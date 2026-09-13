@@ -3,6 +3,8 @@ pysigma==1.5.0
 sigma-cli==3.1.0
 pySigma-backend-loki==0.13.0
 pySigma-backend-opensearch==2.0.3
+pySigma-backend-splunk==2.1.0
+pySigma-backend-kusto==1.0.1
 PyYAML==6.0.3
 
 # Development / test tooling (see also: pip install -e ".[dev]").

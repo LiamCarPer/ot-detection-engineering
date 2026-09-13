@@ -40,6 +40,12 @@ jobs:
       - name: Convert to OpenSearch
         run: python pipelines/convert.py --backend opensearch --check
 
+      - name: Convert to Splunk
+        run: python pipelines/convert.py --backend splunk --check
+
+      - name: Convert to Microsoft Sentinel (KQL)
+        run: python pipelines/convert.py --backend sentinel --check
+
       - name: Validate emulation plan
         run: python purple/runner/run_emulation.py --validate
 

@@ -10,7 +10,8 @@ SIEM platforms is a deliberate later phase.
 ## Design principles
 
 1. **One source of truth per detection.** A rule is authored once. Queries for
-   Loki and OpenSearch are generated from it, never hand-maintained.
+   Loki, OpenSearch, Splunk and Microsoft Sentinel are generated from it, never
+   hand-maintained.
 2. **Derive, do not duplicate.** ATT&CK coverage and detection metrics are
    computed from rule content, so they cannot disagree with the rules.
 3. **Fail loudly.** The validation matcher raises on Sigma features it does not
@@ -38,7 +39,8 @@ rules/sigma/**/*.yml ──┐
 rules/native/**/*.rules┘        │
                                 ├─▶ metrics (precision/recall/FPR/coverage)
                                 │
-Sigma rule ──▶ pipelines/convert.py ──▶ Loki LogQL / OpenSearch PPL + manifest
+Sigma rule ──▶ pipelines/convert.py ──▶ Loki LogQL / OpenSearch PPL /
+                                        Splunk SPL / Sentinel KQL + manifest
 
 emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
         (or recorded observations)         (against the lab or a replay)
@@ -61,7 +63,9 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 
 - **pySigma and sigma-cli** are the industry-standard Sigma toolchain. Rules are
   parsed by pySigma and converted by official backends (`pySigma-backend-loki`,
-  `pySigma-backend-opensearch`).
+  `pySigma-backend-opensearch`, `pySigma-backend-splunk`, `pySigma-backend-kusto`).
+  Splunk SPL and Microsoft Sentinel KQL are first-class targets because those are
+  the platforms most enterprise and MSSP detection teams run.
 - **The validation matcher builds on pySigma's parsed model**, not on a
   re-implementation of Sigma. pySigma handles condition parsing and modifier
   application; the matcher only interprets the resulting tree. This keeps the
@@ -102,8 +106,9 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 The repository is built to plug into the live environment without changing
 detection content:
 
-- `pipelines/convert.py` emits Loki and OpenSearch queries for the lab and NDR
-  stacks; a future step installs them and records provenance.
+- `pipelines/convert.py` emits Loki, OpenSearch, Splunk and Microsoft Sentinel
+  queries for the lab and NDR stacks; a future step installs them and records
+  provenance.
 - `purple/runner/run_emulation.py --execute` runs the plan against
   [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) via
   `docker exec`.

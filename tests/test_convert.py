@@ -19,6 +19,15 @@ def test_all_backends_convert_every_rule() -> None:
         assert all(entry["queries"] for entry in manifest["rules"])
 
 
+def test_splunk_and_sentinel_backends_emit_expected_syntax() -> None:
+    splunk, _ = build_artifacts("splunk", Path("rules/sigma"))
+    sentinel, _ = build_artifacts("sentinel", Path("rules/sigma"))
+    assert all(name.endswith(".spl") for name in splunk)
+    assert all(name.endswith(".kql") for name in sentinel)
+    assert any("| table " in query for query in splunk.values())
+    assert any("in~" in query for query in sentinel.values())
+
+
 def test_manifest_sources_are_relative_to_repo() -> None:
     _, manifest = build_artifacts("loki", Path("rules/sigma"))
     for entry in manifest["rules"]:

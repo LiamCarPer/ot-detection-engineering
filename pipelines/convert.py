@@ -11,7 +11,9 @@ diff always corresponds to a change in a rule.
 Usage:
     python pipelines/convert.py --backend loki
     python pipelines/convert.py --backend opensearch
-    python pipelines/convert.py --backend loki --check
+    python pipelines/convert.py --backend splunk
+    python pipelines/convert.py --backend sentinel
+    python pipelines/convert.py --backend splunk --check
 """
 
 from __future__ import annotations
@@ -22,8 +24,10 @@ import json
 import sys
 from pathlib import Path
 
+from sigma.backends.kusto import KustoBackend
 from sigma.backends.loki import LogQLBackend
 from sigma.backends.opensearch import OpenSearchPPLBackend
+from sigma.backends.splunk import SplunkBackend
 from sigma.collection import SigmaCollection
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +35,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 BACKENDS = {
     "loki": (LogQLBackend, "logql"),
     "opensearch": (OpenSearchPPLBackend, "ppl"),
+    "splunk": (SplunkBackend, "spl"),
+    "sentinel": (KustoBackend, "kql"),
 }
 
 

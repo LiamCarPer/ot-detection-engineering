@@ -48,6 +48,10 @@ recombined through shared metadata, testing and metrics.
 Every rule, regardless of format, carries an ATT&CK for ICS technique, is
 covered by labeled fixtures, and is included in the generated coverage map.
 
+Log-based rules are converted from Sigma into the platforms detection teams
+actually run: **Loki LogQL**, **OpenSearch PPL**, **Splunk SPL** and
+**Microsoft Sentinel KQL** (Kusto).
+
 ## Architecture
 
 ```
@@ -56,7 +60,8 @@ rules/sigma/**/*.yml ──┐
 rules/native/**/*.rules┘        │
                                 ├─▶ metrics (precision / recall / FPR / coverage)
                                 │
-Sigma rule ──▶ pipelines/convert.py ──▶ Loki LogQL / OpenSearch PPL + provenance
+Sigma rule ──▶ pipelines/convert.py ──▶ Loki LogQL / OpenSearch PPL /
+                                        Splunk SPL / Sentinel KQL + provenance
 
 emulation plan ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
 ```
@@ -86,6 +91,9 @@ make setup             # create .venv and install the toolchain
 make check             # lint + sigma-cli validation + tests
 make convert BACKEND=loki
 make convert BACKEND=opensearch
+make convert BACKEND=splunk     # Splunk SPL
+make convert BACKEND=sentinel   # Microsoft Sentinel KQL
+make convert-all                # all four target platforms
 make metrics           # coverage + emulation replay + metrics report
 ```
 
@@ -111,7 +119,7 @@ Full instructions are in [docs/DETECTION_LIFECYCLE.md](docs/DETECTION_LIFECYCLE.
 ## Tooling
 
 - **pySigma / sigma-cli** for parsing, validation and conversion, with the
-  official Loki and OpenSearch backends.
+  official Loki, OpenSearch, Splunk and Kusto (Sentinel KQL) backends.
 - **JSON Schema** for rule test cases, the ATT&CK catalog and the emulation plan.
 - **Pinned ATT&CK for ICS v19.2** catalog, regenerated from the upstream STIX
   collection by `scripts/build_attack_catalog.py`.
@@ -121,8 +129,8 @@ Full instructions are in [docs/DETECTION_LIFECYCLE.md](docs/DETECTION_LIFECYCLE.
 ## Status and roadmap
 
 Implemented: detection-as-code pipeline, OT Sigma and native Modbus DPI rules,
-ATT&CK for ICS coverage, adversary emulation, and detection metrics, all wired
-into CI.
+multi-platform conversion (Loki, OpenSearch, Splunk SPL, Sentinel KQL), ATT&CK
+for ICS coverage, adversary emulation, and detection metrics, all wired into CI.
 
 Deferred by design (integration phase):
 

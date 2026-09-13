@@ -95,6 +95,9 @@ a positive case, or with a tag that is not in the catalog fails.
 ```bash
 make convert BACKEND=loki
 make convert BACKEND=opensearch
+make convert BACKEND=splunk    # Splunk SPL
+make convert BACKEND=sentinel  # Microsoft Sentinel KQL
+make convert-all               # all four target platforms
 ```
 
 Generated queries land in `pipelines/out/` with a manifest that links each
