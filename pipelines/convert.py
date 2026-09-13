@@ -49,16 +49,23 @@ def convert_rule(backend, text: str) -> list[str]:
     return backend.convert(collection)
 
 
+def _relative(path: Path) -> str:
+    try:
+        return path.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
 def build_artifacts(backend_name: str, rules_dir: Path) -> tuple[dict[str, str], dict]:
     backend_cls, extension = BACKENDS[backend_name]
     backend = backend_cls()
     artifacts: dict[str, str] = {}
     manifest: list[dict] = []
 
-    for rule_path in rule_files(rules_dir):
+    for rule_path in rule_files(rules_dir.resolve()):
         text = rule_path.read_text(encoding="utf-8")
         queries = convert_rule(backend, text)
-        relative = rule_path.relative_to(REPO_ROOT).as_posix()
+        relative = _relative(rule_path)
         artifact_name = f"{rule_path.stem}.{extension}"
         header = f"# source: {relative}\n# backend: {backend_name}\n"
         artifacts[artifact_name] = header + "\n".join(queries) + "\n"
