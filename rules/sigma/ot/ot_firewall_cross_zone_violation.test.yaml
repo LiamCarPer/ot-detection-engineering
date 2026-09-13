@@ -1,0 +1,59 @@
+cases:
+  - name: enterprise host reaches the control zone on Modbus
+    expect: match
+    event:
+      timestamp: "2026-09-13T02:14:07.000Z"
+      action: DROP
+      proto: TCP
+      src_zone: it
+      dst_zone: control
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      dst_port: 502
+
+  - name: enterprise host reaches the control zone on S7comm
+    expect: match
+    event:
+      timestamp: "2026-09-13T02:14:08.000Z"
+      action: DROP
+      proto: TCP
+      src_zone: it
+      dst_zone: control
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.11
+      dst_port: 102
+
+  - name: gateway ICMP health check is expected
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T02:00:00.000Z"
+      action: DROP
+      proto: ICMP
+      src_zone: it
+      dst_zone: control
+      src_ip: 172.24.0.2
+      dst_ip: 172.21.0.10
+
+  - name: operations to control traffic is within policy
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T02:00:05.000Z"
+      action: DROP
+      proto: TCP
+      src_zone: ops
+      dst_zone: control
+      src_ip: 172.23.0.50
+      dst_ip: 172.21.0.10
+      dst_port: 502
+
+  - name: enterprise to DMZ is permitted
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T02:00:10.000Z"
+      action: ACCEPT
+      proto: TCP
+      src_zone: it
+      dst_zone: dmz
+      src_ip: 172.24.0.10
+      dst_ip: 172.24.0.2
+      dst_port: 443

@@ -1,0 +1,37 @@
+title: Modbus Device Identification Scan
+id: 6cb1ea58-c9cb-4be9-ad51-0e536b56e4b9
+status: experimental
+description: |
+  Detects Modbus device identification requests (function code 43, Read Device
+  Identification, and function code 17, Report Server ID) sent as requests.
+  These functions enumerate vendor, product and firmware information and are a
+  common first step in OT reconnaissance, mapping devices before an attack.
+
+  Device identification is rare in steady-state polling, which makes it a
+  high-signal event even at low volume.
+references:
+  - https://attack.mitre.org/techniques/T0888/
+author: Liam Carvajal
+date: 2026-09-13
+logsource:
+  product: ot_ndr
+  service: modbus
+detection:
+  selection_direction:
+    direction: request
+  selection_function:
+    function_code:
+      - 17
+      - 43
+  condition: selection_direction and selection_function
+fields:
+  - src_ip
+  - dst_ip
+  - function_code
+  - unit_id
+falsepositives:
+  - Authorized asset inventory or network discovery tooling
+  - Commissioning of a new PLC during a planned maintenance window
+level: medium
+tags:
+  - attack.t0888

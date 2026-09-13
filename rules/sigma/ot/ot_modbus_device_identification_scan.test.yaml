@@ -1,0 +1,40 @@
+cases:
+  - name: read device identification request
+    expect: match
+    event:
+      timestamp: "2026-09-13T01:02:11.400Z"
+      direction: request
+      function_code: 43
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+
+  - name: report server id request
+    expect: match
+    event:
+      timestamp: "2026-09-13T01:02:11.650Z"
+      direction: request
+      function_code: 17
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.11
+      unit_id: 1
+
+  - name: read input registers is normal polling
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T01:03:00.000Z"
+      direction: request
+      function_code: 4
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+
+  - name: device identification response is not a scan
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T01:04:22.120Z"
+      direction: response
+      function_code: 43
+      src_ip: 172.21.0.10
+      dst_ip: 172.24.0.10
+      unit_id: 1

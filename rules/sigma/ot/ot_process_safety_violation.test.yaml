@@ -1,0 +1,36 @@
+cases:
+  - name: inlet opened while tank is full
+    expect: match
+    event:
+      timestamp: "2026-09-13T03:41:19.000Z"
+      event_type: process_safety_violation
+      asset: plc_intake
+      register: 100
+      value: 1
+      tank_level_pct: 98
+      actor: 172.22.0.10
+      response: none
+
+  - name: violation auto-mitigated by the safety monitor
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T03:42:00.000Z"
+      event_type: process_safety_violation
+      asset: plc_intake
+      register: 100
+      value: 1
+      tank_level_pct: 97
+      actor: 172.22.0.10
+      response: auto_mitigated
+
+  - name: normal process telemetry
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T03:42:30.000Z"
+      event_type: process_update
+      asset: plc_intake
+      register: 100
+      value: 0
+      tank_level_pct: 42
+      actor: 172.22.0.10
+      response: none

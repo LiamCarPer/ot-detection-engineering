@@ -1,0 +1,65 @@
+cases:
+  - name: enterprise host writes a single register
+    expect: match
+    event:
+      timestamp: "2026-09-13T02:14:07.221Z"
+      direction: request
+      function_code: 6
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 1024
+
+  - name: operations host writes multiple registers
+    expect: match
+    event:
+      timestamp: "2026-09-13T02:15:41.009Z"
+      direction: request
+      function_code: 16
+      src_ip: 172.23.0.50
+      dst_ip: 172.21.0.11
+      unit_id: 1
+      register: 300
+
+  - name: HMI control-side interface writes a setpoint
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T02:16:12.500Z"
+      direction: request
+      function_code: 6
+      src_ip: 172.21.0.20
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 1024
+
+  - name: HMI supervisory interface writes a setpoint
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T02:16:30.100Z"
+      direction: request
+      function_code: 16
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.12
+      unit_id: 1
+      register: 512
+
+  - name: write response is not a write request
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T02:17:02.775Z"
+      direction: response
+      function_code: 6
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+
+  - name: unauthorized host reads holding registers
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T02:18:19.330Z"
+      direction: request
+      function_code: 3
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 0

@@ -1,0 +1,40 @@
+title: Industrial Protocol Traffic From Enterprise To Control Zone
+id: aaaaba9c-627e-4dfb-adda-4d719c81cb89
+status: experimental
+description: |
+  Detects the zone firewall dropping industrial protocol traffic that
+  originates in the enterprise zone and targets the control zone. A healthy
+  Purdue segmentation allows no direct path from Level 4/5 to Level 1; traffic
+  that reaches the firewall boundary is evidence of a misconfigured asset, a
+  misrouted pivot, or an attempt to reach controllers directly.
+
+  The firewall allows the enterprise zone to reach only the industrial DMZ and
+  the operations zone, so every drop of this shape is a policy violation rather
+  than routine noise.
+references:
+  - https://attack.mitre.org/techniques/T0886/
+author: Liam Carvajal
+date: 2026-09-13
+logsource:
+  product: ot_firewall
+  service: iptables
+detection:
+  selection_action:
+    action: DROP
+  selection_zones:
+    src_zone: it
+    dst_zone: control
+  selection_icmp_healthcheck:
+    proto: ICMP
+  condition: selection_action and selection_zones and not selection_icmp_healthcheck
+fields:
+  - src_ip
+  - dst_ip
+  - dst_port
+  - proto
+falsepositives:
+  - The zone gateway itself when performing a reachability health check
+  - A monitoring collector explicitly authorized to poll the control zone
+level: high
+tags:
+  - attack.t0886

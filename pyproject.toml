@@ -14,12 +14,14 @@ dependencies = [
     "pysigma>=1.5,<2",
     "sigma-cli>=3.1,<4",
     "pySigma-backend-loki>=0.13,<1",
+    "pySigma-backend-opensearch>=2,<3",
     "PyYAML>=6.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8",
+    "jsonschema>=4.20",
     "ruff>=0.6",
 ]
 

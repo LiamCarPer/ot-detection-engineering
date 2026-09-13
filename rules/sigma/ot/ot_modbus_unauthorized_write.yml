@@ -1,0 +1,44 @@
+title: Modbus Write From Unauthorized Control Writer
+id: 62dc6867-340d-4560-a957-53826aa802eb
+status: experimental
+description: |
+  Detects a Modbus write to a PLC from a host that is not an approved control
+  writer. In a segmented OT network, Modbus writes should originate only from
+  the HMI or the engineering workstation; a write from any other source is
+  either a compromised host or an unauthorized engineering change.
+
+  This rule operates on normalized NDR telemetry (see docs/TELEMETRY.md) where
+  each Modbus transaction is decoded into a request/response record with the
+  function code and endpoints. The allowed writers are site-specific and must be
+  tuned per environment.
+references:
+  - https://attack.mitre.org/techniques/T1692/001/
+author: Liam Carvajal
+date: 2026-09-13
+logsource:
+  product: ot_ndr
+  service: modbus
+detection:
+  selection_direction:
+    direction: request
+  selection_function:
+    function_code:
+      - 6
+      - 16
+  filter_authorized_writer:
+    src_ip:
+      - 172.21.0.20
+      - 172.22.0.10
+  condition: selection_direction and selection_function and not filter_authorized_writer
+fields:
+  - src_ip
+  - dst_ip
+  - function_code
+  - register
+  - unit_id
+falsepositives:
+  - A newly commissioned engineering workstation not yet added to the allowlist
+  - An authorized asset migration that changes the source address of the HMI
+level: high
+tags:
+  - attack.t1692.001

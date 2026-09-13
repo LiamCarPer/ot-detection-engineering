@@ -1,0 +1,43 @@
+"""Fixture-driven tests for every Sigma rule in the repository."""
+
+from __future__ import annotations
+
+import pytest
+from support.loader import REPO_ROOT, cases_path_for, load_cases, load_rule, sigma_rule_paths
+from support.sigma_matcher import match
+
+RULE_PATHS = sigma_rule_paths()
+
+
+def _case_ids(rule_path):
+    return rule_path.stem
+
+
+def test_rules_are_discovered() -> None:
+    assert RULE_PATHS, "no Sigma rules found under rules/sigma"
+
+
+@pytest.mark.parametrize("rule_path", RULE_PATHS, ids=_case_ids)
+def test_rule_has_a_test_sidecar(rule_path) -> None:
+    assert cases_path_for(rule_path).exists(), (
+        f"missing test cases: {cases_path_for(rule_path).relative_to(REPO_ROOT)}"
+    )
+
+
+@pytest.mark.parametrize("rule_path", RULE_PATHS, ids=_case_ids)
+def test_rule_has_positive_and_negative_cases(rule_path) -> None:
+    cases = load_cases(rule_path)
+    assert any(case.expect_match for case in cases), "rule has no positive case"
+    assert any(not case.expect_match for case in cases), "rule has no negative case"
+
+
+@pytest.mark.parametrize("rule_path", RULE_PATHS, ids=_case_ids)
+def test_rule_matches_expected_cases(rule_path) -> None:
+    rule = load_rule(rule_path)
+    failures = []
+    for case in load_cases(rule_path):
+        observed = match(rule, case.event)
+        if observed != case.expect_match:
+            expected = "match" if case.expect_match else "no_match"
+            failures.append(f"{case.name!r}: expected {expected}, observed {observed}")
+    assert not failures, f"{rule_path.relative_to(REPO_ROOT)}:\n" + "\n".join(failures)
