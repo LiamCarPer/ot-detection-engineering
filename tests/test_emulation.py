@@ -14,6 +14,8 @@ sys.path.insert(0, str(REPO_ROOT / "purple" / "runner"))
 from run_emulation import (  # noqa: E402
     evaluate,
     load_plan,
+    main,
+    parse_timestamp,
     render_markdown,
     run_plan,
     validate_plan,
@@ -85,6 +87,26 @@ def test_render_markdown_contains_summary() -> None:
     report = render_markdown(evaluate(load_plan(), OBSERVATIONS))
     assert "Adversary Emulation Results" in report
     assert "100.0%" in report
+
+
+def test_naive_timestamp_is_treated_as_local_time() -> None:
+    parsed = parse_timestamp("2026-09-13T02:14:00.500000")
+    assert parsed.tzinfo is not None
+    assert parsed == datetime.fromisoformat("2026-09-13T02:14:00.500000").astimezone()
+
+
+def test_offset_timestamp_is_preserved() -> None:
+    assert parse_timestamp("2026-09-13T02:14:00Z") == datetime(2026, 9, 13, 2, 14, tzinfo=UTC)
+
+
+def test_observations_are_persisted(tmp_path: Path) -> None:
+    source = tmp_path / "observations.json"
+    source.write_text(json.dumps(OBSERVATIONS))
+    out = tmp_path / "out"
+    assert main(["--observations", str(source), "--out", str(out)]) == 0
+    assert (out / "observations.json").exists()
+    assert (out / "emulation_results.json").exists()
+    assert (out / "emulation_report.md").exists()
 
 
 def test_run_plan_records_execution_windows(tmp_path: Path) -> None:

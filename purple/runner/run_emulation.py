@@ -10,7 +10,9 @@ The runner has two modes:
   be reproduced from an artifact.
 
 Both modes feed the same pure ``evaluate`` function, which matches each expected
-signal to the first alert inside the step's time window and computes MTTD.
+signal to the first alert inside the step's time window and computes MTTD. The
+evaluated observations are written alongside the results so any run can be
+reproduced from a committed artifact.
 
 Usage:
     python purple/runner/run_emulation.py --validate
@@ -86,7 +88,9 @@ def validate_plan(plan: dict, schema_path: Path = DEFAULT_SCHEMA) -> list[str]:
 def parse_timestamp(value: str) -> datetime:
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=UTC)
+        # The lab emits naive local timestamps (datetime.now().isoformat()).
+        # Interpret them as local time so MTTD is correct on any host timezone.
+        parsed = parsed.astimezone()
     return parsed
 
 
@@ -277,6 +281,9 @@ def main(argv: list[str] | None = None) -> int:
     results = evaluate(plan, observations)
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "observations.json").write_text(
+        json.dumps(observations, indent=2) + "\n", encoding="utf-8"
+    )
     (out_dir / "emulation_results.json").write_text(
         json.dumps(results, indent=2) + "\n", encoding="utf-8"
     )
