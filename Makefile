@@ -49,11 +49,11 @@ coverage: setup
 emulate-validate: setup
 	$(PY) purple/runner/run_emulation.py --validate
 
-# Replays a recorded emulation run so metrics are reproducible without a lab.
+# Replays the recorded lab run so metrics are reproducible without a lab.
 metrics: setup
 	$(PY) coverage/generate_coverage.py
 	$(PY) purple/runner/run_emulation.py \
-		--observations purple/emulation/recorded-observations.json
+		--observations purple/emulation/lab-observations.json
 	$(PY) metrics/compute.py
 
 check: lint validate test

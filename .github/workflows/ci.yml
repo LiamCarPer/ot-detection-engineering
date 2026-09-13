@@ -49,7 +49,7 @@ jobs:
       - name: Compute detection metrics
         run: |
           python purple/runner/run_emulation.py \
-            --observations purple/emulation/recorded-observations.json
+            --observations purple/emulation/lab-observations.json
           python metrics/compute.py
 
       - name: Upload coverage map and metrics
