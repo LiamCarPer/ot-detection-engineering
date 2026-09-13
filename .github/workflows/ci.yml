@@ -39,3 +39,12 @@ jobs:
 
       - name: Convert to OpenSearch
         run: python pipelines/convert.py --backend opensearch --check
+
+      - name: Generate ATT&CK for ICS coverage map
+        run: python coverage/generate_coverage.py
+
+      - name: Upload coverage map
+        uses: actions/upload-artifact@v4
+        with:
+          name: attack-ics-coverage
+          path: coverage/out/
