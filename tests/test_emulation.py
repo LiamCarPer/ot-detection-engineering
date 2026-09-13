@@ -89,10 +89,10 @@ def test_render_markdown_contains_summary() -> None:
     assert "100.0%" in report
 
 
-def test_naive_timestamp_is_treated_as_local_time() -> None:
+def test_naive_timestamp_is_treated_as_utc() -> None:
+    # The lab detectors run in UTC containers, so naive timestamps are UTC.
     parsed = parse_timestamp("2026-09-13T02:14:00.500000")
-    assert parsed.tzinfo is not None
-    assert parsed == datetime.fromisoformat("2026-09-13T02:14:00.500000").astimezone()
+    assert parsed == datetime(2026, 9, 13, 2, 14, 0, 500000, tzinfo=UTC)
 
 
 def test_offset_timestamp_is_preserved() -> None:

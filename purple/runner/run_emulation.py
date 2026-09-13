@@ -88,9 +88,9 @@ def validate_plan(plan: dict, schema_path: Path = DEFAULT_SCHEMA) -> list[str]:
 def parse_timestamp(value: str) -> datetime:
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None:
-        # The lab emits naive local timestamps (datetime.now().isoformat()).
-        # Interpret them as local time so MTTD is correct on any host timezone.
-        parsed = parsed.astimezone()
+        # The lab detectors run in UTC containers and emit naive timestamps
+        # from datetime.now(), so interpret naive values as UTC.
+        parsed = parsed.replace(tzinfo=UTC)
     return parsed
 
 
