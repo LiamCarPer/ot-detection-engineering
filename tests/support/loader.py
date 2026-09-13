@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -10,11 +9,18 @@ from typing import Any
 import yaml
 from sigma.rule import SigmaRule
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-RULES_DIR = REPO_ROOT / "rules" / "sigma"
-NATIVE_RULES_DIR = REPO_ROOT / "rules" / "native"
+from tools.otde.rules import (
+    CATALOG_PATH,
+    NATIVE_RULES_DIR,
+    REPO_ROOT,
+    SIGMA_RULES_DIR,
+    load_catalog,
+    native_rule_paths,
+    sigma_rule_paths,
+    technique_ids,
+)
+
 METADATA_DIR = REPO_ROOT / "metadata"
-CATALOG_PATH = METADATA_DIR / "attack_ics_catalog.json"
 
 
 @dataclass(frozen=True)
@@ -22,16 +28,6 @@ class Case:
     name: str
     expect_match: bool
     event: dict[str, Any]
-
-
-def sigma_rule_paths() -> list[Path]:
-    return sorted(
-        path for path in RULES_DIR.rglob("*.yml") if not path.name.endswith(".test.yml")
-    )
-
-
-def native_rule_paths() -> list[Path]:
-    return sorted(NATIVE_RULES_DIR.rglob("*.rules"))
 
 
 def cases_path_for(rule_path: Path) -> Path:
@@ -56,9 +52,18 @@ def load_cases(rule_path: Path) -> list[Case]:
     ]
 
 
-def load_catalog() -> dict[str, Any]:
-    return json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
-
-
-def technique_ids() -> set[str]:
-    return {technique["id"] for technique in load_catalog()["techniques"]}
+__all__ = [
+    "CATALOG_PATH",
+    "METADATA_DIR",
+    "NATIVE_RULES_DIR",
+    "REPO_ROOT",
+    "SIGMA_RULES_DIR",
+    "Case",
+    "cases_path_for",
+    "load_cases",
+    "load_catalog",
+    "load_rule",
+    "native_rule_paths",
+    "sigma_rule_paths",
+    "technique_ids",
+]

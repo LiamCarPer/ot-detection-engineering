@@ -6,7 +6,8 @@ from pathlib import Path
 
 import pytest
 from support.loader import REPO_ROOT, native_rule_paths, technique_ids
-from support.suricata import read_rules
+
+from tools.otde.suricata import read_rules
 
 RULE_PATHS = native_rule_paths()
 TECHNIQUE_IDS = technique_ids()

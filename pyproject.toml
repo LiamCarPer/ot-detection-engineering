@@ -30,6 +30,7 @@ packages = []
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "-q"
 filterwarnings = ["error::DeprecationWarning:sigma.*"]
 
