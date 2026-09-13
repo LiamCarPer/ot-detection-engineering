@@ -24,3 +24,6 @@ ics-attack.json
 .vscode/
 .idea/
 .DS_Store
+
+# Emulation run output
+purple/results/

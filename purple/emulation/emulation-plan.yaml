@@ -1,0 +1,46 @@
+name: Water treatment OT emulation
+version: 1
+description: |
+  Adversary emulation plan for the OT-Security-Lab water treatment range. Each
+  step is a real adversary action executed inside the lab, paired with the
+  ground-truth alert the lab emits and the rule in this repository that should
+  detect it.
+
+  The plan is deliberately small and repeatable: it proves that the detections
+  fire on live traffic rather than on curated fixtures. Run it with the lab
+  online via purple/runner/run_emulation.py --execute.
+
+steps:
+  - id: enterprise-pivot-and-write
+    name: Enterprise pivot, unauthorized Modbus write and I/O brute force
+    technique: T1692.001
+    description: |
+      An enterprise-zone host attempts to reach the control zone, issues a
+      Modbus write to a PLC, and then floods invalid function codes to force a
+      burst of exception responses. One action, three expected detections.
+    execute:
+      command: docker exec ot_attacker python3 /attacker/simulate_attack.py
+    expectations:
+      - signal: CROSS_ZONE_VIOLATION
+        technique: T0886
+        rule: rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+      - signal: UNAUTHORIZED_MODBUS_WRITE
+        technique: T1692.001
+        rule: rules/sigma/ot/ot_modbus_unauthorized_write.yml
+      - signal: OT_BRUTE_FORCE_SCAN
+        technique: T0806
+        rule: rules/native/suricata/modbus_dpi.rules
+
+  - id: physics-aware-safety-violation
+    name: Unsafe command while the process is in a danger state
+    technique: T0831
+    description: |
+      The process state is spoofed to a high tank level, then a protocol-valid
+      write from the authorized HMI opens the inlet valve. Every field is
+      legitimate, so only the physics-aware monitor catches it.
+    execute:
+      command: docker exec ot_attacker python3 /attacker/simulate_process_violation.py
+    expectations:
+      - signal: PROCESS_SAFETY_VIOLATION
+        technique: T0831
+        rule: rules/sigma/ot/ot_process_safety_violation.yml

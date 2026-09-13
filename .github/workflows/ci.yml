@@ -40,6 +40,9 @@ jobs:
       - name: Convert to OpenSearch
         run: python pipelines/convert.py --backend opensearch --check
 
+      - name: Validate emulation plan
+        run: python purple/runner/run_emulation.py --validate
+
       - name: Generate ATT&CK for ICS coverage map
         run: python coverage/generate_coverage.py
 

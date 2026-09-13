@@ -61,6 +61,15 @@ def native_techniques(rule_path: Path) -> list[str]:
     return techniques
 
 
+def techniques_for(rule_path: Path) -> list[str]:
+    """Techniques detected by a rule file, dispatching on its format."""
+    if rule_path.suffix == ".rules":
+        return native_techniques(rule_path)
+    if rule_path.suffix in {".yml", ".yaml"}:
+        return sigma_techniques(rule_path)
+    raise ValueError(f"unsupported rule format: {rule_path}")
+
+
 def detected_techniques() -> dict[str, list[str]]:
     """Map each detected technique to the rule sources that detect it."""
     sources: dict[str, list[str]] = {}

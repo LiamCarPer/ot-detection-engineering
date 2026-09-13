@@ -7,17 +7,18 @@ RUFF := $(VENV)/bin/ruff
 RULES := rules/sigma
 BACKEND ?= loki
 
-.PHONY: help setup lint validate test convert coverage check clean
+.PHONY: help setup lint validate test convert coverage emulate-validate check clean
 
 help:
 	@echo "Targets:"
-	@echo "  setup     Create $(VENV) and install requirements"
-	@echo "  lint      Run ruff over the repository"
-	@echo "  validate  Validate Sigma rules with sigma-cli (sigma check)"
-	@echo "  test      Run the rule and tooling test suite"
-	@echo "  convert   Convert Sigma rules to the BACKEND query language (default: loki)"
-	@echo "  coverage  Generate the ATT&CK for ICS coverage map"
-	@echo "  check     lint + validate + test (what CI runs)"
+	@echo "  setup            Create $(VENV) and install requirements"
+	@echo "  lint             Run ruff over the repository"
+	@echo "  validate         Validate Sigma rules with sigma-cli (sigma check)"
+	@echo "  test             Run the rule and tooling test suite"
+	@echo "  convert          Convert Sigma rules to the BACKEND query language (default: loki)"
+	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
+	@echo "  emulate-validate Validate the adversary emulation plan"
+	@echo "  check            lint + validate + test (what CI runs)"
 
 $(VENV)/bin/activate: requirements.txt
 	python3 -m venv $(VENV)
@@ -43,6 +44,9 @@ convert: setup
 
 coverage: setup
 	$(PY) coverage/generate_coverage.py
+
+emulate-validate: setup
+	$(PY) purple/runner/run_emulation.py --validate
 
 check: lint validate test
 
