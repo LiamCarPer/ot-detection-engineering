@@ -1,7 +1,7 @@
 VENV ?= .venv
 PY := $(VENV)/bin/python
 SIGMA := $(VENV)/bin/sigma
-PYTEST := $(VENV)/bin/pytest
+PYTEST := env -u PYTHONPATH PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 $(VENV)/bin/pytest
 RUFF := $(VENV)/bin/ruff
 
 RULES := rules/sigma
@@ -30,8 +30,10 @@ setup: $(VENV)/bin/activate
 lint: setup
 	$(RUFF) check .
 
+# sigma-cli's attacktag validator only knows ATT&CK Enterprise; ICS technique
+# validation is enforced by tests/test_metadata.py against the pinned catalog.
 validate: setup
-	$(SIGMA) check $(RULES)
+	$(SIGMA) check -x attacktag $(RULES)
 
 test: setup
 	$(PYTEST)
