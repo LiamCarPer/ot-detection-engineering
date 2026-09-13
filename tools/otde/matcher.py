@@ -1,8 +1,10 @@
 """Evaluate a parsed Sigma rule against a normalized event.
 
-This is a test harness, not a detection engine. It exists so that every rule in
-``rules/sigma`` can be proven to fire on a labeled positive event and stay quiet
-on a labeled negative event without deploying a SIEM in CI.
+This is a validation tool, not a detection engine. It exists so that every rule
+in ``rules/sigma`` can be proven to fire on a labeled positive event and stay
+quiet on a labeled negative event without deploying a SIEM. The test suite uses
+it for rule regression and the metrics layer uses it to estimate false-positive
+behaviour on benign telemetry.
 
 The matcher deliberately builds on pySigma's own parser and post-processor
 (``SigmaRule`` / ``SigmaCondition``) rather than re-reading YAML. pySigma is

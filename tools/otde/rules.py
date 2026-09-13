@@ -8,8 +8,11 @@ from __future__ import annotations
 
 import json
 import re
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
+import yaml
 from sigma.rule import SigmaRule
 
 from tools.otde.suricata import read_rules
@@ -17,7 +20,8 @@ from tools.otde.suricata import read_rules
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SIGMA_RULES_DIR = REPO_ROOT / "rules" / "sigma"
 NATIVE_RULES_DIR = REPO_ROOT / "rules" / "native"
-CATALOG_PATH = REPO_ROOT / "metadata" / "attack_ics_catalog.json"
+METADATA_DIR = REPO_ROOT / "metadata"
+CATALOG_PATH = METADATA_DIR / "attack_ics_catalog.json"
 
 ATTACK_TAG_RE = re.compile(r"^attack\.t(?P<number>\d{4}(?:\.\d{3})?)$")
 
@@ -59,6 +63,31 @@ def native_techniques(rule_path: Path) -> list[str]:
             if technique not in techniques:
                 techniques.append(technique)
     return techniques
+
+
+@dataclass(frozen=True)
+class Case:
+    name: str
+    expect_match: bool
+    event: dict[str, Any]
+
+
+def cases_path_for(rule_path: Path) -> Path:
+    # Sidecars use .yaml so that `sigma check` (which globs *.yml) does not
+    # mistake them for rules.
+    return rule_path.with_suffix(".test.yaml")
+
+
+def load_cases(rule_path: Path) -> list[Case]:
+    raw = yaml.safe_load(cases_path_for(rule_path).read_text(encoding="utf-8"))
+    return [
+        Case(
+            name=entry["name"],
+            expect_match=entry["expect"] == "match",
+            event=entry["event"],
+        )
+        for entry in raw["cases"]
+    ]
 
 
 def techniques_for(rule_path: Path) -> list[str]:

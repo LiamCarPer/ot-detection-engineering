@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import pytest
 from sigma.rule import SigmaRule
-from support.sigma_matcher import UnsupportedFeatureError, match
+
+from tools.otde.matcher import UnsupportedFeatureError, match
 
 _RULE_TEMPLATE = """
 title: {title}

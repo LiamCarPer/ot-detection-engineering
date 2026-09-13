@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import pytest
 from support.loader import REPO_ROOT, cases_path_for, load_cases, load_rule, sigma_rule_paths
-from support.sigma_matcher import match
+
+from tools.otde.matcher import match
 
 RULE_PATHS = sigma_rule_paths()
 
