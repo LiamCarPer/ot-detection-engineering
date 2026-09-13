@@ -46,8 +46,16 @@ jobs:
       - name: Generate ATT&CK for ICS coverage map
         run: python coverage/generate_coverage.py
 
-      - name: Upload coverage map
+      - name: Compute detection metrics
+        run: |
+          python purple/runner/run_emulation.py \
+            --observations purple/emulation/recorded-observations.json
+          python metrics/compute.py
+
+      - name: Upload coverage map and metrics
         uses: actions/upload-artifact@v4
         with:
-          name: attack-ics-coverage
-          path: coverage/out/
+          name: detection-report
+          path: |
+            coverage/out/
+            metrics/out/

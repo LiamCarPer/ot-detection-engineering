@@ -1,0 +1,18 @@
+{
+  "enterprise-pivot-and-write": {
+    "started_at": "2026-09-13T02:14:00+00:00",
+    "finished_at": "2026-09-13T02:14:30+00:00",
+    "alerts": [
+      {"timestamp": "2026-09-13T02:14:05Z", "alert_type": "CROSS_ZONE_VIOLATION", "mitre_id": "T0886"},
+      {"timestamp": "2026-09-13T02:14:07Z", "alert_type": "UNAUTHORIZED_MODBUS_WRITE", "mitre_id": "T0831"},
+      {"timestamp": "2026-09-13T02:14:20Z", "alert_type": "OT_BRUTE_FORCE_SCAN", "mitre_id": "T0846"}
+    ]
+  },
+  "physics-aware-safety-violation": {
+    "started_at": "2026-09-13T02:15:00+00:00",
+    "finished_at": "2026-09-13T02:15:30+00:00",
+    "alerts": [
+      {"timestamp": "2026-09-13T02:15:02Z", "alert_type": "PROCESS_SAFETY_VIOLATION", "mitre_id": "T0831"}
+    ]
+  }
+}

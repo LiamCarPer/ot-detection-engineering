@@ -1,0 +1,12 @@
+{"timestamp": "2026-09-13T06:00:00Z", "direction": "request", "function_code": 3, "src_ip": "172.22.0.10", "dst_ip": "172.21.0.10", "unit_id": 1, "register": 0}
+{"timestamp": "2026-09-13T06:00:01Z", "direction": "response", "function_code": 3, "src_ip": "172.21.0.10", "dst_ip": "172.22.0.10", "unit_id": 1, "register": 0}
+{"timestamp": "2026-09-13T06:00:05Z", "direction": "request", "function_code": 4, "src_ip": "172.22.0.10", "dst_ip": "172.21.0.11", "unit_id": 1, "register": 100}
+{"timestamp": "2026-09-13T06:01:00Z", "direction": "request", "function_code": 6, "src_ip": "172.21.0.20", "dst_ip": "172.21.0.10", "unit_id": 1, "register": 1024}
+{"timestamp": "2026-09-13T06:01:02Z", "direction": "response", "function_code": 6, "src_ip": "172.21.0.10", "dst_ip": "172.21.0.20", "unit_id": 1}
+{"timestamp": "2026-09-13T06:02:00Z", "direction": "request", "function_code": 16, "src_ip": "172.22.0.10", "dst_ip": "172.21.0.12", "unit_id": 1, "register": 512}
+{"timestamp": "2026-09-13T06:03:00Z", "direction": "response", "function_code": 43, "src_ip": "172.21.0.10", "dst_ip": "172.22.0.10", "unit_id": 1}
+{"timestamp": "2026-09-13T06:04:00Z", "action": "ACCEPT", "proto": "TCP", "src_zone": "it", "dst_zone": "dmz", "src_ip": "172.24.0.10", "dst_ip": "172.24.0.2", "dst_port": 443}
+{"timestamp": "2026-09-13T06:04:30Z", "action": "DROP", "proto": "TCP", "src_zone": "ops", "dst_zone": "control", "src_ip": "172.23.0.50", "dst_ip": "172.21.0.10", "dst_port": 502}
+{"timestamp": "2026-09-13T06:04:45Z", "action": "DROP", "proto": "ICMP", "src_zone": "it", "dst_zone": "control", "src_ip": "172.24.0.2", "dst_ip": "172.21.0.10"}
+{"timestamp": "2026-09-13T06:05:00Z", "event_type": "process_update", "asset": "plc_intake", "register": 100, "value": 0, "tank_level_pct": 42, "actor": "172.22.0.10", "response": "none"}
+{"timestamp": "2026-09-13T06:05:30Z", "event_type": "process_safety_violation", "asset": "plc_intake", "register": 100, "value": 1, "tank_level_pct": 97, "actor": "172.22.0.10", "response": "auto_mitigated"}

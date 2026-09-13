@@ -7,7 +7,7 @@ RUFF := $(VENV)/bin/ruff
 RULES := rules/sigma
 BACKEND ?= loki
 
-.PHONY: help setup lint validate test convert coverage emulate-validate check clean
+.PHONY: help setup lint validate test convert coverage emulate-validate metrics check clean
 
 help:
 	@echo "Targets:"
@@ -18,6 +18,7 @@ help:
 	@echo "  convert          Convert Sigma rules to the BACKEND query language (default: loki)"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate the adversary emulation plan"
+	@echo "  metrics          Generate coverage, replay emulation, compute metrics"
 	@echo "  check            lint + validate + test (what CI runs)"
 
 $(VENV)/bin/activate: requirements.txt
@@ -47,6 +48,13 @@ coverage: setup
 
 emulate-validate: setup
 	$(PY) purple/runner/run_emulation.py --validate
+
+# Replays a recorded emulation run so metrics are reproducible without a lab.
+metrics: setup
+	$(PY) coverage/generate_coverage.py
+	$(PY) purple/runner/run_emulation.py \
+		--observations purple/emulation/recorded-observations.json
+	$(PY) metrics/compute.py
 
 check: lint validate test
 
