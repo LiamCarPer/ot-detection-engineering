@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Generated / runtime artifacts
+build/
+dist/
+coverage/out/
+metrics/out/
+pipelines/out/
+
+# Local data downloads (see scripts/build_attack_catalog.py)
+ics-attack.json
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

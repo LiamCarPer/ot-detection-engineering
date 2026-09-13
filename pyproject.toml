@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ot-detection-engineering"
+version = "0.1.0"
+description = "Detection-as-code for OT/ICS: Sigma rules, native protocol DPI, ATT&CK for ICS coverage, and detection validation."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Liam Carvajal", email = "carvajalperezliam7@gmail.com" }]
+dependencies = [
+    "pysigma>=1.5,<2",
+    "sigma-cli>=3.1,<4",
+    "pySigma-backend-loki>=0.13,<1",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+]
+
+[tool.setuptools]
+packages = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["error::DeprecationWarning:sigma.*"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+exclude = [".venv", "build", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

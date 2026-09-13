@@ -1,0 +1,9 @@
+# Runtime and validation toolchain. Pinned to the versions the CI matrix uses.
+pysigma==1.5.0
+sigma-cli==3.1.0
+pySigma-backend-loki==0.13.0
+PyYAML==6.0.3
+
+# Development / test tooling (see also: pip install -e ".[dev]").
+pytest==9.1.1
+ruff==0.16.7
