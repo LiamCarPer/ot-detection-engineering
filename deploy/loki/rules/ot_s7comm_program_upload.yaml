@@ -1,0 +1,29 @@
+# source: rules/sigma/ot/ot_s7comm_program_upload.yml
+groups:
+- name: Sigma rules
+  rules:
+  - alert: S7comm_Program_Upload
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a program block upload from a Siemens controller (Start
+        Upload,
+
+        Upload, End Upload). Reading logic out of a controller is how an attacker
+
+        learns the process and prepares a targeted modification; it is also how the
+
+        PLC program is exfiltrated.
+
+
+        Operates on decoded S7comm events (see docs/TELEMETRY.md) produced by
+
+        tools/s7comm-dpi.
+
+        '
+      summary: S7comm Program Upload
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      (function_code=29 or function_code=30 or function_code=31) | line_format "{{.function_name}}
+      {{.pdu_reference}}" [1m])) or vector(0) > 0
+    labels:
+      severity: medium
+

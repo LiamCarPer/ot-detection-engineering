@@ -24,6 +24,8 @@ make suricata-check
 | `dnp3_benign` | none | none |
 | `opcua_attack` | 1000008, 1000009 | 1000008, 1000009 |
 | `opcua_benign` | none | none |
+| `s7comm_attack` | 1000020-1000028 | 1000020-1000028 |
+| `s7comm_benign` | none | none |
 
 Every attack capture fires exactly the expected signatures and every benign
 capture is silent.
@@ -43,3 +45,7 @@ capture is silent.
   application-layer parser, so those rules match the 3-byte message type with
   `content`/`depth`. Application-layer OPC UA detection would need a decoder,
   as with DNP3.
+- **S7comm has no app-layer parser either.** The rules anchor on the S7 protocol
+  id (`0x32`) and match the function code at a fixed offset within the TPKT/COTP
+  data PDU, which the captures confirm is offset 17. The Rust decoder and the
+  Sigma rules handle the richer application-layer semantics.

@@ -43,6 +43,24 @@
       "backend": "loki"
     },
     {
+      "source": "rules/sigma/ot/ot_s7comm_change_operating_mode.yml",
+      "source_sha256": "527e0e56e539835b2201f9cbb48e13c11338569c7be1cb1abbda15d17664a338",
+      "target": "loki/rules/ot_s7comm_change_operating_mode.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_s7comm_program_download.yml",
+      "source_sha256": "bc9922d19f71a74b909a2f492c5b7ce2bc31dde4ac746a8dc2e81afaeb4038d2",
+      "target": "loki/rules/ot_s7comm_program_download.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_s7comm_program_upload.yml",
+      "source_sha256": "04a1654b5f1f3598ae036dd6be99a9fac1ffac037a7525cf2266897d87d19522",
+      "target": "loki/rules/ot_s7comm_program_upload.yaml",
+      "backend": "loki"
+    },
+    {
       "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
       "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
       "target": "opensearch/ot_dnp3_restart_command.ppl",
@@ -82,6 +100,24 @@
       "source": "rules/sigma/ot/ot_process_safety_violation.yml",
       "source_sha256": "a5daeaf78aa62d584dab17fc1864fbe0f11557fe486327b29813ac0cb8fce78d",
       "target": "opensearch/ot_process_safety_violation.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_s7comm_change_operating_mode.yml",
+      "source_sha256": "527e0e56e539835b2201f9cbb48e13c11338569c7be1cb1abbda15d17664a338",
+      "target": "opensearch/ot_s7comm_change_operating_mode.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_s7comm_program_download.yml",
+      "source_sha256": "bc9922d19f71a74b909a2f492c5b7ce2bc31dde4ac746a8dc2e81afaeb4038d2",
+      "target": "opensearch/ot_s7comm_program_download.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_s7comm_program_upload.yml",
+      "source_sha256": "04a1654b5f1f3598ae036dd6be99a9fac1ffac037a7525cf2266897d87d19522",
+      "target": "opensearch/ot_s7comm_program_upload.ppl",
       "backend": "opensearch"
     },
     {
@@ -127,6 +163,24 @@
       "backend": "sentinel"
     },
     {
+      "source": "rules/sigma/ot/ot_s7comm_change_operating_mode.yml",
+      "source_sha256": "527e0e56e539835b2201f9cbb48e13c11338569c7be1cb1abbda15d17664a338",
+      "target": "sentinel/ot_s7comm_change_operating_mode.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_s7comm_program_download.yml",
+      "source_sha256": "bc9922d19f71a74b909a2f492c5b7ce2bc31dde4ac746a8dc2e81afaeb4038d2",
+      "target": "sentinel/ot_s7comm_program_download.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_s7comm_program_upload.yml",
+      "source_sha256": "04a1654b5f1f3598ae036dd6be99a9fac1ffac037a7525cf2266897d87d19522",
+      "target": "sentinel/ot_s7comm_program_upload.kql",
+      "backend": "sentinel"
+    },
+    {
       "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
       "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
       "target": "splunk/ot_dnp3_restart_command.conf",
@@ -169,6 +223,24 @@
       "backend": "splunk"
     },
     {
+      "source": "rules/sigma/ot/ot_s7comm_change_operating_mode.yml",
+      "source_sha256": "527e0e56e539835b2201f9cbb48e13c11338569c7be1cb1abbda15d17664a338",
+      "target": "splunk/ot_s7comm_change_operating_mode.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_s7comm_program_download.yml",
+      "source_sha256": "bc9922d19f71a74b909a2f492c5b7ce2bc31dde4ac746a8dc2e81afaeb4038d2",
+      "target": "splunk/ot_s7comm_program_download.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_s7comm_program_upload.yml",
+      "source_sha256": "04a1654b5f1f3598ae036dd6be99a9fac1ffac037a7525cf2266897d87d19522",
+      "target": "splunk/ot_s7comm_program_upload.conf",
+      "backend": "splunk"
+    },
+    {
       "source": "rules/native/suricata/dnp3_dpi.rules",
       "source_sha256": "7cfd5e654e54f13fb06f64e2deeb476c8e0f462c6f76e33c4b26a1978edbc30e",
       "target": "suricata/ot-detection.rules",
@@ -183,6 +255,12 @@
     {
       "source": "rules/native/suricata/opcua_dpi.rules",
       "source_sha256": "139cd3794a6a83aa64f3c9b6afebe275c5acdd587937ef8dc74ebe2f8d8e7134",
+      "target": "suricata/ot-detection.rules",
+      "backend": "suricata"
+    },
+    {
+      "source": "rules/native/suricata/s7comm_dpi.rules",
+      "source_sha256": "4db1811668644176ec396b4ebc3285243ce0bac48e5d0735f792ff38c85f3770",
       "target": "suricata/ot-detection.rules",
       "backend": "suricata"
     }

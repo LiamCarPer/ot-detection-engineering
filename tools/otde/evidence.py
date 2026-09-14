@@ -27,6 +27,18 @@ EXPECTED_SIDS: dict[str, set[int]] = {
     },
     "opcua_benign": set(),
     "opcua_attack": {1000008, 1000009},
+    "s7comm_benign": set(),
+    "s7comm_attack": {
+        1000020,
+        1000021,
+        1000022,
+        1000023,
+        1000024,
+        1000025,
+        1000026,
+        1000027,
+        1000028,
+    },
 }
 
 

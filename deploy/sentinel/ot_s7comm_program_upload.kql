@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_s7comm_program_upload.yml
+direction =~ "request" and (function_code in~ ("29", "30", "31"))

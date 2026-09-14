@@ -6,7 +6,7 @@ RUFF := $(VENV)/bin/ruff
 
 RULES := rules/sigma
 BACKEND ?= loki
-RUST_DIR := tools/dnp3-dpi
+RUST_DIR := tools
 CARGO ?= cargo
 
 .PHONY: help setup lint validate test rust convert convert-all deploy deploy-check suricata-check coverage emulate-validate metrics check clean
@@ -49,8 +49,8 @@ test: setup
 
 rust:
 	cd $(RUST_DIR) && $(CARGO) fmt --check
-	cd $(RUST_DIR) && $(CARGO) clippy --all-targets -- -D warnings
-	cd $(RUST_DIR) && $(CARGO) test
+	cd $(RUST_DIR) && $(CARGO) clippy --workspace --all-targets -- -D warnings
+	cd $(RUST_DIR) && $(CARGO) test --workspace
 
 convert: setup
 	$(PY) pipelines/convert.py --backend $(BACKEND) --rules $(RULES)

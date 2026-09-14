@@ -5,3 +5,7 @@ version = 4
 [[package]]
 name = "dnp3-dpi"
 version = "0.1.0"
+
+[[package]]
+name = "s7comm-dpi"
+version = "0.1.0"

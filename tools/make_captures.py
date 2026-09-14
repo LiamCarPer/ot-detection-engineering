@@ -32,6 +32,7 @@ ATTACKER = "172.24.0.10"     # unauthorized
 MODBUS_PLC = "172.21.0.10"
 DNP3_OUTSTATION = "172.31.0.10"
 OPCUA_SERVER = "172.31.0.10"
+S7_PLC = "172.21.0.10"
 
 
 def crc_dnp(data: bytes) -> int:
@@ -199,6 +200,33 @@ def opcua_sessions(attacker: bool) -> list[Packet]:
     return tcp_session(source, 43000, OPCUA_SERVER, 4840, [hel, opn])
 
 
+def s7comm_job(function: int, extra_params: bytes = b"", data: bytes = b"") -> bytes:
+    """Build a TPKT/COTP/S7comm job with the function code at offset 17."""
+    params = bytes([function]) + extra_params
+    s7 = (
+        bytes([0x32, 0x01, 0x00, 0x00, 0x00, 0x01])
+        + len(params).to_bytes(2, "big")
+        + len(data).to_bytes(2, "big")
+        + params
+        + data
+    )
+    cotp = bytes([0x02, 0xF0, 0x80])  # COTP DT
+    total = 4 + len(cotp) + len(s7)
+    return bytes([0x03, 0x00]) + total.to_bytes(2, "big") + cotp + s7
+
+
+def s7comm_sessions(attacker: bool) -> list[Packet]:
+    source = ATTACKER if attacker else HMI
+    if attacker:
+        # Download, upload, PLC control/stop and an unauthorized write.
+        functions = [0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x28, 0x29, 0x05]
+    else:
+        # Setup communication and a read: normal engineering traffic.
+        functions = [0xF0, 0x04]
+    payloads = [s7comm_job(function) for function in functions]
+    return tcp_session(source, 44000, S7_PLC, 102, payloads)
+
+
 def build_captures() -> dict[str, list[Packet]]:
     captures = {
         "modbus_benign.pcap": modbus_sessions(attacker=False),
@@ -207,6 +235,8 @@ def build_captures() -> dict[str, list[Packet]]:
         "dnp3_attack.pcap": dnp3_sessions(attacker=True),
         "opcua_benign.pcap": opcua_sessions(attacker=False),
         "opcua_attack.pcap": opcua_sessions(attacker=True),
+        "s7comm_benign.pcap": s7comm_sessions(attacker=False),
+        "s7comm_attack.pcap": s7comm_sessions(attacker=True),
     }
     for packets in captures.values():
         for index, packet in enumerate(packets):

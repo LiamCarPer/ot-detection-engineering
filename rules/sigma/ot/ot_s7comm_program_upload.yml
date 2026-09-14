@@ -1,0 +1,35 @@
+title: S7comm Program Upload
+id: c231db54-8929-42bd-8d9c-3ca276d037c6
+status: experimental
+description: |
+  Detects a program block upload from a Siemens controller (Start Upload,
+  Upload, End Upload). Reading logic out of a controller is how an attacker
+  learns the process and prepares a targeted modification; it is also how the
+  PLC program is exfiltrated.
+
+  Operates on decoded S7comm events (see docs/TELEMETRY.md) produced by
+  tools/s7comm-dpi.
+references:
+  - https://attack.mitre.org/techniques/T0845/
+author: Liam Carvajal
+date: 2026-09-14
+logsource:
+  product: ot_ndr
+  service: s7comm
+detection:
+  selection_direction:
+    direction: request
+  selection_function:
+    function_code:
+      - 29
+      - 30
+      - 31
+  condition: selection_direction and selection_function
+fields:
+  - function_name
+  - pdu_reference
+falsepositives:
+  - A backup or an engineering tool reading blocks during maintenance
+level: medium
+tags:
+  - attack.t0845

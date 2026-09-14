@@ -1,0 +1,29 @@
+# source: rules/sigma/ot/ot_s7comm_change_operating_mode.yml
+groups:
+- name: Sigma rules
+  rules:
+  - alert: S7comm_PLC_Control_Or_Stop
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a PLC Control or PLC Stop request. Both change the controller''s
+
+        operating mode and stop the running program, which is a direct availability
+
+        and safety impact. Outside a maintenance window this is a strong indicator
+        of
+
+        a disruptive attack.
+
+
+        Operates on decoded S7comm events (see docs/TELEMETRY.md) produced by
+
+        tools/s7comm-dpi.
+
+        '
+      summary: S7comm PLC Control Or Stop
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      (function_code=40 or function_code=41) | line_format "{{.function_name}} {{.rosctr}}"
+      [1m])) or vector(0) > 0
+    labels:
+      severity: high
+

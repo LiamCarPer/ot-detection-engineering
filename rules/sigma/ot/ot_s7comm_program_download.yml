@@ -1,0 +1,36 @@
+title: S7comm Program Download
+id: e252ae54-8784-4286-ad9f-2b007c508ee5
+status: experimental
+description: |
+  Detects a program block download to a Siemens controller (Request Download,
+  Download Block, Download Ended). Downloading logic to a controller is how an
+  attacker persists on the PLC and modifies process behaviour; outside an
+  engineering change window it is high severity.
+
+  Operates on decoded S7comm events (see docs/TELEMETRY.md) produced by
+  tools/s7comm-dpi.
+references:
+  - https://attack.mitre.org/techniques/T0843/
+author: Liam Carvajal
+date: 2026-09-14
+logsource:
+  product: ot_ndr
+  service: s7comm
+detection:
+  selection_direction:
+    direction: request
+  selection_function:
+    function_code:
+      - 26
+      - 27
+      - 28
+  condition: selection_direction and selection_function
+fields:
+  - function_name
+  - pdu_reference
+  - parameter_length
+falsepositives:
+  - A planned engineering change or firmware update
+level: high
+tags:
+  - attack.t0843

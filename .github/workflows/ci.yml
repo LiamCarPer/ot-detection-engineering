@@ -30,12 +30,12 @@ jobs:
         with:
           components: rustfmt, clippy
 
-      - name: Format-check, lint and test the DNP3 DPI decoder
-        working-directory: tools/dnp3-dpi
+      - name: Format-check, lint and test the protocol decoders
+        working-directory: tools
         run: |
           cargo fmt --check
-          cargo clippy --all-targets -- -D warnings
-          cargo test
+          cargo clippy --workspace --all-targets -- -D warnings
+          cargo test --workspace
 
       - name: Lint
         run: ruff check .

@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_s7comm_program_upload.yml
+source=ot_ndr-s7comm-* | where direction="request" AND (function_code in (29, 30, 31))

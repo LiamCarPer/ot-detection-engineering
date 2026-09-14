@@ -1,0 +1,46 @@
+cases:
+  - name: start upload
+    expect: match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:10:00Z"
+      direction: request
+      function_code: 29
+      function_name: Start Upload
+      rosctr: 1
+      pdu_reference: 5
+
+  - name: upload
+    expect: match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:10:01Z"
+      direction: request
+      function_code: 30
+      function_name: Upload
+      rosctr: 1
+      pdu_reference: 6
+
+  - name: read var is not an upload
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:11:00Z"
+      direction: request
+      function_code: 4
+      function_name: Read Var
+      rosctr: 1
+
+  - name: upload response is not an upload request
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:10:02Z"
+      direction: response
+      function_code: 30
+      function_name: Upload
+      rosctr: 3

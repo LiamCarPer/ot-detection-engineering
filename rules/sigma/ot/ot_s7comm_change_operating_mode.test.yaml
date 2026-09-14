@@ -1,0 +1,46 @@
+cases:
+  - name: plc control
+    expect: match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:20:00Z"
+      direction: request
+      function_code: 40
+      function_name: PLC Control
+      rosctr: 1
+      pdu_reference: 9
+
+  - name: plc stop
+    expect: match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:20:01Z"
+      direction: request
+      function_code: 41
+      function_name: PLC Stop
+      rosctr: 1
+      pdu_reference: 10
+
+  - name: read var is not a mode change
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:21:00Z"
+      direction: request
+      function_code: 4
+      function_name: Read Var
+      rosctr: 1
+
+  - name: stop as a response
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:20:02Z"
+      direction: response
+      function_code: 41
+      function_name: PLC Stop
+      rosctr: 3

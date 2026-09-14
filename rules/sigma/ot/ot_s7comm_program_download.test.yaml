@@ -1,0 +1,49 @@
+cases:
+  - name: request download
+    expect: match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:00:00Z"
+      direction: request
+      function_code: 26
+      function_name: Request Download
+      rosctr: 1
+      pdu_reference: 1
+      parameter_length: 17
+      data_length: 0
+      cotp_type: 240
+
+  - name: download block
+    expect: match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:00:01Z"
+      direction: request
+      function_code: 27
+      function_name: Download Block
+      rosctr: 1
+      pdu_reference: 2
+
+  - name: read var is not a download
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:01:00Z"
+      direction: request
+      function_code: 4
+      function_name: Read Var
+      rosctr: 1
+
+  - name: download response is not a download request
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: s7comm
+      timestamp: "2026-09-14T08:00:02Z"
+      direction: response
+      function_code: 28
+      function_name: Download Ended
+      rosctr: 3

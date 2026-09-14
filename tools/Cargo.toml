@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+members = ["dnp3-dpi", "s7comm-dpi"]
+
+[profile.release]
+lto = true
+codegen-units = 1

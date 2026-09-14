@@ -15,6 +15,7 @@ The `suricata/` directory contains deep packet inspection rules per protocol:
 | `modbus_dpi.rules` | Modbus/TCP | Function-code DPI (unauthorized write, device scan, undefined-register write) |
 | `dnp3_dpi.rules` | DNP3 | Function-code and object-header DPI (control, write, device scan) |
 | `opcua_dpi.rules` | OPC UA (`tcp/4840`) | Message-header DPI (Hello, OpenSecureChannel) |
+| `s7comm_dpi.rules` | S7comm (`tcp/102`) | Function-code DPI (program download/upload, PLC stop, unauthorized write) |
 
 DNP3 control operations are also detected at the application layer:
 [tools/dnp3-dpi](../../tools/dnp3-dpi) decodes frames into normalized events and

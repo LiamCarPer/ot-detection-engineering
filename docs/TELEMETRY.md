@@ -90,3 +90,25 @@ by [`tools/dnp3-dpi`](../tools/dnp3-dpi) from link frames or a network capture.
 DNP3 uses link addresses rather than IP addresses, so the allowlists in the
 rules are expressed against `link_source`. A collector that also knows the
 transport endpoints can add `src_ip`/`dst_ip`.
+
+## `ot_ndr` / `s7comm`
+
+Decoded classic S7comm jobs and responses, produced by
+[`tools/s7comm-dpi`](../tools/s7comm-dpi) from TPKT/COTP frames on TCP/102.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `timestamp` | string | ISO 8601 UTC, added by the collector. |
+| `direction` | string | `request` (ROSCTR Job) or `response` (Ack/Ack-Data). |
+| `function_code` | integer | S7 function code (for example `4` Read Var, `26` Request Download, `41` PLC Stop). |
+| `function_name` | string | Function name. |
+| `rosctr` | integer | Message type (`1` Job, `3` Ack-Data). |
+| `pdu_reference` | integer | PDU reference. |
+| `parameter_length` | integer | Parameter block length. |
+| `data_length` | integer | Data block length. |
+| `cotp_type` | integer | COTP PDU type (`240` for data transfer). |
+
+S7comm carries no source identity, so the "unauthorized write" detection is
+expressed at the network layer against the client IP, while the
+protocol-intrinsic detections (program download/upload, mode change) run over
+these events.

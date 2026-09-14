@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_s7comm_change_operating_mode.yml
+source=ot_ndr-s7comm-* | where direction="request" AND (function_code in (40, 41))
