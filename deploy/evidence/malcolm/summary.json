@@ -1,0 +1,97 @@
+{
+  "captures": {
+    "dnp3_attack": {
+      "expected": [
+        9000005,
+        9000006,
+        9000007,
+        9000010,
+        9000011,
+        9000012,
+        9000013,
+        9000014,
+        9000015
+      ],
+      "observed": [
+        9000005,
+        9000006,
+        9000007,
+        9000010,
+        9000011,
+        9000012,
+        9000013,
+        9000014,
+        9000015
+      ]
+    },
+    "dnp3_benign": {
+      "expected": [],
+      "observed": []
+    },
+    "modbus_attack": {
+      "expected": [
+        9000001,
+        9000002,
+        9000004
+      ],
+      "observed": [
+        9000001,
+        9000002,
+        9000004
+      ]
+    },
+    "modbus_benign": {
+      "expected": [],
+      "observed": []
+    },
+    "opcua_attack": {
+      "expected": [
+        9000008,
+        9000009
+      ],
+      "observed": [
+        9000008,
+        9000009
+      ]
+    },
+    "opcua_benign": {
+      "expected": [],
+      "observed": []
+    },
+    "s7comm_attack": {
+      "expected": [
+        9000020,
+        9000021,
+        9000022,
+        9000023,
+        9000024,
+        9000025,
+        9000026,
+        9000027,
+        9000028
+      ],
+      "observed": [
+        9000020,
+        9000021,
+        9000022,
+        9000023,
+        9000024,
+        9000025,
+        9000026,
+        9000027,
+        9000028
+      ]
+    },
+    "s7comm_benign": {
+      "expected": [],
+      "observed": []
+    }
+  },
+  "meta": {
+    "duplicate_signatures": 0,
+    "malcolm_revision": "e60cbd07",
+    "rules_failed": 0,
+    "rules_loaded": 59188,
+    "suricata_version": "8.0.4"
+  }
+}

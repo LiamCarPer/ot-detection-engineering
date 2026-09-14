@@ -112,6 +112,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `test_emulation.py` | The emulation plan is valid and the evaluation logic computes detection rate and MTTD correctly. |
 | `test_coverage.py`, `test_metrics.py` | Derived coverage and metrics are internally consistent, and no rule fires on the benign baseline. |
 | `test_deploy.py`, `test_deploy_evidence.py` | The bundle matches the rules and the committed Suricata evidence fires the expected signatures. |
+| `test_malcolm_evidence.py` | The committed Malcolm evidence shows the ruleset loading with no failures alongside Malcolm's default rules and firing the expected signatures on every capture. |
 | `test_decoder_evidence.py` | The committed decoder evidence fires each protocol's Sigma rules on real decoder output. |
 | `test_loki_evidence.py`, `test_readme.py` | The committed Loki ruler evidence is complete and the README figures match the generated metrics. |
 
@@ -130,17 +131,22 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 - **MTTD** — mean time from the start of an emulation step to the first matching
   alert, in seconds.
 
-## Integration points (deferred)
+## Integration points
 
 The repository is built to plug into the live environment without changing
 detection content:
 
+- **Suricata rules are installed in a Malcolm pipeline.** `tools/malcolm_check.py`
+  copies `deploy/suricata/ot-detection.rules` into a Malcolm installation and
+  runs Malcolm's own Suricata image and configuration over the captures, with
+  the default ruleset enabled; the result is committed under
+  `deploy/evidence/malcolm/`. This is what surfaced the SID collision with the
+  NSacyber ELITEWOLF rules and moved the repository to the private
+  `9000000-9000099` range.
 - `pipelines/convert.py` emits Loki, OpenSearch, Splunk and Microsoft Sentinel
   queries, and `pipelines/deploy.py` packages them into an installable `deploy/`
-  bundle; a future step installs the bundle into the lab and NDR stacks and
-  records deployment provenance.
+  bundle; the Loki ruler bundle is not yet installed into the lab stack, and
+  that step will record deployment provenance.
 - `purple/runner/run_emulation.py --execute` runs the plan against
   [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) via
   `docker exec`.
-- Native Suricata rules are written for
-  [OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline).

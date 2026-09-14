@@ -149,7 +149,10 @@ committed example frames and feeds the decoded events through the Sigma rules.
 Each refreshes evidence in `deploy/evidence/`. The results are recorded in
 [deploy/report.md](deploy/report.md): every attack capture fires exactly the
 expected signatures, every Loki ruler alert fires, every protocol rule fires on
-the decoded events, and no benign input produces an alert.
+the decoded events, and no benign input produces an alert. The Suricata ruleset
+is also installed into a Malcolm pipeline and run with Malcolm's own Suricata
+image and default ruleset (`tools/malcolm_check.py`), confirming it loads and
+fires there rather than only in isolation.
 
 ## Tooling
 
@@ -174,17 +177,21 @@ the decoded events, and no benign input produces an alert.
 ## Status and roadmap
 
 Implemented: detection-as-code pipeline, OT Sigma rules, native protocol DPI for
-Modbus/TCP, DNP3, OPC UA and S7comm (DNP3 and S7comm also decoded in Rust for
-application-layer Sigma rules), multi-platform conversion (Loki, OpenSearch,
-Splunk SPL, Sentinel KQL), installable deployment bundles, Suricata functional
-validation over committed captures, ATT&CK for ICS coverage, adversary emulation,
-and detection metrics, all wired into CI.
+Modbus/TCP, DNP3, OPC UA and S7comm (DNP3, S7comm and OPC UA also decoded in
+Rust for application-layer Sigma rules), multi-platform conversion (Loki,
+OpenSearch, Splunk SPL, Sentinel KQL), installable deployment bundles, Suricata
+functional validation over committed captures and in a Malcolm pipeline, ATT&CK
+for ICS coverage, adversary emulation, and detection metrics, all wired into CI.
 
 Deferred by design (integration phase):
 
-- [ ] Install the bundles into [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab)
-      (Loki ruler) and [OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline)
-      (Suricata / OpenSearch) end to end, recording deployment provenance.
+- [x] Install the Suricata ruleset into
+      [OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline)
+      and run it with Malcolm's own Suricata image and default ruleset over the
+      captures, recording provenance in `deploy/evidence/malcolm/`.
+- [ ] Install the Loki ruler bundle into
+      [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) end to
+      end, recording deployment provenance.
 - [ ] Run emulation against the live lab in CI and publish live metrics.
 - [ ] Add Wazuh as a conversion target.
 

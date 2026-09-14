@@ -54,6 +54,36 @@ capture is silent.
   data PDU, which the captures confirm is offset 17. The Rust decoder and the
   Sigma rules handle the richer application-layer semantics.
 
+## Malcolm pipeline
+
+`make suricata-check` runs the rules in a minimal container. To prove they work
+in the pipeline that consumes them, `tools/malcolm_check.py` installs the
+generated ruleset into a Malcolm installation's custom rules directory and runs
+Malcolm's own Suricata image and configuration over the same captures, with
+Malcolm's full default ruleset enabled.
+
+| Field | Value |
+| :--- | :--- |
+| Malcolm revision | `e60cbd07` |
+| Suricata | 8.0.4 RELEASE (`ghcr.io/idaholab/malcolm/suricata:26.04.1`) |
+| Rules loaded | 59188, 0 failed |
+| Duplicate signatures | 0 |
+| Evidence | `deploy/evidence/malcolm/` (`summary.json`, `alerts.json`) |
+
+All eight captures produce exactly the expected signatures and the benign
+captures are silent, loaded alongside Malcolm's default IT and OT rulesets.
+
+Findings:
+
+- **The SID range collided with Malcolm's bundled rules.** Every native rule
+  used a SID in `1000001-1000028`, which overlaps the NSacyber ELITEWOLF rules
+  Malcolm ships with (`1000000-1001022`), so Suricata rejected all 24 rules as
+  duplicates and failed to load. The ruleset moved to the private
+  `9000000-9000099` range.
+- **Suricata appends to `eve.json`.** Re-running the capture validation merged
+  new alerts with the committed evidence until `tools/suricata_check.py` was
+  changed to start from a clean output directory.
+
 ## Loki ruler
 
 `make loki-check` starts the stack in `tests/loki-stack/`, mounts the generated

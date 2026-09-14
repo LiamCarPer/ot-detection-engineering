@@ -1,0 +1,184 @@
+[
+  {
+    "capture": "modbus_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000001,
+    "signature": "OT Modbus Write Single Register From Unauthorized Control Writer",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "modbus_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000001,
+    "signature": "OT Modbus Write Single Register From Unauthorized Control Writer",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "modbus_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000004,
+    "signature": "OT Modbus Write To Undefined Holding Register",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "modbus_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000002,
+    "signature": "OT Modbus Write Multiple Registers From Unauthorized Control Writer",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "dnp3_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000010,
+    "signature": "OT DNP3 Select Control Operation",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "dnp3_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000011,
+    "signature": "OT DNP3 Operate Control Operation",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "dnp3_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000005,
+    "signature": "OT DNP3 Direct Operate From Unauthorized Master",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "dnp3_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000012,
+    "signature": "OT DNP3 Direct Operate No Ack Control Operation",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "dnp3_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000006,
+    "signature": "OT DNP3 Write From Unauthorized Master",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "dnp3_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000007,
+    "signature": "OT DNP3 Device Attribute Scan (Object Group 0)",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "dnp3_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000013,
+    "signature": "OT DNP3 Unsolicited Responses Disabled",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "dnp3_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000014,
+    "signature": "OT DNP3 Cold Restart Command",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "dnp3_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000015,
+    "signature": "OT DNP3 Warm Restart Command",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "opcua_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000009,
+    "signature": "OT OPC UA Hello From Unapproved Client",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "opcua_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000008,
+    "signature": "OT OPC UA OpenSecureChannel From Unauthorized Client",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "opcua_attack",
+    "dest_ip": "172.31.0.10",
+    "sid": 9000009,
+    "signature": "OT OPC UA Hello From Unapproved Client",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "s7comm_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000020,
+    "signature": "OT S7comm Request Download",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "s7comm_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000021,
+    "signature": "OT S7comm Download Block",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "s7comm_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000022,
+    "signature": "OT S7comm Download Ended",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "s7comm_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000023,
+    "signature": "OT S7comm Start Upload",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "s7comm_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000024,
+    "signature": "OT S7comm Upload",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "s7comm_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000025,
+    "signature": "OT S7comm End Upload",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "s7comm_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000026,
+    "signature": "OT S7comm PLC Control",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "s7comm_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000027,
+    "signature": "OT S7comm PLC Stop",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "s7comm_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000028,
+    "signature": "OT S7comm Write Variable From Unauthorized Client",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "s7comm_attack",
+    "dest_ip": "172.21.0.10",
+    "sid": 9000020,
+    "signature": "OT S7comm Request Download",
+    "src_ip": "172.24.0.10"
+  }
+]
