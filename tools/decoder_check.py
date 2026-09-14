@@ -8,8 +8,9 @@ records which rules fired. It fails if the set of rules that fired differs from
 ``tools/otde/evidence.py``, so a decoder or rule change that breaks the link
 fails the run.
 
-CI builds and tests Rust in a separate step, so the run is captured once and the
-committed evidence is guarded by ``tests/test_decoder_evidence.py``.
+The run needs no SIEM and no container, so CI performs it directly; the
+committed evidence is an offline record and is guarded by
+``tests/test_decoder_evidence.py``.
 
 Usage:
     python tools/decoder_check.py

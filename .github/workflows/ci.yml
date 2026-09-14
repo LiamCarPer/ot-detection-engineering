@@ -46,6 +46,12 @@ jobs:
       - name: Test rules and tooling
         run: pytest
 
+      - name: Prove decoder output fires the Sigma rules
+        run: python tools/decoder_check.py
+
+      - name: Check the decoder evidence is current
+        run: git diff --exit-code deploy/evidence/decoders/summary.json
+
       - name: Convert to Loki
         run: python pipelines/convert.py --backend loki --check
 
