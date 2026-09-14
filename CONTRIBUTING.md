@@ -6,12 +6,21 @@ follow the same lifecycle as the existing rules.
 ## Before opening a pull request
 
 ```bash
-make check     # lint + sigma-cli validation + tests
+make check     # lint + sigma-cli validation + tests + bundle drift + Rust
 make metrics   # regenerate coverage and the metrics report
 ```
 
 Both must pass. CI runs `make check`'s constituent steps and fails on any rule
-that is invalid, untested, untagged, or that fires on the benign baseline.
+that is invalid, untested, untagged, that fires on the benign baseline, or that
+was changed without regenerating the deployment bundle.
+
+After changing a rule, regenerate the bundle and, for a native rule, the
+functional evidence:
+
+```bash
+make deploy           # refresh deploy/
+make suricata-check   # re-run Suricata over the captures (Docker)
+```
 
 ## Conventions
 

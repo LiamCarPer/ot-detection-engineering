@@ -63,6 +63,9 @@ rules/native/**/*.rules┘        │
 Sigma rule ──▶ pipelines/convert.py ──▶ Loki LogQL / OpenSearch PPL /
                                         Splunk SPL / Sentinel KQL + provenance
 
+rules/** ──▶ pipelines/deploy.py ──▶ deploy/ bundle + provenance manifest
+native rules ──▶ tests/captures ──▶ Suricata (container) ──▶ deploy/evidence
+
 DNP3 frames ──▶ tools/dnp3-dpi (Rust) ──▶ ot_ndr/dnp3 events ──▶ Sigma rules
 
 emulation plan ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
@@ -79,7 +82,8 @@ rules/native/         Suricata rules for protocol DPI
 metadata/             Pinned ATT&CK for ICS catalog and JSON Schemas
 tools/otde/           Shared library: discovery, technique extraction, matcher
 tools/dnp3-dpi/       Rust DNP3 decoder emitting normalized ot_ndr/dnp3 events
-pipelines/            Sigma-to-backend conversion with provenance manifest
+pipelines/            Sigma-to-backend conversion and deployment bundle builder
+deploy/               Installable bundle: Loki ruler, Suricata, Splunk, Sentinel
 coverage/             ATT&CK for ICS coverage map generator
 purple/               Adversary emulation plan, runner and recorded observations
 metrics/              Detection-quality computation and benign baseline
@@ -97,6 +101,8 @@ make convert BACKEND=opensearch
 make convert BACKEND=splunk     # Splunk SPL
 make convert BACKEND=sentinel   # Microsoft Sentinel KQL
 make convert-all                # all four target platforms
+make deploy            # build the installable bundle under deploy/
+make suricata-check    # validate the native rules over captures (Docker)
 make metrics           # coverage + emulation replay + metrics report
 ```
 
@@ -119,6 +125,20 @@ author ─▶ validate ─▶ test ─▶ convert ─▶ emulate ─▶ measure
 
 Full instructions are in [docs/DETECTION_LIFECYCLE.md](docs/DETECTION_LIFECYCLE.md).
 
+## Deployment and validation
+
+`make deploy` turns the rules into an installable bundle under [`deploy/`](deploy/):
+Grafana Loki ruler alerts, a Suricata ruleset, Splunk saved searches and Sentinel
+queries, with a provenance manifest and a per-platform runbook
+([deploy/DEPLOY.md](deploy/DEPLOY.md)). `python pipelines/deploy.py --check`
+fails CI when the committed bundle drifts from the rules.
+
+The native rules are functionally validated, not just linted. `make suricata-check`
+runs Suricata in a container over the committed captures in `tests/captures/` and
+refreshes the alert evidence in `deploy/evidence/`. The result is recorded in
+[deploy/report.md](deploy/report.md): every attack capture fires exactly the
+expected signatures and every benign capture is silent.
+
 ## Tooling
 
 - **pySigma / sigma-cli** for parsing, validation and conversion, with the
@@ -131,22 +151,28 @@ Full instructions are in [docs/DETECTION_LIFECYCLE.md](docs/DETECTION_LIFECYCLE.
 - **A dependency-free Rust DNP3 decoder** (`tools/dnp3-dpi`, `#![forbid(unsafe_code)]`)
   that validates CRC-16/DNP and emits the normalized events the DNP3 Sigma rules
   consume.
+- **Suricata functional validation in a container** over generated captures
+  (Scapy), with committed alert evidence, so the native rules are proven to fire
+  rather than only parsed.
 
 ## Status and roadmap
 
 Implemented: detection-as-code pipeline, OT Sigma rules, native protocol DPI for
 Modbus/TCP, DNP3 and OPC UA (DNP3 also decoded in Rust for application-layer
 Sigma rules), multi-platform conversion (Loki, OpenSearch, Splunk SPL, Sentinel
-KQL), ATT&CK for ICS coverage, adversary emulation, and detection metrics, all
-wired into CI.
+KQL), installable deployment bundles, Suricata functional validation over
+committed captures, ATT&CK for ICS coverage, adversary emulation, and detection
+metrics, all wired into CI.
 
 Deferred by design (integration phase):
 
-- [ ] Install generated rules into [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab)
-      (Loki) and [OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline)
-      (Suricata / OpenSearch), recording provenance end to end.
+- [ ] Install the bundles into [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab)
+      (Loki ruler) and [OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline)
+      (Suricata / OpenSearch) end to end, recording deployment provenance.
 - [ ] Run emulation against the live lab in CI and publish live metrics.
 - [ ] Add Wazuh as a conversion target.
+- [ ] Add an OPC UA application-layer decoder (Suricata has no OPC UA parser, so
+      the current rules match the TCP message header only).
 
 Protocol coverage:
 

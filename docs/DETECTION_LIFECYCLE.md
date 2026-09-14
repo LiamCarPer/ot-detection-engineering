@@ -159,7 +159,9 @@ failing tag check, which is the point.
 
 - [ ] Rule has complete metadata and a known ICS technique tag.
 - [ ] Sidecar has at least one positive and one negative case.
-- [ ] `make check` passes.
+- [ ] `make check` passes (including deployment-bundle drift).
 - [ ] Backend conversion succeeds for every target.
+- [ ] `make deploy` run so `deploy/` and its manifest match the rule.
+- [ ] For a native rule, `make suricata-check` refreshed `deploy/evidence/`.
 - [ ] Emulation plan updated if the technique is newly covered.
 - [ ] Metrics regenerated and committed in the pull request description.
