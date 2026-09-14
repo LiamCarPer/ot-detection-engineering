@@ -1,0 +1,42 @@
+[
+  {
+    "alertname": "DNP3_Cold_Or_Warm_Restart_Command",
+    "status": "firing"
+  },
+  {
+    "alertname": "DNP3_Control_Operation_From_Unauthorized_Master",
+    "status": "firing"
+  },
+  {
+    "alertname": "DNP3_Unsolicited_Responses_Disabled",
+    "status": "firing"
+  },
+  {
+    "alertname": "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
+    "status": "firing"
+  },
+  {
+    "alertname": "Modbus_Device_Identification_Scan",
+    "status": "firing"
+  },
+  {
+    "alertname": "Modbus_Write_From_Unauthorized_Control_Writer",
+    "status": "firing"
+  },
+  {
+    "alertname": "Process_Safety_Violation_From_Physics_Aware_Monitor",
+    "status": "firing"
+  },
+  {
+    "alertname": "S7comm_PLC_Control_Or_Stop",
+    "status": "firing"
+  },
+  {
+    "alertname": "S7comm_Program_Download",
+    "status": "firing"
+  },
+  {
+    "alertname": "S7comm_Program_Upload",
+    "status": "firing"
+  }
+]

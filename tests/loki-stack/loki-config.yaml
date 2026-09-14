@@ -1,0 +1,46 @@
+# Minimal single-binary Loki used to prove the generated ruler bundle. The
+# rules are mounted read-only from deploy/loki/rules under the local ruler
+# storage directory.
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9095
+
+common:
+  path_prefix: /loki
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: tsdb
+      object_store: filesystem
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
+
+ruler:
+  storage:
+    type: local
+    local:
+      directory: /etc/loki/rules
+  rule_path: /loki/rules-temp
+  alertmanager_url: http://alertmanager:9093
+  enable_alertmanager_v2: true
+  enable_api: true
+  ring:
+    kvstore:
+      store: inmemory
+  evaluation_interval: 5s
+
+limits_config:
+  allow_structured_metadata: true

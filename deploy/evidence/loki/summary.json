@@ -1,0 +1,27 @@
+{
+  "expected": [
+    "DNP3_Cold_Or_Warm_Restart_Command",
+    "DNP3_Control_Operation_From_Unauthorized_Master",
+    "DNP3_Unsolicited_Responses_Disabled",
+    "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
+    "Modbus_Device_Identification_Scan",
+    "Modbus_Write_From_Unauthorized_Control_Writer",
+    "Process_Safety_Violation_From_Physics_Aware_Monitor",
+    "S7comm_PLC_Control_Or_Stop",
+    "S7comm_Program_Download",
+    "S7comm_Program_Upload"
+  ],
+  "observed": [
+    "DNP3_Cold_Or_Warm_Restart_Command",
+    "DNP3_Control_Operation_From_Unauthorized_Master",
+    "DNP3_Unsolicited_Responses_Disabled",
+    "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
+    "Modbus_Device_Identification_Scan",
+    "Modbus_Write_From_Unauthorized_Control_Writer",
+    "Process_Safety_Violation_From_Physics_Aware_Monitor",
+    "S7comm_PLC_Control_Or_Stop",
+    "S7comm_Program_Download",
+    "S7comm_Program_Upload"
+  ],
+  "benign_false_positives": []
+}

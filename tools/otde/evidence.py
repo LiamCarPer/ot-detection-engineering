@@ -1,8 +1,9 @@
-"""Expected native detections per capture, shared by the runner and the tests.
+"""Expected validation results, shared by the runners and the tests.
 
-The mapping is the specification for the functional validation: run Suricata
-over each capture and confirm exactly these signatures fire on the attack
-captures and nothing fires on the benign captures.
+``EXPECTED_SIDS`` is the specification for the Suricata capture validation: run
+Suricata over each capture and confirm exactly these signatures fire on the
+attack captures and nothing fires on the benign captures. ``EXPECTED_LOKI_ALERTS``
+is the same specification for the Loki ruler smoke test.
 """
 
 from __future__ import annotations
@@ -39,6 +40,20 @@ EXPECTED_SIDS: dict[str, set[int]] = {
         1000027,
         1000028,
     },
+}
+
+
+EXPECTED_LOKI_ALERTS: set[str] = {
+    "Modbus_Write_From_Unauthorized_Control_Writer",
+    "Modbus_Device_Identification_Scan",
+    "DNP3_Control_Operation_From_Unauthorized_Master",
+    "DNP3_Unsolicited_Responses_Disabled",
+    "DNP3_Cold_Or_Warm_Restart_Command",
+    "S7comm_Program_Download",
+    "S7comm_Program_Upload",
+    "S7comm_PLC_Control_Or_Stop",
+    "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
+    "Process_Safety_Violation_From_Physics_Aware_Monitor",
 }
 
 

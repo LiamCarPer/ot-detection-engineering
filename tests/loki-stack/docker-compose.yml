@@ -1,0 +1,43 @@
+name: ot-loki-smoke
+
+services:
+  loki:
+    image: grafana/loki:3.7.7
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "13100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml:ro
+      # With auth disabled the tenant is "fake", so local ruler storage reads
+      # rules from /etc/loki/rules/<tenant>/.
+      - ../../deploy/loki/rules:/etc/loki/rules/fake:ro
+
+  alertmanager:
+    image: prom/alertmanager:v0.34.0
+    command: --config.file=/etc/alertmanager/alertmanager.yml
+    ports:
+      - "19093:9093"
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    depends_on:
+      - webhook
+
+  # Alertmanager delivers here; the payloads are written to ./received, which
+  # the runner reads. It runs in the compose network because the Docker host
+  # firewall blocks container-to-host connections.
+  webhook:
+    image: python:3.12-alpine
+    command: python /app/webhook.py
+    volumes:
+      - ./webhook.py:/app/webhook.py:ro
+      - ./received:/received
+
+  grafana:
+    image: grafana/grafana:13.2.1
+    ports:
+      - "13000:3000"
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+    volumes:
+      - ./grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro

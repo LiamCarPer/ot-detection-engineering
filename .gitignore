@@ -30,3 +30,6 @@ ics-attack.json
 
 # Emulation run output
 purple/results/
+
+# Loki smoke-test webhook output
+tests/loki-stack/received/

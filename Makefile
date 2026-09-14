@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust convert convert-all deploy deploy-check suricata-check coverage emulate-validate metrics check clean
+.PHONY: help setup lint validate test rust convert convert-all deploy deploy-check suricata-check loki-check coverage emulate-validate metrics check clean
 
 help:
 	@echo "Targets:"
@@ -23,6 +23,7 @@ help:
 	@echo "  deploy           Build the installable deployment bundle (deploy/)"
 	@echo "  deploy-check     Fail if the committed bundle has drifted"
 	@echo "  suricata-check   Run Suricata over the captures and refresh evidence (Docker)"
+	@echo "  loki-check       Run the Loki ruler stack and refresh evidence (Docker)"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate the adversary emulation plan"
 	@echo "  metrics          Generate coverage, replay emulation, compute metrics"
@@ -70,6 +71,9 @@ deploy-check: setup
 suricata-check: setup deploy
 	$(PY) tools/make_captures.py
 	$(PY) tools/suricata_check.py
+
+loki-check: setup deploy
+	$(PY) tools/loki_check.py
 
 coverage: setup
 	$(PY) coverage/generate_coverage.py
