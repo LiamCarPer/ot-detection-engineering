@@ -34,12 +34,11 @@ from generate_coverage import build_report  # noqa: E402
 from sigma.rule import SigmaRule  # noqa: E402
 
 from tools.otde.matcher import match  # noqa: E402
-from tools.otde.rules import REPO_ROOT as _REPO_ROOT  # noqa: E402
 from tools.otde.rules import load_cases, sigma_rule_paths  # noqa: E402
 
-DEFAULT_BASELINE = _REPO_ROOT / "metrics" / "baseline" / "benign-events.jsonl"
-DEFAULT_EMULATION = _REPO_ROOT / "purple" / "results" / "emulation_results.json"
-DEFAULT_OUT = _REPO_ROOT / "metrics" / "out"
+DEFAULT_BASELINE = REPO_ROOT / "metrics" / "baseline" / "benign-events.jsonl"
+DEFAULT_EMULATION = REPO_ROOT / "purple" / "results" / "emulation_results.json"
+DEFAULT_OUT = REPO_ROOT / "metrics" / "out"
 
 
 def _ratio(numerator: int, denominator: int) -> float | None:
@@ -76,7 +75,7 @@ def fixture_metrics() -> tuple[list[dict], dict]:
             totals[key] += counts[key]
         per_rule.append(
             {
-                "rule": rule_path.relative_to(_REPO_ROOT).as_posix(),
+                "rule": rule_path.relative_to(REPO_ROOT).as_posix(),
                 "title": rule.title,
                 **counts,
                 "precision": _ratio(counts["tp"], counts["tp"] + counts["fp"]),
@@ -95,7 +94,7 @@ def fixture_metrics() -> tuple[list[dict], dict]:
 def baseline_metrics(events: list[dict]) -> dict:
     rules = [
         (
-            path.relative_to(_REPO_ROOT).as_posix(),
+            path.relative_to(REPO_ROOT).as_posix(),
             SigmaRule.from_yaml(path.read_text(encoding="utf-8")),
         )
         for path in sigma_rule_paths()

@@ -38,12 +38,11 @@ if str(REPO_ROOT) not in sys.path:
 import yaml  # noqa: E402
 from jsonschema import Draft202012Validator  # noqa: E402
 
-from tools.otde.rules import REPO_ROOT as _REPO_ROOT  # noqa: E402
 from tools.otde.rules import technique_ids, techniques_for  # noqa: E402
 
-DEFAULT_PLAN = _REPO_ROOT / "purple" / "emulation" / "emulation-plan.yaml"
-DEFAULT_SCHEMA = _REPO_ROOT / "purple" / "emulation" / "plan.schema.json"
-DEFAULT_OUT = _REPO_ROOT / "purple" / "results"
+DEFAULT_PLAN = REPO_ROOT / "purple" / "emulation" / "emulation-plan.yaml"
+DEFAULT_SCHEMA = REPO_ROOT / "purple" / "emulation" / "plan.schema.json"
+DEFAULT_OUT = REPO_ROOT / "purple" / "results"
 
 
 def load_plan(path: Path = DEFAULT_PLAN) -> dict:
@@ -74,7 +73,7 @@ def validate_plan(plan: dict, schema_path: Path = DEFAULT_SCHEMA) -> list[str]:
             technique = expectation["technique"]
             if technique not in known:
                 problems.append(f"{step['id']}: unknown technique {technique}")
-            rule_path = _REPO_ROOT / expectation["rule"]
+            rule_path = REPO_ROOT / expectation["rule"]
             if not rule_path.exists():
                 problems.append(f"{step['id']}: rule not found: {expectation['rule']}")
                 continue

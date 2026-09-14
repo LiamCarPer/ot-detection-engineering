@@ -46,3 +46,4 @@ ignored. Output is one JSON event per decoded application message:
 - **CRC-16/DNP** is pinned to the standard check value `crc16(b"123456789") == 0xEA82`.
 - The crate is a library plus a thin CLI, so the parser can be embedded in a
   collector that forwards events to the SIEM.
+- Part of the `tools/` Cargo workspace alongside `s7comm-dpi`.

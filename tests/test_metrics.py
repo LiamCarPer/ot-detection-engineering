@@ -12,8 +12,6 @@ sys.path.insert(0, str(REPO_ROOT / "coverage"))
 from compute import baseline_metrics, fixture_metrics, load_baseline, render_markdown  # noqa: E402
 from generate_coverage import build_report  # noqa: E402
 
-from tools.otde.rules import REPO_ROOT as _REPO_ROOT  # noqa: E402
-
 
 def test_fixture_aggregate_matches_per_rule() -> None:
     per_rule, aggregate = fixture_metrics()
@@ -31,7 +29,7 @@ def test_fixture_metrics_are_consistent() -> None:
 
 
 def test_no_rule_fires_on_the_benign_baseline() -> None:
-    events = load_baseline(_REPO_ROOT / "metrics" / "baseline" / "benign-events.jsonl")
+    events = load_baseline(REPO_ROOT / "metrics" / "baseline" / "benign-events.jsonl")
     result = baseline_metrics(events)
     assert result["events_total"] == len(events)
     assert result["false_positive_events"] == 0, result["details"]
