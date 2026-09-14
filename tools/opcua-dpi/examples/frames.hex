@@ -1,0 +1,11 @@
+# Example OPC UA messages for the opcua-dpi decoder.
+
+# HEL (Hello) — header only in this example.
+48454C4608000000
+
+# OPN (OpenSecureChannel) with SecurityPolicy None.
+# MSG: secure channel 1, policy "None", null certificate/thumbprint, sequence 1.
+4F504E462400000001000000040000004E6F6E65FFFFFFFFFFFFFFFF0100000001000000
+
+# MSG carrying a WriteRequest (service NodeId 673, four-byte encoding).
+4D53474620000000010000000100000002000000020000000100A10201000000

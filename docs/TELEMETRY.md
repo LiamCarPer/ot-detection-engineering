@@ -112,3 +112,26 @@ S7comm carries no source identity, so the "unauthorized write" detection is
 expressed at the network layer against the client IP, while the
 protocol-intrinsic detections (program download/upload, mode change) run over
 these events.
+
+## `ot_ndr` / `opcua`
+
+Decoded OPC UA messages, produced by [`tools/opcua-dpi`](../tools/opcua-dpi)
+from TCP/4840 traffic.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `timestamp` | string | ISO 8601 UTC, added by the collector. |
+| `message_type` | string | `HEL`, `ACK`, `ERR`, `RHE`, `OPN`, `MSG` or `CLO`. |
+| `chunk_type` | string | `F` (final), `C` (intermediate) or `A` (abort). |
+| `secure_channel_id` | integer | Secure channel id, on OPN/MSG/CLO. |
+| `security_policy_uri` | string | Security policy from OPN (for example `None`). |
+| `token_id` | integer | Symmetric token id, on MSG/CLO. |
+| `sequence_number` | integer | Sequence number. |
+| `request_id` | integer | Request id. |
+| `service_id` | integer | Service NodeId identifier (for example `673` WriteRequest). |
+| `opcua_service` | string | Service name, present only on plaintext bodies. |
+| `direction` | string | `request` or `response`, derived from the service name. |
+
+The service is only present when the body is not encrypted. `Sign` keeps the body
+in clear text; `SignAndEncrypt` does not, so those messages carry the header
+fields with no `opcua_service`.

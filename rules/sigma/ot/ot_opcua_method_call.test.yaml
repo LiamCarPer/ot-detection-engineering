@@ -1,0 +1,35 @@
+cases:
+  - name: method call request
+    expect: match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:10:00Z"
+      message_type: MSG
+      secure_channel_id: 1
+      request_id: 4
+      service_id: 712
+      opcua_service: CallRequest
+      direction: request
+
+  - name: read request is not a method call
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:10:01Z"
+      message_type: MSG
+      service_id: 631
+      opcua_service: ReadRequest
+      direction: request
+
+  - name: call response is not a call request
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:10:02Z"
+      message_type: MSG
+      service_id: 715
+      opcua_service: CallResponse
+      direction: response

@@ -1,0 +1,45 @@
+cases:
+  - name: write request
+    expect: match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:00:00Z"
+      message_type: MSG
+      chunk_type: F
+      secure_channel_id: 1
+      request_id: 2
+      service_id: 673
+      opcua_service: WriteRequest
+      direction: request
+
+  - name: read request is not a write
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:00:01Z"
+      message_type: MSG
+      service_id: 631
+      opcua_service: ReadRequest
+      direction: request
+
+  - name: write response is not a write request
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:00:02Z"
+      message_type: MSG
+      service_id: 676
+      opcua_service: WriteResponse
+      direction: response
+
+  - name: hello has no service
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:00:03Z"
+      message_type: HEL
+      chunk_type: F

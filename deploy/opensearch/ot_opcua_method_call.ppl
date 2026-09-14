@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_opcua_method_call.yml
+source=ot_ndr-opcua-* | where direction="request" AND opcua_service="CallRequest"

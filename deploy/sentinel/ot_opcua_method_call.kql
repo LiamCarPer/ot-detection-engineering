@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_opcua_method_call.yml
+direction =~ "request" and opcua_service =~ "CallRequest"

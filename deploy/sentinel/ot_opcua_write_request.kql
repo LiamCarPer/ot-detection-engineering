@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_opcua_write_request.yml
+direction =~ "request" and opcua_service =~ "WriteRequest"

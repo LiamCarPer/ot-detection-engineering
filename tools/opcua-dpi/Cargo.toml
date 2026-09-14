@@ -1,0 +1,15 @@
+[package]
+name = "opcua-dpi"
+version = "0.1.0"
+edition = "2021"
+description = "OPC UA deep packet inspection: decode the TCP message and secure-conversation headers and the service NodeId, and emit normalized OT detection events."
+license = "MIT"
+repository = "https://github.com/LiamCarPer/ot-detection-engineering"
+
+[lib]
+name = "opcua_dpi"
+path = "src/lib.rs"
+
+[[bin]]
+name = "opcua-dpi"
+path = "src/main.rs"

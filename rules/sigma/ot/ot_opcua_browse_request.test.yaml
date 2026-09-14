@@ -1,0 +1,45 @@
+cases:
+  - name: browse request
+    expect: match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:20:00Z"
+      message_type: MSG
+      secure_channel_id: 1
+      service_id: 527
+      opcua_service: BrowseRequest
+      direction: request
+
+  - name: browse next request
+    expect: match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:20:01Z"
+      message_type: MSG
+      service_id: 533
+      opcua_service: BrowseNextRequest
+      direction: request
+
+  - name: read request is not a browse
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:20:02Z"
+      message_type: MSG
+      service_id: 631
+      opcua_service: ReadRequest
+      direction: request
+
+  - name: browse response is not a browse request
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:20:03Z"
+      message_type: MSG
+      service_id: 530
+      opcua_service: BrowseResponse
+      direction: response

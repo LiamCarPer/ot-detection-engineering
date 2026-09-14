@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_opcua_browse_request.yml
+direction =~ "request" and (opcua_service in~ ("BrowseRequest", "BrowseNextRequest"))

@@ -1,0 +1,35 @@
+title: OPC UA Address Space Browse
+id: 71de3736-4142-435e-9f87-70e5c08bd872
+status: experimental
+description: |
+  Detects an OPC UA Browse or BrowseNext request. Browsing walks the address
+  space to enumerate nodes, which is how an attacker discovers the tags and
+  structures of a controller before acting on them.
+
+  Operates on decoded OPC UA events (see docs/TELEMETRY.md) produced by
+  tools/opcua-dpi. Only plaintext (None/Sign) channels expose the service, so
+  this rule does not see SignAndEncrypt traffic.
+references:
+  - https://attack.mitre.org/techniques/T0888/
+author: Liam Carvajal
+date: 2026-09-14
+logsource:
+  product: ot_ndr
+  service: opcua
+detection:
+  selection_direction:
+    direction: request
+  selection_service:
+    opcua_service:
+      - BrowseRequest
+      - BrowseNextRequest
+  condition: selection_direction and selection_service
+fields:
+  - secure_channel_id
+  - request_id
+falsepositives:
+  - An OPC UA client populating its address space view on connect
+  - An authorized asset inventory or commissioning tool
+level: medium
+tags:
+  - attack.t0888

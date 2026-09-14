@@ -1,0 +1,30 @@
+# source: rules/sigma/ot/ot_opcua_write_request.yml
+groups:
+- name: ot_opcua_write_request
+  rules:
+  - alert: OPC_UA_Write_Request
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects an OPC UA WriteRequest. Writing node values over OPC UA
+        changes the
+
+        data the control system acts on; a write from an unexpected client is either
+        a
+
+        compromised host or an unauthorized engineering change.
+
+
+        Operates on decoded OPC UA events (see docs/TELEMETRY.md) produced by
+
+        tools/opcua-dpi. Only plaintext (None/Sign) channels expose the service, so
+
+        this rule does not see SignAndEncrypt traffic.
+
+        '
+      summary: OPC UA Write Request
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      opcua_service=~`(?i)^WriteRequest$` | line_format "{{.secure_channel_id}} {{.request_id}}
+      {{.service_id}}" [1m])) or vector(0) > 0
+    labels:
+      severity: high
+

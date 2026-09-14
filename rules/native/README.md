@@ -19,7 +19,10 @@ The `suricata/` directory contains deep packet inspection rules per protocol:
 
 DNP3 control operations are also detected at the application layer:
 [tools/dnp3-dpi](../../tools/dnp3-dpi) decodes frames into normalized events and
-the `ot_dnp3_*` Sigma rules apply the master allowlist on top.
+the `ot_dnp3_*` Sigma rules apply the master allowlist on top. OPC UA works the
+same way: [tools/opcua-dpi](../../tools/opcua-dpi) decodes the service NodeId
+from plaintext channels and the `ot_opcua_*` Sigma rules match write, method
+call and browse requests.
 
 They are governed by the same conventions as the Sigma rules:
 

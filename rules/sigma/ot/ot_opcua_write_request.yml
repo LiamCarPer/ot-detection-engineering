@@ -1,0 +1,33 @@
+title: OPC UA Write Request
+id: be36ecf4-e509-4683-a287-d53d1315a7a0
+status: experimental
+description: |
+  Detects an OPC UA WriteRequest. Writing node values over OPC UA changes the
+  data the control system acts on; a write from an unexpected client is either a
+  compromised host or an unauthorized engineering change.
+
+  Operates on decoded OPC UA events (see docs/TELEMETRY.md) produced by
+  tools/opcua-dpi. Only plaintext (None/Sign) channels expose the service, so
+  this rule does not see SignAndEncrypt traffic.
+references:
+  - https://attack.mitre.org/techniques/T1692/001/
+author: Liam Carvajal
+date: 2026-09-14
+logsource:
+  product: ot_ndr
+  service: opcua
+detection:
+  selection_direction:
+    direction: request
+  selection_service:
+    opcua_service: WriteRequest
+  condition: selection_direction and selection_service
+fields:
+  - secure_channel_id
+  - request_id
+  - service_id
+falsepositives:
+  - An authorized OPC UA client performing a planned setpoint change
+level: high
+tags:
+  - attack.t1692.001

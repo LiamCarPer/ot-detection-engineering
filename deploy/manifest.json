@@ -37,6 +37,24 @@
       "backend": "loki"
     },
     {
+      "source": "rules/sigma/ot/ot_opcua_browse_request.yml",
+      "source_sha256": "0d39dbafe6247fb0bd5ccd0564735379055a41d86ee01ea63e024248e922b1d3",
+      "target": "loki/rules/ot_opcua_browse_request.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_method_call.yml",
+      "source_sha256": "b8abb791b46c503f1f8fae0a3c203c2971551f229a9c9226b976d56c9a1f5737",
+      "target": "loki/rules/ot_opcua_method_call.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_write_request.yml",
+      "source_sha256": "5eb32cb144bf9b0560a0ea72228060e55c01e15440db81ac991ae9f1c7c4a1da",
+      "target": "loki/rules/ot_opcua_write_request.yaml",
+      "backend": "loki"
+    },
+    {
       "source": "rules/sigma/ot/ot_process_safety_violation.yml",
       "source_sha256": "a5daeaf78aa62d584dab17fc1864fbe0f11557fe486327b29813ac0cb8fce78d",
       "target": "loki/rules/ot_process_safety_violation.yaml",
@@ -94,6 +112,24 @@
       "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
       "source_sha256": "59a70fa633ff61e11bd240a498c321557e5f0580d0e7304fdf0f27b39e742ea5",
       "target": "opensearch/ot_modbus_unauthorized_write.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_browse_request.yml",
+      "source_sha256": "0d39dbafe6247fb0bd5ccd0564735379055a41d86ee01ea63e024248e922b1d3",
+      "target": "opensearch/ot_opcua_browse_request.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_method_call.yml",
+      "source_sha256": "b8abb791b46c503f1f8fae0a3c203c2971551f229a9c9226b976d56c9a1f5737",
+      "target": "opensearch/ot_opcua_method_call.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_write_request.yml",
+      "source_sha256": "5eb32cb144bf9b0560a0ea72228060e55c01e15440db81ac991ae9f1c7c4a1da",
+      "target": "opensearch/ot_opcua_write_request.ppl",
       "backend": "opensearch"
     },
     {
@@ -157,6 +193,24 @@
       "backend": "sentinel"
     },
     {
+      "source": "rules/sigma/ot/ot_opcua_browse_request.yml",
+      "source_sha256": "0d39dbafe6247fb0bd5ccd0564735379055a41d86ee01ea63e024248e922b1d3",
+      "target": "sentinel/ot_opcua_browse_request.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_method_call.yml",
+      "source_sha256": "b8abb791b46c503f1f8fae0a3c203c2971551f229a9c9226b976d56c9a1f5737",
+      "target": "sentinel/ot_opcua_method_call.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_write_request.yml",
+      "source_sha256": "5eb32cb144bf9b0560a0ea72228060e55c01e15440db81ac991ae9f1c7c4a1da",
+      "target": "sentinel/ot_opcua_write_request.kql",
+      "backend": "sentinel"
+    },
+    {
       "source": "rules/sigma/ot/ot_process_safety_violation.yml",
       "source_sha256": "a5daeaf78aa62d584dab17fc1864fbe0f11557fe486327b29813ac0cb8fce78d",
       "target": "sentinel/ot_process_safety_violation.kql",
@@ -214,6 +268,24 @@
       "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
       "source_sha256": "59a70fa633ff61e11bd240a498c321557e5f0580d0e7304fdf0f27b39e742ea5",
       "target": "splunk/ot_modbus_unauthorized_write.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_browse_request.yml",
+      "source_sha256": "0d39dbafe6247fb0bd5ccd0564735379055a41d86ee01ea63e024248e922b1d3",
+      "target": "splunk/ot_opcua_browse_request.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_method_call.yml",
+      "source_sha256": "b8abb791b46c503f1f8fae0a3c203c2971551f229a9c9226b976d56c9a1f5737",
+      "target": "splunk/ot_opcua_method_call.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_write_request.yml",
+      "source_sha256": "5eb32cb144bf9b0560a0ea72228060e55c01e15440db81ac991ae9f1c7c4a1da",
+      "target": "splunk/ot_opcua_write_request.conf",
       "backend": "splunk"
     },
     {

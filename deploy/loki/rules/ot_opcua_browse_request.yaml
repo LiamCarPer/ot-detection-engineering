@@ -1,0 +1,30 @@
+# source: rules/sigma/ot/ot_opcua_browse_request.yml
+groups:
+- name: ot_opcua_browse_request
+  rules:
+  - alert: OPC_UA_Address_Space_Browse
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects an OPC UA Browse or BrowseNext request. Browsing walks
+        the address
+
+        space to enumerate nodes, which is how an attacker discovers the tags and
+
+        structures of a controller before acting on them.
+
+
+        Operates on decoded OPC UA events (see docs/TELEMETRY.md) produced by
+
+        tools/opcua-dpi. Only plaintext (None/Sign) channels expose the service, so
+
+        this rule does not see SignAndEncrypt traffic.
+
+        '
+      summary: OPC UA Address Space Browse
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      (opcua_service=~`(?i)^BrowseRequest$` or opcua_service=~`(?i)^BrowseNextRequest$`)
+      | line_format "{{.secure_channel_id}} {{.request_id}}" [1m])) or vector(0) >
+      0
+    labels:
+      severity: medium
+

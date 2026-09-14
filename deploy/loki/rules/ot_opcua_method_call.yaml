@@ -1,0 +1,29 @@
+# source: rules/sigma/ot/ot_opcua_method_call.yml
+groups:
+- name: ot_opcua_method_call
+  rules:
+  - alert: OPC_UA_Method_Call_Request
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects an OPC UA CallRequest, which invokes a method on the server.
+        Methods
+
+        can start processes, change configuration or run vendor routines, so a call
+
+        from an unexpected client is execution through the OPC UA API.
+
+
+        Operates on decoded OPC UA events (see docs/TELEMETRY.md) produced by
+
+        tools/opcua-dpi. Only plaintext (None/Sign) channels expose the service, so
+
+        this rule does not see SignAndEncrypt traffic.
+
+        '
+      summary: OPC UA Method Call Request
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      opcua_service=~`(?i)^CallRequest$` | line_format "{{.secure_channel_id}} {{.request_id}}
+      {{.service_id}}" [1m])) or vector(0) > 0
+    labels:
+      severity: high
+

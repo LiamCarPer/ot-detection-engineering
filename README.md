@@ -24,7 +24,7 @@ Kept in sync with `make metrics` by `tests/test_readme.py`; the full report is a
 
 | Metric | Value |
 | :--- | ---: |
-| ATT&CK for ICS coverage | 10 / 97 techniques (10.3%) |
+| ATT&CK for ICS coverage | 11 / 97 techniques (11.3%) |
 | Rule precision (labeled fixtures) | 1.0 |
 | Rule recall (labeled fixtures) | 1.0 |
 | Baseline false-positive rate | 0.0 |
@@ -43,7 +43,7 @@ recombined through shared metadata, testing and metrics.
 | Content | Format | Rationale |
 | :--- | :--- | :--- |
 | Log-based detections (firewall, NDR alerts, application and process events) | Sigma | Portable, converted by pySigma, testable offline. |
-| Protocol DPI (Modbus and DNP3 function codes, S7comm program transfer, OPC UA sessions) | Native Suricata, plus Rust decoders for DNP3 and S7comm application semantics | Sigma cannot express industrial protocol semantics. |
+| Protocol DPI (Modbus and DNP3 function codes, S7comm program transfer, OPC UA services) | Native Suricata, plus Rust decoders for DNP3, S7comm and OPC UA application semantics | Sigma cannot express industrial protocol semantics. |
 
 Every rule, regardless of format, carries an ATT&CK for ICS technique, is
 covered by labeled fixtures, and is included in the generated coverage map.
@@ -68,6 +68,7 @@ native rules ──▶ tests/captures ──▶ Suricata (container) ──▶ d
 
 DNP3 frames   ──▶ tools/dnp3-dpi (Rust)   ──▶ ot_ndr/dnp3 events   ──▶ Sigma rules
 S7comm frames ──▶ tools/s7comm-dpi (Rust) ──▶ ot_ndr/s7comm events ──▶ Sigma rules
+OPC UA msgs   ──▶ tools/opcua-dpi (Rust)  ──▶ ot_ndr/opcua events  ──▶ Sigma rules
 
 emulation plan ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
 ```
@@ -84,6 +85,7 @@ metadata/             Pinned ATT&CK for ICS catalog and JSON Schemas
 tools/otde/           Shared library: discovery, technique extraction, matcher
 tools/dnp3-dpi/       Rust DNP3 decoder emitting normalized ot_ndr/dnp3 events
 tools/s7comm-dpi/     Rust S7comm decoder emitting normalized ot_ndr/s7comm events
+tools/opcua-dpi/      Rust OPC UA decoder emitting normalized ot_ndr/opcua events
 pipelines/            Sigma-to-backend conversion and deployment bundle builder
 deploy/               Installable bundle: Loki ruler, Suricata, Splunk, Sentinel
 coverage/             ATT&CK for ICS coverage map generator
@@ -143,7 +145,7 @@ runs Suricata in a container over the committed captures in `tests/captures/`,
 and `make loki-check` runs the generated Loki ruler rules in a full stack (Loki,
 Alertmanager, Grafana), each refreshing evidence in `deploy/evidence/`. The
 results are recorded in [deploy/report.md](deploy/report.md): every attack
-capture fires exactly the expected signatures, all ten Loki ruler alerts fire,
+capture fires exactly the expected signatures, every Loki ruler alert fires,
 and no benign input produces an alert.
 
 ## Tooling
@@ -155,10 +157,10 @@ and no benign input produces an alert.
   collection by `scripts/build_attack_catalog.py`.
 - **A pySigma-based validation matcher** that interprets pySigma's parsed rule
   model and raises on unsupported features instead of passing silently.
-- **Dependency-free Rust protocol decoders** (`tools/dnp3-dpi` and
-  `tools/s7comm-dpi`, `#![forbid(unsafe_code)]`) that validate framing (CRC-16/DNP
-  for DNP3) and emit the normalized events the DNP3 and S7comm Sigma rules
-  consume.
+- **Dependency-free Rust protocol decoders** (`tools/dnp3-dpi`,
+  `tools/s7comm-dpi` and `tools/opcua-dpi`, `#![forbid(unsafe_code)]`) that
+  validate framing (CRC-16/DNP for DNP3) and emit the normalized events the DNP3,
+  S7comm and OPC UA Sigma rules consume.
 - **Suricata functional validation in a container** over generated captures
   (Scapy), with committed alert evidence, so the native rules are proven to fire
   rather than only parsed.
@@ -179,8 +181,6 @@ Deferred by design (integration phase):
       (Suricata / OpenSearch) end to end, recording deployment provenance.
 - [ ] Run emulation against the live lab in CI and publish live metrics.
 - [ ] Add Wazuh as a conversion target.
-- [ ] Add an OPC UA application-layer decoder (Suricata has no OPC UA parser, so
-      the current rules match the TCP message header only).
 
 Protocol coverage:
 
@@ -190,7 +190,8 @@ Protocol coverage:
 - [x] S7comm — native Suricata function-code DPI (program download/upload, PLC
       stop, unauthorized write), plus a Rust application-layer decoder with
       Sigma rules for program transfer and mode changes.
-- [x] OPC UA — native Suricata TCP message-header DPI.
+- [x] OPC UA — native Suricata TCP message-header DPI, plus a Rust service
+      decoder with Sigma rules for plaintext (None/Sign) channels.
 - [ ] PROFINET (layer-2 / DCE-RPC; needs non-IP rule hooks).
 
 ## Related projects
