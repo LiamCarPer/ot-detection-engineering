@@ -24,7 +24,7 @@ from a genuine run against
 
 | Metric | Value |
 | :--- | ---: |
-| ATT&CK for ICS coverage | 7 / 97 techniques (7.2%) |
+| ATT&CK for ICS coverage | 10 / 97 techniques (10.3%) |
 | Rule precision (labeled fixtures) | 1.0 |
 | Rule recall (labeled fixtures) | 1.0 |
 | Baseline false-positive rate | 0.0 |
@@ -43,7 +43,7 @@ recombined through shared metadata, testing and metrics.
 | Content | Format | Rationale |
 | :--- | :--- | :--- |
 | Log-based detections (firewall, NDR alerts, application and process events) | Sigma | Portable, converted by pySigma, testable offline. |
-| Protocol DPI (Modbus function codes, DNP3 control operations, OPC UA sessions, exception bursts) | Native Suricata, plus a Rust decoder for DNP3 application semantics | Sigma cannot express industrial protocol semantics. |
+| Protocol DPI (Modbus and DNP3 function codes, S7comm program transfer, OPC UA sessions) | Native Suricata, plus Rust decoders for DNP3 and S7comm application semantics | Sigma cannot express industrial protocol semantics. |
 
 Every rule, regardless of format, carries an ATT&CK for ICS technique, is
 covered by labeled fixtures, and is included in the generated coverage map.
@@ -67,6 +67,7 @@ rules/** ──▶ pipelines/deploy.py ──▶ deploy/ bundle + provenance man
 native rules ──▶ tests/captures ──▶ Suricata (container) ──▶ deploy/evidence
 
 DNP3 frames ──▶ tools/dnp3-dpi (Rust) ──▶ ot_ndr/dnp3 events ──▶ Sigma rules
+S7comm frames ─▶ tools/s7comm-dpi (Rust) ─▶ ot_ndr/s7comm events ─▶ Sigma rules
 
 emulation plan ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
 ```
@@ -82,6 +83,7 @@ rules/native/         Suricata rules for protocol DPI
 metadata/             Pinned ATT&CK for ICS catalog and JSON Schemas
 tools/otde/           Shared library: discovery, technique extraction, matcher
 tools/dnp3-dpi/       Rust DNP3 decoder emitting normalized ot_ndr/dnp3 events
+tools/s7comm-dpi/     Rust S7comm decoder emitting normalized ot_ndr/s7comm events
 pipelines/            Sigma-to-backend conversion and deployment bundle builder
 deploy/               Installable bundle: Loki ruler, Suricata, Splunk, Sentinel
 coverage/             ATT&CK for ICS coverage map generator
@@ -148,8 +150,9 @@ expected signatures and every benign capture is silent.
   collection by `scripts/build_attack_catalog.py`.
 - **A pySigma-based validation matcher** that interprets pySigma's parsed rule
   model and raises on unsupported features instead of passing silently.
-- **A dependency-free Rust DNP3 decoder** (`tools/dnp3-dpi`, `#![forbid(unsafe_code)]`)
-  that validates CRC-16/DNP and emits the normalized events the DNP3 Sigma rules
+- **Dependency-free Rust protocol decoders** (`tools/dnp3-dpi` and
+  `tools/s7comm-dpi`, `#![forbid(unsafe_code)]`) that validate framing (CRC-16/DNP
+  for DNP3) and emit the normalized events the DNP3 and S7comm Sigma rules
   consume.
 - **Suricata functional validation in a container** over generated captures
   (Scapy), with committed alert evidence, so the native rules are proven to fire
@@ -158,11 +161,11 @@ expected signatures and every benign capture is silent.
 ## Status and roadmap
 
 Implemented: detection-as-code pipeline, OT Sigma rules, native protocol DPI for
-Modbus/TCP, DNP3 and OPC UA (DNP3 also decoded in Rust for application-layer
-Sigma rules), multi-platform conversion (Loki, OpenSearch, Splunk SPL, Sentinel
-KQL), installable deployment bundles, Suricata functional validation over
-committed captures, ATT&CK for ICS coverage, adversary emulation, and detection
-metrics, all wired into CI.
+Modbus/TCP, DNP3, OPC UA and S7comm (DNP3 and S7comm also decoded in Rust for
+application-layer Sigma rules), multi-platform conversion (Loki, OpenSearch,
+Splunk SPL, Sentinel KQL), installable deployment bundles, Suricata functional
+validation over committed captures, ATT&CK for ICS coverage, adversary emulation,
+and detection metrics, all wired into CI.
 
 Deferred by design (integration phase):
 
@@ -179,6 +182,9 @@ Protocol coverage:
 - [x] Modbus/TCP — native Suricata function-code DPI.
 - [x] DNP3 — native Suricata function/object DPI, plus a Rust application-layer
       decoder with Sigma rules over the decoded events.
+- [x] S7comm — native Suricata function-code DPI (program download/upload, PLC
+      stop, unauthorized write), plus a Rust application-layer decoder with
+      Sigma rules for program transfer and mode changes.
 - [x] OPC UA — native Suricata TCP message-header DPI.
 - [ ] PROFINET (layer-2 / DCE-RPC; needs non-IP rule hooks).
 
