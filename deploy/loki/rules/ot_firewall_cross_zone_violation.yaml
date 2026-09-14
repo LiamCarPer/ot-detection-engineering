@@ -30,4 +30,3 @@ groups:
       {{.dst_ip}} {{.dst_port}} {{.proto}}" [1m])) or vector(0) > 0
     labels:
       severity: high
-

@@ -32,4 +32,3 @@ groups:
       {{.tank_level_pct}} {{.actor}}" [1m])) or vector(0) > 0
     labels:
       severity: critical
-

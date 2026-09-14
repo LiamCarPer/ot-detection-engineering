@@ -73,7 +73,7 @@ def build_artifacts(backend_name: str, rules_dir: Path) -> tuple[dict[str, str],
         relative = _relative(rule_path)
         artifact_name = f"{rule_path.stem}.{extension}"
         header = f"# source: {relative}\n# backend: {backend_name}\n"
-        artifacts[artifact_name] = header + "\n".join(queries) + "\n"
+        artifacts[artifact_name] = header + "\n".join(queries).rstrip("\n") + "\n"
         manifest.append(
             {
                 "source": relative,

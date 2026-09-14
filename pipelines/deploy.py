@@ -107,7 +107,7 @@ def build_bundle() -> dict[str, str]:
                 queries = [_rename_ruler_group(query, rule_path.stem) for query in queries]
             relative = rule_path.relative_to(REPO_ROOT).as_posix()
             artifact = f"{directory}/{rule_path.stem}.{extension}"
-            body = f"{comment} source: {relative}\n" + "\n".join(queries) + "\n"
+            body = f"{comment} source: {relative}\n" + "\n".join(queries).rstrip("\n") + "\n"
             bundle[artifact] = body
             manifest.append(
                 {

@@ -23,4 +23,3 @@ groups:
       {{.function_name}}" [1m])) or vector(0) > 0
     labels:
       severity: high
-

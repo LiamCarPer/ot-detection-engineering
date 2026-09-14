@@ -32,4 +32,3 @@ groups:
       {{.register}} {{.unit_id}}" [1m])) or vector(0) > 0
     labels:
       severity: high
-

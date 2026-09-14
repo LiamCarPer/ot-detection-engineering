@@ -26,4 +26,3 @@ groups:
       [1m])) or vector(0) > 0
     labels:
       severity: high
-

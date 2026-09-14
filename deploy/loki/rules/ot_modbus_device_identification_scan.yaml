@@ -27,4 +27,3 @@ groups:
       {{.function_code}} {{.unit_id}}" [1m])) or vector(0) > 0
     labels:
       severity: medium
-

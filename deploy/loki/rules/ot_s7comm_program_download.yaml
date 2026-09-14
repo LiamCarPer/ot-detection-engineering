@@ -27,4 +27,3 @@ groups:
       {{.pdu_reference}} {{.parameter_length}}" [1m])) or vector(0) > 0
     labels:
       severity: high
-
