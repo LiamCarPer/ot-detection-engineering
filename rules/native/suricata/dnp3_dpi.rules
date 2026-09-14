@@ -1,0 +1,20 @@
+# DNP3 deep packet inspection rules.
+#
+# DNP3 is a request/response protocol used by utilities (electric, water, oil and
+# gas) for SCADA telemetry. Sigma cannot express DNP3 function codes or object
+# headers, so these detections are authored natively for Suricata's DNP3 parser.
+#
+# Conventions (see rules/native/README.md):
+#   - sid range 1000000-1000999 is reserved for this repository
+#   - metadata carries attack_ics <technique> for the generated coverage map
+#   - the approved-master allowlist mirrors the Modbus authorised-writer set
+#
+# Approved DNP3 masters: 172.21.0.20 (HMI control interface) and
+# 172.22.0.10 (HMI supervisory interface). Outstations live in 172.31.0.0/24 on
+# the DNP3 port (20000).
+
+alert dnp3 [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Direct Operate From Unauthorized Master"; flow:to_server,established; dnp3_func:direct_operate; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000005; rev:1;)
+
+alert dnp3 [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Write From Unauthorized Master"; flow:to_server,established; dnp3_func:write; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000006; rev:1;)
+
+alert dnp3 any any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Device Attribute Scan (Object Group 0)"; flow:to_server,established; dnp3_func:read; dnp3_obj:0,0; classtype:network-scan; metadata: attack_ics T0888, detection_status experimental; reference:url,attack.mitre.org/techniques/T0888/; sid:1000007; rev:1;)

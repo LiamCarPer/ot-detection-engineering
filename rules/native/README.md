@@ -8,7 +8,14 @@ for the platform that understands the protocol.
 
 ## Suricata
 
-`suricata/modbus_dpi.rules` contains Modbus/TCP deep packet inspection rules.
+The `suricata/` directory contains deep packet inspection rules per protocol:
+
+| File | Protocol | Technique |
+| :--- | :--- | :--- |
+| `modbus_dpi.rules` | Modbus/TCP | Function-code DPI (write, scan, exception bursts) |
+| `dnp3_dpi.rules` | DNP3 | Function-code and object-header DPI (control, write, device scan) |
+| `opcua_dpi.rules` | OPC UA (`tcp/4840`) | Message-header DPI (Hello, OpenSecureChannel) |
+
 They are governed by the same conventions as the Sigma rules:
 
 - **Technique tagging.** Every rule carries `metadata: attack_ics <technique>`,

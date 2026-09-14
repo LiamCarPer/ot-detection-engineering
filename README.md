@@ -138,7 +138,8 @@ Deferred by design (integration phase):
       (Loki) and [OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline)
       (Suricata / OpenSearch), recording provenance end to end.
 - [ ] Run emulation against the live lab in CI and publish live metrics.
-- [ ] Extend protocol coverage to PROFINET, DNP3 and OPC UA.
+- [x] Extend protocol coverage: Modbus/TCP, DNP3 and OPC UA native DPI rules.
+- [ ] Extend protocol coverage to PROFINET (layer-2 / DCE-RPC; needs non-IP rule hooks).
 - [ ] Add Wazuh as a conversion target.
 
 ## Related projects
