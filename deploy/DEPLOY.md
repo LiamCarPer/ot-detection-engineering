@@ -41,11 +41,12 @@ ruler:
   enable_api: true
 ```
 
-Mount `deploy/loki/rules` at `/etc/loki/rules` and reload. Each rule file
-contains one group. The queries use the `logfmt` parser, so the Modbus, DNP3,
-S7comm, firewall and process events must be shipped with the fields defined in
-docs/TELEMETRY.md. Application-layer DNP3 and S7comm events are produced by
-[tools/dnp3-dpi](../tools/dnp3-dpi) and
+Local ruler storage is tenant-scoped: mount the rule files under
+`<rules-dir>/<tenant>/` (with `auth_enabled: false` the tenant is `fake`), then
+reload. Each rule file contains one group named after its rule. The queries use
+the `logfmt` parser, so the Modbus, DNP3, S7comm, firewall and process events
+must be shipped with the fields defined in docs/TELEMETRY.md. Application-layer
+DNP3 and S7comm events are produced by [tools/dnp3-dpi](../tools/dnp3-dpi) and
 [tools/s7comm-dpi](../tools/s7comm-dpi).
 
 ## Suricata

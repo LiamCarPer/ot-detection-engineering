@@ -105,6 +105,7 @@ make convert BACKEND=sentinel   # Microsoft Sentinel KQL
 make convert-all                # all four target platforms
 make deploy            # build the installable bundle under deploy/
 make suricata-check    # validate the native rules over captures (Docker)
+make loki-check        # prove the Loki ruler bundle in a full stack (Docker)
 make metrics           # coverage + emulation replay + metrics report
 ```
 
@@ -137,11 +138,13 @@ queries, with a provenance manifest and a per-platform runbook
 ([deploy/DEPLOY.md](deploy/DEPLOY.md)). `python pipelines/deploy.py --check`
 fails CI when the committed bundle drifts from the rules.
 
-The native rules are functionally validated, not just linted. `make suricata-check`
-runs Suricata in a container over the committed captures in `tests/captures/` and
-refreshes the alert evidence in `deploy/evidence/`. The result is recorded in
-[deploy/report.md](deploy/report.md): every attack capture fires exactly the
-expected signatures and every benign capture is silent.
+The bundles are functionally validated, not just linted. `make suricata-check`
+runs Suricata in a container over the committed captures in `tests/captures/`,
+and `make loki-check` runs the generated Loki ruler rules in a full stack (Loki,
+Alertmanager, Grafana), each refreshing evidence in `deploy/evidence/`. The
+results are recorded in [deploy/report.md](deploy/report.md): every attack
+capture fires exactly the expected signatures, all ten Loki ruler alerts fire,
+and no benign input produces an alert.
 
 ## Tooling
 

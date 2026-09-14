@@ -102,6 +102,8 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `test_native_rules.py` | Native rules carry required fields, unique reserved SIDs and known technique tags. |
 | `test_emulation.py` | The emulation plan is valid and the evaluation logic computes detection rate and MTTD correctly. |
 | `test_coverage.py`, `test_metrics.py` | Derived coverage and metrics are internally consistent, and no rule fires on the benign baseline. |
+| `test_deploy.py`, `test_deploy_evidence.py` | The bundle matches the rules and the committed Suricata evidence fires the expected signatures. |
+| `test_loki_evidence.py`, `test_readme.py` | The committed Loki ruler evidence is complete and the README figures match the generated metrics. |
 
 ## Metric definitions
 

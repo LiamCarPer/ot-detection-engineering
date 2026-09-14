@@ -1,10 +1,13 @@
 # Functional validation report
 
-The native rules are not just structurally linted; they are run through Suricata
-against committed captures. This report records the result. Regenerate with:
+The generated bundles are not just structurally linted. The native rules are run
+through Suricata against committed captures, and the Loki ruler rules are run in
+a full stack (Loki, Alertmanager, Grafana). This report records the results.
+Regenerate with:
 
 ```bash
 make suricata-check
+make loki-check
 ```
 
 | Field | Value |
@@ -49,3 +52,27 @@ capture is silent.
   id (`0x32`) and match the function code at a fixed offset within the TPKT/COTP
   data PDU, which the captures confirm is offset 17. The Rust decoder and the
   Sigma rules handle the richer application-layer semantics.
+
+## Loki ruler
+
+`make loki-check` starts the stack in `tests/loki-stack/`, mounts the generated
+`deploy/loki/rules/`, ships ten attack log lines (one per rule) and ten benign
+lines, and confirms through an Alertmanager webhook which alerts fire.
+
+| Field | Value |
+| :--- | :--- |
+| Loki | 3.7.7 |
+| Alertmanager | 0.34.0 |
+| Grafana | 13.2.1 |
+| Evidence | `deploy/evidence/loki/` (`summary.json`, `alerts.json`) |
+
+All ten expected alerts fired and no benign event produced an alert.
+
+Findings:
+
+- **Local ruler storage is tenant-scoped.** With `auth_enabled: false` the tenant
+  is `fake`, so Loki reads rules from `/etc/loki/rules/fake/`. Mounting the
+  bundle at the rules root loads nothing.
+- **Rule-group names must be unique.** pySigma's Loki ruler output names every
+  group `Sigma rules`, so loading several files collides. `pipelines/deploy.py`
+  now names each group after its rule file.

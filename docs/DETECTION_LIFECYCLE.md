@@ -165,5 +165,6 @@ failing tag check, which is the point.
 - [ ] Backend conversion succeeds for every target.
 - [ ] `make deploy` run so `deploy/` and its manifest match the rule.
 - [ ] For a native rule, `make suricata-check` refreshed `deploy/evidence/`.
+- [ ] For a Sigma rule, `make loki-check` refreshed `deploy/evidence/loki/`.
 - [ ] Emulation plan updated if the technique is newly covered.
 - [ ] Metrics regenerated and committed in the pull request description.
