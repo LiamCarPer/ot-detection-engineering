@@ -152,7 +152,10 @@ expected signatures, every Loki ruler alert fires, every protocol rule fires on
 the decoded events, and no benign input produces an alert. The Suricata ruleset
 is also installed into a Malcolm pipeline and run with Malcolm's own Suricata
 image and default ruleset (`tools/malcolm_check.py`), confirming it loads and
-fires there rather than only in isolation.
+fires there rather than only in isolation. The Loki ruler bundle is deployed
+into [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab), where the
+gateway ships normalized firewall events to Loki and the cross-zone rule fires
+on live lab traffic (`tools/lab_loki_check.py`).
 
 ## Tooling
 
@@ -189,9 +192,10 @@ Deferred by design (integration phase):
       [OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline)
       and run it with Malcolm's own Suricata image and default ruleset over the
       captures, recording provenance in `deploy/evidence/malcolm/`.
-- [ ] Install the Loki ruler bundle into
-      [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) end to
-      end, recording deployment provenance.
+- [x] Install the Loki ruler bundle into
+      [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) and fire a
+      rule on live lab traffic, recording provenance in
+      `deploy/evidence/lab-loki/`.
 - [ ] Run emulation against the live lab in CI and publish live metrics.
 - [ ] Add Wazuh as a conversion target.
 

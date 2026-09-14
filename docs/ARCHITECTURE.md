@@ -113,6 +113,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `test_coverage.py`, `test_metrics.py` | Derived coverage and metrics are internally consistent, and no rule fires on the benign baseline. |
 | `test_deploy.py`, `test_deploy_evidence.py` | The bundle matches the rules and the committed Suricata evidence fires the expected signatures. |
 | `test_malcolm_evidence.py` | The committed Malcolm evidence shows the ruleset loading with no failures alongside Malcolm's default rules and firing the expected signatures on every capture. |
+| `test_lab_loki_evidence.py` | The committed lab evidence shows the generated ruler rule firing in OT-Security-Lab on gateway-shipped firewall events. |
 | `test_decoder_evidence.py` | The committed decoder evidence fires each protocol's Sigma rules on real decoder output. |
 | `test_loki_evidence.py`, `test_readme.py` | The committed Loki ruler evidence is complete and the README figures match the generated metrics. |
 
@@ -143,10 +144,14 @@ detection content:
   `deploy/evidence/malcolm/`. This is what surfaced the SID collision with the
   NSacyber ELITEWOLF rules and moved the repository to the private
   `9000000-9000099` range.
+- **The Loki ruler bundle is installed in the lab.** `siem/rules/` in
+  [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) holds the
+  generated bundle, and the gateway's `firewall_events.py` ships normalized
+  `ot_firewall` events to Loki; `tools/lab_loki_check.py` records the cross-zone
+  rule firing on live traffic under `deploy/evidence/lab-loki/`.
 - `pipelines/convert.py` emits Loki, OpenSearch, Splunk and Microsoft Sentinel
   queries, and `pipelines/deploy.py` packages them into an installable `deploy/`
-  bundle; the Loki ruler bundle is not yet installed into the lab stack, and
-  that step will record deployment provenance.
+  bundle.
 - `purple/runner/run_emulation.py --execute` runs the plan against
   [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) via
   `docker exec`.

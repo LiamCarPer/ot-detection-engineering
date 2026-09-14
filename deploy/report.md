@@ -112,6 +112,34 @@ Findings:
   `service_name_extracted` and a rule filtering on `service_name` silently never
   matches. The OPC UA decoder emits `opcua_service` instead.
 
+## Lab integration (OT-Security-Lab)
+
+The generated ruler bundle is also deployed into the live lab. The lab's Loki
+evaluates rules from `/etc/loki/rules/fake`, and
+`lab-environment/scripts/firewall_events.py` on the gateway turns forwarded
+cross-zone drops into normalized `ot_firewall` events and pushes them to Loki.
+Containerised kernel `[IPTABLES_DROP]` logs are not readable without
+`CAP_SYSLOG`, so the gateway reconstructs the event from the packets it
+forwards, applying the same conduit policy the firewall enforces.
+
+| Field | Value |
+| :--- | :--- |
+| Rule | `Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone` |
+| Group | `ot_firewall_cross_zone_violation` |
+| State | firing |
+| Health | ok |
+| Evidence | `deploy/evidence/lab-loki/` (`summary.json`, `events.json`) |
+
+Findings:
+
+- **The local ruler does not recurse.** Rules must sit directly in
+  `<rules_directory>/<tenant>/`; a subdirectory is ignored, and any non-YAML
+  file in the tenant directory (here a README) aborts the entire listing with a
+  YAML parse error.
+- **Mount rules outside the data path.** Mounting under `/tmp/loki` leaves the
+  parent directory root-owned, and Loki, which runs unprivileged, then cannot
+  create its chunk directory.
+
 ## Decoder validation
 
 The Rust decoders and the Sigma rules were tested separately, which left a gap:

@@ -1,0 +1,92 @@
+[
+  {
+    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+    "stream": {
+      "job": "ot_firewall",
+      "service": "iptables",
+      "service_name": "iptables"
+    },
+    "timestamp": "1789426590619659776"
+  },
+  {
+    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+    "stream": {
+      "job": "ot_firewall",
+      "service": "iptables",
+      "service_name": "iptables"
+    },
+    "timestamp": "1789426617554476288"
+  },
+  {
+    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+    "stream": {
+      "job": "ot_firewall",
+      "service": "iptables",
+      "service_name": "iptables"
+    },
+    "timestamp": "1789426645321024256"
+  },
+  {
+    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+    "stream": {
+      "job": "ot_firewall",
+      "service": "iptables",
+      "service_name": "iptables"
+    },
+    "timestamp": "1789426646268922112"
+  },
+  {
+    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+    "stream": {
+      "job": "ot_firewall",
+      "service": "iptables",
+      "service_name": "iptables"
+    },
+    "timestamp": "1789426647247379712"
+  },
+  {
+    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+    "stream": {
+      "job": "ot_firewall",
+      "service": "iptables",
+      "service_name": "iptables"
+    },
+    "timestamp": "1789426648276416256"
+  },
+  {
+    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+    "stream": {
+      "job": "ot_firewall",
+      "service": "iptables",
+      "service_name": "iptables"
+    },
+    "timestamp": "1789426649238605568"
+  },
+  {
+    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+    "stream": {
+      "job": "ot_firewall",
+      "service": "iptables",
+      "service_name": "iptables"
+    },
+    "timestamp": "1789426688039853824"
+  },
+  {
+    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+    "stream": {
+      "job": "ot_firewall",
+      "service": "iptables",
+      "service_name": "iptables"
+    },
+    "timestamp": "1789426689003029760"
+  },
+  {
+    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+    "stream": {
+      "job": "ot_firewall",
+      "service": "iptables",
+      "service_name": "iptables"
+    },
+    "timestamp": "1789426690003569664"
+  }
+]
