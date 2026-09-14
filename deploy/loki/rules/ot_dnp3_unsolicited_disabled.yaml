@@ -1,0 +1,27 @@
+# source: rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml
+groups:
+- name: Sigma rules
+  rules:
+  - alert: DNP3_Unsolicited_Responses_Disabled
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects the DNP3 Disable Unsolicited function. Outstations report
+        events
+
+        without polling through unsolicited responses; disabling them suppresses that
+
+        reporting and can be used to blind operators to process changes.
+
+
+        The function is legitimate during some maintenance procedures, so this rule
+
+        should be correlated with a change window before escalation.
+
+        '
+      summary: DNP3 Unsolicited Responses Disabled
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      function_code=21 | line_format "{{.link_source}} {{.link_destination}} {{.function_name}}"
+      [1m])) or vector(0) > 0
+    labels:
+      severity: medium
+

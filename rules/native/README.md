@@ -12,7 +12,7 @@ The `suricata/` directory contains deep packet inspection rules per protocol:
 
 | File | Protocol | Technique |
 | :--- | :--- | :--- |
-| `modbus_dpi.rules` | Modbus/TCP | Function-code DPI (write, scan, exception bursts) |
+| `modbus_dpi.rules` | Modbus/TCP | Function-code DPI (unauthorized write, device scan, undefined-register write) |
 | `dnp3_dpi.rules` | DNP3 | Function-code and object-header DPI (control, write, device scan) |
 | `opcua_dpi.rules` | OPC UA (`tcp/4840`) | Message-header DPI (Hello, OpenSecureChannel) |
 

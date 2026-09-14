@@ -1,8 +1,8 @@
 # Modbus/TCP deep packet inspection rules.
 #
 # Sigma cannot express industrial protocol semantics such as Modbus function
-# codes or exception responses, so these detections are authored natively for
-# Suricata. They share the repository's conventions:
+# codes, so these detections are authored natively for Suricata. They share the
+# repository's conventions:
 #   - sid range 1000000-1000999 is reserved for this repository
 #   - metadata carries attack_ics <technique> so coverage is generated from the
 #     same catalog as the Sigma rules
@@ -17,4 +17,7 @@ alert modbus [!172.21.0.20,!172.22.0.10] any -> 172.21.0.0/24 502 (msg:"OT Modbu
 
 alert modbus any any -> 172.21.0.0/24 502 (msg:"OT Modbus Device Identification Scan"; flow:to_server,established; modbus: function 43; classtype:network-scan; metadata: attack_ics T0888, detection_status experimental; reference:url,attack.mitre.org/techniques/T0888/; sid:1000003; rev:1;)
 
-alert modbus any 502 -> any any (msg:"OT Modbus Exception Burst - Possible Brute Force I/O"; flow:from_server,established; modbus: function > 128; threshold:type both, track by_dst, count 5, seconds 60; classtype:attempted-recon; metadata: attack_ics T0806, detection_status experimental; reference:url,attack.mitre.org/techniques/T0806/; sid:1000004; rev:1;)
+# The legacy modbus keyword matches requests only, so this detects a write to a
+# holding register above any plausible process map: a fuzzer probing addresses,
+# or a control command aimed past the configured register range.
+alert modbus any any -> any 502 (msg:"OT Modbus Write To Undefined Holding Register"; flow:to_server,established; modbus: access write holding, address >40000; classtype:attempted-recon; metadata: attack_ics T0806, detection_status experimental; reference:url,attack.mitre.org/techniques/T0806/; sid:1000004; rev:2;)

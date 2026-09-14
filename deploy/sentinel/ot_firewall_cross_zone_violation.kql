@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+action =~ "DROP" and (src_zone =~ "it" and dst_zone =~ "control") and (not(proto =~ "ICMP"))

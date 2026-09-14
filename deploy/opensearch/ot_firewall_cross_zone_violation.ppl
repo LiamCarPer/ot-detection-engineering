@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+source=ot_firewall-iptables-* | where action="DROP" AND src_zone="it" AND dst_zone="control" AND NOT proto="ICMP"

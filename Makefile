@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools/dnp3-dpi
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust convert convert-all coverage emulate-validate metrics check clean
+.PHONY: help setup lint validate test rust convert convert-all deploy deploy-check suricata-check coverage emulate-validate metrics check clean
 
 help:
 	@echo "Targets:"
@@ -20,6 +20,9 @@ help:
 	@echo "  rust             Format-check, lint and test the DNP3 DPI decoder"
 	@echo "  convert          Convert Sigma rules to the BACKEND query language (default: loki)"
 	@echo "  convert-all      Convert to loki, opensearch, splunk and sentinel"
+	@echo "  deploy           Build the installable deployment bundle (deploy/)"
+	@echo "  deploy-check     Fail if the committed bundle has drifted"
+	@echo "  suricata-check   Run Suricata over the captures and refresh evidence (Docker)"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate the adversary emulation plan"
 	@echo "  metrics          Generate coverage, replay emulation, compute metrics"
@@ -58,6 +61,16 @@ convert-all: setup
 	$(PY) pipelines/convert.py --backend splunk --rules $(RULES)
 	$(PY) pipelines/convert.py --backend sentinel --rules $(RULES)
 
+deploy: setup
+	$(PY) pipelines/deploy.py
+
+deploy-check: setup
+	$(PY) pipelines/deploy.py --check
+
+suricata-check: setup deploy
+	$(PY) tools/make_captures.py
+	$(PY) tools/suricata_check.py
+
 coverage: setup
 	$(PY) coverage/generate_coverage.py
 
@@ -71,7 +84,7 @@ metrics: setup
 		--observations purple/emulation/lab-observations.json
 	$(PY) metrics/compute.py
 
-check: lint validate test rust
+check: lint validate test rust deploy-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out

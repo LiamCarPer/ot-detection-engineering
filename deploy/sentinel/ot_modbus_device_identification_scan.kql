@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_modbus_device_identification_scan.yml
+direction =~ "request" and (function_code in~ ("17", "43"))

@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_dnp3_restart_command.yml
+direction =~ "request" and (function_code in~ ("13", "14"))

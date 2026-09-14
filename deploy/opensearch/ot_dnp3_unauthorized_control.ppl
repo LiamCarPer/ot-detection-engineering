@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_dnp3_unauthorized_control.yml
+source=ot_ndr-dnp3-* | where direction="request" AND (function_code in (3, 4, 5, 6)) AND NOT (link_source in (1, 2))

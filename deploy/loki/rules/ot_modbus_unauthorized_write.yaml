@@ -1,0 +1,35 @@
+# source: rules/sigma/ot/ot_modbus_unauthorized_write.yml
+groups:
+- name: Sigma rules
+  rules:
+  - alert: Modbus_Write_From_Unauthorized_Control_Writer
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a Modbus write to a PLC from a host that is not an approved
+        control
+
+        writer. In a segmented OT network, Modbus writes should originate only from
+
+        the HMI or the engineering workstation; a write from any other source is
+
+        either a compromised host or an unauthorized engineering change.
+
+
+        This rule operates on normalized NDR telemetry (see docs/TELEMETRY.md) where
+
+        each Modbus transaction is decoded into a request/response record with the
+
+        function code and endpoints. The allowed writers are site-specific and must
+        be
+
+        tuned per environment.
+
+        '
+      summary: Modbus Write From Unauthorized Control Writer
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      (function_code=6 or function_code=16) and src_ip!~`(?i)^172\.21\.0\.20$` and
+      src_ip!~`(?i)^172\.22\.0\.10$` | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}}
+      {{.register}} {{.unit_id}}" [1m])) or vector(0) > 0
+    labels:
+      severity: high
+

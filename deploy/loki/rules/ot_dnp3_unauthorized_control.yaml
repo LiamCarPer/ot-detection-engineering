@@ -1,0 +1,35 @@
+# source: rules/sigma/ot/ot_dnp3_unauthorized_control.yml
+groups:
+- name: Sigma rules
+  rules:
+  - alert: DNP3_Control_Operation_From_Unauthorized_Master
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a DNP3 control operation (Select, Operate, Direct Operate
+        or Direct
+
+        Operate No Ack) issued by a master that is not an approved control master.
+
+        DNP3 control functions change physical outputs, so a control operation from
+        an
+
+        unexpected link address is either a compromised host or an unauthorized
+
+        engineering change.
+
+
+        The rule operates on decoded DNP3 events (see docs/TELEMETRY.md) produced
+        by
+
+        tools/dnp3-dpi. Authorized master link addresses are site-specific.
+
+        '
+      summary: DNP3 Control Operation From Unauthorized Master
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      (function_code=3 or function_code=4 or function_code=5 or function_code=6) and
+      link_source!=1 and link_source!=2 | line_format "{{.link_source}} {{.link_destination}}
+      {{.function_name}} {{.object_group}} {{.control_code}}" [1m])) or vector(0)
+      > 0
+    labels:
+      severity: high
+

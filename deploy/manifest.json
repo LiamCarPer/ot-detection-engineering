@@ -1,0 +1,190 @@
+{
+  "artifacts": [
+    {
+      "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
+      "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
+      "target": "loki/rules/ot_dnp3_restart_command.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
+      "source_sha256": "b72ab020c89985d8be2bbbc1675afaa2fc170702b850a0705c8e856f7ffe7a77",
+      "target": "loki/rules/ot_dnp3_unauthorized_control.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml",
+      "source_sha256": "43a9d304365ecdbe99763c33cd4be958b57f578d82bc9fe68f291d71fac3a6e5",
+      "target": "loki/rules/ot_dnp3_unsolicited_disabled.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
+      "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
+      "target": "loki/rules/ot_firewall_cross_zone_violation.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
+      "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
+      "target": "loki/rules/ot_modbus_device_identification_scan.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
+      "source_sha256": "59a70fa633ff61e11bd240a498c321557e5f0580d0e7304fdf0f27b39e742ea5",
+      "target": "loki/rules/ot_modbus_unauthorized_write.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_process_safety_violation.yml",
+      "source_sha256": "a5daeaf78aa62d584dab17fc1864fbe0f11557fe486327b29813ac0cb8fce78d",
+      "target": "loki/rules/ot_process_safety_violation.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
+      "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
+      "target": "opensearch/ot_dnp3_restart_command.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
+      "source_sha256": "b72ab020c89985d8be2bbbc1675afaa2fc170702b850a0705c8e856f7ffe7a77",
+      "target": "opensearch/ot_dnp3_unauthorized_control.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml",
+      "source_sha256": "43a9d304365ecdbe99763c33cd4be958b57f578d82bc9fe68f291d71fac3a6e5",
+      "target": "opensearch/ot_dnp3_unsolicited_disabled.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
+      "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
+      "target": "opensearch/ot_firewall_cross_zone_violation.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
+      "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
+      "target": "opensearch/ot_modbus_device_identification_scan.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
+      "source_sha256": "59a70fa633ff61e11bd240a498c321557e5f0580d0e7304fdf0f27b39e742ea5",
+      "target": "opensearch/ot_modbus_unauthorized_write.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_process_safety_violation.yml",
+      "source_sha256": "a5daeaf78aa62d584dab17fc1864fbe0f11557fe486327b29813ac0cb8fce78d",
+      "target": "opensearch/ot_process_safety_violation.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
+      "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
+      "target": "sentinel/ot_dnp3_restart_command.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
+      "source_sha256": "b72ab020c89985d8be2bbbc1675afaa2fc170702b850a0705c8e856f7ffe7a77",
+      "target": "sentinel/ot_dnp3_unauthorized_control.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml",
+      "source_sha256": "43a9d304365ecdbe99763c33cd4be958b57f578d82bc9fe68f291d71fac3a6e5",
+      "target": "sentinel/ot_dnp3_unsolicited_disabled.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
+      "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
+      "target": "sentinel/ot_firewall_cross_zone_violation.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
+      "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
+      "target": "sentinel/ot_modbus_device_identification_scan.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
+      "source_sha256": "59a70fa633ff61e11bd240a498c321557e5f0580d0e7304fdf0f27b39e742ea5",
+      "target": "sentinel/ot_modbus_unauthorized_write.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_process_safety_violation.yml",
+      "source_sha256": "a5daeaf78aa62d584dab17fc1864fbe0f11557fe486327b29813ac0cb8fce78d",
+      "target": "sentinel/ot_process_safety_violation.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
+      "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
+      "target": "splunk/ot_dnp3_restart_command.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
+      "source_sha256": "b72ab020c89985d8be2bbbc1675afaa2fc170702b850a0705c8e856f7ffe7a77",
+      "target": "splunk/ot_dnp3_unauthorized_control.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml",
+      "source_sha256": "43a9d304365ecdbe99763c33cd4be958b57f578d82bc9fe68f291d71fac3a6e5",
+      "target": "splunk/ot_dnp3_unsolicited_disabled.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
+      "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
+      "target": "splunk/ot_firewall_cross_zone_violation.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
+      "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
+      "target": "splunk/ot_modbus_device_identification_scan.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
+      "source_sha256": "59a70fa633ff61e11bd240a498c321557e5f0580d0e7304fdf0f27b39e742ea5",
+      "target": "splunk/ot_modbus_unauthorized_write.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_process_safety_violation.yml",
+      "source_sha256": "a5daeaf78aa62d584dab17fc1864fbe0f11557fe486327b29813ac0cb8fce78d",
+      "target": "splunk/ot_process_safety_violation.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/native/suricata/dnp3_dpi.rules",
+      "source_sha256": "7cfd5e654e54f13fb06f64e2deeb476c8e0f462c6f76e33c4b26a1978edbc30e",
+      "target": "suricata/ot-detection.rules",
+      "backend": "suricata"
+    },
+    {
+      "source": "rules/native/suricata/modbus_dpi.rules",
+      "source_sha256": "7bb14d3541ed0ff6c287efeb209d41b66b2e58d64294466477b3db3b316aa601",
+      "target": "suricata/ot-detection.rules",
+      "backend": "suricata"
+    },
+    {
+      "source": "rules/native/suricata/opcua_dpi.rules",
+      "source_sha256": "139cd3794a6a83aa64f3c9b6afebe275c5acdd587937ef8dc74ebe2f8d8e7134",
+      "target": "suricata/ot-detection.rules",
+      "backend": "suricata"
+    }
+  ]
+}

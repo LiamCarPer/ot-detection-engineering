@@ -1,0 +1,30 @@
+# source: rules/sigma/ot/ot_modbus_device_identification_scan.yml
+groups:
+- name: Sigma rules
+  rules:
+  - alert: Modbus_Device_Identification_Scan
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects Modbus device identification requests (function code 43,
+        Read Device
+
+        Identification, and function code 17, Report Server ID) sent as requests.
+
+        These functions enumerate vendor, product and firmware information and are
+        a
+
+        common first step in OT reconnaissance, mapping devices before an attack.
+
+
+        Device identification is rare in steady-state polling, which makes it a
+
+        high-signal event even at low volume.
+
+        '
+      summary: Modbus Device Identification Scan
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      (function_code=17 or function_code=43) | line_format "{{.src_ip}} {{.dst_ip}}
+      {{.function_code}} {{.unit_id}}" [1m])) or vector(0) > 0
+    labels:
+      severity: medium
+

@@ -25,6 +25,7 @@ dev = [
     "pytest>=8",
     "jsonschema>=4.20",
     "ruff>=0.6",
+    "scapy>=2.6",
 ]
 
 [tool.setuptools]

@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_process_safety_violation.yml
+source=ot_process-safety_monitor-* | where event_type="process\_safety\_violation" AND response="none"

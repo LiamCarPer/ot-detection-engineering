@@ -1,0 +1,35 @@
+# source: rules/sigma/ot/ot_process_safety_violation.yml
+groups:
+- name: Sigma rules
+  rules:
+  - alert: Process_Safety_Violation_From_Physics_Aware_Monitor
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a command that is protocol-valid and issued from an authorized
+
+        writer, but that violates the physical safety envelope of the process, for
+
+        example opening an inlet valve while the tank is full. IP allowlisting and
+
+        protocol validation cannot catch this class of event because every individual
+
+        field is legitimate.
+
+
+        The physics-aware monitor maintains a shadow of the process state and emits
+        a
+
+        structured violation event; this rule classifies it, assigns severity and
+
+        routes it for response. It is the safety-layer counterpart to the protocol
+
+        detections in this repository.
+
+        '
+      summary: Process Safety Violation From Physics-Aware Monitor
+    expr: sum(count_over_time({job=~".+"} | logfmt | event_type=~`(?i)^process_safety_violation$`
+      and response=~`(?i)^none$` | line_format "{{.asset}} {{.register}} {{.value}}
+      {{.tank_level_pct}} {{.actor}}" [1m])) or vector(0) > 0
+    labels:
+      severity: critical
+

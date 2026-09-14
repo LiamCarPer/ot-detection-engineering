@@ -58,6 +58,9 @@ jobs:
       - name: Convert to Microsoft Sentinel (KQL)
         run: python pipelines/convert.py --backend sentinel --check
 
+      - name: Check the deployment bundle is current
+        run: python pipelines/deploy.py --check
+
       - name: Validate emulation plan
         run: python purple/runner/run_emulation.py --validate
 

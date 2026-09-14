@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml
+source=ot_ndr-dnp3-* | where direction="request" AND function_code=21

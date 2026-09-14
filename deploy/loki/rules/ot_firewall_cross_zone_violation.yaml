@@ -1,0 +1,33 @@
+# source: rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+groups:
+- name: Sigma rules
+  rules:
+  - alert: Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects the zone firewall dropping industrial protocol traffic
+        that
+
+        originates in the enterprise zone and targets the control zone. A healthy
+
+        Purdue segmentation allows no direct path from Level 4/5 to Level 1; traffic
+
+        that reaches the firewall boundary is evidence of a misconfigured asset, a
+
+        misrouted pivot, or an attempt to reach controllers directly.
+
+
+        The firewall allows the enterprise zone to reach only the industrial DMZ and
+
+        the operations zone, so every drop of this shape is a policy violation rather
+
+        than routine noise.
+
+        '
+      summary: Industrial Protocol Traffic From Enterprise To Control Zone
+    expr: sum(count_over_time({job=~".+"} | logfmt | action=~`(?i)^DROP$` and src_zone=~`(?i)^it$`
+      and dst_zone=~`(?i)^control$` and proto!~`(?i)^ICMP$` | line_format "{{.src_ip}}
+      {{.dst_ip}} {{.dst_port}} {{.proto}}" [1m])) or vector(0) > 0
+    labels:
+      severity: high
+
