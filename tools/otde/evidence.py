@@ -3,7 +3,9 @@
 ``EXPECTED_SIDS`` is the specification for the Suricata capture validation: run
 Suricata over each capture and confirm exactly these signatures fire on the
 attack captures and nothing fires on the benign captures. ``EXPECTED_LOKI_ALERTS``
-is the same specification for the Loki ruler smoke test.
+is the same specification for the Loki ruler smoke test. ``EXPECTED_DECODER_RULES``
+is the same specification for the decoder validation: decode the committed
+example frames and confirm exactly these rules fire on the decoded events.
 """
 
 from __future__ import annotations
@@ -57,6 +59,26 @@ EXPECTED_LOKI_ALERTS: set[str] = {
     "OPC_UA_Write_Request",
     "OPC_UA_Method_Call_Request",
     "OPC_UA_Address_Space_Browse",
+}
+
+
+# Detection event service -> Sigma rule titles the decoder examples must fire.
+EXPECTED_DECODER_RULES: dict[str, set[str]] = {
+    "dnp3": {
+        "DNP3 Cold Or Warm Restart Command",
+        "DNP3 Control Operation From Unauthorized Master",
+        "DNP3 Unsolicited Responses Disabled",
+    },
+    "s7comm": {
+        "S7comm PLC Control Or Stop",
+        "S7comm Program Download",
+        "S7comm Program Upload",
+    },
+    "opcua": {
+        "OPC UA Address Space Browse",
+        "OPC UA Method Call Request",
+        "OPC UA Write Request",
+    },
 }
 
 

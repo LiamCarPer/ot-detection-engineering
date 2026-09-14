@@ -47,6 +47,9 @@ native rules ──▶ tests/captures ──▶ Suricata (container) ──▶ d
 
 DNP3/S7comm/OPC UA ──▶ tools/*-dpi (Rust) ──▶ ot_ndr events ──▶ Sigma rules
 
+decoder examples ──▶ tools/decoder_check.py ──▶ ot_ndr events ──▶ Sigma rules
+                                                              └─▶ deploy/evidence
+
 emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
         (or recorded observations)         (against the lab or a replay)
 ```
@@ -82,6 +85,10 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
   committed. This is what surfaced that Suricata ships Modbus and DNP3
   application-layer detection disabled by default, and that the original Modbus
   exception rule used invalid syntax.
+- **Decoder output is validated against the rules, not assumed.** Each decoder's
+  committed example frames are decoded and the resulting events are run through
+  the same matcher the rule tests use (`tools/decoder_check.py`), so the decoder
+  and its Sigma rules cannot drift apart.
 - **Protocols are decoded natively in Rust** when no app-layer parser exists.
   DNP3, S7comm and OPC UA have dependency-free decoders (`#![forbid(unsafe_code)]`)
   that emit the normalized events the corresponding Sigma rules run on. S7comm
@@ -105,6 +112,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `test_emulation.py` | The emulation plan is valid and the evaluation logic computes detection rate and MTTD correctly. |
 | `test_coverage.py`, `test_metrics.py` | Derived coverage and metrics are internally consistent, and no rule fires on the benign baseline. |
 | `test_deploy.py`, `test_deploy_evidence.py` | The bundle matches the rules and the committed Suricata evidence fires the expected signatures. |
+| `test_decoder_evidence.py` | The committed decoder evidence fires each protocol's Sigma rules on real decoder output. |
 | `test_loki_evidence.py`, `test_readme.py` | The committed Loki ruler evidence is complete and the README figures match the generated metrics. |
 
 ## Metric definitions

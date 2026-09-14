@@ -9,3 +9,11 @@
 
 # MSG carrying a WriteRequest (service NodeId 673, four-byte encoding).
 4D53474620000000010000000100000002000000020000000100A10201000000
+
+# MSG carrying a CallRequest (service NodeId 712, four-byte encoding): a method
+# call on the server.
+4D53474620000000010000000100000002000000030000000100C80201000000
+
+# MSG carrying a BrowseRequest (service NodeId 527, four-byte encoding):
+# address-space discovery.
+4D534746200000000100000001000000020000000400000001000F0201000000

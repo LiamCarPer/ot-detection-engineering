@@ -108,6 +108,7 @@ make convert-all                # all four target platforms
 make deploy            # build the installable bundle under deploy/
 make suricata-check    # validate the native rules over captures (Docker)
 make loki-check        # prove the Loki ruler bundle in a full stack (Docker)
+make decoder-check     # prove the decoders' events fire the Sigma rules
 make metrics           # coverage + emulation replay + metrics report
 ```
 
@@ -142,11 +143,13 @@ fails CI when the committed bundle drifts from the rules.
 
 The bundles are functionally validated, not just linted. `make suricata-check`
 runs Suricata in a container over the committed captures in `tests/captures/`,
-and `make loki-check` runs the generated Loki ruler rules in a full stack (Loki,
-Alertmanager, Grafana), each refreshing evidence in `deploy/evidence/`. The
-results are recorded in [deploy/report.md](deploy/report.md): every attack
-capture fires exactly the expected signatures, every Loki ruler alert fires,
-and no benign input produces an alert.
+`make loki-check` runs the generated Loki ruler rules in a full stack (Loki,
+Alertmanager, Grafana), and `make decoder-check` runs the Rust decoders over the
+committed example frames and feeds the decoded events through the Sigma rules.
+Each refreshes evidence in `deploy/evidence/`. The results are recorded in
+[deploy/report.md](deploy/report.md): every attack capture fires exactly the
+expected signatures, every Loki ruler alert fires, every protocol rule fires on
+the decoded events, and no benign input produces an alert.
 
 ## Tooling
 
@@ -164,6 +167,9 @@ and no benign input produces an alert.
 - **Suricata functional validation in a container** over generated captures
   (Scapy), with committed alert evidence, so the native rules are proven to fire
   rather than only parsed.
+- **Decoder-to-rule validation**: each decoder's committed example frames are
+  decoded and the resulting events are run through the same pySigma matcher the
+  rule tests use, so the decoders and their Sigma rules cannot drift apart.
 
 ## Status and roadmap
 

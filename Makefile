@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust convert convert-all deploy deploy-check suricata-check loki-check coverage emulate-validate metrics check clean
+.PHONY: help setup lint validate test rust convert convert-all deploy deploy-check suricata-check loki-check decoder-check coverage emulate-validate metrics check clean
 
 help:
 	@echo "Targets:"
@@ -24,10 +24,11 @@ help:
 	@echo "  deploy-check     Fail if the committed bundle has drifted"
 	@echo "  suricata-check   Run Suricata over the captures and refresh evidence (Docker)"
 	@echo "  loki-check       Run the Loki ruler stack and refresh evidence (Docker)"
+	@echo "  decoder-check    Decode the example frames and refresh rule evidence"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate the adversary emulation plan"
 	@echo "  metrics          Generate coverage, replay emulation, compute metrics"
-	@echo "  check            lint + validate + test + rust + deploy-check"
+	@echo "  check            lint + validate + test + rust + decoder-check + deploy-check"
 
 $(VENV)/bin/activate: requirements.txt
 	python3 -m venv $(VENV)
@@ -75,6 +76,9 @@ suricata-check: setup deploy
 loki-check: setup deploy
 	$(PY) tools/loki_check.py
 
+decoder-check: setup
+	$(PY) tools/decoder_check.py
+
 coverage: setup
 	$(PY) coverage/generate_coverage.py
 
@@ -88,7 +92,7 @@ metrics: setup
 		--observations purple/emulation/lab-observations.json
 	$(PY) metrics/compute.py
 
-check: lint validate test rust deploy-check
+check: lint validate test rust decoder-check deploy-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target

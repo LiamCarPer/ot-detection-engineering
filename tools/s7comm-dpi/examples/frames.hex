@@ -1,0 +1,15 @@
+# Example S7comm TPKT/COTP frames for the s7comm-dpi decoder.
+#
+# TPKT 03 00 <len> | COTP 02 F0 80 | S7 32 01 ... | function at offset 17.
+
+# Documented Read Var job (function 0x04): Merker byte 368, two bytes.
+0300001F02F08032010000026B000E00000401120A10020002000083000170
+
+# Request Download (function 0x1A, 26): a program block is pushed to the PLC.
+0300001202F08032010000026C000100001A
+
+# Start Upload (function 0x1D, 29): a program block is read back from the PLC.
+0300001202F08032010000026D000100001D
+
+# PLC Stop (function 0x29, 41): the controller is switched out of RUN.
+0300001202F08032010000026E0001000029

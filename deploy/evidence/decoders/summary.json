@@ -1,0 +1,47 @@
+{
+  "dnp3": {
+    "events": 3,
+    "examples": "tools/dnp3-dpi/examples/frames.hex",
+    "expected": [
+      "DNP3 Cold Or Warm Restart Command",
+      "DNP3 Control Operation From Unauthorized Master",
+      "DNP3 Unsolicited Responses Disabled"
+    ],
+    "observed": [
+      "DNP3 Cold Or Warm Restart Command",
+      "DNP3 Control Operation From Unauthorized Master",
+      "DNP3 Unsolicited Responses Disabled"
+    ],
+    "unmatched_events": 0
+  },
+  "opcua": {
+    "events": 5,
+    "examples": "tools/opcua-dpi/examples/frames.hex",
+    "expected": [
+      "OPC UA Address Space Browse",
+      "OPC UA Method Call Request",
+      "OPC UA Write Request"
+    ],
+    "observed": [
+      "OPC UA Address Space Browse",
+      "OPC UA Method Call Request",
+      "OPC UA Write Request"
+    ],
+    "unmatched_events": 2
+  },
+  "s7comm": {
+    "events": 4,
+    "examples": "tools/s7comm-dpi/examples/frames.hex",
+    "expected": [
+      "S7comm PLC Control Or Stop",
+      "S7comm Program Download",
+      "S7comm Program Upload"
+    ],
+    "observed": [
+      "S7comm PLC Control Or Stop",
+      "S7comm Program Download",
+      "S7comm Program Upload"
+    ],
+    "unmatched_events": 1
+  }
+}

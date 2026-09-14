@@ -1,3 +1,0 @@
-# Documented S7comm Read Var job: Merker byte 368, two bytes.
-# TPKT 03 00 00 1F | COTP 02 F0 80 | S7 32 01 ... | function 0x04 at offset 17.
-0300001F02F08032010000026B000E00000401120A10020002000083000170

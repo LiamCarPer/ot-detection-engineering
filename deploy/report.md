@@ -1,13 +1,14 @@
 # Functional validation report
 
 The generated bundles are not just structurally linted. The native rules are run
-through Suricata against committed captures, and the Loki ruler rules are run in
-a full stack (Loki, Alertmanager, Grafana). This report records the results.
-Regenerate with:
+through Suricata against committed captures, the Loki ruler rules are run in a
+full stack (Loki, Alertmanager, Grafana), and the Rust decoders' output is run
+through the Sigma rules. This report records the results. Regenerate with:
 
 ```bash
 make suricata-check
 make loki-check
+make decoder-check
 ```
 
 | Field | Value |
@@ -80,3 +81,22 @@ Findings:
   field to a stream label, so `| logfmt` renames the extracted field to
   `service_name_extracted` and a rule filtering on `service_name` silently never
   matches. The OPC UA decoder emits `opcua_service` instead.
+
+## Decoder validation
+
+The Rust decoders and the Sigma rules were tested separately, which left a gap:
+nothing proved that the events the decoders actually emit satisfy the rules.
+`make decoder-check` builds the workspace, decodes every committed example frame
+(`tools/*/examples/frames.hex`), routes each normalized event through the same
+pySigma matcher the rule tests use, and records which rules fired.
+
+| Field | Value |
+| :--- | :--- |
+| Evidence | `deploy/evidence/decoders/summary.json` |
+| Events | 12 across `dnp3`, `s7comm` and `opcua` |
+
+All nine protocol rules fired on the decoded events: the three DNP3 rules, the
+three S7comm rules (program download, program upload, PLC control/stop) and the
+three OPC UA rules (write request, method call, address-space browse). Frames
+that carry no malicious service — an OPC UA `HEL`/`OPN`, an S7comm `Read Var` —
+decode to events that match no rule, which is the expected negative case.

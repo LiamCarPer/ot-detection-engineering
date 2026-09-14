@@ -19,7 +19,7 @@ events.
 
 ```bash
 cargo test
-cargo run -- examples/read_var.hex
+cargo run -- examples/frames.hex
 cat capture.hex | cargo run
 ```
 
