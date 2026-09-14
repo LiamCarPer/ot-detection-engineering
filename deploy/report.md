@@ -44,7 +44,7 @@ capture is silent.
 - **OPC UA rules fire on the message header alone.** Suricata has no OPC UA
   application-layer parser, so those rules match the 3-byte message type with
   `content`/`depth`. Application-layer OPC UA detection would need a decoder,
-  as with DNP3.
+  as with DNP3 and S7comm.
 - **S7comm has no app-layer parser either.** The rules anchor on the S7 protocol
   id (`0x32`) and match the function code at a fixed offset within the TPKT/COTP
   data PDU, which the captures confirm is offset 17. The Rust decoder and the

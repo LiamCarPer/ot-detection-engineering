@@ -5,7 +5,7 @@ automated checks, and every number in the report is derived from the rules
 themselves.
 
 ```
-author ─▶ validate ─▶ test ─▶ convert ─▶ emulate ─▶ measure
+author ─▶ validate ─▶ test ─▶ convert/bundle ─▶ emulate ─▶ measure
 ```
 
 ## 1. Author
@@ -90,7 +90,7 @@ This runs the rule fixtures, metadata governance, native rule lint, coverage and
 metrics consistency, and the emulation logic. A rule without a sidecar, without
 a positive case, or with a tag that is not in the catalog fails.
 
-## 4. Convert
+## 4. Convert and bundle
 
 ```bash
 make convert BACKEND=loki
@@ -98,11 +98,13 @@ make convert BACKEND=opensearch
 make convert BACKEND=splunk    # Splunk SPL
 make convert BACKEND=sentinel  # Microsoft Sentinel KQL
 make convert-all               # all four target platforms
+make deploy                    # installable bundle under deploy/
 ```
 
-Generated queries land in `pipelines/out/` with a manifest that links each
-artifact to the SHA-256 of the rule revision that produced it. Output is
-deterministic, so a diff always reflects a rule change.
+Generated queries land in `pipelines/out/` and the installable bundle under
+`deploy/`, each with a manifest that links every artifact to the SHA-256 of the
+rule revision that produced it. Output is deterministic, so a diff always
+reflects a rule change.
 
 ## 5. Emulate
 
@@ -128,7 +130,7 @@ Validate the plan, then run it against a live lab or replay a recorded run:
 make emulate-validate
 python purple/runner/run_emulation.py --execute --alerts /path/to/alerts.json
 python purple/runner/run_emulation.py \
-  --observations purple/emulation/recorded-observations.json
+  --observations purple/emulation/lab-observations.json
 ```
 
 The runner checks that the referenced rule actually carries the expected

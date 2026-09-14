@@ -16,7 +16,7 @@ python pipelines/deploy.py --check   # CI drift check
 | Directory | Target |
 | :--- | :--- |
 | `deploy/loki/rules/` | Grafana Loki ruler alert rules (LogQL) |
-| `deploy/suricata/ot-detection.rules` | Suricata ruleset (Modbus, DNP3, OPC UA) |
+| `deploy/suricata/ot-detection.rules` | Suricata ruleset (Modbus, DNP3, OPC UA, S7comm) |
 | `deploy/splunk/` | Splunk saved searches (SPL) |
 | `deploy/sentinel/` | Microsoft Sentinel analytics queries (KQL) |
 | `deploy/opensearch/` | OpenSearch PPL queries |
@@ -43,9 +43,10 @@ ruler:
 
 Mount `deploy/loki/rules` at `/etc/loki/rules` and reload. Each rule file
 contains one group. The queries use the `logfmt` parser, so the Modbus, DNP3,
-firewall and process events must be shipped with the fields defined in
-docs/TELEMETRY.md. Application-layer DNP3 events are produced by
-[tools/dnp3-dpi](../tools/dnp3-dpi).
+S7comm, firewall and process events must be shipped with the fields defined in
+docs/TELEMETRY.md. Application-layer DNP3 and S7comm events are produced by
+[tools/dnp3-dpi](../tools/dnp3-dpi) and
+[tools/s7comm-dpi](../tools/s7comm-dpi).
 
 ## Suricata
 
@@ -55,10 +56,12 @@ cp deploy/suricata/ot-detection.rules /etc/suricata/rules/ot-detection.rules
 suricatasc -c reload-rules
 ```
 
-The rules cover Modbus (function-code writes, device scan, exception bursts),
-DNP3 (unauthorized control/write, control operations, reporting suppression,
-restarts) and OPC UA (TCP Hello and OpenSecureChannel from unapproved clients).
-`Suricata 7+` is required for the DNP3 and Modbus application-layer keywords.
+The rules cover Modbus (unauthorized writes, device scan, undefined-register
+writes), DNP3 (unauthorized control/write, control operations, reporting
+suppression, restarts), OPC UA (TCP Hello and OpenSecureChannel from unapproved
+clients) and S7comm (program download/upload, PLC control/stop, unauthorized
+writes). `Suricata 7+` is required for the DNP3 and Modbus application-layer
+keywords; the OPC UA and S7comm rules match on the TCP payload.
 
 ## Splunk
 

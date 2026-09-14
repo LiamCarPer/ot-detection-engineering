@@ -124,8 +124,9 @@ The repository is built to plug into the live environment without changing
 detection content:
 
 - `pipelines/convert.py` emits Loki, OpenSearch, Splunk and Microsoft Sentinel
-  queries for the lab and NDR stacks; a future step installs them and records
-  provenance.
+  queries, and `pipelines/deploy.py` packages them into an installable `deploy/`
+  bundle; a future step installs the bundle into the lab and NDR stacks and
+  records deployment provenance.
 - `purple/runner/run_emulation.py --execute` runs the plan against
   [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) via
   `docker exec`.

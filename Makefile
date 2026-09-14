@@ -17,7 +17,7 @@ help:
 	@echo "  lint             Run ruff over the repository"
 	@echo "  validate         Validate Sigma rules with sigma-cli (sigma check)"
 	@echo "  test             Run the rule and tooling test suite"
-	@echo "  rust             Format-check, lint and test the DNP3 DPI decoder"
+	@echo "  rust             Format-check, lint and test the Rust protocol decoders"
 	@echo "  convert          Convert Sigma rules to the BACKEND query language (default: loki)"
 	@echo "  convert-all      Convert to loki, opensearch, splunk and sentinel"
 	@echo "  deploy           Build the installable deployment bundle (deploy/)"
@@ -26,7 +26,7 @@ help:
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate the adversary emulation plan"
 	@echo "  metrics          Generate coverage, replay emulation, compute metrics"
-	@echo "  check            lint + validate + test (what CI runs)"
+	@echo "  check            lint + validate + test + rust + deploy-check"
 
 $(VENV)/bin/activate: requirements.txt
 	python3 -m venv $(VENV)
@@ -87,5 +87,5 @@ metrics: setup
 check: lint validate test rust deploy-check
 
 clean:
-	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out
+	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target
 	find . -type d -name __pycache__ -prune -exec rm -rf {} +
