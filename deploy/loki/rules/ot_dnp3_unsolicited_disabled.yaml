@@ -1,6 +1,6 @@
 # source: rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml
 groups:
-- name: Sigma rules
+- name: ot_dnp3_unsolicited_disabled
   rules:
   - alert: DNP3_Unsolicited_Responses_Disabled
     annotations:

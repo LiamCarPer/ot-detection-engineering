@@ -1,6 +1,6 @@
 # source: rules/sigma/ot/ot_modbus_device_identification_scan.yml
 groups:
-- name: Sigma rules
+- name: ot_modbus_device_identification_scan
   rules:
   - alert: Modbus_Device_Identification_Scan
     annotations:

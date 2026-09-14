@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -44,6 +45,15 @@ EXTENSIONS = {
     "sentinel": "kql",
     "opensearch": "ppl",
 }
+
+# pySigma's Loki ruler output always names the group "Sigma rules". Loki keys
+# rule groups by name within a namespace, so loading several files that share a
+# name collides. Rename each group after its rule file.
+LOKI_GROUP_RE = re.compile(r"^(- name:\s*).*$", re.MULTILINE)
+
+
+def _rename_ruler_group(document: str, name: str) -> str:
+    return LOKI_GROUP_RE.sub(rf"\g<1>{name}", document, count=1)
 
 
 def _convert(backend_cls, text: str, output_format: str | None) -> list[str]:
@@ -93,6 +103,8 @@ def build_bundle() -> dict[str, str]:
         for rule_path in sigma_rules:
             text = rule_path.read_text(encoding="utf-8")
             queries = _convert(backend_cls, text, output_format)
+            if target == "loki":
+                queries = [_rename_ruler_group(query, rule_path.stem) for query in queries]
             relative = rule_path.relative_to(REPO_ROOT).as_posix()
             artifact = f"{directory}/{rule_path.stem}.{extension}"
             body = f"{comment} source: {relative}\n" + "\n".join(queries) + "\n"

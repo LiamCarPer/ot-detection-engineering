@@ -1,6 +1,6 @@
 # source: rules/sigma/ot/ot_firewall_cross_zone_violation.yml
 groups:
-- name: Sigma rules
+- name: ot_firewall_cross_zone_violation
   rules:
   - alert: Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone
     annotations:

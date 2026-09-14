@@ -1,6 +1,6 @@
 # source: rules/sigma/ot/ot_s7comm_program_upload.yml
 groups:
-- name: Sigma rules
+- name: ot_s7comm_program_upload
   rules:
   - alert: S7comm_Program_Upload
     annotations:

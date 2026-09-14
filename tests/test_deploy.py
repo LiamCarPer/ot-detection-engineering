@@ -54,6 +54,16 @@ def test_loki_rules_are_valid_ruler_yaml() -> None:
             assert group["rules"][0]["expr"], rule_file.name
 
 
+def test_loki_group_names_are_unique() -> None:
+    # Loki keys rule groups by name within a namespace, so the files must not
+    # all reuse the backend's default group name.
+    names = []
+    for rule_file in sorted((DEPLOY_DIR / "loki" / "rules").glob("*.yaml")):
+        document = yaml.safe_load(rule_file.read_text(encoding="utf-8"))
+        names.extend(group["name"] for group in document["groups"])
+    assert len(names) == len(set(names)), f"duplicate Loki group names: {names}"
+
+
 def test_suricata_bundle_contains_every_native_sid() -> None:
     bundle = (DEPLOY_DIR / "suricata" / "ot-detection.rules").read_text(encoding="utf-8")
     expected = set()

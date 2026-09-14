@@ -1,6 +1,6 @@
 # source: rules/sigma/ot/ot_s7comm_change_operating_mode.yml
 groups:
-- name: Sigma rules
+- name: ot_s7comm_change_operating_mode
   rules:
   - alert: S7comm_PLC_Control_Or_Stop
     annotations:

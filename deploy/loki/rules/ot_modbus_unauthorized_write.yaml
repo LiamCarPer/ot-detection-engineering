@@ -1,6 +1,6 @@
 # source: rules/sigma/ot/ot_modbus_unauthorized_write.yml
 groups:
-- name: Sigma rules
+- name: ot_modbus_unauthorized_write
   rules:
   - alert: Modbus_Write_From_Unauthorized_Control_Writer
     annotations:

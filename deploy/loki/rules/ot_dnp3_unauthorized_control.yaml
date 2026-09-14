@@ -1,6 +1,6 @@
 # source: rules/sigma/ot/ot_dnp3_unauthorized_control.yml
 groups:
-- name: Sigma rules
+- name: ot_dnp3_unauthorized_control
   rules:
   - alert: DNP3_Control_Operation_From_Unauthorized_Master
     annotations:

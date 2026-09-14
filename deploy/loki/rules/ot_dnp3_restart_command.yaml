@@ -1,6 +1,6 @@
 # source: rules/sigma/ot/ot_dnp3_restart_command.yml
 groups:
-- name: Sigma rules
+- name: ot_dnp3_restart_command
   rules:
   - alert: DNP3_Cold_Or_Warm_Restart_Command
     annotations:

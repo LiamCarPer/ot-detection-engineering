@@ -1,6 +1,6 @@
 # source: rules/sigma/ot/ot_process_safety_violation.yml
 groups:
-- name: Sigma rules
+- name: ot_process_safety_violation
   rules:
   - alert: Process_Safety_Violation_From_Physics_Aware_Monitor
     annotations:
