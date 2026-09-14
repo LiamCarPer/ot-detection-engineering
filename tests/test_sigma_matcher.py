@@ -114,6 +114,13 @@ def test_keyword_detection_searches_all_values() -> None:
     assert not match(rule, {"message": "benign"})
 
 
+def test_logsource_routes_events_by_product() -> None:
+    rule = _rule("equality", "  selection:\n    code: 6\n  condition: selection")
+    assert match(rule, {"product": "test", "code": 6})
+    assert not match(rule, {"product": "other", "code": 6})
+    assert match(rule, {"code": 6})
+
+
 def test_unsupported_feature_raises() -> None:
     rule = _rule("fieldref", "  selection:\n    dst|fieldref: src\n  condition: selection")
     with pytest.raises(UnsupportedFeatureError):

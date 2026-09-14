@@ -55,7 +55,15 @@ class UnsupportedFeatureError(RuntimeError):
 
 
 def match(rule: SigmaRule, event: Mapping[str, Any]) -> bool:
-    """Return True if ``event`` satisfies ``rule``."""
+    """Return True if ``event`` satisfies ``rule``.
+
+    Sigma ``logsource`` is a routing directive: a rule only runs against the
+    data source it names. The matcher honours it when the event declares a
+    ``product``, ``service`` or ``category``, which prevents a protocol-specific
+    rule from firing on another protocol's events.
+    """
+    if not _logsource_matches(rule, event):
+        return False
     conditions = rule.detection.condition
     if not conditions:
         raise UnsupportedFeatureError(f"rule '{rule.title}' has no condition")
@@ -63,6 +71,18 @@ def match(rule: SigmaRule, event: Mapping[str, Any]) -> bool:
         _eval_condition(SigmaCondition(condition, rule.detection).parsed, event)
         for condition in conditions
     )
+
+
+def _logsource_matches(rule: SigmaRule, event: Mapping[str, Any]) -> bool:
+    logsource = rule.logsource
+    for field, expected in (
+        ("product", logsource.product),
+        ("service", logsource.service),
+        ("category", logsource.category),
+    ):
+        if expected is not None and field in event and event[field] != expected:
+            return False
+    return True
 
 
 def _eval_condition(node: Any, event: Mapping[str, Any]) -> bool:
