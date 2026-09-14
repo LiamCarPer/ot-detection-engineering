@@ -114,13 +114,14 @@ Findings:
 
 ## Lab integration (OT-Security-Lab)
 
-The generated ruler bundle is also deployed into the live lab. The lab's Loki
-evaluates rules from `/etc/loki/rules/fake`, and
-`lab-environment/scripts/firewall_events.py` on the gateway turns forwarded
-cross-zone drops into normalized `ot_firewall` events and pushes them to Loki.
-Containerised kernel `[IPTABLES_DROP]` logs are not readable without
-`CAP_SYSLOG`, so the gateway reconstructs the event from the packets it
-forwards, applying the same conduit policy the firewall enforces.
+The generated ruler bundle is also deployed into the live lab. Its rules live in
+`siem/rules/` — the generated `ot_*.yaml` files alongside the lab's hand-written
+`alerting-rules.yml` — and are mounted read-only at `/etc/loki/rules/fake`.
+`detection/rules/firewall_events.py`, started automatically by the gateway's
+`start_ids.sh`, turns forwarded cross-zone drops into normalized `ot_firewall`
+events and pushes them to Loki. Containerised kernel drop logs (`FW_DROP:`)
+cannot be read without `CAP_SYSLOG`, so the gateway reconstructs the event from
+the packets it forwards, applying the same conduit policy the firewall enforces.
 
 | Field | Value |
 | :--- | :--- |
@@ -130,8 +131,16 @@ forwards, applying the same conduit policy the firewall enforces.
 | Health | ok |
 | Evidence | `deploy/evidence/lab-loki/` (`summary.json`, `events.json`) |
 
+The lab evaluates 15 groups in total: the 13 generated groups plus its own
+`ot_security_alerts` and `ot_siem_health`.
+
 Findings:
 
+- **The ruler tenant path is `fake`.** The lab's alerting rules were mounted at
+  `/etc/loki/rules/ot-security/rules.yml`, but with `auth_enabled: false` the
+  ruler only reads `/etc/loki/rules/fake/`, so none of them ever loaded. Moving
+  the rules into the tenant directory makes the hand-written and generated rules
+  evaluate together.
 - **The local ruler does not recurse.** Rules must sit directly in
   `<rules_directory>/<tenant>/`; a subdirectory is ignored, and any non-YAML
   file in the tenant directory (here a README) aborts the entire listing with a
@@ -139,6 +148,9 @@ Findings:
 - **Mount rules outside the data path.** Mounting under `/tmp/loki` leaves the
   parent directory root-owned, and Loki, which runs unprivileged, then cannot
   create its chunk directory.
+- **Service-name DNS is unreliable on the multi-homed gateway.** The shipper
+  addresses Loki's static lab address instead of the `loki` service name, which
+  the four-network gateway does not resolve.
 
 ## Decoder validation
 

@@ -1,5 +1,5 @@
 {
-  "events": 10,
+  "events": 8,
   "group": "ot_firewall_cross_zone_violation",
   "health": "ok",
   "rule": "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
