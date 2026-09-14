@@ -2,7 +2,7 @@
 
 Functional validation needs traffic, and the repository ships its own so the
 proof is reproducible without a live plant. Each capture is a benign and an
-attack variant for Modbus, DNP3 and OPC UA. Sessions include a full TCP
+attack variant for Modbus, DNP3, OPC UA and S7comm. Sessions include a full TCP
 handshake so Suricata treats them as established flows, which the
 ``flow:to_server,established`` rules require.
 

@@ -3,8 +3,8 @@
 This is not a Suricata parser. It extracts the fields this repository requires
 every native rule to carry (sid, rev, msg, classtype, and an ATT&CK for ICS
 metadata tag) so that native detection content is governed by the same tests as
-the Sigma rules. Functional validation of the rules themselves happens in the
-NDR pipeline that runs Suricata.
+the Sigma rules. Functional validation of the rules themselves happens in
+tools/suricata_check.py and the NDR pipeline that runs Suricata.
 """
 
 from __future__ import annotations

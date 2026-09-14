@@ -27,16 +27,16 @@ ATTACK_TAG_RE = re.compile(r"^attack\.t(?P<number>\d{4}(?:\.\d{3})?)$")
 
 
 def sigma_rule_paths() -> list[Path]:
-    return sorted(
-        path for path in SIGMA_RULES_DIR.rglob("*.yml") if not path.name.endswith(".test.yml")
-    )
+    # Sidecars are *.test.yaml and do not match the *.yml glob; the guard keeps a
+    # sidecar named *.test.yml from ever being treated as a rule.
+    return sorted(path for path in SIGMA_RULES_DIR.rglob("*.yml") if ".test." not in path.name)
 
 
 def native_rule_paths() -> list[Path]:
     return sorted(NATIVE_RULES_DIR.rglob("*.rules"))
 
 
-def load_catalog() -> dict:
+def load_catalog() -> dict[str, Any]:
     return json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
 
 

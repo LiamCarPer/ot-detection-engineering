@@ -31,11 +31,10 @@ if str(REPO_ROOT / "coverage") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "coverage"))
 
 from generate_coverage import build_report  # noqa: E402
+from sigma.rule import SigmaRule  # noqa: E402
 
 from tools.otde.matcher import match  # noqa: E402
-from tools.otde.rules import (  # noqa: E402
-    REPO_ROOT as _REPO_ROOT,
-)
+from tools.otde.rules import REPO_ROOT as _REPO_ROOT  # noqa: E402
 from tools.otde.rules import load_cases, sigma_rule_paths  # noqa: E402
 
 DEFAULT_BASELINE = _REPO_ROOT / "metrics" / "baseline" / "benign-events.jsonl"
@@ -58,8 +57,6 @@ def load_baseline(path: Path) -> list[dict]:
 
 
 def fixture_metrics() -> tuple[list[dict], dict]:
-    from sigma.rule import SigmaRule
-
     per_rule = []
     totals = {"tp": 0, "fn": 0, "fp": 0, "tn": 0}
     for rule_path in sigma_rule_paths():
@@ -96,10 +93,11 @@ def fixture_metrics() -> tuple[list[dict], dict]:
 
 
 def baseline_metrics(events: list[dict]) -> dict:
-    from sigma.rule import SigmaRule
-
     rules = [
-        (path.relative_to(_REPO_ROOT).as_posix(), SigmaRule.from_yaml(path.read_text("utf-8")))
+        (
+            path.relative_to(_REPO_ROOT).as_posix(),
+            SigmaRule.from_yaml(path.read_text(encoding="utf-8")),
+        )
         for path in sigma_rule_paths()
     ]
     false_positives = []

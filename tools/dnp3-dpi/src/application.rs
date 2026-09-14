@@ -9,9 +9,6 @@
 //! layer. That first header is enough to distinguish control objects
 //! (group 12, binary output; group 41, analog output) from monitoring data.
 
-/// DNP3 application function codes that issue a control operation.
-pub const CONTROL_FUNCTIONS: [u8; 4] = [3, 4, 5, 6];
-
 /// Application response function code.
 pub const FUNCTION_RESPONSE: u8 = 129;
 /// Application unsolicited-response function code.
@@ -51,13 +48,6 @@ pub struct ApplicationHeader {
     pub objects: Vec<ObjectHeader>,
     /// Control code for a binary-output control object (group 12), if present.
     pub control_code: Option<u8>,
-}
-
-impl ApplicationHeader {
-    /// True when the function code is a control operation.
-    pub fn is_control(&self) -> bool {
-        CONTROL_FUNCTIONS.contains(&self.function)
-    }
 }
 
 /// Human-readable application function name.

@@ -10,6 +10,7 @@ sys.path.insert(0, str(REPO_ROOT / "metrics"))
 sys.path.insert(0, str(REPO_ROOT / "coverage"))
 
 from compute import baseline_metrics, fixture_metrics, load_baseline, render_markdown  # noqa: E402
+from generate_coverage import build_report  # noqa: E402
 
 from tools.otde.rules import REPO_ROOT as _REPO_ROOT  # noqa: E402
 
@@ -40,7 +41,7 @@ def test_report_renders() -> None:
     per_rule, aggregate = fixture_metrics()
     report = render_markdown(
         {
-            "coverage": {"techniques_covered": 5, "techniques_total": 97, "coverage_pct": 5.2},
+            "coverage": build_report()["summary"],
             "rule_validation": {"per_rule": per_rule, "aggregate": aggregate},
             "baseline": {
                 "false_positive_events": 0,

@@ -17,20 +17,19 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from convert import BACKENDS, rule_files  # noqa: E402
+from convert import BACKENDS, rule_files, sha256  # noqa: E402
 from sigma.collection import SigmaCollection  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = REPO_ROOT / "deploy"
 
-# Deployment targets: backend class, output format, comment prefix, target dir.
+# Deployment targets: backend key, output format, comment prefix, target dir.
 SIGMA_DEPLOY = {
     "loki": ("loki", "ruler", "#", "loki/rules"),
     "splunk": ("splunk", "savedsearches", "#", "splunk"),
@@ -38,17 +37,13 @@ SIGMA_DEPLOY = {
     "opensearch": ("opensearch", None, "#", "opensearch"),
 }
 
-# Extension per target for the combined file.
+# File extension per target.
 EXTENSIONS = {
     "loki": "yaml",
     "splunk": "conf",
     "sentinel": "kql",
     "opensearch": "ppl",
 }
-
-
-def sha256(text: str) -> str:
-    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def _convert(backend_cls, text: str, output_format: str | None) -> list[str]:

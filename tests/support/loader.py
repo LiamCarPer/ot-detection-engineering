@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from sigma.rule import SigmaRule
 
 from tools.otde.rules import (
@@ -20,7 +22,7 @@ from tools.otde.rules import (
 )
 
 
-def load_rule(rule_path):
+def load_rule(rule_path: Path) -> SigmaRule:
     return SigmaRule.from_yaml(rule_path.read_text(encoding="utf-8"))
 
 

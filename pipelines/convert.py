@@ -41,9 +41,8 @@ BACKENDS = {
 
 
 def rule_files(rules_dir: Path) -> list[Path]:
-    return sorted(
-        path for path in rules_dir.rglob("*.yml") if not path.name.endswith(".test.yml")
-    )
+    # Sidecars are *.test.yaml; the guard keeps a *.test.yml sidecar out.
+    return sorted(path for path in rules_dir.rglob("*.yml") if ".test." not in path.name)
 
 
 def sha256(text: str) -> str:
