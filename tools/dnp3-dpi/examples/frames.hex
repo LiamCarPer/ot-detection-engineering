@@ -1,0 +1,14 @@
+# Example DNP3 link frames for the dnp3-dpi decoder.
+#
+# Each line is one hex-encoded link frame with valid CRC-16/DNP header and
+# data-block checksums.
+
+# Direct Operate (function 5) on a binary-output control object (group 12,
+# variation 1), control code 3 (LATCH_ON), from link address 3 to address 1.
+05641044010003001e25c0c0050c01170000000003f19c
+
+# Disable Unsolicited (function 21) from link address 3 to address 1.
+056408440100030003c7c0c0157ecb
+
+# Cold Restart (function 13) from link address 3 to address 1.
+056408440100030003c7c0c00d9c86

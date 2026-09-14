@@ -1,0 +1,19 @@
+[package]
+name = "dnp3-dpi"
+version = "0.1.0"
+edition = "2021"
+description = "DNP3 deep packet inspection: decode link, transport and application layers and emit normalized OT detection events."
+license = "MIT"
+repository = "https://github.com/LiamCarPer/ot-detection-engineering"
+
+[lib]
+name = "dnp3_dpi"
+path = "src/lib.rs"
+
+[[bin]]
+name = "dnp3-dpi"
+path = "src/main.rs"
+
+[profile.release]
+lto = true
+codegen-units = 1

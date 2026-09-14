@@ -16,6 +16,10 @@ The `suricata/` directory contains deep packet inspection rules per protocol:
 | `dnp3_dpi.rules` | DNP3 | Function-code and object-header DPI (control, write, device scan) |
 | `opcua_dpi.rules` | OPC UA (`tcp/4840`) | Message-header DPI (Hello, OpenSecureChannel) |
 
+DNP3 control operations are also detected at the application layer:
+[tools/dnp3-dpi](../../tools/dnp3-dpi) decodes frames into normalized events and
+the `ot_dnp3_*` Sigma rules apply the master allowlist on top.
+
 They are governed by the same conventions as the Sigma rules:
 
 - **Technique tagging.** Every rule carries `metadata: attack_ics <technique>`,

@@ -1,0 +1,33 @@
+title: DNP3 Cold Or Warm Restart Command
+id: fecd2fd4-e612-48be-8d1c-ebbd0679783e
+status: experimental
+description: |
+  Detects a DNP3 Cold Restart or Warm Restart function. Both disrupt an
+  outstation: a cold restart reinitializes the device, while a warm restart
+  restarts the application. Outside a maintenance window this is a strong
+  indicator of an attempt to disrupt control or to force a device into a
+  recoverable state.
+references:
+  - https://attack.mitre.org/techniques/T0816/
+author: Liam Carvajal
+date: 2026-09-13
+logsource:
+  product: ot_ndr
+  service: dnp3
+detection:
+  selection:
+    direction: request
+    function_code:
+      - 13
+      - 14
+  condition: selection
+fields:
+  - link_source
+  - link_destination
+  - function_name
+falsepositives:
+  - A planned restart during a maintenance window or firmware update
+  - Commissioning of a new outstation
+level: high
+tags:
+  - attack.t0816

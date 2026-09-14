@@ -1,0 +1,32 @@
+title: DNP3 Unsolicited Responses Disabled
+id: fdb03386-8bc9-4991-bb23-73c15b1d5e5f
+status: experimental
+description: |
+  Detects the DNP3 Disable Unsolicited function. Outstations report events
+  without polling through unsolicited responses; disabling them suppresses that
+  reporting and can be used to blind operators to process changes.
+
+  The function is legitimate during some maintenance procedures, so this rule
+  should be correlated with a change window before escalation.
+references:
+  - https://attack.mitre.org/techniques/T0878/
+author: Liam Carvajal
+date: 2026-09-13
+logsource:
+  product: ot_ndr
+  service: dnp3
+detection:
+  selection:
+    direction: request
+    function_code: 21
+  condition: selection
+fields:
+  - link_source
+  - link_destination
+  - function_name
+falsepositives:
+  - A planned maintenance procedure that temporarily disables unsolicited reporting
+  - Commissioning of a new outstation
+level: medium
+tags:
+  - attack.t0878

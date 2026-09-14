@@ -10,6 +10,9 @@ venv/
 .ruff_cache/
 .mypy_cache/
 
+# Rust
+target/
+
 # Generated / runtime artifacts
 build/
 dist/

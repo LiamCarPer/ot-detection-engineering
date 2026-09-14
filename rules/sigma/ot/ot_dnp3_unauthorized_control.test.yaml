@@ -1,0 +1,62 @@
+cases:
+  - name: unauthorized direct operate
+    expect: match
+    event:
+      timestamp: "2026-09-13T07:10:00Z"
+      direction: request
+      function_code: 5
+      function_name: Direct Operate
+      link_source: 7
+      link_destination: 1
+      link_function: 4
+      object_group: 12
+      object_variation: 1
+      control_code: 3
+
+  - name: unauthorized select
+    expect: match
+    event:
+      timestamp: "2026-09-13T07:10:02Z"
+      direction: request
+      function_code: 3
+      function_name: Select
+      link_source: 9
+      link_destination: 1
+      link_function: 4
+      object_group: 12
+      object_variation: 1
+
+  - name: authorized master direct operate
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T07:11:00Z"
+      direction: request
+      function_code: 5
+      function_name: Direct Operate
+      link_source: 1
+      link_destination: 1
+      link_function: 4
+      object_group: 12
+      object_variation: 1
+
+  - name: response is not a control operation
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T07:11:01Z"
+      direction: response
+      function_code: 129
+      function_name: Response
+      link_source: 7
+      link_destination: 1
+      iin: 0
+
+  - name: unauthorized read is not a control operation
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T07:11:30Z"
+      direction: request
+      function_code: 1
+      function_name: Read
+      link_source: 7
+      link_destination: 1
+      link_function: 1

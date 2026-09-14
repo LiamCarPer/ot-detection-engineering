@@ -25,6 +25,18 @@ jobs:
       - name: Install toolchain
         run: pip install -r requirements.txt
 
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Format-check, lint and test the DNP3 DPI decoder
+        working-directory: tools/dnp3-dpi
+        run: |
+          cargo fmt --check
+          cargo clippy --all-targets -- -D warnings
+          cargo test
+
       - name: Lint
         run: ruff check .
 

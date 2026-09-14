@@ -1,0 +1,45 @@
+title: DNP3 Control Operation From Unauthorized Master
+id: c56a5b89-e153-4ae5-aed9-2397f691b4d4
+status: experimental
+description: |
+  Detects a DNP3 control operation (Select, Operate, Direct Operate or Direct
+  Operate No Ack) issued by a master that is not an approved control master.
+  DNP3 control functions change physical outputs, so a control operation from an
+  unexpected link address is either a compromised host or an unauthorized
+  engineering change.
+
+  The rule operates on decoded DNP3 events (see docs/TELEMETRY.md) produced by
+  tools/dnp3-dpi. Authorized master link addresses are site-specific.
+references:
+  - https://attack.mitre.org/techniques/T1692/001/
+author: Liam Carvajal
+date: 2026-09-13
+logsource:
+  product: ot_ndr
+  service: dnp3
+detection:
+  selection_direction:
+    direction: request
+  selection_control:
+    function_code:
+      - 3
+      - 4
+      - 5
+      - 6
+  filter_authorized_master:
+    link_source:
+      - 1
+      - 2
+  condition: selection_direction and selection_control and not filter_authorized_master
+fields:
+  - link_source
+  - link_destination
+  - function_name
+  - object_group
+  - control_code
+falsepositives:
+  - A newly commissioned control master not yet added to the allowlist
+  - An authorized master that changes its DNP3 link address
+level: high
+tags:
+  - attack.t1692.001

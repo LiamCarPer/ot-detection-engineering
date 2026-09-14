@@ -1,0 +1,33 @@
+cases:
+  - name: disable unsolicited request
+    expect: match
+    event:
+      timestamp: "2026-09-13T07:20:00Z"
+      direction: request
+      function_code: 21
+      function_name: Disable Unsolicited
+      link_source: 7
+      link_destination: 1
+      link_function: 4
+
+  - name: enable unsolicited is not disable
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T07:20:05Z"
+      direction: request
+      function_code: 20
+      function_name: Enable Unsolicited
+      link_source: 1
+      link_destination: 1
+      link_function: 4
+
+  - name: disable unsolicited as a response
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T07:20:10Z"
+      direction: response
+      function_code: 21
+      function_name: Disable Unsolicited
+      link_source: 1
+      link_destination: 7
+      iin: 0

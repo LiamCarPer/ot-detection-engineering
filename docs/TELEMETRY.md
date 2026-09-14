@@ -64,3 +64,29 @@ Events from the physics-aware process safety monitor.
 `response` is an enum rather than a boolean because not every conversion target
 can express boolean values; using a string keeps the rule portable across
 backends.
+
+## `ot_ndr` / `dnp3`
+
+Decoded DNP3 application messages. One record per request or response, produced
+by [`tools/dnp3-dpi`](../tools/dnp3-dpi) from link frames or a network capture.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `timestamp` | string | ISO 8601 UTC, added by the collector. |
+| `direction` | string | `request` or `response`. |
+| `function_code` | integer | DNP3 application function code (for example `3`, `5`, `21`). |
+| `function_name` | string | Function name (for example `Direct Operate`). |
+| `link_source` | integer | DNP3 link source address (the master). |
+| `link_destination` | integer | DNP3 link destination address (the outstation). |
+| `link_function` | integer | Link layer function code. |
+| `object_group` | integer | First object group (for example `12` binary output control). |
+| `object_variation` | integer | First object variation. |
+| `object_count` | integer | Object count from the first header. |
+| `control_code` | integer | Control code for a binary-output control object. |
+| `iin` | integer | Internal indications, present on responses. |
+| `transport_sequence` | integer | Transport sequence number. |
+| `application_sequence` | integer | Application sequence number. |
+
+DNP3 uses link addresses rather than IP addresses, so the allowlists in the
+rules are expressed against `link_source`. A collector that also knows the
+transport endpoints can add `src_ip`/`dst_ip`.
