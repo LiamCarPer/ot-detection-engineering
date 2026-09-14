@@ -11,9 +11,9 @@ Usage:
         --stix /tmp/ics-attack.json \
         --out metadata/attack_ics_catalog.json
 
-If ``--stix`` is omitted the bundle is downloaded from the URL in
-``STIX_SOURCE_URL``; the download is not cached by design, so re-running the
-command always reflects the upstream release requested by ``--version``.
+If ``--stix`` is omitted the bundle is downloaded from ``STIX_SOURCE_URL``.
+Nothing is cached, so re-running the command reflects the current upstream
+release.
 """
 
 from __future__ import annotations
@@ -41,7 +41,8 @@ def _external_id(obj: dict[str, Any]) -> str | None:
 
 
 def _attack_url(technique_id: str) -> str:
-    return f"https://attack.mitre.org/techniques/{technique_id}/"
+    # Sub-techniques are nested in the URL: T1692.001 -> techniques/T1692/001/.
+    return f"https://attack.mitre.org/techniques/{technique_id.replace('.', '/')}/"
 
 
 def build_catalog(stix: dict[str, Any]) -> dict[str, Any]:

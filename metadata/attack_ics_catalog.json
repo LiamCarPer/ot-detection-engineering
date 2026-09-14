@@ -362,7 +362,7 @@
       "tactics": [
         "TA0109"
       ],
-      "url": "https://attack.mitre.org/techniques/T0843.001/"
+      "url": "https://attack.mitre.org/techniques/T0843/001/"
     },
     {
       "id": "T0843.002",
@@ -371,7 +371,7 @@
       "tactics": [
         "TA0109"
       ],
-      "url": "https://attack.mitre.org/techniques/T0843.002/"
+      "url": "https://attack.mitre.org/techniques/T0843/002/"
     },
     {
       "id": "T0843.003",
@@ -380,7 +380,7 @@
       "tactics": [
         "TA0109"
       ],
-      "url": "https://attack.mitre.org/techniques/T0843.003/"
+      "url": "https://attack.mitre.org/techniques/T0843/003/"
     },
     {
       "id": "T0845",
@@ -407,7 +407,7 @@
       "tactics": [
         "TA0102"
       ],
-      "url": "https://attack.mitre.org/techniques/T0846.001/"
+      "url": "https://attack.mitre.org/techniques/T0846/001/"
     },
     {
       "id": "T0846.002",
@@ -416,7 +416,7 @@
       "tactics": [
         "TA0102"
       ],
-      "url": "https://attack.mitre.org/techniques/T0846.002/"
+      "url": "https://attack.mitre.org/techniques/T0846/002/"
     },
     {
       "id": "T0846.003",
@@ -425,7 +425,7 @@
       "tactics": [
         "TA0102"
       ],
-      "url": "https://attack.mitre.org/techniques/T0846.003/"
+      "url": "https://attack.mitre.org/techniques/T0846/003/"
     },
     {
       "id": "T0847",
@@ -627,7 +627,7 @@
       "tactics": [
         "TA0110"
       ],
-      "url": "https://attack.mitre.org/techniques/T0873.001/"
+      "url": "https://attack.mitre.org/techniques/T0873/001/"
     },
     {
       "id": "T0874",
@@ -819,7 +819,7 @@
       "tactics": [
         "TA0107"
       ],
-      "url": "https://attack.mitre.org/techniques/T1691.001/"
+      "url": "https://attack.mitre.org/techniques/T1691/001/"
     },
     {
       "id": "T1691.002",
@@ -828,7 +828,7 @@
       "tactics": [
         "TA0107"
       ],
-      "url": "https://attack.mitre.org/techniques/T1691.002/"
+      "url": "https://attack.mitre.org/techniques/T1691/002/"
     },
     {
       "id": "T1692",
@@ -848,7 +848,7 @@
         "TA0103",
         "TA0106"
       ],
-      "url": "https://attack.mitre.org/techniques/T1692.001/"
+      "url": "https://attack.mitre.org/techniques/T1692/001/"
     },
     {
       "id": "T1692.002",
@@ -858,7 +858,7 @@
         "TA0103",
         "TA0106"
       ],
-      "url": "https://attack.mitre.org/techniques/T1692.002/"
+      "url": "https://attack.mitre.org/techniques/T1692/002/"
     },
     {
       "id": "T1693",
@@ -880,7 +880,7 @@
         "TA0107",
         "TA0106"
       ],
-      "url": "https://attack.mitre.org/techniques/T1693.001/"
+      "url": "https://attack.mitre.org/techniques/T1693/001/"
     },
     {
       "id": "T1693.002",
@@ -891,7 +891,7 @@
         "TA0107",
         "TA0106"
       ],
-      "url": "https://attack.mitre.org/techniques/T1693.002/"
+      "url": "https://attack.mitre.org/techniques/T1693/002/"
     },
     {
       "id": "T1694",
@@ -911,7 +911,7 @@
         "TA0110",
         "TA0109"
       ],
-      "url": "https://attack.mitre.org/techniques/T1694.001/"
+      "url": "https://attack.mitre.org/techniques/T1694/001/"
     },
     {
       "id": "T1694.002",
@@ -921,7 +921,7 @@
         "TA0110",
         "TA0109"
       ],
-      "url": "https://attack.mitre.org/techniques/T1694.002/"
+      "url": "https://attack.mitre.org/techniques/T1694/002/"
     },
     {
       "id": "T1695",
@@ -939,7 +939,7 @@
       "tactics": [
         "TA0107"
       ],
-      "url": "https://attack.mitre.org/techniques/T1695.001/"
+      "url": "https://attack.mitre.org/techniques/T1695/001/"
     },
     {
       "id": "T1695.002",
@@ -948,7 +948,7 @@
       "tactics": [
         "TA0107"
       ],
-      "url": "https://attack.mitre.org/techniques/T1695.002/"
+      "url": "https://attack.mitre.org/techniques/T1695/002/"
     },
     {
       "id": "T1695.003",
@@ -957,7 +957,7 @@
       "tactics": [
         "TA0107"
       ],
-      "url": "https://attack.mitre.org/techniques/T1695.003/"
+      "url": "https://attack.mitre.org/techniques/T1695/003/"
     }
   ]
 }
