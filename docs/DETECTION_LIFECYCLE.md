@@ -66,7 +66,7 @@ The event fields must match the telemetry contract in
 
 Create or extend a file under `rules/native/suricata/`. Every rule needs `msg`,
 `classtype`, `sid`, `rev`, and `metadata: attack_ics <technique>`. SIDs live in
-the reserved `1000000-1000999` range and must be unique.
+the reserved `9000000-9000099` range and must be unique.
 
 ## 2. Validate
 

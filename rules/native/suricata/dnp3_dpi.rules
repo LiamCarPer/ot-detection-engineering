@@ -7,7 +7,7 @@
 # (ot_dnp3_*) fed by tools/dnp3-dpi.
 #
 # Conventions (see rules/native/README.md):
-#   - sid range 1000000-1000999 is reserved for this repository
+#   - sid range 9000000-9000099 is reserved for this repository
 #   - metadata carries attack_ics <technique> for the generated coverage map
 #   - the approved-master allowlist mirrors the Modbus authorised-writer set
 #
@@ -17,29 +17,29 @@
 
 # --- Control and write operations from unauthorized masters ------------------
 
-alert dnp3 [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Direct Operate From Unauthorized Master"; flow:to_server,established; dnp3_func:direct_operate; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000005; rev:1;)
+alert dnp3 [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Direct Operate From Unauthorized Master"; flow:to_server,established; dnp3_func:direct_operate; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000005; rev:1;)
 
-alert dnp3 [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Write From Unauthorized Master"; flow:to_server,established; dnp3_func:write; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000006; rev:1;)
+alert dnp3 [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Write From Unauthorized Master"; flow:to_server,established; dnp3_func:write; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000006; rev:1;)
 
 # --- Discovery --------------------------------------------------------------
 
-alert dnp3 any any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Device Attribute Scan (Object Group 0)"; flow:to_server,established; dnp3_func:read; dnp3_obj:0,0; classtype:network-scan; metadata: attack_ics T0888, detection_status experimental; reference:url,attack.mitre.org/techniques/T0888/; sid:1000007; rev:1;)
+alert dnp3 any any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Device Attribute Scan (Object Group 0)"; flow:to_server,established; dnp3_func:read; dnp3_obj:0,0; classtype:network-scan; metadata: attack_ics T0888, detection_status experimental; reference:url,attack.mitre.org/techniques/T0888/; sid:9000007; rev:1;)
 
 # --- Control operations from any source -------------------------------------
 # Broad DPI signals: Suricata sees the function code but not whether the master
 # is authorized. The master allowlist is applied by the Sigma rules over decoded
 # events, which is why direct_operate is not duplicated here.
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Select Control Operation"; flow:to_server,established; dnp3_func:select; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000010; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Select Control Operation"; flow:to_server,established; dnp3_func:select; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000010; rev:1;)
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Operate Control Operation"; flow:to_server,established; dnp3_func:operate; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000011; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Operate Control Operation"; flow:to_server,established; dnp3_func:operate; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000011; rev:1;)
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Direct Operate No Ack Control Operation"; flow:to_server,established; dnp3_func:direct_operate_nr; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000012; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Direct Operate No Ack Control Operation"; flow:to_server,established; dnp3_func:direct_operate_nr; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000012; rev:1;)
 
 # --- Reporting suppression and disruptive commands --------------------------
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Unsolicited Responses Disabled"; flow:to_server,established; dnp3_func:disable_unsolicited; classtype:policy-violation; metadata: attack_ics T0878, detection_status experimental; reference:url,attack.mitre.org/techniques/T0878/; sid:1000013; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Unsolicited Responses Disabled"; flow:to_server,established; dnp3_func:disable_unsolicited; classtype:policy-violation; metadata: attack_ics T0878, detection_status experimental; reference:url,attack.mitre.org/techniques/T0878/; sid:9000013; rev:1;)
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Cold Restart Command"; flow:to_server,established; dnp3_func:cold_restart; classtype:attempted-dos; metadata: attack_ics T0816, detection_status experimental; reference:url,attack.mitre.org/techniques/T0816/; sid:1000014; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Cold Restart Command"; flow:to_server,established; dnp3_func:cold_restart; classtype:attempted-dos; metadata: attack_ics T0816, detection_status experimental; reference:url,attack.mitre.org/techniques/T0816/; sid:9000014; rev:1;)
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Warm Restart Command"; flow:to_server,established; dnp3_func:warm_restart; classtype:attempted-dos; metadata: attack_ics T0816, detection_status experimental; reference:url,attack.mitre.org/techniques/T0816/; sid:1000015; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Warm Restart Command"; flow:to_server,established; dnp3_func:warm_restart; classtype:attempted-dos; metadata: attack_ics T0816, detection_status experimental; reference:url,attack.mitre.org/techniques/T0816/; sid:9000015; rev:1;)

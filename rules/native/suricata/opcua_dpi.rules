@@ -7,7 +7,7 @@
 # (F = final, C = intermediate, A = abort).
 #
 # Conventions (see rules/native/README.md):
-#   - sid range 1000000-1000999 is reserved for this repository
+#   - sid range 9000000-9000099 is reserved for this repository
 #   - metadata carries attack_ics <technique> for the generated coverage map
 #
 # Approved OPC UA clients: 172.21.0.20 and 172.22.0.10. OPC UA servers live in
@@ -15,8 +15,8 @@
 
 # OPN = OpenSecureChannel. A secure-channel request from outside the approved
 # client set is a remote-services / unauthorised-session signal.
-alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 4840 (msg:"OT OPC UA OpenSecureChannel From Unauthorized Client"; flow:to_server,established; content:"|4F 50 4E|"; depth:3; classtype:policy-violation; metadata: attack_ics T0886, detection_status experimental; reference:url,attack.mitre.org/techniques/T0886/; sid:1000008; rev:1;)
+alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 4840 (msg:"OT OPC UA OpenSecureChannel From Unauthorized Client"; flow:to_server,established; content:"|4F 50 4E|"; depth:3; classtype:policy-violation; metadata: attack_ics T0886, detection_status experimental; reference:url,attack.mitre.org/techniques/T0886/; sid:9000008; rev:1;)
 
 # HEL = Hello, the first message of any OPC UA TCP session. Catches a connection
 # attempt from an unapproved host before the secure channel is established.
-alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 4840 (msg:"OT OPC UA Hello From Unapproved Client"; flow:to_server,established; content:"|48 45 4C|"; depth:3; classtype:policy-violation; metadata: attack_ics T0886, detection_status experimental; reference:url,attack.mitre.org/techniques/T0886/; sid:1000009; rev:1;)
+alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 4840 (msg:"OT OPC UA Hello From Unapproved Client"; flow:to_server,established; content:"|48 45 4C|"; depth:3; classtype:policy-violation; metadata: attack_ics T0886, detection_status experimental; reference:url,attack.mitre.org/techniques/T0886/; sid:9000009; rev:1;)

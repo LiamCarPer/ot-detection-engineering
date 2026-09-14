@@ -6,7 +6,7 @@
 # offset 17. Connection setup (COTP CR/CC) has no S7 header, so the 0x32 anchor
 # keeps these rules from firing on it.
 #
-# Conventions (see rules/native/README.md): sid range 1000000-1000999, and
+# Conventions (see rules/native/README.md): sid range 9000000-9000099, and
 # metadata carrying attack_ics <technique> for the generated coverage map.
 #
 # Authorized engineering clients: 172.21.0.20 (EWS) and 172.22.0.10 (HMI).
@@ -14,26 +14,26 @@
 
 # --- Program download (T0843) -----------------------------------------------
 
-alert tcp any any -> any 102 (msg:"OT S7comm Request Download"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1a|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:1000020; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm Request Download"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1a|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:9000020; rev:1;)
 
-alert tcp any any -> any 102 (msg:"OT S7comm Download Block"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1b|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:1000021; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm Download Block"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1b|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:9000021; rev:1;)
 
-alert tcp any any -> any 102 (msg:"OT S7comm Download Ended"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1c|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:1000022; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm Download Ended"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1c|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:9000022; rev:1;)
 
 # --- Program upload (T0845) -------------------------------------------------
 
-alert tcp any any -> any 102 (msg:"OT S7comm Start Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1d|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:1000023; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm Start Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1d|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:9000023; rev:1;)
 
-alert tcp any any -> any 102 (msg:"OT S7comm Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1e|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:1000024; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1e|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:9000024; rev:1;)
 
-alert tcp any any -> any 102 (msg:"OT S7comm End Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1f|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:1000025; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm End Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1f|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:9000025; rev:1;)
 
 # --- Change operating mode (T0858) ------------------------------------------
 
-alert tcp any any -> any 102 (msg:"OT S7comm PLC Control"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|28|"; offset:17; depth:1; classtype:attempted-dos; metadata: attack_ics T0858, detection_status experimental; reference:url,attack.mitre.org/techniques/T0858/; sid:1000026; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm PLC Control"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|28|"; offset:17; depth:1; classtype:attempted-dos; metadata: attack_ics T0858, detection_status experimental; reference:url,attack.mitre.org/techniques/T0858/; sid:9000026; rev:1;)
 
-alert tcp any any -> any 102 (msg:"OT S7comm PLC Stop"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|29|"; offset:17; depth:1; classtype:attempted-dos; metadata: attack_ics T0858, detection_status experimental; reference:url,attack.mitre.org/techniques/T0858/; sid:1000027; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm PLC Stop"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|29|"; offset:17; depth:1; classtype:attempted-dos; metadata: attack_ics T0858, detection_status experimental; reference:url,attack.mitre.org/techniques/T0858/; sid:9000027; rev:1;)
 
 # --- Unauthorized write (T1692.001) -----------------------------------------
 
-alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.21.0.0/24 102 (msg:"OT S7comm Write Variable From Unauthorized Client"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|05|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000028; rev:1;)
+alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.21.0.0/24 102 (msg:"OT S7comm Write Variable From Unauthorized Client"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|05|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000028; rev:1;)

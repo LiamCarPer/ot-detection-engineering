@@ -12,7 +12,7 @@
 # (ot_dnp3_*) fed by tools/dnp3-dpi.
 #
 # Conventions (see rules/native/README.md):
-#   - sid range 1000000-1000999 is reserved for this repository
+#   - sid range 9000000-9000099 is reserved for this repository
 #   - metadata carries attack_ics <technique> for the generated coverage map
 #   - the approved-master allowlist mirrors the Modbus authorised-writer set
 #
@@ -22,32 +22,32 @@
 
 # --- Control and write operations from unauthorized masters ------------------
 
-alert dnp3 [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Direct Operate From Unauthorized Master"; flow:to_server,established; dnp3_func:direct_operate; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000005; rev:1;)
+alert dnp3 [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Direct Operate From Unauthorized Master"; flow:to_server,established; dnp3_func:direct_operate; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000005; rev:1;)
 
-alert dnp3 [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Write From Unauthorized Master"; flow:to_server,established; dnp3_func:write; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000006; rev:1;)
+alert dnp3 [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Write From Unauthorized Master"; flow:to_server,established; dnp3_func:write; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000006; rev:1;)
 
 # --- Discovery --------------------------------------------------------------
 
-alert dnp3 any any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Device Attribute Scan (Object Group 0)"; flow:to_server,established; dnp3_func:read; dnp3_obj:0,0; classtype:network-scan; metadata: attack_ics T0888, detection_status experimental; reference:url,attack.mitre.org/techniques/T0888/; sid:1000007; rev:1;)
+alert dnp3 any any -> 172.31.0.0/24 20000 (msg:"OT DNP3 Device Attribute Scan (Object Group 0)"; flow:to_server,established; dnp3_func:read; dnp3_obj:0,0; classtype:network-scan; metadata: attack_ics T0888, detection_status experimental; reference:url,attack.mitre.org/techniques/T0888/; sid:9000007; rev:1;)
 
 # --- Control operations from any source -------------------------------------
 # Broad DPI signals: Suricata sees the function code but not whether the master
 # is authorized. The master allowlist is applied by the Sigma rules over decoded
 # events, which is why direct_operate is not duplicated here.
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Select Control Operation"; flow:to_server,established; dnp3_func:select; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000010; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Select Control Operation"; flow:to_server,established; dnp3_func:select; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000010; rev:1;)
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Operate Control Operation"; flow:to_server,established; dnp3_func:operate; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000011; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Operate Control Operation"; flow:to_server,established; dnp3_func:operate; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000011; rev:1;)
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Direct Operate No Ack Control Operation"; flow:to_server,established; dnp3_func:direct_operate_nr; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000012; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Direct Operate No Ack Control Operation"; flow:to_server,established; dnp3_func:direct_operate_nr; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000012; rev:1;)
 
 # --- Reporting suppression and disruptive commands --------------------------
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Unsolicited Responses Disabled"; flow:to_server,established; dnp3_func:disable_unsolicited; classtype:policy-violation; metadata: attack_ics T0878, detection_status experimental; reference:url,attack.mitre.org/techniques/T0878/; sid:1000013; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Unsolicited Responses Disabled"; flow:to_server,established; dnp3_func:disable_unsolicited; classtype:policy-violation; metadata: attack_ics T0878, detection_status experimental; reference:url,attack.mitre.org/techniques/T0878/; sid:9000013; rev:1;)
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Cold Restart Command"; flow:to_server,established; dnp3_func:cold_restart; classtype:attempted-dos; metadata: attack_ics T0816, detection_status experimental; reference:url,attack.mitre.org/techniques/T0816/; sid:1000014; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Cold Restart Command"; flow:to_server,established; dnp3_func:cold_restart; classtype:attempted-dos; metadata: attack_ics T0816, detection_status experimental; reference:url,attack.mitre.org/techniques/T0816/; sid:9000014; rev:1;)
 
-alert dnp3 any any -> any 20000 (msg:"OT DNP3 Warm Restart Command"; flow:to_server,established; dnp3_func:warm_restart; classtype:attempted-dos; metadata: attack_ics T0816, detection_status experimental; reference:url,attack.mitre.org/techniques/T0816/; sid:1000015; rev:1;)
+alert dnp3 any any -> any 20000 (msg:"OT DNP3 Warm Restart Command"; flow:to_server,established; dnp3_func:warm_restart; classtype:attempted-dos; metadata: attack_ics T0816, detection_status experimental; reference:url,attack.mitre.org/techniques/T0816/; sid:9000015; rev:1;)
 
 # === rules/native/suricata/modbus_dpi.rules ===
 # Modbus/TCP deep packet inspection rules.
@@ -55,7 +55,7 @@ alert dnp3 any any -> any 20000 (msg:"OT DNP3 Warm Restart Command"; flow:to_ser
 # Sigma cannot express industrial protocol semantics such as Modbus function
 # codes, so these detections are authored natively for Suricata. They share the
 # repository's conventions:
-#   - sid range 1000000-1000999 is reserved for this repository
+#   - sid range 9000000-9000099 is reserved for this repository
 #   - metadata carries attack_ics <technique> so coverage is generated from the
 #     same catalog as the Sigma rules
 #   - the authorized-writer allowlist mirrors the Sigma rule of the same name
@@ -63,16 +63,16 @@ alert dnp3 any any -> any 20000 (msg:"OT DNP3 Warm Restart Command"; flow:to_ser
 # Authorized control writers: 172.21.0.20 (HMI control interface) and
 # 172.22.0.10 (HMI supervisory interface).
 
-alert modbus [!172.21.0.20,!172.22.0.10] any -> 172.21.0.0/24 502 (msg:"OT Modbus Write Single Register From Unauthorized Control Writer"; flow:to_server,established; modbus: function 6; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000001; rev:1;)
+alert modbus [!172.21.0.20,!172.22.0.10] any -> 172.21.0.0/24 502 (msg:"OT Modbus Write Single Register From Unauthorized Control Writer"; flow:to_server,established; modbus: function 6; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000001; rev:1;)
 
-alert modbus [!172.21.0.20,!172.22.0.10] any -> 172.21.0.0/24 502 (msg:"OT Modbus Write Multiple Registers From Unauthorized Control Writer"; flow:to_server,established; modbus: function 16; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000002; rev:1;)
+alert modbus [!172.21.0.20,!172.22.0.10] any -> 172.21.0.0/24 502 (msg:"OT Modbus Write Multiple Registers From Unauthorized Control Writer"; flow:to_server,established; modbus: function 16; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000002; rev:1;)
 
-alert modbus any any -> 172.21.0.0/24 502 (msg:"OT Modbus Device Identification Scan"; flow:to_server,established; modbus: function 43; classtype:network-scan; metadata: attack_ics T0888, detection_status experimental; reference:url,attack.mitre.org/techniques/T0888/; sid:1000003; rev:1;)
+alert modbus any any -> 172.21.0.0/24 502 (msg:"OT Modbus Device Identification Scan"; flow:to_server,established; modbus: function 43; classtype:network-scan; metadata: attack_ics T0888, detection_status experimental; reference:url,attack.mitre.org/techniques/T0888/; sid:9000003; rev:1;)
 
 # The legacy modbus keyword matches requests only, so this detects a write to a
 # holding register above any plausible process map: a fuzzer probing addresses,
 # or a control command aimed past the configured register range.
-alert modbus any any -> any 502 (msg:"OT Modbus Write To Undefined Holding Register"; flow:to_server,established; modbus: access write holding, address >40000; classtype:attempted-recon; metadata: attack_ics T0806, detection_status experimental; reference:url,attack.mitre.org/techniques/T0806/; sid:1000004; rev:2;)
+alert modbus any any -> any 502 (msg:"OT Modbus Write To Undefined Holding Register"; flow:to_server,established; modbus: access write holding, address >40000; classtype:attempted-recon; metadata: attack_ics T0806, detection_status experimental; reference:url,attack.mitre.org/techniques/T0806/; sid:9000004; rev:2;)
 
 # === rules/native/suricata/opcua_dpi.rules ===
 # OPC UA deep packet inspection rules.
@@ -84,7 +84,7 @@ alert modbus any any -> any 502 (msg:"OT Modbus Write To Undefined Holding Regis
 # (F = final, C = intermediate, A = abort).
 #
 # Conventions (see rules/native/README.md):
-#   - sid range 1000000-1000999 is reserved for this repository
+#   - sid range 9000000-9000099 is reserved for this repository
 #   - metadata carries attack_ics <technique> for the generated coverage map
 #
 # Approved OPC UA clients: 172.21.0.20 and 172.22.0.10. OPC UA servers live in
@@ -92,11 +92,11 @@ alert modbus any any -> any 502 (msg:"OT Modbus Write To Undefined Holding Regis
 
 # OPN = OpenSecureChannel. A secure-channel request from outside the approved
 # client set is a remote-services / unauthorised-session signal.
-alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 4840 (msg:"OT OPC UA OpenSecureChannel From Unauthorized Client"; flow:to_server,established; content:"|4F 50 4E|"; depth:3; classtype:policy-violation; metadata: attack_ics T0886, detection_status experimental; reference:url,attack.mitre.org/techniques/T0886/; sid:1000008; rev:1;)
+alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 4840 (msg:"OT OPC UA OpenSecureChannel From Unauthorized Client"; flow:to_server,established; content:"|4F 50 4E|"; depth:3; classtype:policy-violation; metadata: attack_ics T0886, detection_status experimental; reference:url,attack.mitre.org/techniques/T0886/; sid:9000008; rev:1;)
 
 # HEL = Hello, the first message of any OPC UA TCP session. Catches a connection
 # attempt from an unapproved host before the secure channel is established.
-alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 4840 (msg:"OT OPC UA Hello From Unapproved Client"; flow:to_server,established; content:"|48 45 4C|"; depth:3; classtype:policy-violation; metadata: attack_ics T0886, detection_status experimental; reference:url,attack.mitre.org/techniques/T0886/; sid:1000009; rev:1;)
+alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 4840 (msg:"OT OPC UA Hello From Unapproved Client"; flow:to_server,established; content:"|48 45 4C|"; depth:3; classtype:policy-violation; metadata: attack_ics T0886, detection_status experimental; reference:url,attack.mitre.org/techniques/T0886/; sid:9000009; rev:1;)
 
 # === rules/native/suricata/s7comm_dpi.rules ===
 # S7comm (Siemens) network inspection rules.
@@ -107,7 +107,7 @@ alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 4840 (msg:"OT OPC UA 
 # offset 17. Connection setup (COTP CR/CC) has no S7 header, so the 0x32 anchor
 # keeps these rules from firing on it.
 #
-# Conventions (see rules/native/README.md): sid range 1000000-1000999, and
+# Conventions (see rules/native/README.md): sid range 9000000-9000099, and
 # metadata carrying attack_ics <technique> for the generated coverage map.
 #
 # Authorized engineering clients: 172.21.0.20 (EWS) and 172.22.0.10 (HMI).
@@ -115,26 +115,26 @@ alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.31.0.0/24 4840 (msg:"OT OPC UA 
 
 # --- Program download (T0843) -----------------------------------------------
 
-alert tcp any any -> any 102 (msg:"OT S7comm Request Download"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1a|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:1000020; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm Request Download"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1a|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:9000020; rev:1;)
 
-alert tcp any any -> any 102 (msg:"OT S7comm Download Block"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1b|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:1000021; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm Download Block"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1b|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:9000021; rev:1;)
 
-alert tcp any any -> any 102 (msg:"OT S7comm Download Ended"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1c|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:1000022; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm Download Ended"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1c|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0843, detection_status experimental; reference:url,attack.mitre.org/techniques/T0843/; sid:9000022; rev:1;)
 
 # --- Program upload (T0845) -------------------------------------------------
 
-alert tcp any any -> any 102 (msg:"OT S7comm Start Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1d|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:1000023; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm Start Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1d|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:9000023; rev:1;)
 
-alert tcp any any -> any 102 (msg:"OT S7comm Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1e|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:1000024; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1e|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:9000024; rev:1;)
 
-alert tcp any any -> any 102 (msg:"OT S7comm End Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1f|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:1000025; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm End Upload"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|1f|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T0845, detection_status experimental; reference:url,attack.mitre.org/techniques/T0845/; sid:9000025; rev:1;)
 
 # --- Change operating mode (T0858) ------------------------------------------
 
-alert tcp any any -> any 102 (msg:"OT S7comm PLC Control"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|28|"; offset:17; depth:1; classtype:attempted-dos; metadata: attack_ics T0858, detection_status experimental; reference:url,attack.mitre.org/techniques/T0858/; sid:1000026; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm PLC Control"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|28|"; offset:17; depth:1; classtype:attempted-dos; metadata: attack_ics T0858, detection_status experimental; reference:url,attack.mitre.org/techniques/T0858/; sid:9000026; rev:1;)
 
-alert tcp any any -> any 102 (msg:"OT S7comm PLC Stop"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|29|"; offset:17; depth:1; classtype:attempted-dos; metadata: attack_ics T0858, detection_status experimental; reference:url,attack.mitre.org/techniques/T0858/; sid:1000027; rev:1;)
+alert tcp any any -> any 102 (msg:"OT S7comm PLC Stop"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|29|"; offset:17; depth:1; classtype:attempted-dos; metadata: attack_ics T0858, detection_status experimental; reference:url,attack.mitre.org/techniques/T0858/; sid:9000027; rev:1;)
 
 # --- Unauthorized write (T1692.001) -----------------------------------------
 
-alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.21.0.0/24 102 (msg:"OT S7comm Write Variable From Unauthorized Client"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|05|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:1000028; rev:1;)
+alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.21.0.0/24 102 (msg:"OT S7comm Write Variable From Unauthorized Client"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|05|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000028; rev:1;)

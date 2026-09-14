@@ -29,8 +29,11 @@ They are governed by the same conventions as the Sigma rules:
 - **Technique tagging.** Every rule carries `metadata: attack_ics <technique>`,
   parsed by `tests/test_native_rules.py` and folded into the same coverage map
   as the Sigma tags.
-- **Reserved identifiers.** `sid` values fall in `1000000-1000999`, which this
-  repository reserves. `tests/test_native_rules.py` enforces uniqueness and
+- **Reserved identifiers.** `sid` values fall in `9000000-9000099`, a private
+  block this repository reserves. It sits above the Emerging Threats
+  (`2000000-2999999`) and NSacyber ELITEWOLF (`1000000-1001022`) ranges that
+  Malcolm ships with, so the ruleset loads alongside those defaults instead of
+  colliding with them. `tests/test_native_rules.py` enforces uniqueness and
   range.
 - **Required fields.** `msg`, `classtype`, `sid` and `rev` are required.
 

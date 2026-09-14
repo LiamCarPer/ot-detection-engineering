@@ -11,8 +11,8 @@ from tools.otde.suricata import read_rules
 
 RULE_PATHS = native_rule_paths()
 TECHNIQUE_IDS = technique_ids()
-SID_MIN = 1000000
-SID_MAX = 1000999
+SID_MIN = 9000000
+SID_MAX = 9000099
 
 
 def _path_id(path: Path) -> str:

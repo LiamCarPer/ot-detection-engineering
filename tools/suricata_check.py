@@ -39,6 +39,9 @@ SURICATA_SETS = [
 
 def run_suricata(name: str, image: str) -> Path:
     out_dir = EVIDENCE_DIR / name
+    # Suricata appends to an existing eve.json, so start from a clean directory;
+    # otherwise a rerun merges fresh alerts with the committed evidence.
+    shutil.rmtree(out_dir, ignore_errors=True)
     out_dir.mkdir(parents=True, exist_ok=True)
     command = [
         "docker", "run", "--rm",

@@ -22,13 +22,13 @@ make decoder-check
 
 | Capture | Expected | Observed |
 | :--- | :--- | :--- |
-| `modbus_attack` | 1000001, 1000002, 1000004 | 1000001, 1000002, 1000004 |
+| `modbus_attack` | 9000001, 9000002, 9000004 | 9000001, 9000002, 9000004 |
 | `modbus_benign` | none | none |
-| `dnp3_attack` | 1000005-1000007, 1000010-1000015 | 1000005-1000007, 1000010-1000015 |
+| `dnp3_attack` | 9000005-9000007, 9000010-9000015 | 9000005-9000007, 9000010-9000015 |
 | `dnp3_benign` | none | none |
-| `opcua_attack` | 1000008, 1000009 | 1000008, 1000009 |
+| `opcua_attack` | 9000008, 9000009 | 9000008, 9000009 |
 | `opcua_benign` | none | none |
-| `s7comm_attack` | 1000020-1000028 | 1000020-1000028 |
+| `s7comm_attack` | 9000020-9000028 | 9000020-9000028 |
 | `s7comm_benign` | none | none |
 
 Every attack capture fires exactly the expected signatures and every benign
@@ -44,7 +44,7 @@ capture is silent.
   is not valid Suricata syntax, and the legacy `modbus` keyword matches requests
   only, so exception responses cannot be inspected with it. The rule was
   replaced with a request-side detection of writes above any plausible register
-  map (sid 1000004), which fires on the capture.
+  map (sid 9000004), which fires on the capture.
 - **OPC UA rules fire on the message header alone.** Suricata has no OPC UA
   application-layer parser, so those rules match the 3-byte message type with
   `content`/`depth`. Application-layer OPC UA detection would need a decoder,

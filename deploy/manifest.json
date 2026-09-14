@@ -314,25 +314,25 @@
     },
     {
       "source": "rules/native/suricata/dnp3_dpi.rules",
-      "source_sha256": "7cfd5e654e54f13fb06f64e2deeb476c8e0f462c6f76e33c4b26a1978edbc30e",
+      "source_sha256": "d6af15c486927cea409fb752bb81238fa16ca546a84a8492f3b91ff67e1ddb48",
       "target": "suricata/ot-detection.rules",
       "backend": "suricata"
     },
     {
       "source": "rules/native/suricata/modbus_dpi.rules",
-      "source_sha256": "7bb14d3541ed0ff6c287efeb209d41b66b2e58d64294466477b3db3b316aa601",
+      "source_sha256": "657146d43f385645047333f06502cb60ad6d96a47bf98842a094bcc15533d683",
       "target": "suricata/ot-detection.rules",
       "backend": "suricata"
     },
     {
       "source": "rules/native/suricata/opcua_dpi.rules",
-      "source_sha256": "139cd3794a6a83aa64f3c9b6afebe275c5acdd587937ef8dc74ebe2f8d8e7134",
+      "source_sha256": "2e9953f5c1128809378ec9b92c5bbf094152885e5f3d21e8327424ceab513e25",
       "target": "suricata/ot-detection.rules",
       "backend": "suricata"
     },
     {
       "source": "rules/native/suricata/s7comm_dpi.rules",
-      "source_sha256": "4db1811668644176ec396b4ebc3285243ce0bac48e5d0735f792ff38c85f3770",
+      "source_sha256": "f624f7e69c7c3cec8edc2abbfb8a1da934fe131f0275d5a3830124edd290c71e",
       "target": "suricata/ot-detection.rules",
       "backend": "suricata"
     }

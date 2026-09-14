@@ -31,7 +31,7 @@ make suricata-check   # re-run Suricata over the captures (Docker)
   [docs/DETECTION_LIFECYCLE.md](docs/DETECTION_LIFECYCLE.md).
 - **Every rule is tagged.** At least one ATT&CK for ICS technique tag, drawn
   from `metadata/attack_ics_catalog.json`.
-- **Respect the SID range.** Native rules use unique SIDs in `1000000-1000999`.
+- **Respect the SID range.** Native rules use unique SIDs in `9000000-9000099`.
 - **Document false positives.** The `falsepositives` field is required and is
   used to interpret baseline results.
 - **Do not hand-edit derived artifacts.** `deploy/`, coverage and metrics are
