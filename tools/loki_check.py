@@ -101,6 +101,18 @@ CASES: dict[str, dict[str, str]] = {
         "attack": "event_type=process_safety_violation response=none",
         "benign": "event_type=process_update response=none",
     },
+    "OPC_UA_Write_Request": {
+        "attack": "message_type=MSG opcua_service=WriteRequest direction=request",
+        "benign": "message_type=MSG opcua_service=ReadRequest direction=request",
+    },
+    "OPC_UA_Method_Call_Request": {
+        "attack": "message_type=MSG opcua_service=CallRequest direction=request",
+        "benign": "message_type=MSG opcua_service=ReadRequest direction=request",
+    },
+    "OPC_UA_Address_Space_Browse": {
+        "attack": "message_type=MSG opcua_service=BrowseRequest direction=request",
+        "benign": "message_type=MSG opcua_service=ReadRequest direction=request",
+    },
 }
 
 assert set(CASES) == EXPECTED_LOKI_ALERTS, "smoke-test cases drift from evidence.py"

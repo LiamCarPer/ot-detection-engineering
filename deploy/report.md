@@ -56,8 +56,8 @@ capture is silent.
 ## Loki ruler
 
 `make loki-check` starts the stack in `tests/loki-stack/`, mounts the generated
-`deploy/loki/rules/`, ships ten attack log lines (one per rule) and ten benign
-lines, and confirms through an Alertmanager webhook which alerts fire.
+`deploy/loki/rules/`, ships one attack log line and one benign line per rule, and
+confirms through an Alertmanager webhook which alerts fire.
 
 | Field | Value |
 | :--- | :--- |
@@ -66,7 +66,7 @@ lines, and confirms through an Alertmanager webhook which alerts fire.
 | Grafana | 13.2.1 |
 | Evidence | `deploy/evidence/loki/` (`summary.json`, `alerts.json`) |
 
-All ten expected alerts fired and no benign event produced an alert.
+All expected alerts fired and no benign event produced an alert.
 
 Findings:
 
@@ -76,3 +76,7 @@ Findings:
 - **Rule-group names must be unique.** pySigma's Loki ruler output names every
   group `Sigma rules`, so loading several files collides. `pipelines/deploy.py`
   now names each group after its rule file.
+- **`service_name` is a reserved Loki label.** Loki promotes a `service_name`
+  field to a stream label, so `| logfmt` renames the extracted field to
+  `service_name_extracted` and a rule filtering on `service_name` silently never
+  matches. The OPC UA decoder emits `opcua_service` instead.

@@ -24,6 +24,18 @@
     "status": "firing"
   },
   {
+    "alertname": "OPC_UA_Address_Space_Browse",
+    "status": "firing"
+  },
+  {
+    "alertname": "OPC_UA_Method_Call_Request",
+    "status": "firing"
+  },
+  {
+    "alertname": "OPC_UA_Write_Request",
+    "status": "firing"
+  },
+  {
     "alertname": "Process_Safety_Violation_From_Physics_Aware_Monitor",
     "status": "firing"
   },
