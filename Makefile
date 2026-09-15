@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust convert convert-all deploy deploy-check suricata-check loki-check decoder-check lab-loki-check coverage emulate-validate metrics check clean
+.PHONY: help setup lint validate test rust demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check lab-loki-check coverage emulate-validate metrics check clean
 
 help:
 	@echo "Targets:"
@@ -18,6 +18,7 @@ help:
 	@echo "  validate         Validate Sigma rules with sigma-cli (sigma check)"
 	@echo "  test             Run the rule and tooling test suite"
 	@echo "  rust             Format-check, lint and test the Rust protocol decoders"
+	@echo "  demo             Offline decoder -> Sigma rule -> SIEM query walkthrough"
 	@echo "  convert          Convert Sigma rules to the BACKEND query language (default: loki)"
 	@echo "  convert-all      Convert to loki, opensearch, splunk and sentinel"
 	@echo "  deploy           Build the installable deployment bundle (deploy/)"
@@ -54,6 +55,9 @@ rust:
 	cd $(RUST_DIR) && $(CARGO) fmt --check
 	cd $(RUST_DIR) && $(CARGO) clippy --workspace --all-targets -- -D warnings
 	cd $(RUST_DIR) && $(CARGO) test --workspace
+
+demo: setup
+	$(PY) tools/demo.py
 
 convert: setup
 	$(PY) pipelines/convert.py --backend $(BACKEND) --rules $(RULES)
