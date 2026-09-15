@@ -11,6 +11,9 @@ sys.path.insert(0, str(REPO_ROOT / "coverage"))
 
 from compute import baseline_metrics, fixture_metrics, load_baseline, render_markdown  # noqa: E402
 from generate_coverage import build_report  # noqa: E402
+from sigma.rule import SigmaRule  # noqa: E402
+
+from tools.otde.rules import sigma_rule_paths  # noqa: E402
 
 
 def test_fixture_aggregate_matches_per_rule() -> None:
@@ -33,6 +36,18 @@ def test_no_rule_fires_on_the_benign_baseline() -> None:
     result = baseline_metrics(events)
     assert result["events_total"] == len(events)
     assert result["false_positive_events"] == 0, result["details"]
+
+
+def test_baseline_covers_every_rule_logsource() -> None:
+    # A rule whose logsource has no benign event is never actually tested for
+    # false positives, so the baseline must span every telemetry domain a rule
+    # consumes.
+    events = load_baseline(REPO_ROOT / "metrics" / "baseline" / "benign-events.jsonl")
+    covered = {(event.get("product"), event.get("service")) for event in events}
+    for rule_path in sigma_rule_paths():
+        rule = SigmaRule.from_yaml(rule_path.read_text(encoding="utf-8"))
+        key = (rule.logsource.product, rule.logsource.service)
+        assert key in covered, f"no benign baseline event for {key} ({rule_path.name})"
 
 
 def test_report_renders() -> None:

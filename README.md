@@ -19,7 +19,7 @@ metrics are derived from the rules themselves, so they cannot drift.
   S7comm and OPC UA frame, matches each event against the Sigma rules, and prints
   the generated Loki, Splunk, Sentinel and OpenSearch queries. No Docker, no
   network.
-- **Run the full check:** `make check` (lint, Sigma validation, 175 tests, the
+- **Run the full check:** `make check` (lint, Sigma validation, 177 tests, the
   Rust decoders, and deployment-bundle drift).
 - **Read the proof:** `deploy/report.md` records 11 generated detection rules
   firing on live traffic in a Dockerized OT lab, the Suricata ruleset running
