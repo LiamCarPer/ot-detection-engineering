@@ -18,7 +18,8 @@ metrics are derived from the rules themselves, so they cannot drift.
 - **See it run in a minute:** `make setup && make demo` decodes a real DNP3,
   S7comm and OPC UA frame, matches each event against the Sigma rules, and prints
   the generated Loki, Splunk, Sentinel and OpenSearch queries. No Docker, no
-  network.
+  network. A recorded transcript is in
+  [`docs/demo-output.txt`](docs/demo-output.txt).
 - **Run the full check:** `make check` (lint, Sigma validation, 177 tests, the
   Rust decoders, and deployment-bundle drift).
 - **Read the proof:** `deploy/report.md` records 11 generated detection rules

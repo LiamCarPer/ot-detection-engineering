@@ -1,0 +1,80 @@
+# Recorded output of `make demo` (offline; no Docker or network).
+# Regenerate with: make demo
+
+
+OT Detection Engineering — decoder -> Sigma rule -> SIEM query
+====================================================================
+
+## dnp3  (3 decoded events from tools/dnp3-dpi/examples/frames.hex)
+  normalized event:
+    direction: "request"
+    function_code: 5
+    function_name: "Direct Operate"
+    link_source: 3
+    link_destination: 1
+    link_function: 4
+    link_function_name: "Operate"
+    transport_sequence: 0
+    application_sequence: 0
+    object_group: 12
+    object_variation: 1
+    object_count: 1
+    control_code: 3
+  rules fired: DNP3 Cold Or Warm Restart Command, DNP3 Control Operation From Unauthorized Master, DNP3 Unsolicited Responses Disabled
+
+## s7comm  (4 decoded events from tools/s7comm-dpi/examples/frames.hex)
+  normalized event:
+    direction: "request"
+    function_code: 26
+    function_name: "Request Download"
+    rosctr: 1
+    pdu_reference: 620
+    parameter_length: 1
+    data_length: 0
+    cotp_type: 240
+  rules fired: S7comm PLC Control Or Stop, S7comm Program Download, S7comm Program Upload
+
+## opcua  (5 decoded events from tools/opcua-dpi/examples/frames.hex)
+  normalized event:
+    message_type: "MSG"
+    chunk_type: "F"
+    secure_channel_id: 1
+    token_id: 1
+    sequence_number: 2
+    request_id: 2
+    service_id: 673
+    opcua_service: "WriteRequest"
+    direction: "request"
+  rules fired: OPC UA Address Space Browse, OPC UA Method Call Request, OPC UA Write Request
+
+## Generated queries
+====================================================================
+
+DNP3 Cold Or Warm Restart Command  [T0816]
+
+  [loki .logql]
+    {job=~".+"} | logfmt | direction=~`(?i)^request$` and (function_code=13 or function_code=14) | line_format "{{.link_source}} {{.link_destination}} {{.function_name}}"
+
+  [splunk .spl]
+    direction="request" function_code IN (13, 14) | table link_source,link_destination,function_name
+
+  [sentinel .kql]
+    direction =~ "request" and (function_code in~ ("13", "14"))
+
+  [opensearch .ppl]
+    source=ot_ndr-dnp3-* | where direction="request" AND (function_code in (13, 14))
+
+## Summary
+====================================================================
+  protocols decoded : 3
+  events evaluated  : 12
+  distinct rules fired: 9
+    - DNP3 Cold Or Warm Restart Command
+    - DNP3 Control Operation From Unauthorized Master
+    - DNP3 Unsolicited Responses Disabled
+    - OPC UA Address Space Browse
+    - OPC UA Method Call Request
+    - OPC UA Write Request
+    - S7comm PLC Control Or Stop
+    - S7comm Program Download
+    - S7comm Program Upload
