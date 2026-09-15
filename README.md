@@ -26,6 +26,8 @@ metrics are derived from the rules themselves, so they cannot drift.
   inside a Malcolm pipeline, and the decoder-to-rule proof.
 - **Understand the tradeoffs:** `docs/DESIGN_DECISIONS.md` explains why the
   system is built this way and what it does not do.
+- **One-page summary:** [`docs/RESULTS.md`](docs/RESULTS.md) lists every claim,
+  its evidence and how to reproduce it.
 
 ## Results
 
@@ -146,7 +148,7 @@ coverage/             ATT&CK for ICS coverage map generator
 purple/               Adversary emulation plan, runner and recorded observations
 metrics/              Detection-quality computation and benign baseline
 tests/                Rule, metadata, coverage and metrics tests
-docs/                 Architecture, design decisions, telemetry and lifecycle docs
+docs/                 Architecture, design decisions, results, telemetry, lifecycle
 ```
 
 ## Quickstart
