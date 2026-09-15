@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_firewall_enterprise_control_service.yml
+action =~ "ACCEPT" and (src_zone =~ "it" and dst_zone =~ "control") and (dst_port in~ ("102", "502", "4840", "20000"))

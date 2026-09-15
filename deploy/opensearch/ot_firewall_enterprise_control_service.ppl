@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_firewall_enterprise_control_service.yml
+source=ot_firewall-iptables-* | where action="ACCEPT" AND src_zone="it" AND dst_zone="control" AND (dst_port in (102, 502, 4840, 20000))

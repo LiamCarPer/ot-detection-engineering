@@ -1,0 +1,31 @@
+# source: rules/sigma/ot/ot_modbus_parameter_write.yml
+groups:
+- name: ot_modbus_parameter_write
+  rules:
+  - alert: Modbus_Write_To_Safety_Critical_Parameter_Register
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a Modbus write to a register above the mapped process
+        band, where
+
+        safety-critical configuration parameters live. Writes to a parameter register
+
+        change how the controller behaves, not just the value it reports; an unexpected
+
+        write here can disable an interlock or push a device outside its safe envelope.
+
+
+        This is the target-side counterpart to the unauthorized-writer rule: it fires
+
+        on the register being touched regardless of who the writer is. The parameter
+
+        band is site-specific and must be tuned per environment.
+
+        '
+      summary: Modbus Write To Safety Critical Parameter Register
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      (function_code=6 or function_code=16) and register>=4000 | line_format "{{.src_ip}}
+      {{.dst_ip}} {{.function_code}} {{.register}} {{.value}}" [1m])) or vector(0)
+      > 0
+    labels:
+      severity: high

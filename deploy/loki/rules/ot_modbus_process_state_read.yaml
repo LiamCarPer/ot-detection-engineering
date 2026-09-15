@@ -1,0 +1,31 @@
+# source: rules/sigma/ot/ot_modbus_process_state_read.yml
+groups:
+- name: ot_modbus_process_state_read
+  rules:
+  - alert: Modbus_Process_State_Read_From_Unauthorized_Source
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a Modbus read of process data (holding or input registers)
+        from a host
+
+        that is not an approved operator interface. In a segmented OT network, process
+
+        reads should originate only from the HMI or the supervisory collector; a read
+
+        from any other source is reconnaissance or a compromised host mapping the
+
+        process before acting on it.
+
+
+        This rule operates on normalized NDR telemetry (see docs/TELEMETRY.md). The
+
+        approved readers are site-specific and must be tuned per environment.
+
+        '
+      summary: Modbus Process State Read From Unauthorized Source
+    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
+      (function_code=3 or function_code=4) and src_ip!~`(?i)^172\.21\.0\.20$` and
+      src_ip!~`(?i)^172\.22\.0\.10$` | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}}
+      {{.register}}" [1m])) or vector(0) > 0
+    labels:
+      severity: low

@@ -19,15 +19,39 @@
       "backend": "loki"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_control_zone_egress.yml",
+      "source_sha256": "d63e2e04d929f54a7829cc7a4e9d326ad8d60d8995e204d4c26a54c82cbb60c2",
+      "target": "loki/rules/ot_firewall_control_zone_egress.yaml",
+      "backend": "loki"
+    },
+    {
       "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
       "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
       "target": "loki/rules/ot_firewall_cross_zone_violation.yaml",
       "backend": "loki"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_enterprise_control_service.yml",
+      "source_sha256": "c8de7d6ba6d24d30d650cb7ff9e7c9f9ee06bb6487edeeb44141a3f89e613e55",
+      "target": "loki/rules/ot_firewall_enterprise_control_service.yaml",
+      "backend": "loki"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
       "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
       "target": "loki/rules/ot_modbus_device_identification_scan.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_parameter_write.yml",
+      "source_sha256": "f7a8222d90214b224220f901505b8c74216d3a44984bf63a2a37c429e6e0e1c9",
+      "target": "loki/rules/ot_modbus_parameter_write.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
+      "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
+      "target": "loki/rules/ot_modbus_process_state_read.yaml",
       "backend": "loki"
     },
     {
@@ -97,15 +121,39 @@
       "backend": "opensearch"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_control_zone_egress.yml",
+      "source_sha256": "d63e2e04d929f54a7829cc7a4e9d326ad8d60d8995e204d4c26a54c82cbb60c2",
+      "target": "opensearch/ot_firewall_control_zone_egress.ppl",
+      "backend": "opensearch"
+    },
+    {
       "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
       "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
       "target": "opensearch/ot_firewall_cross_zone_violation.ppl",
       "backend": "opensearch"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_enterprise_control_service.yml",
+      "source_sha256": "c8de7d6ba6d24d30d650cb7ff9e7c9f9ee06bb6487edeeb44141a3f89e613e55",
+      "target": "opensearch/ot_firewall_enterprise_control_service.ppl",
+      "backend": "opensearch"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
       "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
       "target": "opensearch/ot_modbus_device_identification_scan.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_parameter_write.yml",
+      "source_sha256": "f7a8222d90214b224220f901505b8c74216d3a44984bf63a2a37c429e6e0e1c9",
+      "target": "opensearch/ot_modbus_parameter_write.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
+      "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
+      "target": "opensearch/ot_modbus_process_state_read.ppl",
       "backend": "opensearch"
     },
     {
@@ -175,15 +223,39 @@
       "backend": "sentinel"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_control_zone_egress.yml",
+      "source_sha256": "d63e2e04d929f54a7829cc7a4e9d326ad8d60d8995e204d4c26a54c82cbb60c2",
+      "target": "sentinel/ot_firewall_control_zone_egress.kql",
+      "backend": "sentinel"
+    },
+    {
       "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
       "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
       "target": "sentinel/ot_firewall_cross_zone_violation.kql",
       "backend": "sentinel"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_enterprise_control_service.yml",
+      "source_sha256": "c8de7d6ba6d24d30d650cb7ff9e7c9f9ee06bb6487edeeb44141a3f89e613e55",
+      "target": "sentinel/ot_firewall_enterprise_control_service.kql",
+      "backend": "sentinel"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
       "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
       "target": "sentinel/ot_modbus_device_identification_scan.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_parameter_write.yml",
+      "source_sha256": "f7a8222d90214b224220f901505b8c74216d3a44984bf63a2a37c429e6e0e1c9",
+      "target": "sentinel/ot_modbus_parameter_write.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
+      "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
+      "target": "sentinel/ot_modbus_process_state_read.kql",
       "backend": "sentinel"
     },
     {
@@ -253,15 +325,39 @@
       "backend": "splunk"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_control_zone_egress.yml",
+      "source_sha256": "d63e2e04d929f54a7829cc7a4e9d326ad8d60d8995e204d4c26a54c82cbb60c2",
+      "target": "splunk/ot_firewall_control_zone_egress.conf",
+      "backend": "splunk"
+    },
+    {
       "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
       "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
       "target": "splunk/ot_firewall_cross_zone_violation.conf",
       "backend": "splunk"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_enterprise_control_service.yml",
+      "source_sha256": "c8de7d6ba6d24d30d650cb7ff9e7c9f9ee06bb6487edeeb44141a3f89e613e55",
+      "target": "splunk/ot_firewall_enterprise_control_service.conf",
+      "backend": "splunk"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
       "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
       "target": "splunk/ot_modbus_device_identification_scan.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_parameter_write.yml",
+      "source_sha256": "f7a8222d90214b224220f901505b8c74216d3a44984bf63a2a37c429e6e0e1c9",
+      "target": "splunk/ot_modbus_parameter_write.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
+      "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
+      "target": "splunk/ot_modbus_process_state_read.conf",
       "backend": "splunk"
     },
     {

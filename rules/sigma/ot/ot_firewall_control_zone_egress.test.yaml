@@ -1,0 +1,72 @@
+cases:
+  - name: controller opens HTTPS to the enterprise
+    expect: match
+    event:
+      timestamp: "2026-09-15T08:20:00.100Z"
+      action: ACCEPT
+      proto: TCP
+      src_zone: control
+      dst_zone: it
+      src_ip: 172.21.0.10
+      dst_ip: 172.24.0.10
+      dst_port: 443
+
+  - name: controller resolves a name against enterprise DNS
+    expect: match
+    event:
+      timestamp: "2026-09-15T08:20:01.200Z"
+      action: ACCEPT
+      proto: UDP
+      src_zone: control
+      dst_zone: it
+      src_ip: 172.21.0.11
+      dst_ip: 172.24.0.53
+      dst_port: 53
+
+  - name: operations host reaches the enterprise
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:20:02.300Z"
+      action: ACCEPT
+      proto: TCP
+      src_zone: ops
+      dst_zone: it
+      src_ip: 172.23.0.50
+      dst_ip: 172.24.0.10
+      dst_port: 443
+
+  - name: controller reaches the industrial DMZ
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:20:03.400Z"
+      action: ACCEPT
+      proto: TCP
+      src_zone: control
+      dst_zone: dmz
+      src_ip: 172.21.0.10
+      dst_ip: 172.24.0.2
+      dst_port: 443
+
+  - name: control-to-enterprise flow that the firewall dropped
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:20:04.500Z"
+      action: DROP
+      proto: TCP
+      src_zone: control
+      dst_zone: it
+      src_ip: 172.21.0.10
+      dst_ip: 172.24.0.10
+      dst_port: 443
+
+  - name: controller reaches the enterprise historian port
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:20:05.600Z"
+      action: ACCEPT
+      proto: TCP
+      src_zone: control
+      dst_zone: it
+      src_ip: 172.21.0.10
+      dst_ip: 172.23.0.10
+      dst_port: 8086

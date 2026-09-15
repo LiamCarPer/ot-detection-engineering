@@ -1,0 +1,41 @@
+title: Modbus Write To Safety Critical Parameter Register
+id: dff8d708-aec1-49d0-be71-d74976a84f5e
+status: experimental
+description: |
+  Detects a Modbus write to a register above the mapped process band, where
+  safety-critical configuration parameters live. Writes to a parameter register
+  change how the controller behaves, not just the value it reports; an unexpected
+  write here can disable an interlock or push a device outside its safe envelope.
+
+  This is the target-side counterpart to the unauthorized-writer rule: it fires
+  on the register being touched regardless of who the writer is. The parameter
+  band is site-specific and must be tuned per environment.
+references:
+  - https://attack.mitre.org/techniques/T0836/
+author: Liam Carvajal
+date: 2026-09-15
+logsource:
+  product: ot_ndr
+  service: modbus
+detection:
+  selection_direction:
+    direction: request
+  selection_function:
+    function_code:
+      - 6
+      - 16
+  selection_band:
+    register|gte: 4000
+  condition: selection_direction and selection_function and selection_band
+fields:
+  - src_ip
+  - dst_ip
+  - function_code
+  - register
+  - value
+falsepositives:
+  - A documented engineering change to the safety parameter band during a window
+  - A controller whose register map legitimately extends above 4000
+level: high
+tags:
+  - attack.t0836

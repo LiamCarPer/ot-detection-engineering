@@ -1,0 +1,66 @@
+cases:
+  - name: enterprise host reads holding registers
+    expect: match
+    event:
+      timestamp: "2026-09-15T08:00:00.100Z"
+      direction: request
+      function_code: 3
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 0
+
+  - name: operations host reads input registers
+    expect: match
+    event:
+      timestamp: "2026-09-15T08:00:01.200Z"
+      direction: request
+      function_code: 4
+      src_ip: 172.23.0.50
+      dst_ip: 172.21.0.11
+      unit_id: 1
+      register: 100
+
+  - name: HMI control interface reads process state
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:00:02.300Z"
+      direction: request
+      function_code: 3
+      src_ip: 172.21.0.20
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 0
+
+  - name: HMI supervisory interface reads process state
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:00:03.400Z"
+      direction: request
+      function_code: 4
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 0
+
+  - name: unauthorized host writes rather than reads
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:00:04.500Z"
+      direction: request
+      function_code: 6
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 1024
+
+  - name: read response is not a read request
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:00:05.600Z"
+      direction: response
+      function_code: 3
+      src_ip: 172.21.0.10
+      dst_ip: 172.24.0.10
+      unit_id: 1
+      register: 0

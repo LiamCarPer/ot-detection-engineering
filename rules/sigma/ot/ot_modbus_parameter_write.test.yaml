@@ -1,0 +1,59 @@
+cases:
+  - name: single register write in the parameter band
+    expect: match
+    event:
+      timestamp: "2026-09-15T08:10:00.100Z"
+      direction: request
+      function_code: 6
+      src_ip: 172.21.0.20
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 4001
+      value: 1
+
+  - name: multiple register write starting at the band edge
+    expect: match
+    event:
+      timestamp: "2026-09-15T08:10:01.200Z"
+      direction: request
+      function_code: 16
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 4000
+      value: 0
+
+  - name: process setpoint write below the band
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:10:02.300Z"
+      direction: request
+      function_code: 6
+      src_ip: 172.21.0.20
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 1024
+      value: 50
+
+  - name: read of the parameter band is not a write
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:10:03.400Z"
+      direction: request
+      function_code: 3
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 4001
+
+  - name: write response is not a write request
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:10:04.500Z"
+      direction: response
+      function_code: 6
+      src_ip: 172.21.0.10
+      dst_ip: 172.21.0.20
+      unit_id: 1
+      register: 4001
+      value: 1

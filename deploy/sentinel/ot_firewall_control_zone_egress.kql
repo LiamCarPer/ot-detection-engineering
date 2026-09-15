@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_firewall_control_zone_egress.yml
+action =~ "ACCEPT" and (src_zone =~ "control" and dst_zone =~ "it") and (dst_port in~ ("53", "80", "443"))

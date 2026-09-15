@@ -1,0 +1,72 @@
+cases:
+  - name: enterprise host reaches a Modbus controller
+    expect: match
+    event:
+      timestamp: "2026-09-15T08:30:00.100Z"
+      action: ACCEPT
+      proto: TCP
+      src_zone: it
+      dst_zone: control
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      dst_port: 502
+
+  - name: enterprise host reaches an S7 controller
+    expect: match
+    event:
+      timestamp: "2026-09-15T08:30:01.200Z"
+      action: ACCEPT
+      proto: TCP
+      src_zone: it
+      dst_zone: control
+      src_ip: 172.24.0.11
+      dst_ip: 172.21.0.12
+      dst_port: 102
+
+  - name: enterprise host reaches the DMZ, which is allowed
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:30:02.300Z"
+      action: ACCEPT
+      proto: TCP
+      src_zone: it
+      dst_zone: dmz
+      src_ip: 172.24.0.10
+      dst_ip: 172.24.0.2
+      dst_port: 443
+
+  - name: operations host reaches a controller over the allowed conduit
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:30:03.400Z"
+      action: ACCEPT
+      proto: TCP
+      src_zone: ops
+      dst_zone: control
+      src_ip: 172.23.0.50
+      dst_ip: 172.21.0.10
+      dst_port: 502
+
+  - name: enterprise-to-control flow that the firewall dropped
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:30:04.500Z"
+      action: DROP
+      proto: TCP
+      src_zone: it
+      dst_zone: control
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      dst_port: 502
+
+  - name: enterprise host reaches a non-industrial port on a controller
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:30:05.600Z"
+      action: ACCEPT
+      proto: TCP
+      src_zone: it
+      dst_zone: control
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      dst_port: 8080

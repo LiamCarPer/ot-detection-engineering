@@ -1,0 +1,36 @@
+# source: rules/sigma/ot/ot_firewall_control_zone_egress.yml
+groups:
+- name: ot_firewall_control_zone_egress
+  rules:
+  - alert: Control_Zone_Egress_To_The_Enterprise_Over_A_Standard_Port
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a control-zone host opening an accepted connection to
+        the enterprise
+
+        zone on a standard application port (DNS, HTTP or HTTPS). Purdue segmentation
+
+        allows no direct control-to-enterprise path, so an accepted flow is either
+        a
+
+        policy gap or a compromised controller using a standard protocol to blend
+        in
+
+        with enterprise traffic, both as command and control and as a proxy.
+
+
+        The zone labels come from the gateway''s interface-to-zone mapping and the
+        raw
+
+        iptables decision is normalized into the ot_firewall contract (see
+
+        docs/TELEMETRY.md).
+
+        '
+      summary: Control Zone Egress To The Enterprise Over A Standard Port
+    expr: sum(count_over_time({job=~".+"} | logfmt | action=~`(?i)^ACCEPT$` and src_zone=~`(?i)^control$`
+      and dst_zone=~`(?i)^it$` and (dst_port=53 or dst_port=80 or dst_port=443) |
+      line_format "{{.src_ip}} {{.dst_ip}} {{.dst_port}} {{.proto}}" [1m])) or vector(0)
+      > 0
+    labels:
+      severity: high

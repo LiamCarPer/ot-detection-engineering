@@ -1,0 +1,43 @@
+title: Control Zone Egress To The Enterprise Over A Standard Port
+id: f716e14d-c24f-46d2-b4e3-2e6072135595
+status: experimental
+description: |
+  Detects a control-zone host opening an accepted connection to the enterprise
+  zone on a standard application port (DNS, HTTP or HTTPS). Purdue segmentation
+  allows no direct control-to-enterprise path, so an accepted flow is either a
+  policy gap or a compromised controller using a standard protocol to blend in
+  with enterprise traffic, both as command and control and as a proxy.
+
+  The zone labels come from the gateway's interface-to-zone mapping and the raw
+  iptables decision is normalized into the ot_firewall contract (see
+  docs/TELEMETRY.md).
+references:
+  - https://attack.mitre.org/techniques/T0869/
+author: Liam Carvajal
+date: 2026-09-15
+logsource:
+  product: ot_firewall
+  service: iptables
+detection:
+  selection_action:
+    action: ACCEPT
+  selection_route:
+    src_zone: control
+    dst_zone: it
+  selection_ports:
+    dst_port:
+      - 53
+      - 80
+      - 443
+  condition: selection_action and selection_route and selection_ports
+fields:
+  - src_ip
+  - dst_ip
+  - dst_port
+  - proto
+falsepositives:
+  - A documented maintenance tunnel to a specific enterprise service
+  - A time-synchronisation or backup flow explicitly authorised by policy
+level: high
+tags:
+  - attack.t0869

@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_firewall_control_zone_egress.yml
+source=ot_firewall-iptables-* | where action="ACCEPT" AND src_zone="control" AND dst_zone="it" AND (dst_port in (53, 80, 443))

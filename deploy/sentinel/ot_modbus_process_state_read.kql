@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_modbus_process_state_read.yml
+direction =~ "request" and (function_code in~ ("3", "4")) and (not((src_ip in~ ("172.21.0.20", "172.22.0.10"))))

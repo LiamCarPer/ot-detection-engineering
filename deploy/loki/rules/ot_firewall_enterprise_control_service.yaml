@@ -1,0 +1,32 @@
+# source: rules/sigma/ot/ot_firewall_enterprise_control_service.yml
+groups:
+- name: ot_firewall_enterprise_control_service
+  rules:
+  - alert: Enterprise_Host_Permitted_To_Reach_A_Control_Zone_Service
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects the zone firewall accepting a connection from the enterprise
+        zone to a
+
+        control-zone industrial service port. Purdue segmentation allows no direct
+        path
+
+        from Level 4/5 to Level 1, so an accepted flow is a policy gap that lets an
+
+        enterprise host reach a controller, outstation or OPC UA server directly and
+
+        attempt to exploit the service instead of pivoting through the DMZ.
+
+
+        The complementary rule detects the drop of the same traffic; this one fires
+
+        when the path is allowed, which is the case worth fixing.
+
+        '
+      summary: Enterprise Host Permitted To Reach A Control Zone Service
+    expr: sum(count_over_time({job=~".+"} | logfmt | action=~`(?i)^ACCEPT$` and src_zone=~`(?i)^it$`
+      and dst_zone=~`(?i)^control$` and (dst_port=102 or dst_port=502 or dst_port=4840
+      or dst_port=20000) | line_format "{{.src_ip}} {{.dst_ip}} {{.dst_port}} {{.proto}}"
+      [1m])) or vector(0) > 0
+    labels:
+      severity: critical

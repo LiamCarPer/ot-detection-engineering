@@ -1,0 +1,42 @@
+title: Modbus Process State Read From Unauthorized Source
+id: db9f2530-dbb5-4aa7-8bcf-b5e59ea1c9db
+status: experimental
+description: |
+  Detects a Modbus read of process data (holding or input registers) from a host
+  that is not an approved operator interface. In a segmented OT network, process
+  reads should originate only from the HMI or the supervisory collector; a read
+  from any other source is reconnaissance or a compromised host mapping the
+  process before acting on it.
+
+  This rule operates on normalized NDR telemetry (see docs/TELEMETRY.md). The
+  approved readers are site-specific and must be tuned per environment.
+references:
+  - https://attack.mitre.org/techniques/T0801/
+author: Liam Carvajal
+date: 2026-09-15
+logsource:
+  product: ot_ndr
+  service: modbus
+detection:
+  selection_direction:
+    direction: request
+  selection_function:
+    function_code:
+      - 3
+      - 4
+  filter_authorized_reader:
+    src_ip:
+      - 172.21.0.20
+      - 172.22.0.10
+  condition: selection_direction and selection_function and not filter_authorized_reader
+fields:
+  - src_ip
+  - dst_ip
+  - function_code
+  - register
+falsepositives:
+  - A newly commissioned monitoring collector not yet added to the allowlist
+  - A diagnostic tool run by an engineer from an unlisted jump host
+level: low
+tags:
+  - attack.t0801

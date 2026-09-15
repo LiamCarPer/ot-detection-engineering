@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_modbus_parameter_write.yml
+source=ot_ndr-modbus-* | where direction="request" AND (function_code in (6, 16)) AND register>=4000
