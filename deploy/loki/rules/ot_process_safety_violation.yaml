@@ -27,7 +27,7 @@ groups:
 
         '
       summary: Process Safety Violation From Physics-Aware Monitor
-    expr: sum(count_over_time({job=~".+"} | logfmt | event_type=~`(?i)^process_safety_violation$`
+    expr: sum(count_over_time({job=~".+", service="safety_monitor"} | logfmt | event_type=~`(?i)^process_safety_violation$`
       and response=~`(?i)^none$` | line_format "{{.asset}} {{.register}} {{.value}}
       {{.tank_level_pct}} {{.actor}}" [1m])) or vector(0) > 0
     labels:

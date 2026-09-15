@@ -21,8 +21,8 @@ groups:
 
         '
       summary: S7comm PLC Control Or Stop
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      (function_code=40 or function_code=41) | line_format "{{.function_name}} {{.rosctr}}"
-      [1m])) or vector(0) > 0
+    expr: sum(count_over_time({job=~".+", service="s7comm"} | logfmt | direction=~`(?i)^request$`
+      and (function_code=40 or function_code=41) | line_format "{{.function_name}}
+      {{.rosctr}}" [1m])) or vector(0) > 0
     labels:
       severity: high

@@ -31,6 +31,10 @@ from sigma.backends.splunk import SplunkBackend
 from sigma.collection import SigmaCollection
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from loki_pipeline import LOKI_LOGSOURCE_PIPELINE  # noqa: E402
 
 BACKENDS = {
     "loki": (LogQLBackend, "logql"),
@@ -38,6 +42,19 @@ BACKENDS = {
     "splunk": (SplunkBackend, "spl"),
     "sentinel": (KustoBackend, "kql"),
 }
+
+
+def make_backend(backend_name: str):
+    """Instantiate a backend, applying the Loki logsource-routing pipeline.
+
+    The Loki backend needs the pipeline so its queries select the rule's stream
+    by the ``service`` label instead of matching every stream. Other backends
+    route through their own index/source handling.
+    """
+    backend_cls, _ = BACKENDS[backend_name]
+    if backend_name == "loki":
+        return backend_cls(processing_pipeline=LOKI_LOGSOURCE_PIPELINE)
+    return backend_cls()
 
 
 def rule_files(rules_dir: Path) -> list[Path]:
@@ -62,8 +79,8 @@ def _relative(path: Path) -> str:
 
 
 def build_artifacts(backend_name: str, rules_dir: Path) -> tuple[dict[str, str], dict]:
-    backend_cls, extension = BACKENDS[backend_name]
-    backend = backend_cls()
+    _, extension = BACKENDS[backend_name]
+    backend = make_backend(backend_name)
     artifacts: dict[str, str] = {}
     manifest: list[dict] = []
 

@@ -23,9 +23,9 @@ groups:
 
         '
       summary: Modbus Process State Read From Unauthorized Source
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      (function_code=3 or function_code=4) and src_ip!~`(?i)^172\.21\.0\.20$` and
-      src_ip!~`(?i)^172\.22\.0\.10$` | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}}
+    expr: sum(count_over_time({job=~".+", service="modbus"} | logfmt | direction=~`(?i)^request$`
+      and (function_code=3 or function_code=4) and src_ip!~`(?i)^172\.21\.0\.20$`
+      and src_ip!~`(?i)^172\.22\.0\.10$` | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}}
       {{.register}}" [1m])) or vector(0) > 0
     labels:
       severity: low

@@ -21,8 +21,8 @@ groups:
 
         '
       summary: S7comm Program Upload
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      (function_code=29 or function_code=30 or function_code=31) | line_format "{{.function_name}}
-      {{.pdu_reference}}" [1m])) or vector(0) > 0
+    expr: sum(count_over_time({job=~".+", service="s7comm"} | logfmt | direction=~`(?i)^request$`
+      and (function_code=29 or function_code=30 or function_code=31) | line_format
+      "{{.function_name}} {{.pdu_reference}}" [1m])) or vector(0) > 0
     labels:
       severity: medium

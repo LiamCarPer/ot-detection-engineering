@@ -22,8 +22,8 @@ groups:
 
         '
       summary: Modbus Device Identification Scan
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      (function_code=17 or function_code=43) | line_format "{{.src_ip}} {{.dst_ip}}
+    expr: sum(count_over_time({job=~".+", service="modbus"} | logfmt | direction=~`(?i)^request$`
+      and (function_code=17 or function_code=43) | line_format "{{.src_ip}} {{.dst_ip}}
       {{.function_code}} {{.unit_id}}" [1m])) or vector(0) > 0
     labels:
       severity: medium

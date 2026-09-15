@@ -21,8 +21,8 @@ groups:
 
         '
       summary: OPC UA Address Space Browse
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      (opcua_service=~`(?i)^BrowseRequest$` or opcua_service=~`(?i)^BrowseNextRequest$`)
+    expr: sum(count_over_time({job=~".+", service="opcua"} | logfmt | direction=~`(?i)^request$`
+      and (opcua_service=~`(?i)^BrowseRequest$` or opcua_service=~`(?i)^BrowseNextRequest$`)
       | line_format "{{.secure_channel_id}} {{.request_id}}" [1m])) or vector(0) >
       0
     labels:

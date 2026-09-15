@@ -22,8 +22,8 @@ groups:
 
         '
       summary: OPC UA Write Request
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      opcua_service=~`(?i)^WriteRequest$` | line_format "{{.secure_channel_id}} {{.request_id}}
-      {{.service_id}}" [1m])) or vector(0) > 0
+    expr: sum(count_over_time({job=~".+", service="opcua"} | logfmt | direction=~`(?i)^request$`
+      and opcua_service=~`(?i)^WriteRequest$` | line_format "{{.secure_channel_id}}
+      {{.request_id}} {{.service_id}}" [1m])) or vector(0) > 0
     labels:
       severity: high

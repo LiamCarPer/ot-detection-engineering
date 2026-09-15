@@ -26,9 +26,9 @@ groups:
 
         '
       summary: Modbus Write From Unauthorized Control Writer
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      (function_code=6 or function_code=16) and src_ip!~`(?i)^172\.21\.0\.20$` and
-      src_ip!~`(?i)^172\.22\.0\.10$` | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}}
+    expr: sum(count_over_time({job=~".+", service="modbus"} | logfmt | direction=~`(?i)^request$`
+      and (function_code=6 or function_code=16) and src_ip!~`(?i)^172\.21\.0\.20$`
+      and src_ip!~`(?i)^172\.22\.0\.10$` | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}}
       {{.register}} {{.unit_id}}" [1m])) or vector(0) > 0
     labels:
       severity: high

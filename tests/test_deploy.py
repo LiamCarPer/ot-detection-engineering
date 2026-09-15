@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import yaml
+from sigma.rule import SigmaRule
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "pipelines"))
@@ -52,6 +53,20 @@ def test_loki_rules_are_valid_ruler_yaml() -> None:
         for group in document["groups"]:
             assert group["rules"], rule_file.name
             assert group["rules"][0]["expr"], rule_file.name
+
+
+def test_loki_rules_route_by_logsource_service() -> None:
+    # pySigma does not encode the Sigma logsource into the LogQL stream selector,
+    # so the deploy pipeline sets it explicitly. Without it, {job=~".+"} would
+    # let a rule match another protocol's events in a shared Loki instance.
+    for rule_file in sorted((DEPLOY_DIR / "loki" / "rules").glob("*.yaml")):
+        source = REPO_ROOT / "rules" / "sigma" / "ot" / f"{rule_file.stem}.yml"
+        rule = SigmaRule.from_yaml(source.read_text(encoding="utf-8"))
+        service = rule.logsource.service
+        assert service, f"{rule_file.name} has no logsource service"
+        document = yaml.safe_load(rule_file.read_text(encoding="utf-8"))
+        expr = document["groups"][0]["rules"][0]["expr"]
+        assert f'service="{service}"' in expr, f"{rule_file.name} does not route on {service}"
 
 
 def test_loki_group_names_are_unique() -> None:

@@ -25,8 +25,9 @@ groups:
 
         '
       summary: Industrial Protocol Traffic From Enterprise To Control Zone
-    expr: sum(count_over_time({job=~".+"} | logfmt | action=~`(?i)^DROP$` and src_zone=~`(?i)^it$`
-      and dst_zone=~`(?i)^control$` and proto!~`(?i)^ICMP$` | line_format "{{.src_ip}}
-      {{.dst_ip}} {{.dst_port}} {{.proto}}" [1m])) or vector(0) > 0
+    expr: sum(count_over_time({job=~".+", service="iptables"} | logfmt | action=~`(?i)^DROP$`
+      and src_zone=~`(?i)^it$` and dst_zone=~`(?i)^control$` and proto!~`(?i)^ICMP$`
+      | line_format "{{.src_ip}} {{.dst_ip}} {{.dst_port}} {{.proto}}" [1m])) or vector(0)
+      > 0
     labels:
       severity: high

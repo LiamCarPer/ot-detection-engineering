@@ -1,11 +1,15 @@
 {
   "expected": [
+    "Control_Zone_Egress_To_The_Enterprise_Over_A_Standard_Port",
     "DNP3_Cold_Or_Warm_Restart_Command",
     "DNP3_Control_Operation_From_Unauthorized_Master",
     "DNP3_Unsolicited_Responses_Disabled",
+    "Enterprise_Host_Permitted_To_Reach_A_Control_Zone_Service",
     "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
     "Modbus_Device_Identification_Scan",
+    "Modbus_Process_State_Read_From_Unauthorized_Source",
     "Modbus_Write_From_Unauthorized_Control_Writer",
+    "Modbus_Write_To_Safety_Critical_Parameter_Register",
     "OPC_UA_Address_Space_Browse",
     "OPC_UA_Method_Call_Request",
     "OPC_UA_Write_Request",
@@ -15,12 +19,16 @@
     "S7comm_Program_Upload"
   ],
   "observed": [
+    "Control_Zone_Egress_To_The_Enterprise_Over_A_Standard_Port",
     "DNP3_Cold_Or_Warm_Restart_Command",
     "DNP3_Control_Operation_From_Unauthorized_Master",
     "DNP3_Unsolicited_Responses_Disabled",
+    "Enterprise_Host_Permitted_To_Reach_A_Control_Zone_Service",
     "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
     "Modbus_Device_Identification_Scan",
+    "Modbus_Process_State_Read_From_Unauthorized_Source",
     "Modbus_Write_From_Unauthorized_Control_Writer",
+    "Modbus_Write_To_Safety_Critical_Parameter_Register",
     "OPC_UA_Address_Space_Browse",
     "OPC_UA_Method_Call_Request",
     "OPC_UA_Write_Request",

@@ -1,5 +1,9 @@
 [
   {
+    "alertname": "Control_Zone_Egress_To_The_Enterprise_Over_A_Standard_Port",
+    "status": "firing"
+  },
+  {
     "alertname": "DNP3_Cold_Or_Warm_Restart_Command",
     "status": "firing"
   },
@@ -12,6 +16,10 @@
     "status": "firing"
   },
   {
+    "alertname": "Enterprise_Host_Permitted_To_Reach_A_Control_Zone_Service",
+    "status": "firing"
+  },
+  {
     "alertname": "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
     "status": "firing"
   },
@@ -20,7 +28,15 @@
     "status": "firing"
   },
   {
+    "alertname": "Modbus_Process_State_Read_From_Unauthorized_Source",
+    "status": "firing"
+  },
+  {
     "alertname": "Modbus_Write_From_Unauthorized_Control_Writer",
+    "status": "firing"
+  },
+  {
+    "alertname": "Modbus_Write_To_Safety_Critical_Parameter_Register",
     "status": "firing"
   },
   {

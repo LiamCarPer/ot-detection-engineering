@@ -18,8 +18,8 @@ groups:
 
         '
       summary: DNP3 Cold Or Warm Restart Command
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      (function_code=13 or function_code=14) | line_format "{{.link_source}} {{.link_destination}}
+    expr: sum(count_over_time({job=~".+", service="dnp3"} | logfmt | direction=~`(?i)^request$`
+      and (function_code=13 or function_code=14) | line_format "{{.link_source}} {{.link_destination}}
       {{.function_name}}" [1m])) or vector(0) > 0
     labels:
       severity: high

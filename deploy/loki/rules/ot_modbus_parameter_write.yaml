@@ -23,8 +23,8 @@ groups:
 
         '
       summary: Modbus Write To Safety Critical Parameter Register
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      (function_code=6 or function_code=16) and register>=4000 | line_format "{{.src_ip}}
+    expr: sum(count_over_time({job=~".+", service="modbus"} | logfmt | direction=~`(?i)^request$`
+      and (function_code=6 or function_code=16) and register>=4000 | line_format "{{.src_ip}}
       {{.dst_ip}} {{.function_code}} {{.register}} {{.value}}" [1m])) or vector(0)
       > 0
     labels:

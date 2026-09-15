@@ -41,9 +41,12 @@ GRAFANA_HEALTH = "http://localhost:13000/api/health"
 JOB_LABEL = "ot_loki_smoke"
 
 # Each generated Loki rule, with a line that must fire it and a benign line that
-# must not. Keys are the alert names emitted by the pySigma Loki ruler backend.
+# must not, plus the stream-label service the rule routes on. Keys are the alert
+# names emitted by the pySigma Loki ruler backend; the service must match the
+# rule's logsource service or the query selects the wrong stream and never fires.
 CASES: dict[str, dict[str, str]] = {
     "Modbus_Write_From_Unauthorized_Control_Writer": {
+        "service": "modbus",
         "attack": (
             "direction=request function_code=6 src_ip=172.24.0.10 "
             "dst_ip=172.21.0.10 unit_id=1 register=1024"
@@ -54,6 +57,7 @@ CASES: dict[str, dict[str, str]] = {
         ),
     },
     "Modbus_Device_Identification_Scan": {
+        "service": "modbus",
         "attack": (
             "direction=request function_code=43 src_ip=172.24.0.10 "
             "dst_ip=172.21.0.10 unit_id=1"
@@ -63,31 +67,60 @@ CASES: dict[str, dict[str, str]] = {
             "dst_ip=172.21.0.10 unit_id=1"
         ),
     },
+    "Modbus_Process_State_Read_From_Unauthorized_Source": {
+        "service": "modbus",
+        "attack": (
+            "direction=request function_code=3 src_ip=172.24.0.10 "
+            "dst_ip=172.21.0.10 unit_id=1 register=0"
+        ),
+        "benign": (
+            "direction=request function_code=3 src_ip=172.22.0.10 "
+            "dst_ip=172.21.0.10 unit_id=1 register=0"
+        ),
+    },
+    "Modbus_Write_To_Safety_Critical_Parameter_Register": {
+        "service": "modbus",
+        "attack": (
+            "direction=request function_code=6 src_ip=172.21.0.20 "
+            "dst_ip=172.21.0.10 unit_id=1 register=4001 value=1"
+        ),
+        "benign": (
+            "direction=request function_code=6 src_ip=172.21.0.20 "
+            "dst_ip=172.21.0.10 unit_id=1 register=1024 value=50"
+        ),
+    },
     "DNP3_Control_Operation_From_Unauthorized_Master": {
+        "service": "dnp3",
         "attack": "direction=request function_code=5 link_source=7 link_destination=1",
         "benign": "direction=request function_code=5 link_source=1 link_destination=1",
     },
     "DNP3_Unsolicited_Responses_Disabled": {
+        "service": "dnp3",
         "attack": "direction=request function_code=21 link_source=7 link_destination=1",
         "benign": "direction=request function_code=20 link_source=1 link_destination=1",
     },
     "DNP3_Cold_Or_Warm_Restart_Command": {
+        "service": "dnp3",
         "attack": "direction=request function_code=13 link_source=7 link_destination=1",
         "benign": "direction=request function_code=1 link_source=1 link_destination=1",
     },
     "S7comm_Program_Download": {
+        "service": "s7comm",
         "attack": "direction=request function_code=26",
         "benign": "direction=request function_code=4",
     },
     "S7comm_Program_Upload": {
+        "service": "s7comm",
         "attack": "direction=request function_code=29",
         "benign": "direction=request function_code=4",
     },
     "S7comm_PLC_Control_Or_Stop": {
+        "service": "s7comm",
         "attack": "direction=request function_code=41",
         "benign": "direction=request function_code=4",
     },
     "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone": {
+        "service": "iptables",
         "attack": (
             "action=DROP proto=TCP src_zone=it dst_zone=control "
             "src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502"
@@ -97,19 +130,45 @@ CASES: dict[str, dict[str, str]] = {
             "src_ip=172.23.0.50 dst_ip=172.21.0.10 dst_port=502"
         ),
     },
+    "Control_Zone_Egress_To_The_Enterprise_Over_A_Standard_Port": {
+        "service": "iptables",
+        "attack": (
+            "action=ACCEPT proto=TCP src_zone=control dst_zone=it "
+            "src_ip=172.21.0.10 dst_ip=172.24.0.10 dst_port=443"
+        ),
+        "benign": (
+            "action=ACCEPT proto=TCP src_zone=control dst_zone=dmz "
+            "src_ip=172.21.0.10 dst_ip=172.24.0.2 dst_port=8086"
+        ),
+    },
+    "Enterprise_Host_Permitted_To_Reach_A_Control_Zone_Service": {
+        "service": "iptables",
+        "attack": (
+            "action=ACCEPT proto=TCP src_zone=it dst_zone=control "
+            "src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502"
+        ),
+        "benign": (
+            "action=ACCEPT proto=TCP src_zone=ops dst_zone=control "
+            "src_ip=172.23.0.50 dst_ip=172.21.0.10 dst_port=502"
+        ),
+    },
     "Process_Safety_Violation_From_Physics_Aware_Monitor": {
+        "service": "safety_monitor",
         "attack": "event_type=process_safety_violation response=none",
         "benign": "event_type=process_update response=none",
     },
     "OPC_UA_Write_Request": {
+        "service": "opcua",
         "attack": "message_type=MSG opcua_service=WriteRequest direction=request",
         "benign": "message_type=MSG opcua_service=ReadRequest direction=request",
     },
     "OPC_UA_Method_Call_Request": {
+        "service": "opcua",
         "attack": "message_type=MSG opcua_service=CallRequest direction=request",
         "benign": "message_type=MSG opcua_service=ReadRequest direction=request",
     },
     "OPC_UA_Address_Space_Browse": {
+        "service": "opcua",
         "attack": "message_type=MSG opcua_service=BrowseRequest direction=request",
         "benign": "message_type=MSG opcua_service=ReadRequest direction=request",
     },
@@ -158,10 +217,19 @@ def _wait_for(url: str, timeout: float) -> None:
     raise TimeoutError(f"timed out waiting for {url}")
 
 
-def _push(lines: list[str]) -> None:
+def _push(entries: list[tuple[str, str]]) -> None:
     base = time.time_ns()
-    values = [[str(base + index), line] for index, line in enumerate(lines)]
-    payload = json.dumps({"streams": [{"stream": {"job": JOB_LABEL}, "values": values}]})
+    streams: dict[str, list[list[str]]] = {}
+    for index, (service, line) in enumerate(entries):
+        streams.setdefault(service, []).append([str(base + index), line])
+    payload = json.dumps(
+        {
+            "streams": [
+                {"stream": {"job": JOB_LABEL, "service": service}, "values": values}
+                for service, values in sorted(streams.items())
+            ]
+        }
+    )
     request = urllib.request.Request(
         LOKI_PUSH,
         data=payload.encode("utf-8"),
@@ -187,12 +255,12 @@ def run() -> int:
         _wait_for(GRAFANA_HEALTH, 60)
 
         _clear_received()
-        _push([case["benign"] for case in CASES.values()])
+        _push([(case["service"], case["benign"]) for case in CASES.values()])
         time.sleep(20)
         false_positives = sorted(_alertnames(_payloads()) & EXPECTED_LOKI_ALERTS)
 
         _clear_received()
-        _push([case["attack"] for case in CASES.values()])
+        _push([(case["service"], case["attack"]) for case in CASES.values()])
         deadline = time.monotonic() + 120
         while time.monotonic() < deadline:
             observed = _alertnames(_payloads())

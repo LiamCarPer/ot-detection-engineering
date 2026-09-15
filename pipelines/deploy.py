@@ -24,7 +24,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from convert import BACKENDS, rule_files, sha256  # noqa: E402
+from convert import make_backend, rule_files, sha256  # noqa: E402
 from sigma.collection import SigmaCollection  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -56,9 +56,8 @@ def _rename_ruler_group(document: str, name: str) -> str:
     return LOKI_GROUP_RE.sub(rf"\g<1>{name}", document, count=1)
 
 
-def _convert(backend_cls, text: str, output_format: str | None) -> list[str]:
+def _convert(backend, text: str, output_format: str | None) -> list[str]:
     collection = SigmaCollection.from_yaml(text)
-    backend = backend_cls()
     if output_format:
         result = backend.convert(collection, output_format=output_format)
     else:
@@ -98,11 +97,11 @@ def build_bundle() -> dict[str, str]:
     sigma_rules = rule_files((REPO_ROOT / "rules" / "sigma").resolve())
 
     for target, (backend_name, output_format, comment, directory) in SIGMA_DEPLOY.items():
-        backend_cls, _ = BACKENDS[backend_name]
+        backend = make_backend(backend_name)
         extension = EXTENSIONS[target]
         for rule_path in sigma_rules:
             text = rule_path.read_text(encoding="utf-8")
-            queries = _convert(backend_cls, text, output_format)
+            queries = _convert(backend, text, output_format)
             if target == "loki":
                 queries = [_rename_ruler_group(query, rule_path.stem) for query in queries]
             relative = rule_path.relative_to(REPO_ROOT).as_posix()

@@ -49,6 +49,13 @@ must be shipped with the fields defined in docs/TELEMETRY.md. Application-layer
 DNP3 and S7comm events are produced by [tools/dnp3-dpi](../tools/dnp3-dpi) and
 [tools/s7comm-dpi](../tools/s7comm-dpi).
 
+Each query also selects its stream by the `service` label — for example
+`{job=~".+", service="modbus"}` — so a rule can only match the protocol it was
+written for. Ship every normalized stream with the `service` label from
+docs/TELEMETRY.md (`modbus`, `dnp3`, `s7comm`, `opcua`, `iptables`,
+`safety_monitor`); a stream without it will not match any rule. The logsource to
+selector mapping is applied by `pipelines/loki_pipeline.py` at conversion time.
+
 ## Suricata
 
 ```bash

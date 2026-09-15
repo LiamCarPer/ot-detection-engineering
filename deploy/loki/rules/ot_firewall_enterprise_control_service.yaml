@@ -24,9 +24,9 @@ groups:
 
         '
       summary: Enterprise Host Permitted To Reach A Control Zone Service
-    expr: sum(count_over_time({job=~".+"} | logfmt | action=~`(?i)^ACCEPT$` and src_zone=~`(?i)^it$`
-      and dst_zone=~`(?i)^control$` and (dst_port=102 or dst_port=502 or dst_port=4840
-      or dst_port=20000) | line_format "{{.src_ip}} {{.dst_ip}} {{.dst_port}} {{.proto}}"
-      [1m])) or vector(0) > 0
+    expr: sum(count_over_time({job=~".+", service="iptables"} | logfmt | action=~`(?i)^ACCEPT$`
+      and src_zone=~`(?i)^it$` and dst_zone=~`(?i)^control$` and (dst_port=102 or
+      dst_port=502 or dst_port=4840 or dst_port=20000) | line_format "{{.src_ip}}
+      {{.dst_ip}} {{.dst_port}} {{.proto}}" [1m])) or vector(0) > 0
     labels:
       severity: critical

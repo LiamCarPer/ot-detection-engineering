@@ -28,9 +28,9 @@ groups:
 
         '
       summary: Control Zone Egress To The Enterprise Over A Standard Port
-    expr: sum(count_over_time({job=~".+"} | logfmt | action=~`(?i)^ACCEPT$` and src_zone=~`(?i)^control$`
-      and dst_zone=~`(?i)^it$` and (dst_port=53 or dst_port=80 or dst_port=443) |
-      line_format "{{.src_ip}} {{.dst_ip}} {{.dst_port}} {{.proto}}" [1m])) or vector(0)
-      > 0
+    expr: sum(count_over_time({job=~".+", service="iptables"} | logfmt | action=~`(?i)^ACCEPT$`
+      and src_zone=~`(?i)^control$` and dst_zone=~`(?i)^it$` and (dst_port=53 or dst_port=80
+      or dst_port=443) | line_format "{{.src_ip}} {{.dst_ip}} {{.dst_port}} {{.proto}}"
+      [1m])) or vector(0) > 0
     labels:
       severity: high

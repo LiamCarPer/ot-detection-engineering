@@ -48,6 +48,8 @@ EXPECTED_SIDS: dict[str, set[int]] = {
 EXPECTED_LOKI_ALERTS: set[str] = {
     "Modbus_Write_From_Unauthorized_Control_Writer",
     "Modbus_Device_Identification_Scan",
+    "Modbus_Process_State_Read_From_Unauthorized_Source",
+    "Modbus_Write_To_Safety_Critical_Parameter_Register",
     "DNP3_Control_Operation_From_Unauthorized_Master",
     "DNP3_Unsolicited_Responses_Disabled",
     "DNP3_Cold_Or_Warm_Restart_Command",
@@ -55,6 +57,8 @@ EXPECTED_LOKI_ALERTS: set[str] = {
     "S7comm_Program_Upload",
     "S7comm_PLC_Control_Or_Stop",
     "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
+    "Control_Zone_Egress_To_The_Enterprise_Over_A_Standard_Port",
+    "Enterprise_Host_Permitted_To_Reach_A_Control_Zone_Service",
     "Process_Safety_Violation_From_Physics_Aware_Monitor",
     "OPC_UA_Write_Request",
     "OPC_UA_Method_Call_Request",

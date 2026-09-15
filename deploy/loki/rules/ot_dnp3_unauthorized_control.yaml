@@ -25,9 +25,9 @@ groups:
 
         '
       summary: DNP3 Control Operation From Unauthorized Master
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      (function_code=3 or function_code=4 or function_code=5 or function_code=6) and
-      link_source!=1 and link_source!=2 | line_format "{{.link_source}} {{.link_destination}}
+    expr: sum(count_over_time({job=~".+", service="dnp3"} | logfmt | direction=~`(?i)^request$`
+      and (function_code=3 or function_code=4 or function_code=5 or function_code=6)
+      and link_source!=1 and link_source!=2 | line_format "{{.link_source}} {{.link_destination}}
       {{.function_name}} {{.object_group}} {{.control_code}}" [1m])) or vector(0)
       > 0
     labels:

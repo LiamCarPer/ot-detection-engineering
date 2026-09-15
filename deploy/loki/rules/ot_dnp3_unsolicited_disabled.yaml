@@ -19,8 +19,8 @@ groups:
 
         '
       summary: DNP3 Unsolicited Responses Disabled
-    expr: sum(count_over_time({job=~".+"} | logfmt | direction=~`(?i)^request$` and
-      function_code=21 | line_format "{{.link_source}} {{.link_destination}} {{.function_name}}"
+    expr: sum(count_over_time({job=~".+", service="dnp3"} | logfmt | direction=~`(?i)^request$`
+      and function_code=21 | line_format "{{.link_source}} {{.link_destination}} {{.function_name}}"
       [1m])) or vector(0) > 0
     labels:
       severity: medium

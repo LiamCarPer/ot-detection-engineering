@@ -83,11 +83,14 @@ worked, and they are the reason the repository validates functionally:
   field to a stream label, so `| logfmt` renames the extracted field and a rule
   filtering on `service_name` never matches. The OPC UA decoder emits
   `opcua_service` instead.
-- **The generated LogQL has no logsource selector.** The queries match
-  `{job=~".+"}` and filter on fields, so a deployment that pours every protocol
-  into one stream can cross-fire rules across protocols. The lab keeps streams
-  separated by `job`/`service`; a single-stream deployment would need a service
-  selector added by a pipeline.
+- **The generated LogQL had no logsource selector.** The queries matched
+  `{job=~".+"}` and filtered on fields, so a deployment that pours every protocol
+  into one stream could cross-fire rules across protocols — a Modbus rule firing
+  on DNP3 function codes. pySigma's Loki backend does not encode the logsource
+  into the stream selector, so `pipelines/loki_pipeline.py` now sets the
+  backend's `logsource_loki_selection` attribute from the rule's logsource
+  service; the generated queries select `{job=~".+", service="modbus"}`, and a
+  test guards the mapping.
 - **The lab's Modbus path is not normalized NDR telemetry.** The lab reports
   Modbus as JSON alert events, so the generated Modbus queries have no input
   there and are validated by the offline decoder proof instead. Two generated
