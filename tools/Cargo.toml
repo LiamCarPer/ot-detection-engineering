@@ -5,3 +5,6 @@ members = ["dnp3-dpi", "opcua-dpi", "s7comm-dpi"]
 [profile.release]
 lto = true
 codegen-units = 1
+# Decode attacker-controlled bytes: match debug semantics so an arithmetic
+# overflow traps instead of wrapping silently in a release build.
+overflow-checks = true

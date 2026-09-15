@@ -77,7 +77,9 @@ pub fn is_upload(function: u8) -> bool {
 
 /// Decode the S7 header from the octets that follow the COTP header.
 pub fn parse(bytes: &[u8]) -> Option<S7Header> {
-    if bytes.len() < HEADER_LEN || bytes[0] != PROTOCOL_ID {
+    // The function code is the first octet of the parameter block, which follows
+    // the fixed header, so the buffer must hold the header plus at least one octet.
+    if bytes.len() <= HEADER_LEN || bytes[0] != PROTOCOL_ID {
         return None;
     }
     Some(S7Header {

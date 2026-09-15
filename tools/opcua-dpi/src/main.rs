@@ -8,17 +8,29 @@ use std::io::{self, Read, Write};
 
 use opcua_dpi::parse_stream;
 
+/// Decode one ASCII hex digit.
+fn hex_nibble(byte: u8) -> Option<u8> {
+    match byte {
+        b'0'..=b'9' => Some(byte - b'0'),
+        b'a'..=b'f' => Some(byte - b'a' + 10),
+        b'A'..=b'F' => Some(byte - b'A' + 10),
+        _ => None,
+    }
+}
+
 fn decode_hex(line: &str) -> Option<Vec<u8>> {
-    let cleaned: String = line
-        .chars()
-        .filter(|c| !c.is_whitespace() && *c != ':' && *c != '-')
+    // Work on bytes rather than a `str` slice: slicing a multi-byte UTF-8
+    // character on an even offset used to panic on a char boundary.
+    let cleaned: Vec<u8> = line
+        .bytes()
+        .filter(|byte| !byte.is_ascii_whitespace() && *byte != b':' && *byte != b'-')
         .collect();
     if !cleaned.len().is_multiple_of(2) {
         return None;
     }
-    (0..cleaned.len())
-        .step_by(2)
-        .map(|i| u8::from_str_radix(&cleaned[i..i + 2], 16).ok())
+    cleaned
+        .chunks_exact(2)
+        .map(|pair| Some((hex_nibble(pair[0])? << 4) | hex_nibble(pair[1])?))
         .collect()
 }
 
@@ -80,5 +92,30 @@ fn main() {
     eprintln!("decoded {decoded} event(s), {errors} error(s)");
     if errors > 0 {
         std::process::exit(1);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::decode_hex;
+
+    #[test]
+    fn decodes_hex_with_separators() {
+        assert_eq!(
+            decode_hex("05 64:13-44"),
+            Some(vec![0x05, 0x64, 0x13, 0x44])
+        );
+    }
+
+    #[test]
+    fn rejects_odd_length() {
+        assert_eq!(decode_hex("056"), None);
+    }
+
+    #[test]
+    fn rejects_non_ascii_without_panicking() {
+        // Multi-byte UTF-8 previously broke a char-boundary slice.
+        assert_eq!(decode_hex("€a"), None);
+        assert_eq!(decode_hex("😀"), None);
     }
 }

@@ -142,19 +142,19 @@ fn parse_objects(mut bytes: &[u8]) -> (Vec<ObjectHeader>, Option<u8>) {
             let start = u32::from(bytes[0]);
             let stop = u32::from(bytes[1]);
             bytes = &bytes[2..];
-            Some(stop.saturating_sub(start) + 1)
+            Some(stop.saturating_sub(start).saturating_add(1))
         }
         1 if bytes.len() >= 4 => {
             let start = u32::from(u16::from_le_bytes([bytes[0], bytes[1]]));
             let stop = u32::from(u16::from_le_bytes([bytes[2], bytes[3]]));
             bytes = &bytes[4..];
-            Some(stop.saturating_sub(start) + 1)
+            Some(stop.saturating_sub(start).saturating_add(1))
         }
         2 if bytes.len() >= 8 => {
             let start = u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]);
             let stop = u32::from_le_bytes([bytes[4], bytes[5], bytes[6], bytes[7]]);
             bytes = &bytes[8..];
-            Some(stop.saturating_sub(start) + 1)
+            Some(stop.saturating_sub(start).saturating_add(1))
         }
         3 if !bytes.is_empty() => {
             let value = u32::from(bytes[0]);
