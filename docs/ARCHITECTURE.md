@@ -4,8 +4,9 @@
 
 Treat OT detections as software: versioned, reviewed, tested, converted from a
 single source of truth, proven against adversary emulation, and measured. The
-repository is intentionally self-contained; integration with the live lab and
-SIEM platforms is a deliberate later phase.
+offline checks are self-contained; integration with the live lab, a Malcolm
+pipeline and the target SIEM query languages is done, and the evidence is
+committed under `deploy/evidence/`.
 
 ## Design principles
 
@@ -16,8 +17,9 @@ SIEM platforms is a deliberate later phase.
    computed from rule content, so they cannot disagree with the rules.
 3. **Fail loudly.** The validation matcher raises on Sigma features it does not
    implement rather than silently passing a test.
-4. **Offline-first.** CI needs no SIEM, no lab and no network: the ATT&CK
-   catalog is pinned in-tree and fixtures are committed.
+4. **Offline-first.** The detection checks need no external data source: no
+   SIEM, no lab and no live feed. The ATT&CK catalog is pinned in-tree, fixtures
+   are committed, and dependencies are pinned.
 
 ## Content model
 
@@ -113,7 +115,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `test_coverage.py`, `test_metrics.py` | Derived coverage and metrics are internally consistent, and no rule fires on the benign baseline. |
 | `test_deploy.py`, `test_deploy_evidence.py` | The bundle matches the rules and the committed Suricata evidence fires the expected signatures. |
 | `test_malcolm_evidence.py` | The committed Malcolm evidence shows the ruleset loading with no failures alongside Malcolm's default rules and firing the expected signatures on every capture. |
-| `test_lab_loki_evidence.py` | The committed lab evidence shows the generated ruler rule firing in OT-Security-Lab on gateway-shipped firewall events. |
+| `test_lab_loki_evidence.py` | The committed lab evidence shows the generated DNP3, OPC UA, S7comm, firewall and process ruler rules firing in OT-Security-Lab on lab-shipped normalized events. |
 | `test_decoder_evidence.py` | The committed decoder evidence fires each protocol's Sigma rules on real decoder output. |
 | `test_loki_evidence.py`, `test_readme.py` | The committed Loki ruler evidence is complete and the README figures match the generated metrics. |
 
@@ -126,7 +128,9 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 - **Recall** — true positives divided by true positives plus false negatives,
   from labeled fixtures.
 - **Baseline false-positive rate** — benign events matched by any rule divided by
-  all benign events.
+  all benign events. The committed baseline holds 40 events, so this catches a
+  rule that fires on clearly benign telemetry rather than estimating field
+  false-positive volume.
 - **Detection rate** — emulation expectations that fired divided by all
   expectations.
 - **MTTD** — mean time from the start of an emulation step to the first matching
@@ -146,9 +150,12 @@ detection content:
   `9000000-9000099` range.
 - **The Loki ruler bundle is installed in the lab.** `siem/rules/` in
   [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) holds the
-  generated bundle, and the gateway's `firewall_events.py` ships normalized
-  `ot_firewall` events to Loki; `tools/lab_loki_check.py` records the cross-zone
-  rule firing on live traffic under `deploy/evidence/lab-loki/`.
+  generated bundle. The lab runs real DNP3, OPC UA and S7comm endpoints plus DPI
+  producers that ship normalized `ot_ndr` events, and the gateway's
+  `firewall_events.py` ships normalized `ot_firewall` events; those, with the
+  physics-aware monitor's `ot_process` events, exercise the generated rules.
+  `tools/lab_loki_check.py` records the DNP3, OPC UA, S7comm, firewall and
+  process rules firing on live traffic under `deploy/evidence/lab-loki/`.
 - `pipelines/convert.py` emits Loki, OpenSearch, Splunk and Microsoft Sentinel
   queries, and `pipelines/deploy.py` packages them into an installable `deploy/`
   bundle.

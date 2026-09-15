@@ -143,10 +143,11 @@ def render_markdown(metrics: dict) -> str:
         "| :--- | ---: |",
         f"| ATT&CK for ICS coverage | {coverage['techniques_covered']}/"
         f"{coverage['techniques_total']} ({coverage['coverage_pct']}%) |",
-        f"| Rule precision | {fixture['precision']} |",
-        f"| Rule recall | {fixture['recall']} |",
+        f"| Rule fixture agreement (precision) | {fixture['precision']} |",
+        f"| Rule fixture agreement (recall) | {fixture['recall']} |",
         f"| Fixture false-positive rate | {fixture['false_positive_rate']} |",
-        f"| Baseline false-positive rate | {baseline['false_positive_rate']} |",
+        f"| Baseline false-positive rate | {baseline['false_positive_rate']} "
+        f"({baseline['events_total']} events) |",
     ]
     if emulation:
         lines += [

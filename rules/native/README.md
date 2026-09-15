@@ -40,7 +40,10 @@ They are governed by the same conventions as the Sigma rules:
 ## Validation scope
 
 CI validates these rules structurally: required fields, technique tags against
-the pinned catalog, and unique SIDs. It does not execute Suricata, because the
-repository is intentionally self-contained. Functional validation against live
-traffic happens in the NDR pipeline that consumes these rules
-([OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline)).
+the pinned catalog, and unique SIDs. Functional validation is done locally, not
+in CI: `tools/suricata_check.py` runs Suricata in a container over the committed
+`tests/captures/`, and `tools/malcolm_check.py` installs the generated ruleset
+into a Malcolm pipeline and runs it with Malcolm's own image and default
+ruleset. The alert evidence is committed under `deploy/evidence/` and guarded by
+tests. The rules are also consumed by
+[OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline).
