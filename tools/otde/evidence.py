@@ -62,6 +62,35 @@ EXPECTED_LOKI_ALERTS: set[str] = {
 }
 
 
+# The generated-bundle rules the live OT-Security-Lab exercises end to end,
+# mapped to the Loki ruler group that evaluates them. Captured by
+# tools/lab_loki_check.py after the lab's own protocol, process and cross-zone
+# emulations run. The two generated Modbus rules are deliberately absent: the
+# lab reports Modbus as JSON alert events, not normalized ot_ndr telemetry, so
+# the generated Modbus queries have no input there. Those two rules are covered
+# by the offline decoder proof and the Loki stack smoke test instead.
+EXPECTED_LAB_RULES: dict[str, str] = {
+    "DNP3_Control_Operation_From_Unauthorized_Master": "ot_dnp3_unauthorized_control",
+    "DNP3_Unsolicited_Responses_Disabled": "ot_dnp3_unsolicited_disabled",
+    "DNP3_Cold_Or_Warm_Restart_Command": "ot_dnp3_restart_command",
+    "OPC_UA_Write_Request": "ot_opcua_write_request",
+    "OPC_UA_Method_Call_Request": "ot_opcua_method_call",
+    "OPC_UA_Address_Space_Browse": "ot_opcua_browse_request",
+    "S7comm_Program_Download": "ot_s7comm_program_download",
+    "S7comm_Program_Upload": "ot_s7comm_program_upload",
+    "S7comm_PLC_Control_Or_Stop": "ot_s7comm_change_operating_mode",
+    "Process_Safety_Violation_From_Physics_Aware_Monitor": "ot_process_safety_violation",
+    "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone": (
+        "ot_firewall_cross_zone_violation"
+    ),
+}
+
+# Normalized telemetry streams the lab ships, keyed by Loki job label. The
+# ot_ndr job carries one stream per protocol service.
+LAB_NDR_SERVICES = ("dnp3", "opcua", "s7comm")
+LAB_EVENT_JOBS = ("ot_ndr", "ot_firewall", "ot_process")
+
+
 # Detection event service -> Sigma rule titles the decoder examples must fire.
 EXPECTED_DECODER_RULES: dict[str, set[str]] = {
     "dnp3": {

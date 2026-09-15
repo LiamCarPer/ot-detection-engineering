@@ -116,23 +116,41 @@ Findings:
 
 The generated ruler bundle is also deployed into the live lab. Its rules live in
 `siem/rules/` — the generated `ot_*.yaml` files alongside the lab's hand-written
-`alerting-rules.yml` — and are mounted read-only at `/etc/loki/rules/fake`.
-`detection/rules/firewall_events.py`, started automatically by the gateway's
-`start_ids.sh`, turns forwarded cross-zone drops into normalized `ot_firewall`
-events and pushes them to Loki. Containerised kernel drop logs (`FW_DROP:`)
-cannot be read without `CAP_SYSLOG`, so the gateway reconstructs the event from
-the packets it forwards, applying the same conduit policy the firewall enforces.
+`alerting-rules.yml` — and are mounted read-only at `/etc/loki/rules/fake`. The
+lab runs real DNP3 (opendnp3), OPC UA (asyncua) and S7comm (python-snap7)
+endpoints in the control zone; a compromised engineering workstation drives them
+over legitimate conduits, and live DPI producers normalise the traffic into the
+`ot_ndr` contract. `detection/rules/firewall_events.py`, started automatically by
+the gateway's `start_ids.sh`, turns forwarded cross-zone drops into normalized
+`ot_firewall` events (the kernel `FW_DROP:` logs cannot be read without
+`CAP_SYSLOG`, so the gateway reconstructs the event from the packets it forwards,
+applying the same conduit policy the firewall enforces), and the physics-aware
+monitor ships `ot_process` events. `tools/lab_loki_check.py` queries the running
+lab's ruler and streams after a run of the lab's own emulations and records the
+proof under `deploy/evidence/lab-loki/`.
 
 | Field | Value |
 | :--- | :--- |
-| Rule | `Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone` |
-| Group | `ot_firewall_cross_zone_violation` |
-| State | firing |
-| Health | ok |
+| Lab revision | `11a17f7` |
+| Generated rules firing | 11 / 13 |
 | Evidence | `deploy/evidence/lab-loki/` (`summary.json`, `events.json`) |
 
-The lab evaluates 15 groups in total: the 13 generated groups plus its own
-`ot_security_alerts` and `ot_siem_health`.
+The rules firing on live lab traffic:
+
+| Source | Rules |
+| :--- | :--- |
+| DNP3 | Unauthorized control, unsolicited responses disabled, cold/warm restart |
+| OPC UA | Write request, method call, address-space browse |
+| S7comm | Program download, program upload, PLC control/stop |
+| Firewall | Industrial protocol traffic from the enterprise to the control zone |
+| Process | Physics-aware safety violation |
+
+The two generated Modbus rules are deliberately not in this set: the lab reports
+Modbus as JSON alert events (`ot_alerts`), not normalized `ot_ndr` telemetry, so
+the generated Modbus queries have no input there. They are covered by the offline
+decoder proof and the Loki stack smoke test instead (above). The lab evaluates 15
+groups in total: the 13 generated groups plus its own `ot_security_alerts` and
+`ot_siem_health`.
 
 Findings:
 

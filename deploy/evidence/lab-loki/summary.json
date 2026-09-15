@@ -1,10 +1,94 @@
 {
-  "events": 8,
-  "group": "ot_firewall_cross_zone_violation",
-  "health": "ok",
-  "rule": "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
-  "state": "firing",
-  "streams": [
-    "{\"job\": \"ot_firewall\", \"service\": \"iptables\", \"service_name\": \"iptables\"}"
-  ]
+  "captured_at": "2026-09-15T14:56:00.861382+00:00",
+  "events_total": 24,
+  "expected": {
+    "DNP3_Cold_Or_Warm_Restart_Command": "ot_dnp3_restart_command",
+    "DNP3_Control_Operation_From_Unauthorized_Master": "ot_dnp3_unauthorized_control",
+    "DNP3_Unsolicited_Responses_Disabled": "ot_dnp3_unsolicited_disabled",
+    "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone": "ot_firewall_cross_zone_violation",
+    "OPC_UA_Address_Space_Browse": "ot_opcua_browse_request",
+    "OPC_UA_Method_Call_Request": "ot_opcua_method_call",
+    "OPC_UA_Write_Request": "ot_opcua_write_request",
+    "Process_Safety_Violation_From_Physics_Aware_Monitor": "ot_process_safety_violation",
+    "S7comm_PLC_Control_Or_Stop": "ot_s7comm_change_operating_mode",
+    "S7comm_Program_Download": "ot_s7comm_program_download",
+    "S7comm_Program_Upload": "ot_s7comm_program_upload"
+  },
+  "lab_revision": "11a17f7",
+  "loki_url": "http://localhost:3100",
+  "rules": [
+    {
+      "group": "ot_dnp3_restart_command",
+      "health": "ok",
+      "name": "DNP3_Cold_Or_Warm_Restart_Command",
+      "state": "firing"
+    },
+    {
+      "group": "ot_dnp3_unauthorized_control",
+      "health": "ok",
+      "name": "DNP3_Control_Operation_From_Unauthorized_Master",
+      "state": "firing"
+    },
+    {
+      "group": "ot_dnp3_unsolicited_disabled",
+      "health": "ok",
+      "name": "DNP3_Unsolicited_Responses_Disabled",
+      "state": "firing"
+    },
+    {
+      "group": "ot_firewall_cross_zone_violation",
+      "health": "ok",
+      "name": "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone",
+      "state": "firing"
+    },
+    {
+      "group": "ot_opcua_browse_request",
+      "health": "ok",
+      "name": "OPC_UA_Address_Space_Browse",
+      "state": "firing"
+    },
+    {
+      "group": "ot_opcua_method_call",
+      "health": "ok",
+      "name": "OPC_UA_Method_Call_Request",
+      "state": "firing"
+    },
+    {
+      "group": "ot_opcua_write_request",
+      "health": "ok",
+      "name": "OPC_UA_Write_Request",
+      "state": "firing"
+    },
+    {
+      "group": "ot_process_safety_violation",
+      "health": "ok",
+      "name": "Process_Safety_Violation_From_Physics_Aware_Monitor",
+      "state": "firing"
+    },
+    {
+      "group": "ot_s7comm_change_operating_mode",
+      "health": "ok",
+      "name": "S7comm_PLC_Control_Or_Stop",
+      "state": "firing"
+    },
+    {
+      "group": "ot_s7comm_program_download",
+      "health": "ok",
+      "name": "S7comm_Program_Download",
+      "state": "firing"
+    },
+    {
+      "group": "ot_s7comm_program_upload",
+      "health": "ok",
+      "name": "S7comm_Program_Upload",
+      "state": "firing"
+    }
+  ],
+  "streams": {
+    "ot_firewall": 5,
+    "ot_ndr/dnp3": 5,
+    "ot_ndr/opcua": 5,
+    "ot_ndr/s7comm": 5,
+    "ot_process": 4
+  }
 }

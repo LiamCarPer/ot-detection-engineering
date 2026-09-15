@@ -1,74 +1,228 @@
-[
-  {
-    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
-    "stream": {
-      "job": "ot_firewall",
-      "service": "iptables",
-      "service_name": "iptables"
+{
+  "ot_firewall": [
+    {
+      "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+      "stream": {
+        "job": "ot_firewall",
+        "service": "iptables",
+        "service_name": "iptables"
+      },
+      "timestamp": "1789484154825630720"
     },
-    "timestamp": "1789428132203863808"
-  },
-  {
-    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
-    "stream": {
-      "job": "ot_firewall",
-      "service": "iptables",
-      "service_name": "iptables"
+    {
+      "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+      "stream": {
+        "job": "ot_firewall",
+        "service": "iptables",
+        "service_name": "iptables"
+      },
+      "timestamp": "1789484155337268736"
     },
-    "timestamp": "1789428133585614336"
-  },
-  {
-    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
-    "stream": {
-      "job": "ot_firewall",
-      "service": "iptables",
-      "service_name": "iptables"
+    {
+      "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+      "stream": {
+        "job": "ot_firewall",
+        "service": "iptables",
+        "service_name": "iptables"
+      },
+      "timestamp": "1789484155853938944"
     },
-    "timestamp": "1789428135164083200"
-  },
-  {
-    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
-    "stream": {
-      "job": "ot_firewall",
-      "service": "iptables",
-      "service_name": "iptables"
+    {
+      "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+      "stream": {
+        "job": "ot_firewall",
+        "service": "iptables",
+        "service_name": "iptables"
+      },
+      "timestamp": "1789484156367601664"
     },
-    "timestamp": "1789428136566597376"
-  },
-  {
-    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
-    "stream": {
-      "job": "ot_firewall",
-      "service": "iptables",
-      "service_name": "iptables"
+    {
+      "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
+      "stream": {
+        "job": "ot_firewall",
+        "service": "iptables",
+        "service_name": "iptables"
+      },
+      "timestamp": "1789484156883792384"
+    }
+  ],
+  "ot_ndr/dnp3": [
+    {
+      "line": "direction=request function_code=4 function_name=Operate link_source=3 link_destination=10 link_function=4 transport_sequence=0 application_sequence=0 object_group=12 object_variation=1 object_count=1 control_code=1 src_ip=172.23.0.20 dst_ip=172.21.0.50",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "dnp3",
+        "service_name": "dnp3"
+      },
+      "timestamp": "1789484143061686784"
     },
-    "timestamp": "1789428137889535744"
-  },
-  {
-    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
-    "stream": {
-      "job": "ot_firewall",
-      "service": "iptables",
-      "service_name": "iptables"
+    {
+      "line": "direction=request function_code=13 function_name=\"Cold Restart\" link_source=3 link_destination=10 link_function=4 transport_sequence=0 application_sequence=0 object_group=156 object_variation=134 src_ip=172.23.0.20 dst_ip=172.21.0.50",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "dnp3",
+        "service_name": "dnp3"
+      },
+      "timestamp": "1789484143460843264"
     },
-    "timestamp": "1789428150872696320"
-  },
-  {
-    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
-    "stream": {
-      "job": "ot_firewall",
-      "service": "iptables",
-      "service_name": "iptables"
+    {
+      "line": "direction=request function_code=13 function_name=\"Cold Restart\" link_source=3 link_destination=10 link_function=4 transport_sequence=0 application_sequence=0 object_group=156 object_variation=134 src_ip=172.23.0.20 dst_ip=172.21.0.50",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "dnp3",
+        "service_name": "dnp3"
+      },
+      "timestamp": "1789484143463779328"
     },
-    "timestamp": "1789428152219243008"
-  },
-  {
-    "line": "action=DROP src_zone=it dst_zone=control src_ip=172.24.0.10 dst_ip=172.21.0.10 dst_port=502 proto=TCP",
-    "stream": {
-      "job": "ot_firewall",
-      "service": "iptables",
-      "service_name": "iptables"
+    {
+      "line": "direction=request function_code=21 function_name=\"Disable Unsolicited\" link_source=3 link_destination=10 link_function=4 transport_sequence=0 application_sequence=0 object_group=60 object_variation=2 object_count=60 src_ip=172.23.0.20 dst_ip=172.21.0.50",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "dnp3",
+        "service_name": "dnp3"
+      },
+      "timestamp": "1789484143862955008"
     },
-    "timestamp": "1789428153551447808"
-  }
-]
+    {
+      "line": "direction=request function_code=21 function_name=\"Disable Unsolicited\" link_source=3 link_destination=10 link_function=4 transport_sequence=0 application_sequence=0 object_group=60 object_variation=2 object_count=60 src_ip=172.23.0.20 dst_ip=172.21.0.50",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "dnp3",
+        "service_name": "dnp3"
+      },
+      "timestamp": "1789484143866087168"
+    }
+  ],
+  "ot_ndr/opcua": [
+    {
+      "line": "message_type=MSG chunk_type=F secure_channel_id=14 token_id=13 sequence_number=10 request_id=10 service_id=712 opcua_service=CallRequest direction=request src_ip=172.23.0.20 dst_ip=172.21.0.51",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "opcua",
+        "service_name": "opcua"
+      },
+      "timestamp": "1789484146211109632"
+    },
+    {
+      "line": "message_type=MSG chunk_type=F secure_channel_id=14 token_id=13 sequence_number=11 request_id=11 service_id=473 opcua_service=ActivateSessionRequest direction=request src_ip=172.23.0.20 dst_ip=172.21.0.51",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "opcua",
+        "service_name": "opcua"
+      },
+      "timestamp": "1789484146217871360"
+    },
+    {
+      "line": "message_type=MSG chunk_type=F secure_channel_id=14 token_id=13 sequence_number=11 request_id=11 service_id=473 opcua_service=ActivateSessionRequest direction=request src_ip=172.23.0.20 dst_ip=172.21.0.51",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "opcua",
+        "service_name": "opcua"
+      },
+      "timestamp": "1789484146222197760"
+    },
+    {
+      "line": "message_type=CLO chunk_type=F secure_channel_id=14 token_id=13 src_ip=172.23.0.20 dst_ip=172.21.0.51",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "opcua",
+        "service_name": "opcua"
+      },
+      "timestamp": "1789484146227836928"
+    },
+    {
+      "line": "message_type=CLO chunk_type=F secure_channel_id=14 token_id=13 src_ip=172.23.0.20 dst_ip=172.21.0.51",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "opcua",
+        "service_name": "opcua"
+      },
+      "timestamp": "1789484146231533056"
+    }
+  ],
+  "ot_ndr/s7comm": [
+    {
+      "line": "direction=request rosctr=1 pdu_reference=1 parameter_length=7 data_length=0 cotp_type=240 function_code=29 function_name=\"Start Upload\" src_ip=172.23.0.20 dst_ip=172.21.0.52",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "s7comm",
+        "service_name": "s7comm"
+      },
+      "timestamp": "1789484148084871424"
+    },
+    {
+      "line": "direction=request rosctr=1 pdu_reference=1 parameter_length=7 data_length=0 cotp_type=240 function_code=30 function_name=Upload src_ip=172.23.0.20 dst_ip=172.21.0.52",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "s7comm",
+        "service_name": "s7comm"
+      },
+      "timestamp": "1789484148584720384"
+    },
+    {
+      "line": "direction=request rosctr=1 pdu_reference=1 parameter_length=7 data_length=0 cotp_type=240 function_code=30 function_name=Upload src_ip=172.23.0.20 dst_ip=172.21.0.52",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "s7comm",
+        "service_name": "s7comm"
+      },
+      "timestamp": "1789484148588117248"
+    },
+    {
+      "line": "direction=request rosctr=1 pdu_reference=1 parameter_length=7 data_length=0 cotp_type=240 function_code=31 function_name=\"End Upload\" src_ip=172.23.0.20 dst_ip=172.21.0.52",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "s7comm",
+        "service_name": "s7comm"
+      },
+      "timestamp": "1789484149086763008"
+    },
+    {
+      "line": "direction=request rosctr=1 pdu_reference=1 parameter_length=7 data_length=0 cotp_type=240 function_code=31 function_name=\"End Upload\" src_ip=172.23.0.20 dst_ip=172.21.0.52",
+      "stream": {
+        "job": "ot_ndr",
+        "service": "s7comm",
+        "service_name": "s7comm"
+      },
+      "timestamp": "1789484149089123584"
+    }
+  ],
+  "ot_process": [
+    {
+      "line": "event_type=process_safety_violation asset=PLC-01 register=0 value=1 tank_level_pct=95 actor=172.24.0.10 response=none",
+      "stream": {
+        "job": "ot_process",
+        "service": "safety_monitor",
+        "service_name": "safety_monitor"
+      },
+      "timestamp": "1789483864331286528"
+    },
+    {
+      "line": "event_type=process_safety_violation asset=PLC-01 register=0 value=1 tank_level_pct=95 actor=172.24.0.10 response=none",
+      "stream": {
+        "job": "ot_process",
+        "service": "safety_monitor",
+        "service_name": "safety_monitor"
+      },
+      "timestamp": "1789483951745095168"
+    },
+    {
+      "line": "event_type=process_safety_violation asset=PLC-01 register=0 value=1 tank_level_pct=95 actor=172.24.0.10 response=none",
+      "stream": {
+        "job": "ot_process",
+        "service": "safety_monitor",
+        "service_name": "safety_monitor"
+      },
+      "timestamp": "1789484081891555840"
+    },
+    {
+      "line": "event_type=process_safety_violation asset=PLC-01 register=0 value=1 tank_level_pct=95 actor=172.24.0.10 response=none",
+      "stream": {
+        "job": "ot_process",
+        "service": "safety_monitor",
+        "service_name": "safety_monitor"
+      },
+      "timestamp": "1789484150510530816"
+    }
+  ]
+}
