@@ -28,9 +28,9 @@ fn decode_hex(line: &str) -> Option<Vec<u8>> {
     if !cleaned.len().is_multiple_of(2) {
         return None;
     }
-    cleaned
-        .chunks_exact(2)
-        .map(|pair| Some((hex_nibble(pair[0])? << 4) | hex_nibble(pair[1])?))
+    (0..cleaned.len())
+        .step_by(2)
+        .map(|i| Some((hex_nibble(cleaned[i])? << 4) | hex_nibble(cleaned[i + 1])?))
         .collect()
 }
 
