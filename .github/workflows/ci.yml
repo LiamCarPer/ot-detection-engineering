@@ -26,7 +26,8 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        # Pinned to match rust-toolchain.toml; keep the two in step.
+        uses: dtolnay/rust-toolchain@1.98.0
         with:
           components: rustfmt, clippy
 

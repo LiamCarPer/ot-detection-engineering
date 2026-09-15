@@ -1,0 +1,7 @@
+# Pin the decoder toolchain so CI and local builds use the same compiler and
+# lints. An unpinned toolchain let a newer clippy (1.98) flag `chunks_exact` in
+# code that passed on the older local stable, which is a "passes locally, fails
+# in CI" trap. Bump this deliberately, with the lockfile, in one commit.
+[toolchain]
+channel = "1.98.0"
+components = ["clippy", "rustfmt"]
