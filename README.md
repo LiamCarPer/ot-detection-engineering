@@ -45,7 +45,7 @@ not committed). The emulation figures are replayed from a genuine run against
 | Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, replayed from the recorded lab run. |
 | Rule fixture agreement (precision) | 1.0 | Rule matches against its own committed positive/negative fixtures. A regression check, not field precision. |
 | Rule fixture agreement (recall) | 1.0 | As above. |
-| Baseline false-positive rate | 0.0 | 40 committed benign events across every protocol and stream the rules consume. |
+| Baseline false-positive rate | 0.0 | 50 committed benign events across every protocol and stream the rules consume. |
 | ATT&CK for ICS coverage | 15 / 97 techniques (15.5%) | Intentionally low: a small, fully tested ruleset rather than untested padding. |
 
 Coverage is intentionally low: this repository seeds the pipeline with a small,
@@ -71,7 +71,7 @@ detection is only as trustworthy as the evidence behind it.
   that the rule and its fixtures agree — useful as a regression guard, not as a
   claim about production precision.
 - **The benign baseline is small.** The baseline false-positive rate is measured
-  over 40 committed benign events spanning normal Modbus, DNP3, S7comm and OPC UA
+  over 50 committed benign events spanning normal Modbus, DNP3, S7comm and OPC UA
   traffic, zone-firewall decisions and process updates. It is authored, not
   harvested from a plant, so it catches a rule that fires on clearly
   benign telemetry, not enough to estimate field false-positive volume.

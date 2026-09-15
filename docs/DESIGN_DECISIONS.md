@@ -103,7 +103,7 @@ worked, and they are the reason the repository validates functionally:
 - **Coverage is intentionally low** (15 of 97 ICS techniques). The point is the
   engineering process, which scales unchanged to a large ruleset.
 - **Fixture precision and recall measure rule/fixture agreement**, not field
-  performance, and the benign baseline is 40 authored events covering normal
+  performance, and the benign baseline is 50 authored events covering normal
   traffic for every protocol and stream the rules consume.
 - **Detection is mostly signature-based.** There is no stateful correlation or
   long-window behavioural baseline yet; the physics-aware process rule is the one
