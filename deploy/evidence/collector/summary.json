@@ -1,0 +1,104 @@
+{
+  "suricata/dnp3_attack": {
+    "events": 9,
+    "expected": [
+      "DNP3 Cold Or Warm Restart Command",
+      "DNP3 Control Operation From Unauthorized Master",
+      "DNP3 Unsolicited Responses Disabled"
+    ],
+    "inputs": [
+      "suricata/dnp3_attack.eve.json"
+    ],
+    "observed": [
+      "DNP3 Cold Or Warm Restart Command",
+      "DNP3 Control Operation From Unauthorized Master",
+      "DNP3 Unsolicited Responses Disabled"
+    ],
+    "schema_errors": [],
+    "sensor": "suricata"
+  },
+  "suricata/dnp3_benign": {
+    "events": 1,
+    "expected": [],
+    "inputs": [
+      "suricata/dnp3_benign.eve.json"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "suricata"
+  },
+  "suricata/modbus_attack": {
+    "events": 6,
+    "expected": [
+      "Modbus Write From Unauthorized Control Writer",
+      "Modbus Write To Safety Critical Parameter Register"
+    ],
+    "inputs": [
+      "suricata/modbus_attack.eve.json"
+    ],
+    "observed": [
+      "Modbus Write From Unauthorized Control Writer",
+      "Modbus Write To Safety Critical Parameter Register"
+    ],
+    "schema_errors": [],
+    "sensor": "suricata"
+  },
+  "suricata/modbus_benign": {
+    "events": 6,
+    "expected": [],
+    "inputs": [
+      "suricata/modbus_benign.eve.json"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "suricata"
+  },
+  "zeek/dnp3_attack": {
+    "events": 1,
+    "expected": [
+      "DNP3 Control Operation From Unauthorized Master"
+    ],
+    "inputs": [
+      "zeek/dnp3_attack.dnp3.log"
+    ],
+    "observed": [
+      "DNP3 Control Operation From Unauthorized Master"
+    ],
+    "schema_errors": [],
+    "sensor": "zeek"
+  },
+  "zeek/dnp3_benign": {
+    "events": 1,
+    "expected": [],
+    "inputs": [
+      "zeek/dnp3_benign.dnp3.log"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "zeek"
+  },
+  "zeek/modbus_attack": {
+    "events": 6,
+    "expected": [
+      "Modbus Write From Unauthorized Control Writer"
+    ],
+    "inputs": [
+      "zeek/modbus_attack.modbus.log"
+    ],
+    "observed": [
+      "Modbus Write From Unauthorized Control Writer"
+    ],
+    "schema_errors": [],
+    "sensor": "zeek"
+  },
+  "zeek/modbus_benign": {
+    "events": 6,
+    "expected": [],
+    "inputs": [
+      "zeek/modbus_benign.modbus.log"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "zeek"
+  }
+}

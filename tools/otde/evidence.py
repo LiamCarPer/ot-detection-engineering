@@ -115,6 +115,30 @@ EXPECTED_DECODER_RULES: dict[str, set[str]] = {
 }
 
 
+# Sensor sample -> Sigma rule titles the collector's normalized events must fire.
+# Captured from the repository's own PCAPs; see collector/samples/PROVENANCE.md.
+EXPECTED_COLLECTOR_RULES: dict[str, set[str]] = {
+    "suricata/modbus_attack": {
+        "Modbus Write From Unauthorized Control Writer",
+        "Modbus Write To Safety Critical Parameter Register",
+    },
+    "suricata/modbus_benign": set(),
+    "suricata/dnp3_attack": {
+        "DNP3 Control Operation From Unauthorized Master",
+        "DNP3 Unsolicited Responses Disabled",
+        "DNP3 Cold Or Warm Restart Command",
+    },
+    "suricata/dnp3_benign": set(),
+    # Zeek's modbus.log has no register value, so the parameter-band rule cannot
+    # fire on it; its dnp3.log has no link address, so the control rule's master
+    # allowlist cannot be applied (see collector/README.md).
+    "zeek/modbus_attack": {"Modbus Write From Unauthorized Control Writer"},
+    "zeek/modbus_benign": set(),
+    "zeek/dnp3_attack": {"DNP3 Control Operation From Unauthorized Master"},
+    "zeek/dnp3_benign": set(),
+}
+
+
 def read_alert_sids(eve_path: Path) -> set[int]:
     """Return the set of signature ids in an alert-only eve.json."""
     sids: set[int] = set()

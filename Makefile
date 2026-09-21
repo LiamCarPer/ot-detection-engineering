@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check lab-loki-check coverage emulate-validate metrics check clean
+.PHONY: help setup lint validate test rust demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check lab-loki-check coverage emulate-validate metrics check clean
 
 help:
 	@echo "Targets:"
@@ -26,6 +26,7 @@ help:
 	@echo "  suricata-check   Run Suricata over the captures and refresh evidence (Docker)"
 	@echo "  loki-check       Run the Loki ruler stack and refresh evidence (Docker)"
 	@echo "  decoder-check    Decode the example frames and refresh rule evidence"
+	@echo "  collector-check  Prove collector output fires the Sigma rules"
 	@echo "  lab-loki-check   Refresh the OT-Security-Lab ruler evidence (lab required)"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate the adversary emulation plan"
@@ -84,6 +85,9 @@ loki-check: setup deploy
 decoder-check: setup
 	$(PY) tools/decoder_check.py
 
+collector-check: setup
+	$(PY) tools/collector_check.py
+
 lab-loki-check: setup
 	$(PY) tools/lab_loki_check.py
 
@@ -100,7 +104,7 @@ metrics: setup
 		--observations purple/emulation/lab-observations.json
 	$(PY) metrics/compute.py
 
-check: lint validate test rust decoder-check deploy-check
+check: lint validate test rust decoder-check collector-check deploy-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target

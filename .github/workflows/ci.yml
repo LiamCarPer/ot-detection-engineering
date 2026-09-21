@@ -53,6 +53,12 @@ jobs:
       - name: Check the decoder evidence is current
         run: git diff --exit-code deploy/evidence/decoders/summary.json
 
+      - name: Prove collector output fires the Sigma rules
+        run: python tools/collector_check.py
+
+      - name: Check the collector evidence is current
+        run: git diff --exit-code deploy/evidence/collector/summary.json
+
       - name: Convert to Loki
         run: python pipelines/convert.py --backend loki --check
 
