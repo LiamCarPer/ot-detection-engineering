@@ -1,0 +1,10 @@
+#separator \x09
+#set_separator	,
+#empty_field	(empty)
+#unset_field	-
+#path	dnp3
+#open	2026-09-21-23-43-50
+#fields	ts	uid	id.orig_h	id.orig_p	id.resp_h	id.resp_p	fc_request	fc_reply	iin
+#types	time	string	addr	port	addr	port	string	string	count
+1700000000.003000	CuYf7B166fpBGlSVgj	172.21.0.20	42000	172.31.0.10	20000	READ	-	-
+#close	2026-09-21-23-43-50
