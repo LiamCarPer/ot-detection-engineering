@@ -1,5 +1,8 @@
 # Runtime and validation toolchain. Pinned to the versions the CI matrix uses.
 pysigma==1.5.0
+# Transitive pin: pyparsing 3.3.3 breaks pySigma 1.5.0's condition parser with
+# "TypeError: 'str' object is not callable". 3.3.2 is the last working release.
+pyparsing==3.3.2
 sigma-cli==3.1.0
 pySigma-backend-loki==0.13.0
 pySigma-backend-opensearch==2.0.3
