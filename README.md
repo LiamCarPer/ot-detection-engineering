@@ -125,6 +125,9 @@ DNP3 frames   ──▶ tools/dnp3-dpi (Rust)   ──▶ ot_ndr/dnp3 events   �
 S7comm frames ──▶ tools/s7comm-dpi (Rust) ──▶ ot_ndr/s7comm events ──▶ Sigma rules
 OPC UA msgs   ──▶ tools/opcua-dpi (Rust)  ──▶ ot_ndr/opcua events  ──▶ Sigma rules
 
+Suricata eve.json / Zeek OT logs ──▶ collector/ ──▶ contract events ──▶ Sigma rules
+                                                        (schema-validated, routed)
+
 emulation plan ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
 ```
 
@@ -143,6 +146,7 @@ tools/otde/           Shared library: discovery, technique extraction, matcher
 tools/dnp3-dpi/       Rust DNP3 decoder emitting normalized ot_ndr/dnp3 events
 tools/s7comm-dpi/     Rust S7comm decoder emitting normalized ot_ndr/s7comm events
 tools/opcua-dpi/      Rust OPC UA decoder emitting normalized ot_ndr/opcua events
+collector/            Normalizes Suricata eve.json and Zeek OT logs into the contract
 pipelines/            Sigma-to-backend conversion and deployment bundle builder
 deploy/               Installable bundle: Loki ruler, Suricata, Splunk, Sentinel, OpenSearch
 coverage/             ATT&CK for ICS coverage map generator
@@ -167,6 +171,7 @@ make deploy            # build the installable bundle under deploy/
 make suricata-check    # validate the native rules over captures (Docker)
 make loki-check        # prove the Loki ruler bundle in a full stack (Docker)
 make decoder-check     # prove the decoders' events fire the Sigma rules
+make collector-check   # prove collector output fires the Sigma rules
 make metrics           # coverage + emulation replay + metrics report
 ```
 
@@ -241,6 +246,11 @@ breakdown is in [deploy/report.md](deploy/report.md).
 - **Decoder-to-rule validation**: each decoder's committed example frames are
   decoded and the resulting events are run through the same pySigma matcher the
   rule tests use, so the decoders and their Sigma rules cannot drift apart.
+- **A telemetry collector** (`collector/`) that normalizes real Suricata
+  `eve.json` and Zeek OT logs into the contract, validates each event against
+  `metadata/telemetry.schema.json`, and is proven to fire the rules
+  (`make collector-check`) — so the telemetry the rules assume is produced in
+  the repository rather than assumed.
 
 ## Status and roadmap
 

@@ -52,6 +52,10 @@ DNP3/S7comm/OPC UA ──▶ tools/*-dpi (Rust) ──▶ ot_ndr events ──�
 decoder examples ──▶ tools/decoder_check.py ──▶ ot_ndr events ──▶ Sigma rules
                                                               └─▶ deploy/evidence
 
+Suricata eve.json / Zeek logs ──▶ collector/ ──▶ contract events ──▶ Sigma rules
+                                       │                             └─▶ deploy/evidence
+                                       └─▶ stdout JSONL / Loki (routed by service label)
+
 emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
         (or recorded observations)         (against the lab or a replay)
 ```
@@ -61,8 +65,9 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | Path | Responsibility |
 | :--- | :--- |
 | `rules/` | Detection content: Sigma rules with `.test.yaml` sidecars, and native Suricata rules. |
-| `metadata/` | Pinned ATT&CK for ICS catalog and JSON Schemas for rule test cases, the catalog, and the emulation plan. |
+| `metadata/` | Pinned ATT&CK for ICS catalog and JSON Schemas for rule test cases, the catalog, the emulation plan and the telemetry contract. |
 | `tools/otde/` | Shared library: rule discovery, technique extraction, Suricata reader, and the pySigma-based validation matcher. |
+| `collector/` | Produces the telemetry contract from real sensor output (Suricata `eve.json`, Zeek OT logs), with schema validation and routing. |
 | `tools/dnp3-dpi/`, `tools/s7comm-dpi/`, `tools/opcua-dpi/` | Dependency-free Rust decoders (Cargo workspace) that emit normalized `ot_ndr` events for the DNP3, S7comm and OPC UA Sigma rules. |
 | `pipelines/` | Sigma-to-backend conversion and the deployment bundle builder. |
 | `deploy/` | Committed, installable bundle (Loki ruler, Suricata, Splunk, Sentinel), provenance manifest, runbook and Suricata evidence. |

@@ -8,6 +8,22 @@ rules stay readable and testable.
 Each contract is identified by the Sigma `logsource` (`product` / `service`) that
 selects it.
 
+## Producers
+
+- **`collector/`** normalizes Suricata `eve.json` and Zeek `modbus.log` /
+  `dnp3.log` into these events, attaches the `product` / `service` routing and an
+  ISO 8601 UTC timestamp, and validates every event against
+  `metadata/telemetry.schema.json`. `make collector-check` proves the output
+  fires the rules.
+- **`tools/dnp3-dpi`, `tools/s7comm-dpi`, `tools/opcua-dpi`** emit the raw
+  application-layer events; the collector or the pipeline attaches the routing
+  fields.
+
+Sensors differ in what they can see, so which fields are present depends on the
+source. A field the source cannot see is **omitted, never guessed**, so a rule
+can distinguish "the master was authorized" from "the master was not visible".
+The per-sensor field matrix is in `collector/README.md`.
+
 ## `ot_ndr` / `modbus`
 
 Decoded Modbus/TCP transactions. One record per request or response.

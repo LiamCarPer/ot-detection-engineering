@@ -23,6 +23,7 @@ from a real run; nothing is hand-counted.
 | The ruleset loads and fires inside a Malcolm pipeline alongside 59,188 default rules | `deploy/evidence/malcolm/` | `tools/malcolm_check.py` |
 | The generated rules fire on live traffic in a real-endpoint OT lab (DNP3, OPC UA, S7comm) | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
 | The Rust decoders' output satisfies the Sigma rules | `deploy/evidence/decoders/summary.json` | `make decoder-check` |
+| Real Suricata and Zeek sensor output normalizes to the contract and fires the rules | `deploy/evidence/collector/summary.json` | `make collector-check` |
 | Every rule converts to Loki, Splunk, Sentinel and OpenSearch, with provenance | `deploy/manifest.json` | `make convert-all` |
 
 See [deploy/report.md](../deploy/report.md) for the full functional report.
