@@ -145,6 +145,36 @@ def test_loki_group_names_are_unique() -> None:
     assert len(names) == len(set(names)), f"duplicate Loki group names: {names}"
 
 
+def test_correlation_loki_query_is_not_wrapped_in_a_range_function() -> None:
+    """A correlation query is a metric expression; count_over_time takes a selector.
+
+    The pinned Loki backend finalises a correlation for the ruler format by
+    wrapping its query in `sum(count_over_time(<query> [1m])) or vector(0) > 0`,
+    which is the log-rule idiom. A metric expression cannot be an argument to
+    count_over_time, so Loki rejects the rule with "syntax error: unexpected
+    COUNT" and the rule never loads. The bundle builds correlation ruler
+    documents from the default-format query instead
+    (pipelines/loki_correlation.py); this guards the shape, because the failure
+    mode is a rule that is silently absent at runtime.
+    """
+    correlation_paths = correlation_rule_paths()
+    assert correlation_paths, "no correlation rules found"
+
+    for rule_path in correlation_paths:
+        artifact = DEPLOY_DIR / "loki" / "rules" / f"{rule_path.stem}.yaml"
+        assert artifact.exists(), artifact.name
+        document = yaml.safe_load(artifact.read_text(encoding="utf-8"))
+        rule = document["groups"][0]["rules"][0]
+        expr = rule["expr"]
+
+        wrapped = "a metric expression is wrapped in a range function"
+        assert "count_over_time(count " not in expr, wrapped
+        assert "count_over_time(sum " not in expr, wrapped
+        assert "count_over_time({" in expr, f"{artifact.name} has no log selector subquery"
+        assert 'service="' in expr, f"{artifact.name} does not route on its service"
+        assert ">=" in expr, f"{artifact.name} carries no threshold"
+
+
 def test_suricata_bundle_contains_every_native_sid() -> None:
     bundle = (DEPLOY_DIR / "suricata" / "ot-detection.rules").read_text(encoding="utf-8")
     expected = set()

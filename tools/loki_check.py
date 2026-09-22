@@ -40,11 +40,13 @@ ALERTMANAGER_READY = "http://localhost:19093/-/ready"
 GRAFANA_HEALTH = "http://localhost:13000/api/health"
 JOB_LABEL = "ot_loki_smoke"
 
-# Each generated Loki rule, with a line that must fire it and a benign line that
-# must not, plus the stream-label service the rule routes on. Keys are the alert
+# Each generated Loki rule, with the line(s) that must fire it and a benign line
+# that must not, plus the stream-label service the rule routes on. A correlation
+# needs several events — several distinct destinations for one source — so its
+# attack value is a list. Keys are the alert
 # names emitted by the pySigma Loki ruler backend; the service must match the
 # rule's logsource service or the query selects the wrong stream and never fires.
-CASES: dict[str, dict[str, str]] = {
+CASES: dict[str, dict[str, object]] = {
     "Modbus_Write_From_Unauthorized_Control_Writer": {
         "service": "modbus",
         "attack": (
@@ -77,6 +79,30 @@ CASES: dict[str, dict[str, str]] = {
             "direction=request function_code=3 src_ip=172.22.0.10 "
             "dst_ip=172.21.0.10 unit_id=1 register=0"
         ),
+    },
+    "Modbus_Control_Asset_Enumeration": {
+        # One source reading three distinct control assets inside the window. The
+        # referenced rule matches each line on its own; the correlation is what
+        # counts the distinct destinations.
+        "service": "modbus",
+        "attack": [
+            f"direction=request function_code=3 src_ip=172.24.0.10 "
+            f"dst_ip=172.21.0.{last} unit_id=1 register=0"
+            for last in (10, 11, 12)
+        ],
+        # Three distinct assets again, but from the allowlisted reader the
+        # referenced rule filters out, so the correlation has nothing to count.
+        #
+        # The idle case cannot be "one source polling one asset", because any
+        # event that feeds this correlation also matches the rule it references,
+        # and the benign phase requires no alerts at all. That distinct-count
+        # negative is the offline fixture's job; this one proves the correlation
+        # inherits the referenced rule's filter.
+        "benign": [
+            f"direction=request function_code=3 src_ip=172.22.0.10 "
+            f"dst_ip=172.21.0.{last} unit_id=1 register=0"
+            for last in (10, 11, 12)
+        ],
     },
     "Modbus_Write_To_Safety_Critical_Parameter_Register": {
         "service": "modbus",
@@ -240,6 +266,13 @@ def _push(entries: list[tuple[str, str]]) -> None:
         response.read()
 
 
+def _lines(value: object) -> list[str]:
+    """Return a case's log line(s) as a list, so a case may supply several."""
+    if isinstance(value, str):
+        return [value]
+    return list(value)  # type: ignore[arg-type]
+
+
 def _compose(*args: str) -> None:
     subprocess.run(["docker", "compose", "-f", str(COMPOSE_FILE), *args], check=True)
 
@@ -255,12 +288,14 @@ def run() -> int:
         _wait_for(GRAFANA_HEALTH, 60)
 
         _clear_received()
-        _push([(case["service"], case["benign"]) for case in CASES.values()])
+        _push([(case["service"], line) for case in CASES.values()
+               for line in _lines(case["benign"])])
         time.sleep(20)
         false_positives = sorted(_alertnames(_payloads()) & EXPECTED_LOKI_ALERTS)
 
         _clear_received()
-        _push([(case["service"], case["attack"]) for case in CASES.values()])
+        _push([(case["service"], line) for case in CASES.values()
+               for line in _lines(case["attack"])])
         deadline = time.monotonic() + 120
         while time.monotonic() < deadline:
             observed = _alertnames(_payloads())

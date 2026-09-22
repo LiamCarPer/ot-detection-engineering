@@ -24,6 +24,10 @@
     "status": "firing"
   },
   {
+    "alertname": "Modbus_Control_Asset_Enumeration",
+    "status": "firing"
+  },
+  {
     "alertname": "Modbus_Device_Identification_Scan",
     "status": "firing"
   },

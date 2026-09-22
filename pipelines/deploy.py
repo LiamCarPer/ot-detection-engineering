@@ -32,6 +32,7 @@ from convert import (  # noqa: E402
     make_backend,
     sha256,
 )
+from loki_correlation import ruler_document  # noqa: E402
 from sigma.correlations import SigmaCorrelationRule  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -117,7 +118,10 @@ def build_bundle() -> dict[str, str]:
                 )
                 continue
             text = rule_path.read_text(encoding="utf-8")
-            queries = convert_rule_object(backend, rule, output_format)
+            if target == "loki" and isinstance(rule, SigmaCorrelationRule):
+                queries = [_correlation_loki_document(backend_name, rule)]
+            else:
+                queries = convert_rule_object(backend, rule, output_format)
             if target == "loki":
                 queries = [_rename_ruler_group(query, rule_path.stem) for query in queries]
             artifact = f"{directory}/{rule_path.stem}.{extension}"
@@ -149,6 +153,27 @@ def build_bundle() -> dict[str, str]:
         indent=2,
     ) + "\n"
     return bundle
+
+
+def _correlation_loki_document(backend_name: str, rule) -> str:
+    """Build a Loki ruler document for a correlation rule.
+
+    The backend's ruler output format for a correlation is not valid LogQL: it
+    wraps the metric expression in ``count_over_time()`` and interpolates the
+    referenced rule's ruler document into the subquery selector (see
+    pipelines/loki_correlation.py). The default output format produces the query
+    correctly, but it is built from the referenced rules' *cached* conversion
+    results — which in this loop are ruler documents, because that is what the
+    loop just produced for them. A fresh backend converts the references in the
+    default format first, so the subquery is a query.
+    """
+    backend = make_backend(backend_name)
+    output_format = backend.default_format
+    backend.init_processing_pipeline(output_format)
+    for reference in rule.referenced_rules:
+        backend.convert_rule(reference.rule, output_format)
+    query = convert_rule_object(backend, rule, output_format)[0]
+    return ruler_document(query, rule)
 
 
 def write_bundle(bundle: dict[str, str], out_dir: Path) -> None:

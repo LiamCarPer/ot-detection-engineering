@@ -113,6 +113,21 @@ worked, and they are the reason the repository validates functionally:
   distinct count had the field it was counting added to its own grouping and
   could never reach the threshold. Each target now loads its own copy, and the
   generated queries are committed where the difference would be visible.
+- **The Loki ruler output for a correlation was not valid LogQL, and the smoke
+  test is what caught it.** `finalize_query_ruler` wraps every query in
+  `sum(count_over_time(<query> [1m])) or vector(0) > 0`, which is the log-rule
+  idiom — alert when a matching line appeared in the last minute. A correlation's
+  query is already a metric expression ending in its own threshold, and a metric
+  expression cannot be an argument to `count_over_time`, so Loki rejected the
+  generated rule with `syntax error: unexpected COUNT`. The same path also
+  interpolated the referenced rule's ruler *document* into the subquery selector,
+  because in the ruler format a rule's conversion result is a dict, not a query.
+  Both are one mistake: a log-rule path applied to a metric expression. The
+  bundle builds correlation ruler documents from the backend's default-format
+  query instead (`pipelines/loki_correlation.py`), and a test asserts the shape
+  because the failure mode is a rule that never loads. The lesson is the cheap
+  one I keep relearning here: POST the generated query to the thing that has to
+  run it. It took one curl to tell "converts" apart from "runs".
 - **A referenced rule keeps its own artifact only with
   `finalize_correlation_subqueries`.** Without it the rule is emitted
   unfinalised, so its Splunk saved search loses its stanza the moment a
@@ -142,7 +157,8 @@ worked, and they are the reason the repository validates functionally:
   harness that proves it is equally narrow: the offline evaluator implements
   `value_count` and fails loudly on every other correlation type, and the benign
   baseline is single-event, so correlation false positives are covered only by
-  the negative windows in the rule's own fixture.
+  the negative windows in the rule's own fixture and by one live negative case
+  (an allowlisted reader touching three assets) in the Loki stack.
 - **Encrypted channels.** OPC UA service bodies are only visible on `None`/`Sign`
   channels; `SignAndEncrypt` yields metadata but no service. The S7comm decoder
   handles classic S7comm only, not S7comm Plus.

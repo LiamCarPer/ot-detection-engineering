@@ -63,6 +63,7 @@ EXPECTED_LOKI_ALERTS: set[str] = {
     "OPC_UA_Write_Request",
     "OPC_UA_Method_Call_Request",
     "OPC_UA_Address_Space_Browse",
+    "Modbus_Control_Asset_Enumeration",
 }
 
 

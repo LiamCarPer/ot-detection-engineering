@@ -43,20 +43,10 @@ groups:
 
         '
       summary: Modbus Control Asset Enumeration
-    expr: 'sum(count_over_time(count without (dst_ip) (sum by (src_ip, dst_ip) (count_over_time({''alert'':
-      ''Modbus_Process_State_Read_From_Unauthorized_Source'', ''annotations'': {''description'':
-      ''Detects a Modbus read of process data (holding or input registers) from a
-      host\nthat is not an approved operator interface. In a segmented OT network,
-      process\nreads should originate only from the HMI or the supervisory collector;
-      a read\nfrom any other source is reconnaissance or a compromised host mapping
-      the\nprocess before acting on it.\n\nThis rule operates on normalized NDR telemetry
-      (see docs/TELEMETRY.md). The\napproved readers are site-specific and must be
-      tuned per environment.\n'', ''summary'': ''Modbus Process State Read From Unauthorized
-      Source'', ''author'': ''Liam Carvajal''}, ''expr'': ''sum(count_over_time({job=~".+",
+    expr: count without (dst_ip) (sum by (src_ip, dst_ip) (count_over_time({job=~".+",
       service="modbus"} | logfmt | direction=~`(?i)^request$` and (function_code=3
-      or function_code=4) and src_ip!~`(?i)^172\\.21\\.0\\.20$` and src_ip!~`(?i)^172\\.22\\.0\\.10$`
-      | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}} {{.register}}" [1m]))
-      or vector(0) > 0'', ''labels'': {''severity'': ''low''}} [5m]))) >= 3 [1m]))
-      or vector(0) > 0'
+      or function_code=4) and src_ip!~`(?i)^172\.21\.0\.20$` and src_ip!~`(?i)^172\.22\.0\.10$`
+      | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}} {{.register}}" [5m])))
+      >= 3
     labels:
       severity: high
