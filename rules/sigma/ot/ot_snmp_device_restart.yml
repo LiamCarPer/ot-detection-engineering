@@ -1,0 +1,31 @@
+title: OT Device Restart
+id: 3f1822fa-8392-42d9-9445-6a2de38ee068
+status: experimental
+description: |
+  Detects an SNMP coldStart or warmStart trap from an OT device. A device that
+  restarts reinitializes its process image and control state; outside a
+  maintenance window it is a disruptive action or a sign that a controller
+  crashed, and it is the network-device counterpart to the DNP3 restart rule.
+
+  Operates on the normalized SNMP contract (docs/TELEMETRY.md).
+references:
+  - https://attack.mitre.org/techniques/T0816/
+author: Liam Carvajal
+date: 2026-09-22
+logsource:
+  product: ot_snmp
+  service: snmp
+detection:
+  selection:
+    event_type: device_restart
+  condition: selection
+fields:
+  - device
+  - oid
+  - snmp_value
+falsepositives:
+  - A planned firmware update or power maintenance
+  - A device rebooting after a recoverable fault
+level: high
+tags:
+  - attack.t0816

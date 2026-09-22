@@ -109,6 +109,24 @@
       "backend": "loki"
     },
     {
+      "source": "rules/sigma/ot/ot_snmp_config_change.yml",
+      "source_sha256": "d1b8cfd7ba48875abbcc0c03ec230bda8b818d03baa70ea2aece688e23f75412",
+      "target": "loki/rules/ot_snmp_config_change.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_snmp_device_restart.yml",
+      "source_sha256": "e9de5251f4ca26737841fdbbfe36f7a89d584b973f040824b5c5cc3e333ce62d",
+      "target": "loki/rules/ot_snmp_device_restart.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_snmp_interface_down.yml",
+      "source_sha256": "b63c1c903f44d9c452b49af90b5a9440863ffe8726eda7385df24286cc817686",
+      "target": "loki/rules/ot_snmp_interface_down.yaml",
+      "backend": "loki"
+    },
+    {
       "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
       "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
       "target": "opensearch/ot_dnp3_restart_command.ppl",
@@ -217,6 +235,24 @@
       "backend": "opensearch"
     },
     {
+      "source": "rules/sigma/ot/ot_snmp_config_change.yml",
+      "source_sha256": "d1b8cfd7ba48875abbcc0c03ec230bda8b818d03baa70ea2aece688e23f75412",
+      "target": "opensearch/ot_snmp_config_change.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_snmp_device_restart.yml",
+      "source_sha256": "e9de5251f4ca26737841fdbbfe36f7a89d584b973f040824b5c5cc3e333ce62d",
+      "target": "opensearch/ot_snmp_device_restart.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_snmp_interface_down.yml",
+      "source_sha256": "b63c1c903f44d9c452b49af90b5a9440863ffe8726eda7385df24286cc817686",
+      "target": "opensearch/ot_snmp_interface_down.ppl",
+      "backend": "opensearch"
+    },
+    {
       "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
       "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
       "target": "sentinel/ot_dnp3_restart_command.kql",
@@ -316,6 +352,24 @@
       "source": "rules/sigma/ot/ot_s7comm_program_upload.yml",
       "source_sha256": "04a1654b5f1f3598ae036dd6be99a9fac1ffac037a7525cf2266897d87d19522",
       "target": "sentinel/ot_s7comm_program_upload.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_snmp_config_change.yml",
+      "source_sha256": "d1b8cfd7ba48875abbcc0c03ec230bda8b818d03baa70ea2aece688e23f75412",
+      "target": "sentinel/ot_snmp_config_change.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_snmp_device_restart.yml",
+      "source_sha256": "e9de5251f4ca26737841fdbbfe36f7a89d584b973f040824b5c5cc3e333ce62d",
+      "target": "sentinel/ot_snmp_device_restart.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_snmp_interface_down.yml",
+      "source_sha256": "b63c1c903f44d9c452b49af90b5a9440863ffe8726eda7385df24286cc817686",
+      "target": "sentinel/ot_snmp_interface_down.kql",
       "backend": "sentinel"
     },
     {
@@ -424,6 +478,24 @@
       "source": "rules/sigma/ot/ot_s7comm_program_upload.yml",
       "source_sha256": "04a1654b5f1f3598ae036dd6be99a9fac1ffac037a7525cf2266897d87d19522",
       "target": "splunk/ot_s7comm_program_upload.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_snmp_config_change.yml",
+      "source_sha256": "d1b8cfd7ba48875abbcc0c03ec230bda8b818d03baa70ea2aece688e23f75412",
+      "target": "splunk/ot_snmp_config_change.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_snmp_device_restart.yml",
+      "source_sha256": "e9de5251f4ca26737841fdbbfe36f7a89d584b973f040824b5c5cc3e333ce62d",
+      "target": "splunk/ot_snmp_device_restart.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_snmp_interface_down.yml",
+      "source_sha256": "b63c1c903f44d9c452b49af90b5a9440863ffe8726eda7385df24286cc817686",
+      "target": "splunk/ot_snmp_interface_down.conf",
       "backend": "splunk"
     },
     {

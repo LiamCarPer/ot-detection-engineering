@@ -1,0 +1,33 @@
+cases:
+  - name: a switch reports its running config changed
+    expect: match
+    event:
+      timestamp: "2026-09-22T10:00:10Z"
+      product: ot_snmp
+      service: snmp
+      device: 172.21.0.10
+      event_type: config_change
+      oid: 1.3.6.1.4.1.9.9.43.2.0.1
+      snmp_value: running-config changed
+
+  - name: a controller reports a restart, not a config change
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T10:00:00Z"
+      product: ot_snmp
+      service: snmp
+      device: 172.21.0.10
+      event_type: device_restart
+      oid: 1.3.6.1.6.3.1.1.5.1
+      snmp_value: coldStart
+
+  - name: a routine heartbeat poll
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T10:05:30Z"
+      product: ot_snmp
+      service: snmp
+      device: 172.21.0.10
+      event_type: heartbeat
+      oid: 1.3.6.1.2.1.1.3.0
+      snmp_value: "123456"

@@ -1,0 +1,27 @@
+# source: rules/sigma/ot/ot_snmp_interface_down.yml
+groups:
+- name: ot_snmp_interface_down
+  rules:
+  - alert: Network_Interface_Down_On_An_OT_Device
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects an SNMP linkDown trap from an OT device. A single interface
+        going
+
+        down is routine; a controller or a switch port carrying control traffic going
+
+        down is a loss of view or a precursor to loss of control, and is worth
+
+        correlating with the process state.
+
+
+        Operates on the normalized SNMP contract (docs/TELEMETRY.md): traps exported
+
+        from snmptrapd or a poller, mapped to one event per trap.
+
+        '
+      summary: Network Interface Down On An OT Device
+    expr: sum(count_over_time({job=~".+", service="snmp"} | logfmt | event_type=~`(?i)^interface_down$`
+      | line_format "{{.device}} {{.oid}} {{.snmp_value}}" [1m])) or vector(0) > 0
+    labels:
+      severity: medium

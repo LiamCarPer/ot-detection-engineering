@@ -1,0 +1,26 @@
+# source: rules/sigma/ot/ot_snmp_config_change.yml
+groups:
+- name: ot_snmp_config_change
+  rules:
+  - alert: OT_Device_Configuration_Change
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects an SNMP notification that a device''s running configuration
+        changed.
+
+        On a segmented OT network the configuration of a switch or a controller is
+        the
+
+        segmentation and the process itself; an unplanned change is either an
+
+        unauthorized modification or a misconfiguration that quietly weakens both.
+
+
+        Operates on the normalized SNMP contract (docs/TELEMETRY.md).
+
+        '
+      summary: OT Device Configuration Change
+    expr: sum(count_over_time({job=~".+", service="snmp"} | logfmt | event_type=~`(?i)^config_change$`
+      | line_format "{{.device}} {{.oid}} {{.snmp_value}}" [1m])) or vector(0) > 0
+    labels:
+      severity: medium

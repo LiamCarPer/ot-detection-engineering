@@ -1,0 +1,25 @@
+# source: rules/sigma/ot/ot_snmp_device_restart.yml
+groups:
+- name: ot_snmp_device_restart
+  rules:
+  - alert: OT_Device_Restart
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects an SNMP coldStart or warmStart trap from an OT device.
+        A device that
+
+        restarts reinitializes its process image and control state; outside a
+
+        maintenance window it is a disruptive action or a sign that a controller
+
+        crashed, and it is the network-device counterpart to the DNP3 restart rule.
+
+
+        Operates on the normalized SNMP contract (docs/TELEMETRY.md).
+
+        '
+      summary: OT Device Restart
+    expr: sum(count_over_time({job=~".+", service="snmp"} | logfmt | event_type=~`(?i)^device_restart$`
+      | line_format "{{.device}} {{.oid}} {{.snmp_value}}" [1m])) or vector(0) > 0
+    labels:
+      severity: high

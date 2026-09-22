@@ -1,0 +1,33 @@
+cases:
+  - name: a controller reports a cold start
+    expect: match
+    event:
+      timestamp: "2026-09-22T10:00:00Z"
+      product: ot_snmp
+      service: snmp
+      device: 172.21.0.10
+      event_type: device_restart
+      oid: 1.3.6.1.6.3.1.1.5.1
+      snmp_value: coldStart
+
+  - name: a controller reports a link down, not a restart
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T10:00:05Z"
+      product: ot_snmp
+      service: snmp
+      device: 172.21.0.10
+      event_type: interface_down
+      oid: 1.3.6.1.6.3.1.1.5.3
+      snmp_value: linkDown
+
+  - name: a routine heartbeat poll
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T10:05:30Z"
+      product: ot_snmp
+      service: snmp
+      device: 172.21.0.10
+      event_type: heartbeat
+      oid: 1.3.6.1.2.1.1.3.0
+      snmp_value: "123456"

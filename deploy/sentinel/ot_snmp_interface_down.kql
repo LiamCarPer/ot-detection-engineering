@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_snmp_interface_down.yml
+event_type =~ "interface_down"

@@ -1,0 +1,32 @@
+title: Network Interface Down On An OT Device
+id: 1a9db62d-dc76-430a-8f66-b4de7372d626
+status: experimental
+description: |
+  Detects an SNMP linkDown trap from an OT device. A single interface going
+  down is routine; a controller or a switch port carrying control traffic going
+  down is a loss of view or a precursor to loss of control, and is worth
+  correlating with the process state.
+
+  Operates on the normalized SNMP contract (docs/TELEMETRY.md): traps exported
+  from snmptrapd or a poller, mapped to one event per trap.
+references:
+  - https://attack.mitre.org/techniques/T0814/
+author: Liam Carvajal
+date: 2026-09-22
+logsource:
+  product: ot_snmp
+  service: snmp
+detection:
+  selection:
+    event_type: interface_down
+  condition: selection
+fields:
+  - device
+  - oid
+  - snmp_value
+falsepositives:
+  - A planned maintenance window or a physical cable change
+  - A flapping uplink that recovers within seconds
+level: medium
+tags:
+  - attack.t0814

@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_snmp_device_restart.yml
+source=ot_snmp-snmp-* | where event_type="device\_restart"

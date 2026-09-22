@@ -1,0 +1,31 @@
+title: OT Device Configuration Change
+id: 1560f62b-dbef-4f8a-aa08-4e3aca2fcc77
+status: experimental
+description: |
+  Detects an SNMP notification that a device's running configuration changed.
+  On a segmented OT network the configuration of a switch or a controller is the
+  segmentation and the process itself; an unplanned change is either an
+  unauthorized modification or a misconfiguration that quietly weakens both.
+
+  Operates on the normalized SNMP contract (docs/TELEMETRY.md).
+references:
+  - https://attack.mitre.org/techniques/T0836/
+author: Liam Carvajal
+date: 2026-09-22
+logsource:
+  product: ot_snmp
+  service: snmp
+detection:
+  selection:
+    event_type: config_change
+  condition: selection
+fields:
+  - device
+  - oid
+  - snmp_value
+falsepositives:
+  - A documented change during a maintenance window
+  - An automated configuration-management push
+level: medium
+tags:
+  - attack.t0836

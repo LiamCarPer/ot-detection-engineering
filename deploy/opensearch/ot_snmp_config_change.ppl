@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_snmp_config_change.yml
+source=ot_snmp-snmp-* | where event_type="config\_change"
