@@ -1,0 +1,194 @@
+{
+  "declared_conduits": [
+    [
+      "supervisory",
+      "control"
+    ],
+    [
+      "ops",
+      "control"
+    ],
+    [
+      "control",
+      "field"
+    ],
+    [
+      "supervisory",
+      "ops"
+    ],
+    [
+      "control",
+      "ops"
+    ],
+    [
+      "it",
+      "ops"
+    ],
+    [
+      "it",
+      "dmz"
+    ]
+  ],
+  "observed_conduits": [
+    [
+      "control",
+      "field"
+    ],
+    [
+      "it",
+      "control"
+    ],
+    [
+      "it",
+      "field"
+    ]
+  ],
+  "rules": [
+    "Flow On A Port Outside The Declared Conduit",
+    "Flow Through An Undeclared Zone Conduit"
+  ],
+  "samples": {
+    "netflow/flows": {
+      "events": 2,
+      "expected": [],
+      "observed": []
+    },
+    "netflow/flows_violation": {
+      "events": 1,
+      "expected": [
+        "Flow On A Port Outside The Declared Conduit"
+      ],
+      "observed": [
+        "Flow On A Port Outside The Declared Conduit"
+      ]
+    },
+    "snmp/attack": {
+      "events": 3,
+      "expected": [],
+      "observed": []
+    },
+    "snmp/benign": {
+      "events": 2,
+      "expected": [],
+      "observed": []
+    },
+    "suricata/dnp3_attack": {
+      "events": 9,
+      "expected": [
+        "Flow Through An Undeclared Zone Conduit"
+      ],
+      "observed": [
+        "Flow Through An Undeclared Zone Conduit"
+      ]
+    },
+    "suricata/dnp3_benign": {
+      "events": 1,
+      "expected": [],
+      "observed": []
+    },
+    "suricata/modbus_attack": {
+      "events": 6,
+      "expected": [
+        "Flow Through An Undeclared Zone Conduit"
+      ],
+      "observed": [
+        "Flow Through An Undeclared Zone Conduit"
+      ]
+    },
+    "suricata/modbus_benign": {
+      "events": 6,
+      "expected": [],
+      "observed": []
+    },
+    "zeek/dnp3_attack": {
+      "events": 1,
+      "expected": [
+        "Flow Through An Undeclared Zone Conduit"
+      ],
+      "observed": [
+        "Flow Through An Undeclared Zone Conduit"
+      ]
+    },
+    "zeek/dnp3_benign": {
+      "events": 1,
+      "expected": [],
+      "observed": []
+    },
+    "zeek/flow_dnp3_attack": {
+      "events": 1,
+      "expected": [
+        "Flow Through An Undeclared Zone Conduit"
+      ],
+      "observed": [
+        "Flow Through An Undeclared Zone Conduit"
+      ]
+    },
+    "zeek/flow_dnp3_benign": {
+      "events": 1,
+      "expected": [],
+      "observed": []
+    },
+    "zeek/flow_modbus_attack": {
+      "events": 3,
+      "expected": [
+        "Flow Through An Undeclared Zone Conduit"
+      ],
+      "observed": [
+        "Flow Through An Undeclared Zone Conduit"
+      ]
+    },
+    "zeek/flow_modbus_benign": {
+      "events": 3,
+      "expected": [],
+      "observed": []
+    },
+    "zeek/modbus_attack": {
+      "events": 6,
+      "expected": [
+        "Flow Through An Undeclared Zone Conduit"
+      ],
+      "observed": [
+        "Flow Through An Undeclared Zone Conduit"
+      ]
+    },
+    "zeek/modbus_benign": {
+      "events": 6,
+      "expected": [],
+      "observed": []
+    }
+  },
+  "unused_conduits": [
+    [
+      "supervisory",
+      "control"
+    ],
+    [
+      "ops",
+      "control"
+    ],
+    [
+      "supervisory",
+      "ops"
+    ],
+    [
+      "control",
+      "ops"
+    ],
+    [
+      "it",
+      "ops"
+    ],
+    [
+      "it",
+      "dmz"
+    ]
+  ],
+  "zones": [
+    "it",
+    "dmz",
+    "ops",
+    "supervisory",
+    "control",
+    "field"
+  ]
+}

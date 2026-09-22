@@ -65,6 +65,12 @@ jobs:
       - name: Check the baseline evidence is current
         run: git diff --exit-code deploy/evidence/baseline/summary.json
 
+      - name: Prove conduit rules against the declared segmentation policy
+        run: python tools/conduit_check.py
+
+      - name: Check the conduit evidence is current
+        run: git diff --exit-code deploy/evidence/conduit/summary.json
+
 
       - name: Convert to Loki
         run: python pipelines/convert.py --backend loki --check
