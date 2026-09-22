@@ -87,11 +87,43 @@ def load_ruleset(rules_dir: Path) -> SigmaCollection:
     """Load every Sigma rule at once, with correlation references resolved.
 
     A correlation rule names rules that live in other files, so loading one file
-    at a time cannot resolve it. Loading the whole set also means pySigma orders
-    the collection so a referenced rule is converted before the correlation that
-    needs its conversion result.
+    at a time cannot resolve it.
     """
     return SigmaCollection.load_ruleset([rules_dir])
+
+
+def conversion_order(collection: SigmaCollection) -> list:
+    """Order rules so a referenced rule is converted before its correlation.
+
+    A correlation reads the conversion result of the rules it references, so the
+    order is a real dependency, not a detail. pySigma sorts a collection by
+    backreference but that comparison is not a total order, so the result still
+    depends on the order the files were listed in — which differs between a
+    developer's checkout and CI. This resolves the dependency explicitly, and
+    refuses to guess when it cannot.
+    """
+    pending = list(collection.rules)
+    ordered: list = []
+    placed: set[int] = set()
+    while pending:
+        ready = [
+            rule
+            for rule in pending
+            if all(
+                reference.rule is None or id(reference.rule) in placed
+                for reference in getattr(rule, "referenced_rules", [])
+            )
+        ]
+        if not ready:
+            raise ConversionError(
+                "cannot order rules for conversion: a correlation references a rule that "
+                "is not in the ruleset, or the references form a cycle"
+            )
+        for rule in ready:
+            ordered.append(rule)
+            placed.add(id(rule))
+            pending.remove(rule)
+    return ordered
 
 
 def backend_supports_correlation(backend) -> bool:
@@ -146,7 +178,7 @@ def build_artifacts(backend_name: str, rules_dir: Path) -> tuple[dict[str, str],
     manifest: list[dict] = []
     unsupported: list[dict] = []
 
-    for rule in load_ruleset(rules_dir.resolve()).rules:
+    for rule in conversion_order(load_ruleset(rules_dir.resolve())):
         rule_path = Path(rule.source.path)
         relative = _relative(rule_path)
         if isinstance(rule, SigmaCorrelationRule) and not backend_supports_correlation(backend):

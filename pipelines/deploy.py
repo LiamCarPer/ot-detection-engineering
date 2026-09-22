@@ -26,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from convert import (  # noqa: E402
     backend_supports_correlation,
+    conversion_order,
     convert_rule_object,
     load_ruleset,
     make_backend,
@@ -103,7 +104,7 @@ def build_bundle() -> dict[str, str]:
         backend = make_backend(backend_name)
         extension = EXTENSIONS[target]
         backend.init_processing_pipeline(output_format or backend.default_format)
-        for rule in collection.rules:
+        for rule in conversion_order(collection):
             rule_path = Path(rule.source.path)
             relative = rule_path.relative_to(REPO_ROOT).as_posix()
             if isinstance(rule, SigmaCorrelationRule) and not backend_supports_correlation(backend):

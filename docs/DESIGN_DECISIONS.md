@@ -120,6 +120,13 @@ worked, and they are the reason the repository validates functionally:
 - **A correlation cannot be parsed standalone.** pySigma resolves references at
   parse time, so tooling that reads one file at a time has to pass
   `resolve_references=False`, and any conversion has to load the whole ruleset.
+- **Conversion order is a dependency, and the local run passed by luck.** A
+  correlation reads the conversion result of the rules it references, and
+  pySigma's backreference sort is not a total order, so the effective order still
+  depends on the order the directory was listed in. That was green on the
+  developer's machine and red in CI, which is the useful version of that failure.
+  `conversion_order()` now resolves the dependency explicitly and refuses to guess
+  when it cannot — a missing reference or a cycle is an error, not a coin flip.
 
 ## Known limitations
 
