@@ -152,6 +152,17 @@ against a schema, committed, and re-checked in CI. Learning "normal" from the
 traffic it is meant to police — or letting it drift silently — would be the same
 class of mistake as an untested rule.
 
+## Why segmentation is a detection, not a configuration
+
+It would be easy to grow this into a firewall manager that generates rules from
+the policy. That is the wrong lane: the repository detects. So the zone/conduit
+policy is a committed model of intent, and the conduit rules flag traffic that
+violates it — an undeclared cross-zone path, or a service the conduit does not
+permit — plus the hygiene signal that a declared conduit is never used. It never
+configures a device. That keeps the segmentation knowledge in the detection
+layer, where it is tested, and leaves enforcement to the firewall the operations
+team owns.
+
 ## Known limitations
 
 - **Coverage is intentionally low** (16 of 97 ICS techniques). The point is the

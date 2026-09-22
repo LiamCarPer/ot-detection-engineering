@@ -85,6 +85,10 @@ detection is only as trustworthy as the evidence behind it.
   collector samples. A legitimate network change requires regenerating it, so a
   stale baseline is a reviewable event rather than a silent source of false
   positives — and it is only as good as the benign period it was learned from.
+- **The conduit policy is a committed model of intent.** The conduit rules are
+  only as good as `metadata/ot-conduit-policy.yaml`: zones and conduits must be
+  kept in step with the network, and traffic with an unzoned endpoint is out of
+  scope by design, so an asset that has not been zoned is invisible to them.
 - **Protocol limits.** The S7comm decoder handles classic S7comm only (not
   S7comm Plus); OPC UA service bodies are only visible on unencrypted channels
   (`None`/`Sign`, not `SignAndEncrypt`); the DNP3 decoder reads the first object
@@ -120,6 +124,7 @@ recombined through shared metadata, testing and metrics.
 | Behaviour relative to learned normal (new asset, new communication pair, new function code) | Behaviour-baseline rules (`rules/baseline`) | No per-event signature can say "this asset was never here". The rule needs the learned baseline, which is committed and reviewed rather than hidden inside the rule. |
 | Flow-level visibility (endpoints, ports, volumes) | Collector `ot_flow` (NetFlow/IPFIX, Zeek `conn.log`) | Where DPI cannot see the payload — encrypted or unknown protocols — a flow still shows a new source or pair, and feeds the baseline rules. |
 | Device availability and configuration (link, restart, config change) | Sigma over the `ot_snmp` contract | Network-device state is a separate data source from protocol traffic, and a link or config change on a switch carrying control traffic is a detection in its own right. |
+| Segmentation drift (a cross-zone path with no declared conduit, or a service the conduit does not permit) | Conduit rules (`rules/conduit`) over `metadata/ot-conduit-policy.yaml` | The intended segmentation is the condition. Sigma cannot reference an external policy, so drift is its own small rule family, and the policy is committed and reviewed like code. |
 
 Every rule, regardless of format, carries an ATT&CK for ICS technique, is
 covered by labeled fixtures, and is included in the generated coverage map.
@@ -162,6 +167,7 @@ the event contracts.
 ```
 rules/sigma/          Sigma rules with *.test.yaml positive/negative fixtures
 rules/baseline/       Behaviour-baseline rules (deviations from learned normal)
+rules/conduit/        Conduit rules (deviations from the segmentation policy)
 rules/native/         Suricata rules for protocol DPI
 baseline/             Committed OT behaviour baseline and its builder
 metadata/             Pinned ATT&CK for ICS catalog and JSON Schemas
@@ -196,6 +202,7 @@ make loki-check        # prove the Loki ruler bundle in a full stack (Docker)
 make decoder-check     # prove the decoders' events fire the Sigma rules
 make collector-check   # prove collector output fires the Sigma rules
 make baseline-check    # prove behaviour-baseline rules against committed telemetry
+make conduit-check     # prove conduit rules against the segmentation policy
 make metrics           # coverage + emulation replay + metrics report
 ```
 
@@ -281,6 +288,11 @@ breakdown is in [deploy/report.md](deploy/report.md).
   new communication pair or a new protocol function code. This is the asset
   visibility and anomaly-detection half of OT monitoring, expressed as detection
   content with fixtures and evidence rather than as a product feature.
+- **Segmentation as code** (`metadata/ot-conduit-policy.yaml`) with conduit rules
+  (`rules/conduit`) that flag a cross-zone path with no declared conduit or a
+  service the conduit does not permit, and report declared conduits never
+  observed. It detects drift from the intended Purdue segmentation rather than
+  configuring it.
 
 ## Status and roadmap
 

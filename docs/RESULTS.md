@@ -25,6 +25,7 @@ from a real run; nothing is hand-counted.
 | The Rust decoders' output satisfies the Sigma rules | `deploy/evidence/decoders/summary.json` | `make decoder-check` |
 | Real Suricata and Zeek sensor output, NetFlow/IPFIX exports and SNMP traps normalize to the contract; the SNMP device-event rules fire and stay silent on benign samples | `deploy/evidence/collector/summary.json` | `make collector-check` |
 | Behaviour-baseline rules flag a new asset, pair or function code on attack samples and stay silent on benign ones, and the committed baseline is reproducible | `deploy/evidence/baseline/summary.json` | `make baseline-check` |
+| Conduit rules flag cross-zone traffic with no declared conduit or an undeclared service, and report the declared conduits never observed | `deploy/evidence/conduit/summary.json` | `make conduit-check` |
 | Every single-event rule converts to Loki, Splunk, Sentinel and OpenSearch, with provenance | `deploy/manifest.json` | `make convert-all` |
 | The correlation rule converts for Loki, Splunk and OpenSearch; Sentinel is unsupported and recorded as such | `deploy/manifest.json` (`unsupported`) | `make convert-all` |
 | The correlation rule fires on an event sequence offline and in a live Loki stack | `deploy/evidence/loki/`, fixtures | `make loki-check`, `make test` (Docker) |

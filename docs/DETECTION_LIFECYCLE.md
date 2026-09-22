@@ -165,6 +165,58 @@ cases:
 current) and evaluates every behaviour rule against the committed telemetry
 samples, so a stale baseline or a rule that stops firing fails CI.
 
+### A conduit detection
+
+A detection whose condition is the intended segmentation — traffic across a zone
+boundary with no declared conduit, or on a service the conduit does not permit —
+is a conduit rule. It has no Sigma `detection` block; it names the deviation, and
+the condition is `metadata/ot-conduit-policy.yaml`.
+
+```yaml
+title: Flow Through An Undeclared Zone Conduit
+id: 00000000-0000-0000-0000-000000000000
+status: experimental
+description: A cross-zone flow for which no conduit is declared.
+references:
+  - https://attack.mitre.org/techniques/T0886/
+author: Liam Carvajal
+date: 2026-09-22
+conduit:
+  type: undeclared_path      # undeclared_path | undeclared_service
+level: high
+tags:
+  - attack.t0886
+```
+
+The policy declares the Purdue zones (with their address ranges) and the conduits
+between them:
+
+```yaml
+zones:
+  - { name: control, purdue: "1", cidr: 172.21.0.0/24 }
+  - { name: field, purdue: "0", cidr: 172.31.0.0/24 }
+conduits:
+  - { from: control, to: field, ports: [20000] }
+```
+
+Keep the zones in step with the network: traffic with an endpoint that is in no
+zone is out of scope, so an unzoned asset is invisible to these rules until it is
+zoned. The sidecar uses the same `cases` shape as a Sigma rule:
+
+```yaml
+cases:
+  - name: an enterprise host reaches a control-zone PLC
+    expect: match
+    event: { src_ip: 172.24.0.10, dst_ip: 172.21.0.10, dst_port: 502 }
+  - name: the HMI reaches an outstation over the declared conduit
+    expect: no_match
+    event: { src_ip: 172.21.0.20, dst_ip: 172.31.0.10, dst_port: 20000 }
+```
+
+`make conduit-check` evaluates every conduit rule against the committed
+telemetry, asserts the firings, and records which declared conduits were observed
+and which were not — the drift signal that a documented path is unused.
+
 ### A protocol DPI detection (native Suricata)
 
 Create or extend a file under `rules/native/suricata/`. Every rule needs `msg`,
