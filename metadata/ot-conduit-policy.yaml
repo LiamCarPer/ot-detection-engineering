@@ -1,0 +1,26 @@
+# The intended OT segmentation, as code.
+#
+# Zones follow the Purdue model: field (L0) and control (L1) at the bottom,
+# supervisory (L2) and operations (L3) above, the industrial DMZ, and the
+# enterprise (L4/5) on top. Each conduit is an allowed zone-to-zone path and the
+# services it permits. Traffic inside a zone is not modelled here; traffic that
+# crosses zones without a declared conduit is what rules/conduit flags.
+#
+# This mirrors the conduits the lab firewall enforces, so the rules fire on the
+# committed telemetry samples rather than on a fictional topology.
+version: 1
+zones:
+  - { name: it, purdue: "4-5", cidr: 172.24.0.0/24 }
+  - { name: dmz, purdue: "3.5", cidr: 172.25.0.0/24 }
+  - { name: ops, purdue: "3", cidr: 172.23.0.0/24 }
+  - { name: supervisory, purdue: "2", cidr: 172.22.0.0/24 }
+  - { name: control, purdue: "1", cidr: 172.21.0.0/24 }
+  - { name: field, purdue: "0", cidr: 172.31.0.0/24 }
+conduits:
+  - { from: supervisory, to: control, ports: [102, 502, 4840, 20000] }
+  - { from: ops, to: control, ports: [502, 8086] }
+  - { from: control, to: field, ports: [20000] }
+  - { from: supervisory, to: ops, ports: [8086] }
+  - { from: control, to: ops, ports: [8086] }
+  - { from: it, to: ops, ports: [8086] }
+  - { from: it, to: dmz, ports: [443] }

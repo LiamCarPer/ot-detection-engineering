@@ -23,6 +23,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SIGMA_RULES_DIR = REPO_ROOT / "rules" / "sigma"
 NATIVE_RULES_DIR = REPO_ROOT / "rules" / "native"
 BASELINE_RULES_DIR = REPO_ROOT / "rules" / "baseline"
+CONDUIT_RULES_DIR = REPO_ROOT / "rules" / "conduit"
 METADATA_DIR = REPO_ROOT / "metadata"
 CATALOG_PATH = METADATA_DIR / "attack_ics_catalog.json"
 
@@ -115,6 +116,17 @@ def baseline_techniques(rule_path: Path) -> list[str]:
     return _techniques_from_tags(list(data.get("tags", [])))
 
 
+def conduit_rule_paths() -> list[Path]:
+    return sorted(
+        path for path in CONDUIT_RULES_DIR.rglob("*.yml") if ".test." not in path.name
+    )
+
+
+def conduit_techniques(rule_path: Path) -> list[str]:
+    data = yaml.safe_load(rule_path.read_text(encoding="utf-8"))
+    return _techniques_from_tags(list(data.get("tags", [])))
+
+
 def native_techniques(rule_path: Path) -> list[str]:
     techniques: list[str] = []
     for rule in read_rules(rule_path):
@@ -193,6 +205,10 @@ def detected_techniques() -> dict[str, list[str]]:
     for rule_path in baseline_rule_paths():
         relative = rule_path.relative_to(REPO_ROOT).as_posix()
         for technique in baseline_techniques(rule_path):
+            sources.setdefault(technique, []).append(relative)
+    for rule_path in conduit_rule_paths():
+        relative = rule_path.relative_to(REPO_ROOT).as_posix()
+        for technique in conduit_techniques(rule_path):
             sources.setdefault(technique, []).append(relative)
     for rule_path in native_rule_paths():
         relative = rule_path.relative_to(REPO_ROOT).as_posix()
