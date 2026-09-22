@@ -24,6 +24,14 @@ python pipelines/deploy.py --check   # CI drift check
 
 ## Loki
 
+> **One rule in this bundle does not load.** `ot_modbus_control_asset_enumeration`
+> is a correlation rule, and the pinned Loki backend's `value_count` output is not
+> valid LogQL: Loki 3.7.7 rejects the generated expression with
+> `syntax error: unexpected COUNT, expecting NUMBER or { or (`. Delete that file
+> before installing the ruler, or expect it to fail validation. The rule is
+> verified by the offline windowed evaluator, not here — see the known
+> limitations in the README.
+
 Loki evaluates alerting rules with the ruler. Point the ruler at this directory
 and enable it in `loki-config.yaml`:
 

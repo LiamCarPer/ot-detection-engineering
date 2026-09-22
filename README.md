@@ -85,6 +85,15 @@ detection is only as trustworthy as the evidence behind it.
   (`None`/`Sign`, not `SignAndEncrypt`); the DNP3 decoder reads the first object
   header only; and the native Modbus/DNP3 rules require Suricata's application
   layer to be enabled.
+- **The correlation rule's generated Loki query is not executable.** It
+  converts and the artifact is committed, but the pinned Loki backend's
+  `value_count` output does not parse as LogQL: Loki 3.7.7 rejects it with
+  `syntax error: unexpected COUNT, expecting NUMBER or { or (`. The rule is
+  proven by the offline windowed evaluator against its own fixtures; proving it
+  in a stack needs a corrected query or a different correlation type. Splunk and
+  OpenSearch are converted and inspect clean but have not been executed. Treat
+  "converts" and "verified" as different claims here, because for this rule they
+  are different answers.
 - **CI vs. local validation.** CI runs the offline checks and the decoder proof.
   The container validations (Suricata, Loki, Malcolm) and the live-lab capture
   require Docker or the lab, so they run locally and their committed evidence is
