@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "generated_from": [
+    "collector/samples/suricata/dnp3_benign.eve.json",
+    "collector/samples/suricata/modbus_benign.eve.json"
+  ],
+  "assets": [
+    "172.21.0.10",
+    "172.21.0.20",
+    "172.31.0.10"
+  ],
+  "pairs": [
+    [
+      "172.21.0.20",
+      "172.21.0.10"
+    ],
+    [
+      "172.21.0.20",
+      "172.31.0.10"
+    ]
+  ],
+  "functions": {
+    "dnp3": [
+      1
+    ],
+    "modbus": [
+      3,
+      6,
+      16
+    ]
+  },
+  "services": [
+    "dnp3",
+    "modbus"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "baseline.schema.json",
+  "title": "OT behaviour baseline",
+  "description": "Learned normal behaviour for the OT network: the assets seen, the pairs that talk, and the protocol function codes each service uses. Behaviour-baseline rules (rules/baseline) flag events that deviate from it.",
+  "type": "object",
+  "required": ["schema_version", "generated_from", "assets", "pairs", "functions", "services"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": 1 },
+    "generated_from": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Inputs the baseline was built from, as repository-relative paths.",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "assets": {
+      "type": "array",
+      "uniqueItems": true,
+      "description": "Every IP address observed as a source or destination.",
+      "items": { "type": "string" }
+    },
+    "pairs": {
+      "type": "array",
+      "description": "Every (source, destination) pair observed talking.",
+      "items": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": { "type": "string" }
+      }
+    },
+    "functions": {
+      "type": "object",
+      "description": "Protocol function codes observed per service.",
+      "additionalProperties": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": { "type": "integer" }
+      }
+    },
+    "services": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string" }
+    }
+  }
+}
