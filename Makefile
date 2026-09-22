@@ -33,7 +33,7 @@ help:
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate the adversary emulation plan"
 	@echo "  metrics          Generate coverage, replay emulation, compute metrics"
-	@echo "  check            lint + validate + test + rust + decoder-check + deploy-check"
+	@echo "  check            lint + validate + test + rust + decoder/collector/baseline/conduit proofs + deploy-check"
 
 $(VENV)/bin/activate: requirements.txt
 	python3 -m venv $(VENV)
