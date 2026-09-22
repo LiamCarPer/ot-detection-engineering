@@ -19,6 +19,11 @@
       "expected": [],
       "observed": []
     },
+    "netflow/flows_violation": {
+      "events": 1,
+      "expected": [],
+      "observed": []
+    },
     "snmp/attack": {
       "events": 3,
       "expected": [],

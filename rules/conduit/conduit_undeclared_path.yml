@@ -1,0 +1,28 @@
+title: Flow Through An Undeclared Zone Conduit
+id: 5e9fe595-96f2-4283-98bd-a278832ed291
+status: experimental
+description: |
+  Detects a flow between two Purdue zones for which no conduit is declared. The
+  intended segmentation lives in `metadata/ot-conduit-policy.yaml`; traffic that
+  crosses zones without a declared path is either a misconfiguration or a host
+  reaching somewhere the segmentation says it cannot.
+
+  This is the complement to the firewall rules: those fire on what the firewall
+  drops, this fires on what the *policy* says should not exist, whether the flow
+  was accepted, dropped or only seen by an NDR sensor.
+references:
+  - https://attack.mitre.org/techniques/T0886/
+author: Liam Carvajal
+date: 2026-09-22
+conduit:
+  type: undeclared_path
+fields:
+  - src_ip
+  - dst_ip
+  - dst_port
+falsepositives:
+  - A documented temporary path that has not been added to the policy
+  - A new subnet that has not been zoned yet
+level: high
+tags:
+  - attack.t0886

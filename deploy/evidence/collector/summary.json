@@ -9,6 +9,16 @@
     "schema_errors": [],
     "sensor": "netflow"
   },
+  "netflow/flows_violation": {
+    "events": 1,
+    "expected": [],
+    "inputs": [
+      "netflow/flows_violation.json"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "netflow"
+  },
   "snmp/attack": {
     "events": 3,
     "expected": [

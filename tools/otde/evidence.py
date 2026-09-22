@@ -144,6 +144,7 @@ EXPECTED_COLLECTOR_RULES: dict[str, set[str]] = {
     "zeek/flow_dnp3_attack": set(),
     "zeek/flow_dnp3_benign": set(),
     "netflow/flows": set(),
+    "netflow/flows_violation": set(),
     "snmp/attack": {
         "Network Interface Down On An OT Device",
         "OT Device Restart",
@@ -190,6 +191,28 @@ EXPECTED_BASELINE_RULES: dict[str, set[str]] = {
     },
     "zeek/flow_dnp3_benign": set(),
     "netflow/flows": set(),
+    "netflow/flows_violation": set(),
+    "snmp/attack": set(),
+    "snmp/benign": set(),
+}
+
+
+# Sensor sample -> conduit rule titles the sample must fire.
+EXPECTED_CONDUIT_RULES: dict[str, set[str]] = {
+    "suricata/modbus_attack": {"Flow Through An Undeclared Zone Conduit"},
+    "suricata/modbus_benign": set(),
+    "suricata/dnp3_attack": {"Flow Through An Undeclared Zone Conduit"},
+    "suricata/dnp3_benign": set(),
+    "zeek/modbus_attack": {"Flow Through An Undeclared Zone Conduit"},
+    "zeek/modbus_benign": set(),
+    "zeek/dnp3_attack": {"Flow Through An Undeclared Zone Conduit"},
+    "zeek/dnp3_benign": set(),
+    "zeek/flow_modbus_attack": {"Flow Through An Undeclared Zone Conduit"},
+    "zeek/flow_modbus_benign": set(),
+    "zeek/flow_dnp3_attack": {"Flow Through An Undeclared Zone Conduit"},
+    "zeek/flow_dnp3_benign": set(),
+    "netflow/flows": set(),
+    "netflow/flows_violation": {"Flow On A Port Outside The Declared Conduit"},
     "snmp/attack": set(),
     "snmp/benign": set(),
 }

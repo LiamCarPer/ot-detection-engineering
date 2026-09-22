@@ -1,0 +1,20 @@
+cases:
+  - name: an enterprise host reaches a control-zone PLC
+    expect: match
+    event: { src_ip: 172.24.0.10, dst_ip: 172.21.0.10, dst_port: 502 }
+
+  - name: an enterprise host reaches a field outstation
+    expect: match
+    event: { src_ip: 172.24.0.10, dst_ip: 172.31.0.10, dst_port: 20000 }
+
+  - name: the HMI reaches an outstation over the declared control-to-field conduit
+    expect: no_match
+    event: { src_ip: 172.21.0.20, dst_ip: 172.31.0.10, dst_port: 20000 }
+
+  - name: two hosts inside the control zone
+    expect: no_match
+    event: { src_ip: 172.21.0.20, dst_ip: 172.21.0.10, dst_port: 502 }
+
+  - name: a destination outside every declared zone
+    expect: no_match
+    event: { src_ip: 172.24.0.10, dst_ip: 8.8.8.8, dst_port: 443 }

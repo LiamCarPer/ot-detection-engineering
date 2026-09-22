@@ -1,0 +1,3 @@
+[
+  {"timestamp": "2026-09-22T10:20:00Z", "src_ip": "172.21.0.20", "dst_ip": "172.31.0.10", "src_port": 50000, "dst_port": 22, "proto": "tcp", "bytes": 400, "packets": 12, "duration": 0.5, "flow_state": "SF"}
+]

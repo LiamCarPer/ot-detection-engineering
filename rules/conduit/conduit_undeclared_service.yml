@@ -1,0 +1,28 @@
+title: Flow On A Port Outside The Declared Conduit
+id: f1f5a75c-12a9-4ede-ae8c-812c239e6a57
+status: experimental
+description: |
+  Detects a flow between two zones over a conduit that is declared, but on a
+  service the conduit does not permit — for example SSH from the control zone to
+  a field outstation when the conduit allows only DNP3. The path is legitimate;
+  the service on it is not, which is how an allowed conduit gets abused for
+  lateral movement.
+
+  The intended services live in `metadata/ot-conduit-policy.yaml`, so this is
+  policy drift rather than a signature.
+references:
+  - https://attack.mitre.org/techniques/T0886/
+author: Liam Carvajal
+date: 2026-09-22
+conduit:
+  type: undeclared_service
+fields:
+  - src_ip
+  - dst_ip
+  - dst_port
+falsepositives:
+  - A documented maintenance service on an otherwise permitted path
+  - A service that should be added to the conduit definition
+level: high
+tags:
+  - attack.t0886

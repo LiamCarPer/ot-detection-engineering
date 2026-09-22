@@ -1,0 +1,16 @@
+cases:
+  - name: SSH from the control zone to an outstation over the DNP3 conduit
+    expect: match
+    event: { src_ip: 172.21.0.20, dst_ip: 172.31.0.10, dst_port: 22 }
+
+  - name: DNP3 from the control zone to an outstation, the declared service
+    expect: no_match
+    event: { src_ip: 172.21.0.20, dst_ip: 172.31.0.10, dst_port: 20000 }
+
+  - name: an undeclared path is a path violation, not a service one
+    expect: no_match
+    event: { src_ip: 172.24.0.10, dst_ip: 172.21.0.10, dst_port: 22 }
+
+  - name: two hosts inside the control zone
+    expect: no_match
+    event: { src_ip: 172.21.0.20, dst_ip: 172.21.0.10, dst_port: 22 }

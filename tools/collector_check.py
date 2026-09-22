@@ -55,6 +55,7 @@ SAMPLES: dict[str, tuple[str, list[str]]] = {
     "zeek/flow_dnp3_attack": ("zeek", ["zeek/dnp3_attack.conn.log"]),
     "zeek/flow_dnp3_benign": ("zeek", ["zeek/dnp3_benign.conn.log"]),
     "netflow/flows": ("netflow", ["netflow/flows.json"]),
+    "netflow/flows_violation": ("netflow", ["netflow/flows_violation.json"]),
     "snmp/attack": ("snmp", ["snmp/attack.json"]),
     "snmp/benign": ("snmp", ["snmp/benign.json"]),
 }
