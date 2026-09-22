@@ -55,6 +55,9 @@ Honest scope, because a detection is only as trustworthy as its evidence:
 - S7comm classic only; OPC UA plaintext only; DNP3 first object header only.
 - The behaviour baseline is a committed snapshot learned from a benign sample; it
   needs regenerating when the network legitimately changes.
+- The conduit policy is a committed model of intent; traffic with an unzoned
+  endpoint is out of scope, and the zones and conduits must be kept in step with
+  the network.
 
 Full detail in [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
 
@@ -63,6 +66,6 @@ Full detail in [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
 ```bash
 make setup
 make demo          # decoder -> Sigma match -> generated SIEM queries, offline
-make check         # lint, Sigma validation, 201 tests, Rust, bundle drift
+make check         # lint, Sigma validation, 246 tests, Rust, bundle drift
 make metrics       # coverage, fixture agreement, baseline FPR, emulation replay
 ```

@@ -6,29 +6,35 @@ follow the same lifecycle as the existing rules.
 ## Before opening a pull request
 
 ```bash
-make check     # lint + sigma-cli validation + tests + bundle drift + Rust
+make check     # lint + validation + tests + Rust + the offline proofs + bundle drift
 make metrics   # regenerate coverage and the metrics report
 ```
 
 Both must pass. CI runs `make check`'s constituent steps and fails on any rule
 that is invalid, untested, untagged, that fires on the benign baseline, or that
-was changed without regenerating the deployment bundle.
+was changed without regenerating the deployment bundle or the evidence it feeds.
 
-After changing a rule, regenerate the bundle and, for a native rule, the
-functional evidence:
+After changing a rule, regenerate what it feeds:
 
 ```bash
-make deploy           # refresh deploy/
-make suricata-check   # re-run Suricata over the captures (Docker)
+make deploy           # refresh deploy/ after a Sigma or native rule change
+make suricata-check   # re-run Suricata over the captures (Docker, native rules)
+make collector-check  # after a collector source or sample change
+make baseline-check   # after a behaviour rule or a baseline regeneration
+make conduit-check    # after a conduit rule or a policy change
 ```
 
 ## Conventions
 
-- **One detection per file.** Sigma rules live under `rules/sigma/` (OT rules in
-  `rules/sigma/ot/`), native protocol rules in `rules/native/`.
-- **Every rule is tested.** A Sigma rule needs a `.test.yaml` sidecar with at
-  least one `match` and one `no_match` case. See
-  [docs/DETECTION_LIFECYCLE.md](docs/DETECTION_LIFECYCLE.md).
+- **One detection per file.** Detection content lives under `rules/`: Sigma
+  rules in `rules/sigma/` (OT rules in `rules/sigma/ot/`), behaviour-baseline
+  rules in `rules/baseline/`, conduit rules in `rules/conduit/`, and native
+  protocol rules in `rules/native/`.
+- **Every rule is tested.** Every rule needs a `.test.yaml` sidecar with at least
+  one `match` and one `no_match` case. A correlation rule uses `windows` (an
+  event sequence and a window) instead of `cases`; a behaviour-baseline or
+  conduit rule uses `cases`, evaluated against the committed baseline or policy.
+  See [docs/DETECTION_LIFECYCLE.md](docs/DETECTION_LIFECYCLE.md).
 - **Every rule is tagged.** At least one ATT&CK for ICS technique tag, drawn
   from `metadata/attack_ics_catalog.json`.
 - **Respect the SID range.** Native rules use unique SIDs in `9000000-9000099`.

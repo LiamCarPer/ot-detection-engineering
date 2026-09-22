@@ -241,9 +241,14 @@ suite.
 make test
 ```
 
-This runs the rule fixtures, metadata governance, native rule lint, coverage and
-metrics consistency, and the emulation logic. A rule without a sidecar, without
-a positive case, or with a tag that is not in the catalog fails.
+This runs the rule fixtures (single-event, correlation, behaviour-baseline and
+conduit), metadata governance, native rule lint, coverage and metrics
+consistency, and the emulation logic. A rule without a sidecar, without a
+positive case, or with a tag that is not in the catalog fails.
+
+`make check` also runs the offline proofs — `decoder-check`, `collector-check`,
+`baseline-check` and `conduit-check` — so the events, the baseline and the
+segmentation policy each stay aligned with the detections they feed.
 
 ## 4. Convert and bundle
 

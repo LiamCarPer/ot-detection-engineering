@@ -2,13 +2,18 @@
 
 The generated bundles are not just structurally linted. The native rules are run
 through Suricata against committed captures, the Loki ruler rules are run in a
-full stack (Loki, Alertmanager, Grafana), and the Rust decoders' output is run
-through the Sigma rules. This report records the results. Regenerate with:
+full stack (Loki, Alertmanager, Grafana), and the Rust decoders' output, the
+collector's normalized events, the behaviour baseline and the conduit policy are
+each run through the matcher or evaluator that governs them. This report records
+the results. Regenerate with:
 
 ```bash
 make suricata-check
 make loki-check
 make decoder-check
+make collector-check
+make baseline-check
+make conduit-check
 ```
 
 | Field | Value |
@@ -87,8 +92,12 @@ Findings:
 ## Loki ruler
 
 `make loki-check` starts the stack in `tests/loki-stack/`, mounts the generated
-`deploy/loki/rules/`, ships one attack log line and one benign line per rule, and
-confirms through an Alertmanager webhook which alerts fire.
+`deploy/loki/rules/`, ships attack and benign telemetry for every rule — one log
+line per single-event rule, and a windowed sequence for the correlation rule —
+and confirms through an Alertmanager webhook which alerts fire. All 18 generated
+rules are covered, including the correlation rule, whose query the bundle builds
+from the backend's default-format query because the pinned backend's ruler output
+was not valid LogQL (see `pipelines/loki_correlation.py`).
 
 | Field | Value |
 | :--- | :--- |
@@ -148,9 +157,10 @@ The rules firing on live lab traffic:
 The two generated Modbus rules are deliberately not in this set: the lab reports
 Modbus as JSON alert events (`ot_alerts`), not normalized `ot_ndr` telemetry, so
 the generated Modbus queries have no input there. They are covered by the offline
-decoder proof and the Loki stack smoke test instead (above). The lab evaluates 15
-groups in total: the 13 generated groups plus its own `ot_security_alerts` and
-`ot_siem_health`.
+decoder proof and the Loki stack smoke test instead (above). The lab deploys a
+snapshot of the bundle — 13 generated groups when the capture was taken, since
+grown to 18 — plus its own `ot_security_alerts` and `ot_siem_health`, 15 groups
+in total.
 
 Findings:
 
@@ -188,3 +198,57 @@ three S7comm rules (program download, program upload, PLC control/stop) and the
 three OPC UA rules (write request, method call, address-space browse). Frames
 that carry no malicious service — an OPC UA `HEL`/`OPN`, an S7comm `Read Var` —
 decode to events that match no rule, which is the expected negative case.
+
+## Collector validation
+
+The rules run on a normalized contract; the collector is what produces it from a
+real sensor. `make collector-check` normalizes every committed sample — Suricata
+`eve.json`, Zeek `modbus.log`/`dnp3.log`/`conn.log`, a NetFlow/IPFIX export and
+SNMP traps — validates each event against `metadata/telemetry.schema.json`, and
+routes it through the same matcher the rule tests use.
+
+| Field | Value |
+| :--- | :--- |
+| Evidence | `deploy/evidence/collector/summary.json` |
+| Events | 52 across 16 samples |
+| Rule firings | 10 |
+
+Findings:
+
+- **Sensors differ in what they can see.** Zeek's `modbus.log` carries no
+  register value and its `dnp3.log` no link address, so the parameter-band rule
+  cannot fire from Zeek and the DNP3 control rule's master allowlist cannot be
+  applied there. The expected firings record that difference rather than
+  pretending the sensors are equivalent.
+
+## Behaviour-baseline validation
+
+`make baseline-check` rebuilds the committed behaviour baseline from the benign
+samples (proving the artifact is current) and evaluates the deviation rules
+against every committed sample.
+
+| Field | Value |
+| :--- | :--- |
+| Evidence | `deploy/evidence/baseline/summary.json` |
+| Baseline | 3 assets, 2 pairs, services `dnp3`, `modbus` |
+| Rules | New source asset, new communication pair, new protocol function code |
+
+Every attack sample fires the expected deviations and every benign sample is
+silent. An attacker visible only as a flow record still surfaces as a new source
+and a new pair, because the deviation rules run on any contract event.
+
+## Conduit validation
+
+`make conduit-check` evaluates the conduit rules against the declared
+zone/conduit policy and every committed sample.
+
+| Field | Value |
+| :--- | :--- |
+| Evidence | `deploy/evidence/conduit/summary.json` |
+| Rules | Undeclared path, undeclared service |
+| Conduits | 3 observed, 6 declared but unused |
+
+Cross-zone flows on an undeclared path (enterprise to control, enterprise to
+field) and a flow on an undeclared service (SSH over the DNP3 conduit) fire;
+declared paths and intra-zone traffic do not. The unused conduits are the drift
+signal: documented paths the committed telemetry never exercises.

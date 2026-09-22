@@ -20,11 +20,13 @@ metrics are derived from the rules themselves, so they cannot drift.
   the generated Loki, Splunk, Sentinel and OpenSearch queries. No Docker, no
   network. A recorded transcript is in
   [`docs/demo-output.txt`](docs/demo-output.txt).
-- **Run the full check:** `make check` (lint, Sigma validation, 201 tests, the
-  Rust decoders, and deployment-bundle drift).
-- **Read the proof:** `deploy/report.md` records 11 generated detection rules
-  firing on live traffic in a Dockerized OT lab, the Suricata ruleset running
-  inside a Malcolm pipeline, and the decoder-to-rule proof.
+- **Run the full check:** `make check` (lint, Sigma validation, 246 tests, the
+  Rust decoders, the decoder/collector/baseline/conduit proofs, and
+  deployment-bundle drift).
+- **Read the proof:** `deploy/report.md` records the functional validation — 11
+  of the 13 generated rules firing on live traffic in a Dockerized OT lab, the
+  Suricata ruleset running inside a Malcolm pipeline, and the
+  decoder/collector/baseline/conduit proofs.
 - **Understand the tradeoffs:** `docs/DESIGN_DECISIONS.md` explains why the
   system is built this way and what it does not do.
 - **One-page summary:** [`docs/RESULTS.md`](docs/RESULTS.md) lists every claim,
@@ -106,10 +108,11 @@ detection is only as trustworthy as the evidence behind it.
   the shape, because the failure mode is a rule that is silently absent at
   runtime. Splunk and OpenSearch are converted and inspect clean but have not
   been executed.
-- **CI vs. local validation.** CI runs the offline checks and the decoder proof.
-  The container validations (Suricata, Loki, Malcolm) and the live-lab capture
-  require Docker or the lab, so they run locally and their committed evidence is
-  guarded by tests rather than re-run on every commit.
+- **CI vs. local validation.** CI runs the offline checks and the decoder,
+  collector, behaviour-baseline and conduit proofs. The container validations
+  (Suricata, Loki, Malcolm) and the live-lab capture require Docker or the lab,
+  so they run locally and their committed evidence is guarded by tests rather
+  than re-run on every commit.
 
 ## Approach
 
