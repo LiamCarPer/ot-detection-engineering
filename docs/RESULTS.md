@@ -8,11 +8,11 @@ from a real run; nothing is hand-counted.
 
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
-| ATT&CK for ICS coverage | 16 / 97 techniques (16.5%) | Intentionally seeded, not padded. |
+| ATT&CK for ICS coverage | 17 / 97 techniques (17.5%) | Intentionally seeded, not padded. |
 | Emulation detection rate | 100% (4 / 4 expectations) | Two adversary steps, replayed from a live lab run. |
 | Mean MTTD | 2.45 s | Time from action to first matching alert. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule vs. its own committed fixtures — a regression check. |
-| Baseline false-positive rate | 0.0 | 50 benign and near-miss events across every telemetry domain. |
+| Baseline false-positive rate | 0.0 | 52 benign and near-miss events across every telemetry domain. |
 
 ## What is functionally validated
 

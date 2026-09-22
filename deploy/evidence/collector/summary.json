@@ -1,4 +1,42 @@
 {
+  "netflow/flows": {
+    "events": 2,
+    "expected": [],
+    "inputs": [
+      "netflow/flows.json"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "netflow"
+  },
+  "snmp/attack": {
+    "events": 3,
+    "expected": [
+      "Network Interface Down On An OT Device",
+      "OT Device Configuration Change",
+      "OT Device Restart"
+    ],
+    "inputs": [
+      "snmp/attack.json"
+    ],
+    "observed": [
+      "Network Interface Down On An OT Device",
+      "OT Device Configuration Change",
+      "OT Device Restart"
+    ],
+    "schema_errors": [],
+    "sensor": "snmp"
+  },
+  "snmp/benign": {
+    "events": 2,
+    "expected": [],
+    "inputs": [
+      "snmp/benign.json"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "snmp"
+  },
   "suricata/dnp3_attack": {
     "events": 9,
     "expected": [
@@ -72,6 +110,46 @@
     "expected": [],
     "inputs": [
       "zeek/dnp3_benign.dnp3.log"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "zeek"
+  },
+  "zeek/flow_dnp3_attack": {
+    "events": 1,
+    "expected": [],
+    "inputs": [
+      "zeek/dnp3_attack.conn.log"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "zeek"
+  },
+  "zeek/flow_dnp3_benign": {
+    "events": 1,
+    "expected": [],
+    "inputs": [
+      "zeek/dnp3_benign.conn.log"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "zeek"
+  },
+  "zeek/flow_modbus_attack": {
+    "events": 3,
+    "expected": [],
+    "inputs": [
+      "zeek/modbus_attack.conn.log"
+    ],
+    "observed": [],
+    "schema_errors": [],
+    "sensor": "zeek"
+  },
+  "zeek/flow_modbus_benign": {
+    "events": 3,
+    "expected": [],
+    "inputs": [
+      "zeek/modbus_benign.conn.log"
     ],
     "observed": [],
     "schema_errors": [],

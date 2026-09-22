@@ -29,7 +29,7 @@ if str(REPO_ROOT) not in sys.path:
 from sigma.rule import SigmaRule  # noqa: E402
 
 from collector import contract  # noqa: E402
-from collector.sources import suricata, zeek  # noqa: E402
+from collector.sources import netflow, snmp, suricata, zeek  # noqa: E402
 from tools.otde.evidence import EXPECTED_COLLECTOR_RULES  # noqa: E402
 from tools.otde.matcher import match  # noqa: E402
 from tools.otde.rules import single_event_rule_paths  # noqa: E402
@@ -38,7 +38,7 @@ SAMPLES_DIR = REPO_ROOT / "collector" / "samples"
 EVIDENCE_DIR = REPO_ROOT / "deploy" / "evidence" / "collector"
 EVIDENCE_PATH = EVIDENCE_DIR / "summary.json"
 
-ADAPTERS = {"suricata": suricata, "zeek": zeek}
+ADAPTERS = {"suricata": suricata, "zeek": zeek, "netflow": netflow, "snmp": snmp}
 
 # Sample key -> (sensor, input files relative to collector/samples).
 SAMPLES: dict[str, tuple[str, list[str]]] = {
@@ -50,6 +50,13 @@ SAMPLES: dict[str, tuple[str, list[str]]] = {
     "zeek/modbus_benign": ("zeek", ["zeek/modbus_benign.modbus.log"]),
     "zeek/dnp3_attack": ("zeek", ["zeek/dnp3_attack.dnp3.log"]),
     "zeek/dnp3_benign": ("zeek", ["zeek/dnp3_benign.dnp3.log"]),
+    "zeek/flow_modbus_attack": ("zeek", ["zeek/modbus_attack.conn.log"]),
+    "zeek/flow_modbus_benign": ("zeek", ["zeek/modbus_benign.conn.log"]),
+    "zeek/flow_dnp3_attack": ("zeek", ["zeek/dnp3_attack.conn.log"]),
+    "zeek/flow_dnp3_benign": ("zeek", ["zeek/dnp3_benign.conn.log"]),
+    "netflow/flows": ("netflow", ["netflow/flows.json"]),
+    "snmp/attack": ("snmp", ["snmp/attack.json"]),
+    "snmp/benign": ("snmp", ["snmp/benign.json"]),
 }
 
 

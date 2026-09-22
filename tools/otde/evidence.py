@@ -137,6 +137,19 @@ EXPECTED_COLLECTOR_RULES: dict[str, set[str]] = {
     "zeek/modbus_benign": set(),
     "zeek/dnp3_attack": {"DNP3 Control Operation From Unauthorized Master"},
     "zeek/dnp3_benign": set(),
+    # Flow records carry no register or function detail, so no Sigma rule targets
+    # them yet; they feed the behaviour-baseline rules instead (see below).
+    "zeek/flow_modbus_attack": set(),
+    "zeek/flow_modbus_benign": set(),
+    "zeek/flow_dnp3_attack": set(),
+    "zeek/flow_dnp3_benign": set(),
+    "netflow/flows": set(),
+    "snmp/attack": {
+        "Network Interface Down On An OT Device",
+        "OT Device Restart",
+        "OT Device Configuration Change",
+    },
+    "snmp/benign": set(),
 }
 
 
@@ -164,6 +177,21 @@ EXPECTED_BASELINE_RULES: dict[str, set[str]] = {
         "New Protocol Function Code From An OT Asset",
     },
     "zeek/dnp3_benign": set(),
+    # Flow records feed the baseline deviation rules: an attacker that appears
+    # only as a flow still shows up as a new source and a new pair.
+    "zeek/flow_modbus_attack": {
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New OT Communication Pair",
+    },
+    "zeek/flow_modbus_benign": set(),
+    "zeek/flow_dnp3_attack": {
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New OT Communication Pair",
+    },
+    "zeek/flow_dnp3_benign": set(),
+    "netflow/flows": set(),
+    "snmp/attack": set(),
+    "snmp/benign": set(),
 }
 
 

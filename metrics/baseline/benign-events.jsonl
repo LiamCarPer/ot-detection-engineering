@@ -48,3 +48,5 @@
 {"product": "ot_firewall", "service": "iptables", "timestamp": "2026-09-13T06:17:10Z", "action": "ACCEPT", "proto": "TCP", "src_zone": "control", "dst_zone": "it", "src_ip": "172.21.0.10", "dst_ip": "172.24.0.10", "dst_port": 8086}
 {"product": "ot_firewall", "service": "iptables", "timestamp": "2026-09-13T06:17:20Z", "action": "DROP", "proto": "TCP", "src_zone": "control", "dst_zone": "it", "src_ip": "172.21.0.10", "dst_ip": "172.24.0.10", "dst_port": 443}
 {"product": "ot_firewall", "service": "iptables", "timestamp": "2026-09-13T06:17:30Z", "action": "ACCEPT", "proto": "TCP", "src_zone": "it", "dst_zone": "control", "src_ip": "172.24.0.10", "dst_ip": "172.21.0.10", "dst_port": 20001}
+{"product": "ot_snmp", "service": "snmp", "timestamp": "2026-09-13T06:18:00Z", "device": "172.21.0.10", "src_ip": "172.21.0.10", "event_type": "interface_up", "oid": "1.3.6.1.6.3.1.1.5.4", "snmp_value": "linkUp", "severity": "info"}
+{"product": "ot_snmp", "service": "snmp", "timestamp": "2026-09-13T06:18:30Z", "device": "172.21.0.10", "src_ip": "172.21.0.10", "event_type": "heartbeat", "oid": "1.3.6.1.2.1.1.3.0", "snmp_value": "123456", "severity": "info"}

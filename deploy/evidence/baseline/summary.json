@@ -14,6 +14,21 @@
     "New Protocol Function Code From An OT Asset"
   ],
   "samples": {
+    "netflow/flows": {
+      "events": 2,
+      "expected": [],
+      "observed": []
+    },
+    "snmp/attack": {
+      "events": 3,
+      "expected": [],
+      "observed": []
+    },
+    "snmp/benign": {
+      "events": 2,
+      "expected": [],
+      "observed": []
+    },
     "suricata/dnp3_attack": {
       "events": 9,
       "expected": [
@@ -63,6 +78,38 @@
     },
     "zeek/dnp3_benign": {
       "events": 1,
+      "expected": [],
+      "observed": []
+    },
+    "zeek/flow_dnp3_attack": {
+      "events": 1,
+      "expected": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline"
+      ],
+      "observed": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline"
+      ]
+    },
+    "zeek/flow_dnp3_benign": {
+      "events": 1,
+      "expected": [],
+      "observed": []
+    },
+    "zeek/flow_modbus_attack": {
+      "events": 3,
+      "expected": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline"
+      ],
+      "observed": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline"
+      ]
+    },
+    "zeek/flow_modbus_benign": {
+      "events": 3,
       "expected": [],
       "observed": []
     },

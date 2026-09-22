@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from collector import contract, sinks
-from collector.sources import suricata, zeek
+from collector.sources import netflow, snmp, suricata, zeek
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SAMPLES = REPO_ROOT / "collector" / "samples"
@@ -60,12 +60,47 @@ def test_zeek_dnp3_omits_the_link_address() -> None:
     assert all("link_source" not in event for event in events)
 
 
+def test_zeek_conn_maps_to_the_flow_contract() -> None:
+    events = list(zeek.events([SAMPLES / "zeek" / "modbus_attack.conn.log"]))
+    assert events
+    flow = events[0]
+    assert flow["product"] == "ot_flow"
+    assert flow["service"] == "flow"
+    assert flow["dst_port"] == 502
+    assert flow["app_protocol"] == "modbus"
+    assert isinstance(flow["duration"], float)
+    assert isinstance(flow["bytes"], int)
+
+
+def test_netflow_export_maps_to_the_flow_contract() -> None:
+    events = list(netflow.events([SAMPLES / "netflow" / "flows.json"]))
+    assert events
+    assert all(event["product"] == "ot_flow" and event["service"] == "flow" for event in events)
+    assert {event["dst_port"] for event in events} == {502, 20000}
+
+
+def test_snmp_export_maps_to_the_snmp_contract() -> None:
+    events = list(snmp.events([SAMPLES / "snmp" / "attack.json"]))
+    assert {event["event_type"] for event in events} == {
+        "device_restart",
+        "interface_down",
+        "config_change",
+    }
+    assert all(event["product"] == "ot_snmp" and event["service"] == "snmp" for event in events)
+
+
 def test_every_sample_event_validates_against_the_schema() -> None:
     for path in sorted((SAMPLES / "suricata").glob("*.json")):
         for event in suricata.events([path]):
             assert contract.schema_errors(event) == [], event
     for path in sorted((SAMPLES / "zeek").glob("*.log")):
         for event in zeek.events([path]):
+            assert contract.schema_errors(event) == [], event
+    for path in sorted((SAMPLES / "netflow").glob("*.json")):
+        for event in netflow.events([path]):
+            assert contract.schema_errors(event) == [], event
+    for path in sorted((SAMPLES / "snmp").glob("*.json")):
+        for event in snmp.events([path]):
             assert contract.schema_errors(event) == [], event
 
 
