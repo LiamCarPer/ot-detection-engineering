@@ -54,9 +54,9 @@ DNP3/S7comm/OPC UA ──▶ tools/*-dpi (Rust) ──▶ ot_ndr events ──�
 decoder examples ──▶ tools/decoder_check.py ──▶ ot_ndr events ──▶ Sigma rules
                                                               └─▶ deploy/evidence
 
-Suricata eve.json / Zeek logs ──▶ collector/ ──▶ contract events ──▶ Sigma rules
-                                       │                             └─▶ deploy/evidence
-                                       └─▶ stdout JSONL / Loki (routed by service label)
+Suricata eve.json / Zeek logs / NetFlow / SNMP ──▶ collector/ ──▶ contract events ──▶ Sigma rules
+                                                        │                                └─▶ deploy/evidence
+                                                        └─▶ stdout JSONL / Loki (routed by service label)
 
 benign contract events ──▶ baseline/build.py ──▶ baseline/ot-behaviour.json
                                                         │

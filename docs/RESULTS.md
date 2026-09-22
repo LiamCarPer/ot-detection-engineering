@@ -23,7 +23,7 @@ from a real run; nothing is hand-counted.
 | The ruleset loads and fires inside a Malcolm pipeline alongside 59,188 default rules | `deploy/evidence/malcolm/` | `tools/malcolm_check.py` |
 | The generated rules fire on live traffic in a real-endpoint OT lab (DNP3, OPC UA, S7comm) | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
 | The Rust decoders' output satisfies the Sigma rules | `deploy/evidence/decoders/summary.json` | `make decoder-check` |
-| Real Suricata and Zeek sensor output normalizes to the contract and fires the rules | `deploy/evidence/collector/summary.json` | `make collector-check` |
+| Real Suricata and Zeek sensor output, NetFlow/IPFIX exports and SNMP traps normalize to the contract; the SNMP device-event rules fire and stay silent on benign samples | `deploy/evidence/collector/summary.json` | `make collector-check` |
 | Behaviour-baseline rules flag a new asset, pair or function code on attack samples and stay silent on benign ones, and the committed baseline is reproducible | `deploy/evidence/baseline/summary.json` | `make baseline-check` |
 | Every single-event rule converts to Loki, Splunk, Sentinel and OpenSearch, with provenance | `deploy/manifest.json` | `make convert-all` |
 | The correlation rule converts for Loki, Splunk and OpenSearch; Sentinel is unsupported and recorded as such | `deploy/manifest.json` (`unsupported`) | `make convert-all` |

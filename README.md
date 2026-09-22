@@ -118,6 +118,8 @@ recombined through shared metadata, testing and metrics.
 | Protocol DPI (Modbus and DNP3 function codes, S7comm program transfer, OPC UA services) | Native Suricata, plus Rust decoders for DNP3, S7comm and OPC UA application semantics | Sigma cannot express industrial protocol semantics. |
 | Behaviour over time (one host reading several control assets inside a window) | Sigma correlation rules | A per-event signature cannot separate an enumerating host from a polling one: normal polling produces *more* matches than enumeration does. Only a distinct-value count over a window separates them. |
 | Behaviour relative to learned normal (new asset, new communication pair, new function code) | Behaviour-baseline rules (`rules/baseline`) | No per-event signature can say "this asset was never here". The rule needs the learned baseline, which is committed and reviewed rather than hidden inside the rule. |
+| Flow-level visibility (endpoints, ports, volumes) | Collector `ot_flow` (NetFlow/IPFIX, Zeek `conn.log`) | Where DPI cannot see the payload — encrypted or unknown protocols — a flow still shows a new source or pair, and feeds the baseline rules. |
+| Device availability and configuration (link, restart, config change) | Sigma over the `ot_snmp` contract | Network-device state is a separate data source from protocol traffic, and a link or config change on a switch carrying control traffic is a detection in its own right. |
 
 Every rule, regardless of format, carries an ATT&CK for ICS technique, is
 covered by labeled fixtures, and is included in the generated coverage map.
@@ -269,7 +271,8 @@ breakdown is in [deploy/report.md](deploy/report.md).
   decoded and the resulting events are run through the same pySigma matcher the
   rule tests use, so the decoders and their Sigma rules cannot drift apart.
 - **A telemetry collector** (`collector/`) that normalizes real Suricata
-  `eve.json` and Zeek OT logs into the contract, validates each event against
+  `eve.json`, Zeek OT logs and `conn.log`, NetFlow/IPFIX exports and SNMP traps
+  into the contract, validates each event against
   `metadata/telemetry.schema.json`, and is proven to fire the rules
   (`make collector-check`) — so the telemetry the rules assume is produced in
   the repository rather than assumed.

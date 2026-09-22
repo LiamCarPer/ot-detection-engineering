@@ -151,3 +151,34 @@ from TCP/4840 traffic.
 The service is only present when the body is not encrypted. `Sign` keeps the body
 in clear text; `SignAndEncrypt` does not, so those messages carry the header
 fields with no `opcua_service`.
+
+## `ot_flow` / `flow`
+
+Flow records, from a NetFlow/IPFIX exporter or Zeek's `conn.log`, produced by the
+collector's `netflow` and Zeek `conn` sources. Flow is the fallback visibility
+where DPI cannot see the payload (encrypted or unknown protocols).
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `timestamp` | string | ISO 8601 UTC. |
+| `src_ip` / `dst_ip` | string | Flow endpoints. |
+| `src_port` / `dst_port` | integer | Flow ports. |
+| `proto` | string | Transport protocol. |
+| `app_protocol` | string | Application protocol the sensor identified (for example `modbus`), when known. |
+| `bytes` / `packets` | integer | Totals across both directions. |
+| `duration` | number | Flow duration in seconds. |
+| `flow_state` | string | Sensor flow state (for example Zeek `SF`). |
+
+## `ot_snmp` / `snmp`
+
+SNMP traps or poll results from an OT network device, produced by the collector's
+`snmp` source. This is the device-availability and configuration layer.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `timestamp` | string | ISO 8601 UTC. |
+| `device` / `src_ip` | string | The reporting device. |
+| `event_type` | string | `interface_down`, `interface_up`, `device_restart`, `config_change`, `heartbeat`. |
+| `oid` | string | Object identifier, when the source carries one. |
+| `snmp_value` | string | The value as a string; SNMP values are not always numeric. |
+| `severity` | string | Source severity, when present. |

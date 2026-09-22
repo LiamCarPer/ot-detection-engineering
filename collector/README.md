@@ -28,7 +28,12 @@ on, so the collector and the rules agree on routing.
 | Source | Adapter | Reads |
 | :-- | :-- | :-- |
 | Suricata | `collector/sources/suricata.py` | `eve.json` OT application-layer records (`modbus`, `dnp3`) |
-| Zeek | `collector/sources/zeek.py` | `modbus.log`, `dnp3.log` (tab-separated, `#fields` header) |
+| Zeek | `collector/sources/zeek.py` | `modbus.log`, `dnp3.log` and `conn.log` (tab-separated, `#fields` header) |
+| NetFlow / IPFIX | `collector/sources/netflow.py` | JSON flow export (`nfdump -o json` shape) |
+| SNMP | `collector/sources/snmp.py` | JSON trap/poll export (`snmptrapd` shape) |
+
+Zeek `conn.log` and the NetFlow export produce the same `ot_flow` / `flow`
+contract; SNMP produces `ot_snmp` / `snmp`.
 
 A source that cannot see a field omits it rather than guessing, so a rule can
 tell "the master was authorized" from "the master was not visible".
