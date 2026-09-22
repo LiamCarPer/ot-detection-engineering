@@ -1,0 +1,4 @@
+[
+  {"timestamp": "2026-09-22T10:05:00Z", "device": "172.21.0.10", "event_type": "interface_up", "oid": "1.3.6.1.6.3.1.1.5.4", "value": "linkUp", "severity": "info"},
+  {"timestamp": "2026-09-22T10:05:30Z", "device": "172.21.0.10", "event_type": "heartbeat", "oid": "1.3.6.1.2.1.1.3.0", "value": "123456", "severity": "info"}
+]

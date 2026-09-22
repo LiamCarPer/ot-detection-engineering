@@ -106,7 +106,9 @@ def events(paths: Iterable[Path]) -> Iterator[dict[str, Any]]:
     for path in paths:
         name = Path(path).name
         for row in _rows(Path(path)):
-            if "modbus" in name:
+            if "conn" in name:
+                converted = _conn(row)
+            elif "modbus" in name:
                 converted = _modbus(row)
             elif "dnp3" in name:
                 converted = _dnp3(row)
@@ -114,6 +116,25 @@ def events(paths: Iterable[Path]) -> Iterator[dict[str, Any]]:
                 continue
             if converted is not None:
                 yield converted
+
+
+def _conn(row: dict[str, str]) -> dict[str, Any] | None:
+    """Zeek's flow record, normalized to the flow contract."""
+    return event(
+        "ot_flow",
+        "flow",
+        float(row["ts"]),
+        src_ip=row.get("id.orig_h"),
+        dst_ip=row.get("id.resp_h"),
+        src_port=_int(row.get("id.orig_p")),
+        dst_port=_int(row.get("id.resp_p")),
+        proto=row.get("proto") or None,
+        app_protocol=row.get("service") or None,
+        duration=_float(row.get("duration")),
+        bytes=_sum(row.get("orig_bytes"), row.get("resp_bytes")),
+        packets=_sum(row.get("orig_pkts"), row.get("resp_pkts")),
+        flow_state=row.get("conn_state") or None,
+    )
 
 
 def _modbus(row: dict[str, str]) -> dict[str, Any] | None:
@@ -169,3 +190,17 @@ def _int(value: str | None) -> int | None:
         return int(value)  # type: ignore[arg-type]
     except (TypeError, ValueError):
         return None
+
+
+def _float(value: str | None) -> float | None:
+    try:
+        return float(value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return None
+
+
+def _sum(*values: str | None) -> int | None:
+    numbers = [_int(value) for value in values]
+    if all(number is None for number in numbers):
+        return None
+    return sum(number or 0 for number in numbers)

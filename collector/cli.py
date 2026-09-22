@@ -20,9 +20,9 @@ from pathlib import Path
 
 from collector import contract
 from collector.sinks import push_loki, to_jsonl, to_loki_streams
-from collector.sources import suricata, zeek
+from collector.sources import netflow, snmp, suricata, zeek
 
-SOURCES = {"suricata": suricata, "zeek": zeek}
+SOURCES = {"suricata": suricata, "zeek": zeek, "netflow": netflow, "snmp": snmp}
 DEFAULT_LOKI_URL = "http://localhost:3100/loki/api/v1/push"
 
 

@@ -1,0 +1,5 @@
+[
+  {"timestamp": "2026-09-22T10:00:00Z", "device": "172.21.0.10", "event_type": "device_restart", "oid": "1.3.6.1.6.3.1.1.5.1", "value": "coldStart", "severity": "high"},
+  {"timestamp": "2026-09-22T10:00:05Z", "device": "172.21.0.10", "event_type": "interface_down", "oid": "1.3.6.1.6.3.1.1.5.3", "value": "linkDown", "severity": "high"},
+  {"timestamp": "2026-09-22T10:00:10Z", "device": "172.21.0.10", "event_type": "config_change", "oid": "1.3.6.1.4.1.9.9.43.2.0.1", "value": "running-config changed", "severity": "medium"}
+]
