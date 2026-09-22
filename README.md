@@ -80,6 +80,11 @@ detection is only as trustworthy as the evidence behind it.
   benign telemetry, not enough to estimate field false-positive volume.
 - **Emulation scope.** The emulation plan covers two adversary steps and four
   expectations; it does not exercise every rule.
+- **The behaviour baseline is a committed snapshot.** The deviation rules are
+  only as current as `baseline/ot-behaviour.json`, which is built from the benign
+  collector samples. A legitimate network change requires regenerating it, so a
+  stale baseline is a reviewable event rather than a silent source of false
+  positives — and it is only as good as the benign period it was learned from.
 - **Protocol limits.** The S7comm decoder handles classic S7comm only (not
   S7comm Plus); OPC UA service bodies are only visible on unencrypted channels
   (`None`/`Sign`, not `SignAndEncrypt`); the DNP3 decoder reads the first object
@@ -112,6 +117,7 @@ recombined through shared metadata, testing and metrics.
 | Log-based detections (firewall, NDR alerts, application and process events) | Sigma | Portable, converted by pySigma, testable offline. |
 | Protocol DPI (Modbus and DNP3 function codes, S7comm program transfer, OPC UA services) | Native Suricata, plus Rust decoders for DNP3, S7comm and OPC UA application semantics | Sigma cannot express industrial protocol semantics. |
 | Behaviour over time (one host reading several control assets inside a window) | Sigma correlation rules | A per-event signature cannot separate an enumerating host from a polling one: normal polling produces *more* matches than enumeration does. Only a distinct-value count over a window separates them. |
+| Behaviour relative to learned normal (new asset, new communication pair, new function code) | Behaviour-baseline rules (`rules/baseline`) | No per-event signature can say "this asset was never here". The rule needs the learned baseline, which is committed and reviewed rather than hidden inside the rule. |
 
 Every rule, regardless of format, carries an ATT&CK for ICS technique, is
 covered by labeled fixtures, and is included in the generated coverage map.
@@ -153,7 +159,9 @@ the event contracts.
 
 ```
 rules/sigma/          Sigma rules with *.test.yaml positive/negative fixtures
+rules/baseline/       Behaviour-baseline rules (deviations from learned normal)
 rules/native/         Suricata rules for protocol DPI
+baseline/             Committed OT behaviour baseline and its builder
 metadata/             Pinned ATT&CK for ICS catalog and JSON Schemas
 tools/otde/           Shared library: discovery, technique extraction, matcher
 tools/dnp3-dpi/       Rust DNP3 decoder emitting normalized ot_ndr/dnp3 events
@@ -185,6 +193,7 @@ make suricata-check    # validate the native rules over captures (Docker)
 make loki-check        # prove the Loki ruler bundle in a full stack (Docker)
 make decoder-check     # prove the decoders' events fire the Sigma rules
 make collector-check   # prove collector output fires the Sigma rules
+make baseline-check    # prove behaviour-baseline rules against committed telemetry
 make metrics           # coverage + emulation replay + metrics report
 ```
 
@@ -264,6 +273,11 @@ breakdown is in [deploy/report.md](deploy/report.md).
   `metadata/telemetry.schema.json`, and is proven to fire the rules
   (`make collector-check`) — so the telemetry the rules assume is produced in
   the repository rather than assumed.
+- **A learned OT behaviour baseline** (`baseline/`), built from benign telemetry
+  and committed, with behaviour rules (`rules/baseline`) that flag a new asset, a
+  new communication pair or a new protocol function code. This is the asset
+  visibility and anomaly-detection half of OT monitoring, expressed as detection
+  content with fixtures and evidence rather than as a product feature.
 
 ## Status and roadmap
 

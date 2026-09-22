@@ -143,6 +143,15 @@ worked, and they are the reason the repository validates functionally:
   `conversion_order()` now resolves the dependency explicitly and refuses to guess
   when it cannot — a missing reference or a cycle is an error, not a coin flip.
 
+## Why the behaviour baseline is a committed artifact
+
+The deviation rules (`rules/baseline`) fire when an event is *absent* from the
+learned baseline, which makes the baseline itself the detection condition. So it
+is treated like code: built by a script from benign telemetry only, validated
+against a schema, committed, and re-checked in CI. Learning "normal" from the
+traffic it is meant to police — or letting it drift silently — would be the same
+class of mistake as an untested rule.
+
 ## Known limitations
 
 - **Coverage is intentionally low** (16 of 97 ICS techniques). The point is the
@@ -150,15 +159,13 @@ worked, and they are the reason the repository validates functionally:
 - **Fixture precision and recall measure rule/fixture agreement**, not field
   performance, and the benign baseline is 50 authored events covering normal
   traffic for every protocol and stream the rules consume.
-- **Detection is mostly signature-based.** One correlation rule now exists — it
-  counts distinct destinations per source over a five-minute window to separate
-  control-asset enumeration from normal polling — but it is the only stateful
-  detection here, and there is still no long-window behavioural baseline. The
-  harness that proves it is equally narrow: the offline evaluator implements
-  `value_count` and fails loudly on every other correlation type, and the benign
-  baseline is single-event, so correlation false positives are covered only by
-  the negative windows in the rule's own fixture and by one live negative case
-  (an allowlisted reader touching three assets) in the Loki stack.
+- **Detection is mostly signature-based.** Two behavioural detections now exist —
+  a correlation rule that counts distinct destinations per source over a window,
+  and behaviour-baseline rules that flag a new asset, pair or function code
+  against a committed baseline — but both are narrow. The correlation evaluator
+  implements only `value_count`, and the behaviour baseline is a snapshot learned
+  from a small benign sample rather than a continuously updated model, so its
+  false-positive behaviour is bounded by how representative that sample is.
 - **Encrypted channels.** OPC UA service bodies are only visible on `None`/`Sign`
   channels; `SignAndEncrypt` yields metadata but no service. The S7comm decoder
   handles classic S7comm only, not S7comm Plus.

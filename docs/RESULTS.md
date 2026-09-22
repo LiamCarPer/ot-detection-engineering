@@ -24,6 +24,7 @@ from a real run; nothing is hand-counted.
 | The generated rules fire on live traffic in a real-endpoint OT lab (DNP3, OPC UA, S7comm) | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
 | The Rust decoders' output satisfies the Sigma rules | `deploy/evidence/decoders/summary.json` | `make decoder-check` |
 | Real Suricata and Zeek sensor output normalizes to the contract and fires the rules | `deploy/evidence/collector/summary.json` | `make collector-check` |
+| Behaviour-baseline rules flag a new asset, pair or function code on attack samples and stay silent on benign ones, and the committed baseline is reproducible | `deploy/evidence/baseline/summary.json` | `make baseline-check` |
 | Every single-event rule converts to Loki, Splunk, Sentinel and OpenSearch, with provenance | `deploy/manifest.json` | `make convert-all` |
 | The correlation rule converts for Loki, Splunk and OpenSearch; Sentinel is unsupported and recorded as such | `deploy/manifest.json` (`unsupported`) | `make convert-all` |
 | The correlation rule fires on an event sequence offline and in a live Loki stack | `deploy/evidence/loki/`, fixtures | `make loki-check`, `make test` (Docker) |
@@ -51,6 +52,8 @@ Honest scope, because a detection is only as trustworthy as its evidence:
 - Coverage is deliberately small; the point is the process.
 - Emulation covers two steps and four expectations, not every rule.
 - S7comm classic only; OPC UA plaintext only; DNP3 first object header only.
+- The behaviour baseline is a committed snapshot learned from a benign sample; it
+  needs regenerating when the network legitimately changes.
 
 Full detail in [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
 

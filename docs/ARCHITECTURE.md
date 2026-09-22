@@ -29,9 +29,11 @@ Detection content is split by what each format can actually express.
 | :--- | :--- | :--- |
 | Sigma | Log-based detections: firewall decisions, NDR alerts, application and process events. | Portable, parsed and converted by pySigma, testable offline. |
 | Native Suricata | Modbus function codes, exception responses and other protocol DPI. | Sigma has no vocabulary for industrial protocol semantics; forcing it would lose fidelity. |
+| Sigma correlation | Behaviour over a window: a fan-out, a burst, a drift. | A per-event signature cannot express a count or a timespan. |
+| Behaviour-baseline (`rules/baseline`) | Deviations from learned normal: a new asset, a new pair, a new function code. | The condition is the committed baseline, not a signature; the baseline is reviewed like code. |
 
-Both formats are governed identically: every rule carries an ATT&CK for ICS
-technique, and both feed the same coverage and metrics calculations.
+All content is governed identically: every rule carries an ATT&CK for ICS
+technique and feeds the same coverage and metrics calculations.
 
 ## Data flow
 
@@ -56,6 +58,10 @@ Suricata eve.json / Zeek logs ──▶ collector/ ──▶ contract events ─
                                        │                             └─▶ deploy/evidence
                                        └─▶ stdout JSONL / Loki (routed by service label)
 
+benign contract events ──▶ baseline/build.py ──▶ baseline/ot-behaviour.json
+                                                        │
+contract events ──▶ tools/otde/baseline.py ◀────────────┘ ──▶ rules/baseline ──▶ deploy/evidence
+
 emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
         (or recorded observations)         (against the lab or a replay)
 ```
@@ -64,8 +70,9 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 
 | Path | Responsibility |
 | :--- | :--- |
-| `rules/` | Detection content: Sigma rules with `.test.yaml` sidecars, and native Suricata rules. |
-| `metadata/` | Pinned ATT&CK for ICS catalog and JSON Schemas for rule test cases, the catalog, the emulation plan and the telemetry contract. |
+| `rules/` | Detection content: Sigma rules (single-event and correlation) and behaviour-baseline rules, each with `.test.yaml` sidecars, and native Suricata rules. |
+| `baseline/` | Builds and commits the OT behaviour baseline the deviation rules compare against. |
+| `metadata/` | Pinned ATT&CK for ICS catalog and JSON Schemas for rule test cases, correlation test cases, the catalog, the emulation plan, the telemetry contract and the behaviour baseline. |
 | `tools/otde/` | Shared library: rule discovery, technique extraction, Suricata reader, and the pySigma-based validation matcher. |
 | `collector/` | Produces the telemetry contract from real sensor output (Suricata `eve.json`, Zeek OT logs), with schema validation and routing. |
 | `tools/dnp3-dpi/`, `tools/s7comm-dpi/`, `tools/opcua-dpi/` | Dependency-free Rust decoders (Cargo workspace) that emit normalized `ot_ndr` events for the DNP3, S7comm and OPC UA Sigma rules. |
@@ -96,6 +103,11 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
   committed example frames are decoded and the resulting events are run through
   the same matcher the rule tests use (`tools/decoder_check.py`), so the decoder
   and its Sigma rules cannot drift apart.
+- **The behaviour baseline is learned, committed and reviewed.** Benign telemetry
+  is reduced to a schema-valid baseline artifact (`baseline/`) and the deviation
+  rules (`rules/baseline`) compare against it. A baseline that had seen the
+  attack it is meant to catch would be worthless, so it is built from benign
+  samples only, and its currency is checked in CI.
 - **Protocols are decoded natively in Rust** when no app-layer parser exists.
   DNP3, S7comm and OPC UA have dependency-free decoders (`#![forbid(unsafe_code)]`)
   that emit the normalized events the corresponding Sigma rules run on. S7comm
@@ -114,6 +126,9 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | :--- | :--- |
 | `test_sigma_matcher.py` | The matcher's semantics: equality, wildcards, regex, CIDR, comparisons, keyword and unsupported-feature handling. |
 | `test_sigma_rules.py` | Every rule fires on its positive fixtures and stays quiet on its negative fixtures. |
+| `test_sigma_correlations.py` | Correlation rules are evaluated over event sequences and a window, and their fixtures hold. |
+| `test_baseline.py`, `test_baseline_evidence.py` | The behaviour baseline is reproducible and schema-valid, and the deviation rules fire on attack samples and stay silent on benign ones. |
+| `test_collector.py`, `test_collector_evidence.py` | The collector's field mappings and the committed collector evidence. |
 | `test_metadata.py` | Rule policy, unique IDs, and ATT&CK tags that exist in the pinned ICS catalog. |
 | `test_native_rules.py` | Native rules carry required fields, unique reserved SIDs and known technique tags. |
 | `test_emulation.py` | The emulation plan is valid and the evaluation logic computes detection rate and MTTD correctly. |

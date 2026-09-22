@@ -117,6 +117,54 @@ window, and an approved reader the referenced rule filters out. Only
 (`tools/otde/correlation.py`); any other correlation type raises rather than
 returning a result the test never exercised.
 
+### A behaviour-baseline detection
+
+A detection whose condition is "this was never normal" — a new asset, a new
+communication pair, a new protocol function code — is a behaviour-baseline rule.
+It has no Sigma `detection` block and no logsource; it names the deviation, and
+the condition is the committed baseline.
+
+```yaml
+title: New OT Communication Pair
+id: 00000000-0000-0000-0000-000000000000
+status: experimental
+description: A source and destination that have never talked in the baseline.
+references:
+  - https://attack.mitre.org/techniques/T0846/
+author: Liam Carvajal
+date: 2026-09-22
+baseline:
+  type: new_pair          # new_asset | new_pair | new_function_code
+  # new_asset also takes `field: src_ip`; any type takes `service: modbus` to scope it
+level: medium
+tags:
+  - attack.t0846
+```
+
+The baseline itself lives at `baseline/ot-behaviour.json` and is built from
+benign telemetry with `python baseline/build.py --source suricata --input
+'collector/samples/suricata/*_benign.eve.json'`. Build it from benign traffic
+only — a baseline that has seen the attack will not flag it — and regenerate it
+when the network legitimately changes, as part of the change.
+
+The sidecar uses the same `cases` shape as a Sigma rule (a single event and
+whether the rule fires), because a deviation is decided per event against the
+baseline:
+
+```yaml
+cases:
+  - name: an enterprise host initiates a new conversation with a PLC
+    expect: match
+    event: { src_ip: 172.24.0.10, dst_ip: 172.21.0.10, service: modbus, function_code: 6 }
+  - name: the HMI talks to its PLC, a known pair
+    expect: no_match
+    event: { src_ip: 172.21.0.20, dst_ip: 172.21.0.10, service: modbus, function_code: 6 }
+```
+
+`make baseline-check` rebuilds the baseline (proving the committed artifact is
+current) and evaluates every behaviour rule against the committed telemetry
+samples, so a stale baseline or a rule that stops firing fails CI.
+
 ### A protocol DPI detection (native Suricata)
 
 Create or extend a file under `rules/native/suricata/`. Every rule needs `msg`,
