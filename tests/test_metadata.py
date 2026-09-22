@@ -10,13 +10,15 @@ from pathlib import Path
 import pytest
 import yaml
 from jsonschema import Draft202012Validator
+from sigma.correlations import SigmaCorrelationRule
 from sigma.rule import SigmaLevel
 from support.loader import (
     METADATA_DIR,
     REPO_ROOT,
     cases_path_for,
+    is_correlation_rule,
     load_catalog,
-    load_rule,
+    load_sigma_rule,
     sigma_rule_paths,
     technique_ids,
 )
@@ -44,20 +46,26 @@ def test_attack_ics_catalog_conforms_to_schema() -> None:
 
 @pytest.mark.parametrize("rule_path", RULE_PATHS, ids=_path_id)
 def test_rule_metadata_is_complete(rule_path: Path) -> None:
-    rule = load_rule(rule_path)
+    rule = load_sigma_rule(rule_path)
     assert uuid.UUID(str(rule.id)), "rule id must be a UUID"
     assert rule.title and rule.title.strip(), "rule must have a title"
     assert rule.description and rule.description.strip(), "rule must have a description"
     assert rule.author and rule.author.strip(), "rule must have an author"
     assert rule.date is not None, "rule must have a date"
     assert rule.level in (SigmaLevel.LOW, SigmaLevel.MEDIUM, SigmaLevel.HIGH, SigmaLevel.CRITICAL)
-    assert rule.logsource.product, "rule must define a logsource product"
     assert rule.falsepositives, "rule must document false positives"
+    if isinstance(rule, SigmaCorrelationRule):
+        # A correlation has no logsource of its own: it inherits routing from the
+        # rules it references, so those references are the thing to check.
+        assert rule.rules, "correlation rule must reference at least one rule"
+        assert rule.timespan is not None, "correlation rule must declare a timespan"
+    else:
+        assert rule.logsource.product, "rule must define a logsource product"
 
 
 @pytest.mark.parametrize("rule_path", RULE_PATHS, ids=_path_id)
 def test_rule_has_known_ics_technique_tag(rule_path: Path) -> None:
-    tags = [str(tag) for tag in load_rule(rule_path).tags]
+    tags = [str(tag) for tag in load_sigma_rule(rule_path).tags]
     attack_tags = [tag for tag in tags if tag.startswith("attack.")]
     assert attack_tags, "rule must carry at least one ATT&CK tag"
     for tag in attack_tags:
@@ -69,15 +77,20 @@ def test_rule_has_known_ics_technique_tag(rule_path: Path) -> None:
 
 @pytest.mark.parametrize("rule_path", RULE_PATHS, ids=_path_id)
 def test_test_cases_conform_to_schema(rule_path: Path) -> None:
+    schema = (
+        "correlation-testcase.schema.json"
+        if is_correlation_rule(rule_path)
+        else "testcase.schema.json"
+    )
     raw = yaml.safe_load(cases_path_for(rule_path).read_text(encoding="utf-8"))
-    _validator("testcase.schema.json").validate(raw)
+    _validator(schema).validate(raw)
 
 
 def test_rule_ids_are_unique() -> None:
     seen: dict[str, Path] = {}
     duplicates = []
     for rule_path in RULE_PATHS:
-        rule_id = str(load_rule(rule_path).id)
+        rule_id = str(load_sigma_rule(rule_path).id)
         if rule_id in seen:
             duplicates.append(f"{rule_id}: {seen[rule_id]} and {rule_path}")
         seen[rule_id] = rule_path

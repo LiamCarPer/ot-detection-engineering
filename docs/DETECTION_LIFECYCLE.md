@@ -62,6 +62,61 @@ cases:
 The event fields must match the telemetry contract in
 [TELEMETRY.md](TELEMETRY.md).
 
+### A correlation detection (Sigma)
+
+A detection that needs more than one event — a fan-out, a burst, a drift —
+is a correlation rule. It has no detection block and no logsource: it names the
+rules it correlates and how.
+
+```yaml
+title: Modbus Control Asset Enumeration
+id: 7c4e1b2a-6d3f-4a58-9e21-0b5c8f7a2d10
+correlation:
+  generate: true          # keep the referenced rule's own alert as well
+  type: value_count
+  rules:
+    - db9f2530-dbb5-4aa7-8bcf-b5e59ea1c9db   # referenced by id; a title only resolves if the rule declares `name`
+  group-by:
+    - src_ip
+  timespan: 5m
+  condition:
+    field: dst_ip         # the field to count distinct values of
+    gte: 3
+tags:
+  - attack.t0846
+```
+
+`generate: true` matters: without it pySigma suppresses the output of every rule
+the correlation references, which would silently remove an existing alert. A test
+asserts that every rule either has an artifact for a target or is recorded as
+unsupported, so that cannot happen quietly.
+
+The sidecar uses `windows` rather than `cases`, because a correlation is
+evaluated over a sequence and a window:
+
+```yaml
+windows:
+  - name: one host reads three distinct assets inside the window
+    expect: match
+    events:
+      - { timestamp: "2026-05-01T10:27:07Z", direction: request, function_code: 3,
+          src_ip: 172.24.0.10, dst_ip: 172.21.0.10 }
+      - { timestamp: "2026-05-01T10:27:14Z", direction: request, function_code: 3,
+          src_ip: 172.24.0.10, dst_ip: 172.21.0.11 }
+      - { timestamp: "2026-05-01T10:27:21Z", direction: request, function_code: 3,
+          src_ip: 172.24.0.10, dst_ip: 172.21.0.12 }
+  - name: one host polling a single asset repeatedly
+    expect: no_match
+    events: [ ... ]
+```
+
+At least one positive and one negative window are required, and the negative ones
+carry the weight: a high-rate poll of one asset, a fan-out spread beyond the
+window, and an approved reader the referenced rule filters out. Only
+`value_count` is implemented by the offline evaluator
+(`tools/otde/correlation.py`); any other correlation type raises rather than
+returning a result the test never exercised.
+
 ### A protocol DPI detection (native Suricata)
 
 Create or extend a file under `rules/native/suricata/`. Every rule needs `msg`,

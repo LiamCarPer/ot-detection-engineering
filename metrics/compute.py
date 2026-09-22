@@ -31,10 +31,19 @@ if str(REPO_ROOT / "coverage") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "coverage"))
 
 from generate_coverage import build_report  # noqa: E402
+from sigma.collection import SigmaCollection  # noqa: E402
+from sigma.correlations import SigmaCorrelationRule  # noqa: E402
 from sigma.rule import SigmaRule  # noqa: E402
 
+from tools.otde.correlation import match_correlation  # noqa: E402
 from tools.otde.matcher import match  # noqa: E402
-from tools.otde.rules import load_cases, sigma_rule_paths  # noqa: E402
+from tools.otde.rules import (  # noqa: E402
+    SIGMA_RULES_DIR,
+    load_cases,
+    load_correlation_cases,
+    sigma_rule_paths,
+    single_event_rule_paths,
+)
 
 DEFAULT_BASELINE = REPO_ROOT / "metrics" / "baseline" / "benign-events.jsonl"
 DEFAULT_EMULATION = REPO_ROOT / "purple" / "results" / "emulation_results.json"
@@ -56,27 +65,34 @@ def load_baseline(path: Path) -> list[dict]:
 
 
 def fixture_metrics() -> tuple[list[dict], dict]:
+    # Correlation rules are evaluated over a sequence and need their references
+    # resolved, so the ruleset is loaded once and looked up by source path.
+    collection = SigmaCollection.load_ruleset([SIGMA_RULES_DIR])
+    resolved = {str(rule.source.path): rule for rule in collection.rules}
+
     per_rule = []
     totals = {"tp": 0, "fn": 0, "fp": 0, "tn": 0}
     for rule_path in sigma_rule_paths():
-        rule = SigmaRule.from_yaml(rule_path.read_text(encoding="utf-8"))
+        rule = resolved.get(str(rule_path))
+        if rule is None:
+            rule = SigmaRule.from_yaml(rule_path.read_text(encoding="utf-8"))
+        is_correlation = isinstance(rule, SigmaCorrelationRule)
         counts = {"tp": 0, "fn": 0, "fp": 0, "tn": 0}
-        for case in load_cases(rule_path):
-            observed = match(rule, case.event)
-            if case.expect_match and observed:
-                counts["tp"] += 1
-            elif case.expect_match and not observed:
-                counts["fn"] += 1
-            elif not case.expect_match and observed:
-                counts["fp"] += 1
-            else:
-                counts["tn"] += 1
+        if is_correlation:
+            for case in load_correlation_cases(rule_path):
+                observed = match_correlation(rule, case.events)
+                counts[_bucket(case.expect_match, observed)] += 1
+        else:
+            for case in load_cases(rule_path):
+                observed = match(rule, case.event)
+                counts[_bucket(case.expect_match, observed)] += 1
         for key in totals:
             totals[key] += counts[key]
         per_rule.append(
             {
                 "rule": rule_path.relative_to(REPO_ROOT).as_posix(),
                 "title": rule.title,
+                "correlation": is_correlation,
                 **counts,
                 "precision": _ratio(counts["tp"], counts["tp"] + counts["fp"]),
                 "recall": _ratio(counts["tp"], counts["tp"] + counts["fn"]),
@@ -91,13 +107,27 @@ def fixture_metrics() -> tuple[list[dict], dict]:
     return per_rule, aggregate
 
 
+def _bucket(expected: bool, observed: bool) -> str:
+    if expected and observed:
+        return "tp"
+    if expected and not observed:
+        return "fn"
+    if not expected and observed:
+        return "fp"
+    return "tn"
+
+
 def baseline_metrics(events: list[dict]) -> dict:
+    # Correlation rules are deliberately absent: they are evaluated over a
+    # sequence and a timespan, and the benign baseline is a corpus of single
+    # events. Their false-positive behaviour is covered by the negative windows
+    # in their own fixtures instead.
     rules = [
         (
             path.relative_to(REPO_ROOT).as_posix(),
             SigmaRule.from_yaml(path.read_text(encoding="utf-8")),
         )
-        for path in sigma_rule_paths()
+        for path in single_event_rule_paths()
     ]
     false_positives = []
     for index, event in enumerate(events):

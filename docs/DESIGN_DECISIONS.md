@@ -97,17 +97,45 @@ worked, and they are the reason the repository validates functionally:
   rules are therefore not part of the live-lab evidence.
 - **Suricata appends to `eve.json`.** Re-running validation merged new alerts
   with committed evidence until the runner started from a clean directory.
+- **Adding a correlation rule would have silently deleted an existing alert.**
+  pySigma suppresses the output of every rule a correlation references unless the
+  correlation sets `generate: true`. The Modbus process-read rule is a
+  smoke-tested detection in its own right, so the correlation sets it
+  deliberately, and a test asserts that an artifact either exists or is recorded
+  as unsupported — never quietly absent.
+- **Correlation conversion is not backend-neutral.** Of the four pinned targets,
+  Loki, Splunk and OpenSearch implement `correlation_methods`; the Kusto backend
+  does not, so the correlation is recorded as unsupported for Sentinel in the
+  manifest rather than being silently dropped from the bundle.
+- **pySigma's Loki correlation conversion mutates the rule in place.** It appends
+  the counted field to the rule's `group-by` list, so converting several targets
+  from one loaded ruleset corrupted the Splunk and OpenSearch queries: the
+  distinct count had the field it was counting added to its own grouping and
+  could never reach the threshold. Each target now loads its own copy, and the
+  generated queries are committed where the difference would be visible.
+- **A referenced rule keeps its own artifact only with
+  `finalize_correlation_subqueries`.** Without it the rule is emitted
+  unfinalised, so its Splunk saved search loses its stanza the moment a
+  correlation starts referencing it.
+- **A correlation cannot be parsed standalone.** pySigma resolves references at
+  parse time, so tooling that reads one file at a time has to pass
+  `resolve_references=False`, and any conversion has to load the whole ruleset.
 
 ## Known limitations
 
-- **Coverage is intentionally low** (15 of 97 ICS techniques). The point is the
+- **Coverage is intentionally low** (16 of 97 ICS techniques). The point is the
   engineering process, which scales unchanged to a large ruleset.
 - **Fixture precision and recall measure rule/fixture agreement**, not field
   performance, and the benign baseline is 50 authored events covering normal
   traffic for every protocol and stream the rules consume.
-- **Detection is mostly signature-based.** There is no stateful correlation or
-  long-window behavioural baseline yet; the physics-aware process rule is the one
-  exception.
+- **Detection is mostly signature-based.** One correlation rule now exists — it
+  counts distinct destinations per source over a five-minute window to separate
+  control-asset enumeration from normal polling — but it is the only stateful
+  detection here, and there is still no long-window behavioural baseline. The
+  harness that proves it is equally narrow: the offline evaluator implements
+  `value_count` and fails loudly on every other correlation type, and the benign
+  baseline is single-event, so correlation false positives are covered only by
+  the negative windows in the rule's own fixture.
 - **Encrypted channels.** OPC UA service bodies are only visible on `None`/`Sign`
   channels; `SignAndEncrypt` yields metadata but no service. The S7comm decoder
   handles classic S7comm only, not S7comm Plus.
@@ -118,8 +146,11 @@ worked, and they are the reason the repository validates functionally:
 
 1. Add a broader tactic spread (Impact, Evasion, C2, Initial Access) rather than
    deepening the same columns.
-2. Add stateful/behavioural detections (setpoint drift, engineering-workstation
-   change windows) to move beyond signatures.
+2. Add more stateful detections. The first one landed — control-asset
+   enumeration — along with the fixture format and evaluator it needed; the next
+   candidates are setpoint drift over time and an engineering-workstation change
+   window, both of which need a longer window than the current evaluator's
+   sliding count.
 3. Grow the benign baseline from real lab traffic so false-positive rate becomes
    meaningful.
 4. Run the emulation in CI against an ephemeral lab and publish live metrics.

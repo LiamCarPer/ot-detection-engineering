@@ -32,7 +32,7 @@ from sigma.rule import SigmaRule  # noqa: E402
 
 from tools.otde.evidence import EXPECTED_DECODER_RULES  # noqa: E402
 from tools.otde.matcher import match  # noqa: E402
-from tools.otde.rules import sigma_rule_paths  # noqa: E402
+from tools.otde.rules import single_event_rule_paths  # noqa: E402
 
 TOOLS_DIR = REPO_ROOT / "tools"
 EVIDENCE_DIR = REPO_ROOT / "deploy" / "evidence" / "decoders"
@@ -58,8 +58,11 @@ def build(cargo: str) -> None:
 
 
 def rules_for_service(service: str) -> list[SigmaRule]:
+    # Single-event rules only: this proof matches one decoded event at a time, and
+    # a correlation needs a sequence. The correlation rule is proven by its own
+    # fixture and by the Loki ruler validation instead.
     rules = []
-    for path in sigma_rule_paths():
+    for path in single_event_rule_paths():
         rule = SigmaRule.from_yaml(path.read_text(encoding="utf-8"))
         if rule.logsource.service == service:
             rules.append(rule)

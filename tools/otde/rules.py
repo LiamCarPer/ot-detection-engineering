@@ -13,6 +13,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from sigma.collection import SigmaCollection
+from sigma.correlations import SigmaCorrelationRule
 from sigma.rule import SigmaRule
 
 from tools.otde.suricata import read_rules
@@ -24,12 +26,52 @@ METADATA_DIR = REPO_ROOT / "metadata"
 CATALOG_PATH = METADATA_DIR / "attack_ics_catalog.json"
 
 ATTACK_TAG_RE = re.compile(r"^attack\.t(?P<number>\d{4}(?:\.\d{3})?)$")
+CORRELATION_KEY = "correlation"
 
 
 def sigma_rule_paths() -> list[Path]:
     # Sidecars are *.test.yaml and do not match the *.yml glob; the guard keeps a
     # sidecar named *.test.yml from ever being treated as a rule.
     return sorted(path for path in SIGMA_RULES_DIR.rglob("*.yml") if ".test." not in path.name)
+
+
+def is_correlation_rule(rule_path: Path) -> bool:
+    """True when the file is a Sigma correlation rule rather than a log rule.
+
+    Detected from the raw mapping so callers can pick a parser without first
+    committing to one: a correlation rule has no detection block, and a log rule
+    has no correlation block.
+    """
+    data = yaml.safe_load(rule_path.read_text(encoding="utf-8"))
+    return isinstance(data, dict) and CORRELATION_KEY in data
+
+
+def correlation_rule_paths() -> list[Path]:
+    return [path for path in sigma_rule_paths() if is_correlation_rule(path)]
+
+
+def single_event_rule_paths() -> list[Path]:
+    return [path for path in sigma_rule_paths() if not is_correlation_rule(path)]
+
+
+def load_sigma_rule(rule_path: Path) -> SigmaRule | SigmaCorrelationRule:
+    """Parse either kind of Sigma rule, dispatching on the file's shape.
+
+    References are not resolved here: a correlation rule names rules that live in
+    other files, so resolving one in isolation is impossible by construction.
+    Callers that need the referenced rules loaded together use
+    ``SigmaCollection.load_ruleset``; callers that only need the rule's own
+    metadata get an unresolved correlation rule whose ``rules`` field still lists
+    what it references.
+    """
+    text = rule_path.read_text(encoding="utf-8")
+    if is_correlation_rule(rule_path):
+        rules = SigmaCollection.from_yaml(text, resolve_references=False).rules
+        if len(rules) != 1 or not isinstance(rules[0], SigmaCorrelationRule):
+            raise ValueError(f"{rule_path} is not a single correlation rule")
+        return rules[0]
+    return SigmaRule.from_yaml(text)
+
 
 
 def native_rule_paths() -> list[Path]:
@@ -45,7 +87,7 @@ def technique_ids() -> set[str]:
 
 
 def sigma_techniques(rule_path: Path) -> list[str]:
-    rule = SigmaRule.from_yaml(rule_path.read_text(encoding="utf-8"))
+    rule = load_sigma_rule(rule_path)
     techniques: list[str] = []
     for tag in rule.tags:
         match = ATTACK_TAG_RE.match(str(tag))
@@ -72,6 +114,13 @@ class Case:
     event: dict[str, Any]
 
 
+@dataclass(frozen=True)
+class CorrelationCase:
+    name: str
+    expect_match: bool
+    events: list[dict[str, Any]]
+
+
 def cases_path_for(rule_path: Path) -> Path:
     # Sidecars use .yaml so that `sigma check` (which globs *.yml) does not
     # mistake them for rules.
@@ -87,6 +136,24 @@ def load_cases(rule_path: Path) -> list[Case]:
             event=entry["event"],
         )
         for entry in raw["cases"]
+    ]
+
+
+def load_correlation_cases(rule_path: Path) -> list[CorrelationCase]:
+    """Load the event sequences a correlation rule is proven against.
+
+    A correlation needs a sequence and a window, so the sidecar schema is
+    ``windows`` rather than ``cases``; everything else about the fixture is the
+    same idea: one labeled positive and one labeled negative at minimum.
+    """
+    raw = yaml.safe_load(cases_path_for(rule_path).read_text(encoding="utf-8"))
+    return [
+        CorrelationCase(
+            name=entry["name"],
+            expect_match=entry["expect"] == "match",
+            events=entry["events"],
+        )
+        for entry in raw["windows"]
     ]
 
 

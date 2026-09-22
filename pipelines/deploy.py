@@ -24,8 +24,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from convert import make_backend, rule_files, sha256  # noqa: E402
-from sigma.collection import SigmaCollection  # noqa: E402
+from convert import (  # noqa: E402
+    backend_supports_correlation,
+    convert_rule_object,
+    load_ruleset,
+    make_backend,
+    sha256,
+)
+from sigma.correlations import SigmaCorrelationRule  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = REPO_ROOT / "deploy"
@@ -56,15 +62,6 @@ def _rename_ruler_group(document: str, name: str) -> str:
     return LOKI_GROUP_RE.sub(rf"\g<1>{name}", document, count=1)
 
 
-def _convert(backend, text: str, output_format: str | None) -> list[str]:
-    collection = SigmaCollection.from_yaml(text)
-    if output_format:
-        result = backend.convert(collection, output_format=output_format)
-    else:
-        result = backend.convert(collection)
-    return [result] if isinstance(result, str) else list(result)
-
-
 def _native_bundle() -> tuple[dict[str, str], list[dict]]:
     """Concatenate the native Suricata rules into one installable file."""
     parts: list[str] = []
@@ -93,18 +90,35 @@ def build_bundle() -> dict[str, str]:
     """Return the full deployment bundle as a mapping of path to content."""
     bundle: dict[str, str] = {}
     manifest: list[dict] = []
-
-    sigma_rules = rule_files((REPO_ROOT / "rules" / "sigma").resolve())
+    unsupported: list[dict] = []
 
     for target, (backend_name, output_format, comment, directory) in SIGMA_DEPLOY.items():
+        # Each target loads its own copy of the ruleset. pySigma's Loki
+        # correlation conversion appends the counted field to the rule's
+        # ``group-by`` list *in place*, so reusing one loaded collection across
+        # targets silently corrupts the Splunk and OpenSearch queries: the
+        # distinct count gets the field it is counting added to its own grouping
+        # and can never reach the threshold.
+        collection = load_ruleset((REPO_ROOT / "rules" / "sigma").resolve())
         backend = make_backend(backend_name)
         extension = EXTENSIONS[target]
-        for rule_path in sigma_rules:
+        backend.init_processing_pipeline(output_format or backend.default_format)
+        for rule in collection.rules:
+            rule_path = Path(rule.source.path)
+            relative = rule_path.relative_to(REPO_ROOT).as_posix()
+            if isinstance(rule, SigmaCorrelationRule) and not backend_supports_correlation(backend):
+                unsupported.append(
+                    {
+                        "source": relative,
+                        "backend": target,
+                        "reason": "backend does not implement correlation conversion",
+                    }
+                )
+                continue
             text = rule_path.read_text(encoding="utf-8")
-            queries = _convert(backend, text, output_format)
+            queries = convert_rule_object(backend, rule, output_format)
             if target == "loki":
                 queries = [_rename_ruler_group(query, rule_path.stem) for query in queries]
-            relative = rule_path.relative_to(REPO_ROOT).as_posix()
             artifact = f"{directory}/{rule_path.stem}.{extension}"
             body = f"{comment} source: {relative}\n" + "\n".join(queries).rstrip("\n") + "\n"
             bundle[artifact] = body
@@ -122,7 +136,15 @@ def build_bundle() -> dict[str, str]:
     manifest.extend(native_manifest)
 
     bundle["manifest.json"] = json.dumps(
-        {"artifacts": sorted(manifest, key=lambda item: (item["target"], item["source"]))},
+        {
+            "artifacts": sorted(manifest, key=lambda item: (item["target"], item["source"])),
+            # A correlation rule cannot be converted for every target. Recording
+            # that here keeps the gap visible instead of letting the artifact
+            # simply not exist.
+            "unsupported": sorted(
+                unsupported, key=lambda item: (item["backend"], item["source"])
+            ),
+        },
         indent=2,
     ) + "\n"
     return bundle

@@ -1,0 +1,209 @@
+# Correlation fixture: a window of events, and whether the correlation fires.
+#
+# The single-event sidecars use `cases`; a correlation needs a sequence and a
+# timespan, so this sidecar uses `windows`. Every event must satisfy the
+# referenced rule, or it is filtered out before the count is taken.
+windows:
+  - name: one host reads three distinct control assets inside the window
+    expect: match
+    events:
+      - timestamp: "2026-05-01T10:27:07.700Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.10
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:27:14.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.11
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:27:21.300Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.12
+        unit_id: 1
+        register: 0
+
+  - name: one host polls a single asset repeatedly
+    expect: no_match
+    events:
+      - timestamp: "2026-05-01T10:27:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.10
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:28:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.10
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:29:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.10
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:30:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 4
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.10
+        unit_id: 1
+        register: 100
+      - timestamp: "2026-05-01T10:31:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.10
+        unit_id: 1
+        register: 0
+
+  - name: three distinct assets read, but spread beyond the window
+    expect: no_match
+    events:
+      - timestamp: "2026-05-01T08:00:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.10
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T08:06:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.11
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T08:12:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.12
+        unit_id: 1
+        register: 0
+
+  - name: two distinct assets is below the threshold
+    expect: no_match
+    events:
+      - timestamp: "2026-05-01T10:27:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.10
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:27:05.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.11
+        unit_id: 1
+        register: 0
+
+  - name: an approved reader touching three assets is filtered by the referenced rule
+    expect: no_match
+    events:
+      - timestamp: "2026-05-01T10:27:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.21.0.20
+        dst_ip: 172.21.0.10
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:27:05.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.21.0.20
+        dst_ip: 172.21.0.11
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:27:10.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.21.0.20
+        dst_ip: 172.21.0.12
+        unit_id: 1
+        register: 0
+
+  - name: two hosts each reading two assets is not one host enumerating
+    expect: no_match
+    events:
+      - timestamp: "2026-05-01T10:27:00.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.10
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:27:04.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.24.0.10
+        dst_ip: 172.21.0.11
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:27:08.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.23.0.50
+        dst_ip: 172.21.0.11
+        unit_id: 1
+        register: 0
+      - timestamp: "2026-05-01T10:27:12.000Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        function_code: 3
+        src_ip: 172.23.0.50
+        dst_ip: 172.21.0.12
+        unit_id: 1
+        register: 0

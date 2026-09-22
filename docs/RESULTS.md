@@ -8,7 +8,7 @@ from a real run; nothing is hand-counted.
 
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
-| ATT&CK for ICS coverage | 15 / 97 techniques (15.5%) | Intentionally seeded, not padded. |
+| ATT&CK for ICS coverage | 16 / 97 techniques (16.5%) | Intentionally seeded, not padded. |
 | Emulation detection rate | 100% (4 / 4 expectations) | Two adversary steps, replayed from a live lab run. |
 | Mean MTTD | 2.45 s | Time from action to first matching alert. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule vs. its own committed fixtures — a regression check. |
@@ -57,6 +57,6 @@ Full detail in [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
 ```bash
 make setup
 make demo          # decoder -> Sigma match -> generated SIEM queries, offline
-make check         # lint, Sigma validation, 177 tests, Rust, bundle drift
+make check         # lint, Sigma validation, 201 tests, Rust, bundle drift
 make metrics       # coverage, fixture agreement, baseline FPR, emulation replay
 ```

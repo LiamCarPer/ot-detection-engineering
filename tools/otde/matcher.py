@@ -102,11 +102,17 @@ def _eval_condition(node: Any, event: Mapping[str, Any]) -> bool:
 
 
 def _eval_field(event: Mapping[str, Any], field: str, value: Any) -> bool:
-    actual = _lookup(event, field)
+    actual = lookup_field(event, field)
     return _value_matches(value, actual)
 
 
-def _lookup(event: Mapping[str, Any], field: str) -> Any:
+def lookup_field(event: Mapping[str, Any], field: str) -> Any:
+    """Return a field from an event, following dotted paths.
+
+    Public because the correlation evaluator groups and counts events on the
+    same field semantics the rule matcher uses; two implementations would let a
+    correlation group on something the base rule never matched.
+    """
     if field in event:
         return event[field]
     if "." in field:

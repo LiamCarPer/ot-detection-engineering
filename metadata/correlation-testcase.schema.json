@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/LiamCarPer/ot-detection-engineering/main/metadata/correlation-testcase.schema.json",
+  "title": "Sigma correlation rule test cases",
+  "description": "Schema for the *.test.yaml sidecar that accompanies each Sigma correlation rule. A correlation is evaluated over a sequence of events and a timespan, so the fixture carries `windows` rather than the single-event `cases`.",
+  "type": "object",
+  "required": ["windows"],
+  "additionalProperties": false,
+  "properties": {
+    "windows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "expect", "events"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Human readable description of the scenario."
+          },
+          "expect": {
+            "enum": ["match", "no_match"],
+            "description": "Whether the correlation is expected to fire on these events."
+          },
+          "events": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Ordered normalized telemetry events evaluated as a sequence.",
+            "items": {
+              "type": "object",
+              "minProperties": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

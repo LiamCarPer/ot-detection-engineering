@@ -26,14 +26,13 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-import yaml  # noqa: E402
 from sigma.rule import SigmaRule  # noqa: E402
 
 from collector import contract  # noqa: E402
 from collector.sources import suricata, zeek  # noqa: E402
 from tools.otde.evidence import EXPECTED_COLLECTOR_RULES  # noqa: E402
 from tools.otde.matcher import match  # noqa: E402
-from tools.otde.rules import sigma_rule_paths  # noqa: E402
+from tools.otde.rules import single_event_rule_paths  # noqa: E402
 
 SAMPLES_DIR = REPO_ROOT / "collector" / "samples"
 EVIDENCE_DIR = REPO_ROOT / "deploy" / "evidence" / "collector"
@@ -61,10 +60,7 @@ def _single_event_rules() -> dict[str, list[SigmaRule]]:
     proof, so they are skipped here without depending on the correlation tooling.
     """
     by_service: dict[str, list[SigmaRule]] = {}
-    for path in sigma_rule_paths():
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
-        if isinstance(data, dict) and "correlation" in data:
-            continue
+    for path in single_event_rule_paths():
         rule = SigmaRule.from_yaml(path.read_text(encoding="utf-8"))
         by_service.setdefault(rule.logsource.service, []).append(rule)
     return by_service

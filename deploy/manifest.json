@@ -37,6 +37,12 @@
       "backend": "loki"
     },
     {
+      "source": "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
+      "source_sha256": "1a431bad5e9a45bf43a0240d38e008ddc31f9dc6fc08dc80c2fc1d2e2f935410",
+      "target": "loki/rules/ot_modbus_control_asset_enumeration.yaml",
+      "backend": "loki"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
       "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
       "target": "loki/rules/ot_modbus_device_identification_scan.yaml",
@@ -136,6 +142,12 @@
       "source": "rules/sigma/ot/ot_firewall_enterprise_control_service.yml",
       "source_sha256": "c8de7d6ba6d24d30d650cb7ff9e7c9f9ee06bb6487edeeb44141a3f89e613e55",
       "target": "opensearch/ot_firewall_enterprise_control_service.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
+      "source_sha256": "1a431bad5e9a45bf43a0240d38e008ddc31f9dc6fc08dc80c2fc1d2e2f935410",
+      "target": "opensearch/ot_modbus_control_asset_enumeration.ppl",
       "backend": "opensearch"
     },
     {
@@ -343,6 +355,12 @@
       "backend": "splunk"
     },
     {
+      "source": "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
+      "source_sha256": "1a431bad5e9a45bf43a0240d38e008ddc31f9dc6fc08dc80c2fc1d2e2f935410",
+      "target": "splunk/ot_modbus_control_asset_enumeration.conf",
+      "backend": "splunk"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
       "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
       "target": "splunk/ot_modbus_device_identification_scan.conf",
@@ -431,6 +449,13 @@
       "source_sha256": "f624f7e69c7c3cec8edc2abbfb8a1da934fe131f0275d5a3830124edd290c71e",
       "target": "suricata/ot-detection.rules",
       "backend": "suricata"
+    }
+  ],
+  "unsupported": [
+    {
+      "source": "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
+      "backend": "sentinel",
+      "reason": "backend does not implement correlation conversion"
     }
   ]
 }

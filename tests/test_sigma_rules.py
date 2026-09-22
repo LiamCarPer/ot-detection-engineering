@@ -1,15 +1,27 @@
-"""Fixture-driven tests for every Sigma rule in the repository."""
+"""Fixture-driven tests for every single-event Sigma rule in the repository.
+
+Correlation rules are proven separately in ``test_sigma_correlations.py``: they
+have no detection block and no logsource, and they are evaluated over a sequence
+rather than one event, so sharing this parametrization would mean pretending two
+different fixtures are the same shape.
+"""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 import pytest
-from support.loader import REPO_ROOT, cases_path_for, load_cases, load_rule, sigma_rule_paths
+from support.loader import (
+    REPO_ROOT,
+    cases_path_for,
+    load_cases,
+    load_rule,
+    single_event_rule_paths,
+)
 
 from tools.otde.matcher import match
 
-RULE_PATHS = sigma_rule_paths()
+RULE_PATHS = single_event_rule_paths()
 
 
 def _case_ids(rule_path: Path) -> str:

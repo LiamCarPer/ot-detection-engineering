@@ -29,12 +29,18 @@ from sigma.backends.loki import LogQLBackend
 from sigma.backends.opensearch import OpenSearchPPLBackend
 from sigma.backends.splunk import SplunkBackend
 from sigma.collection import SigmaCollection
+from sigma.correlations import SigmaCorrelationRule
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(Path(__file__).resolve().parent) not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from loki_pipeline import LOKI_LOGSOURCE_PIPELINE  # noqa: E402
+
+
+class ConversionError(RuntimeError):
+    """Raised when a rule produces no output, which is almost always a mistake."""
+
 
 BACKENDS = {
     "loki": (LogQLBackend, "logql"),
@@ -50,11 +56,22 @@ def make_backend(backend_name: str):
     The Loki backend needs the pipeline so its queries select the rule's stream
     by the ``service`` label instead of matching every stream. Other backends
     route through their own index/source handling.
+
+    ``finalize_correlation_subqueries`` is enabled so a rule that a correlation
+    references is still finalised when it is emitted in its own right. Without
+    it, a correlation with ``generate: true`` would emit the referenced rule
+    *unfinalised* — a Splunk saved search would lose its stanza, for example —
+    and the rule's own artifact would change the moment a correlation started
+    referencing it.
     """
     backend_cls, _ = BACKENDS[backend_name]
-    if backend_name == "loki":
-        return backend_cls(processing_pipeline=LOKI_LOGSOURCE_PIPELINE)
-    return backend_cls()
+    backend = (
+        backend_cls(processing_pipeline=LOKI_LOGSOURCE_PIPELINE)
+        if backend_name == "loki"
+        else backend_cls()
+    )
+    backend.finalize_correlation_subqueries = True
+    return backend
 
 
 def rule_files(rules_dir: Path) -> list[Path]:
@@ -66,9 +83,50 @@ def sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def convert_rule(backend, text: str) -> list[str]:
-    collection = SigmaCollection.from_yaml(text)
-    return backend.convert(collection)
+def load_ruleset(rules_dir: Path) -> SigmaCollection:
+    """Load every Sigma rule at once, with correlation references resolved.
+
+    A correlation rule names rules that live in other files, so loading one file
+    at a time cannot resolve it. Loading the whole set also means pySigma orders
+    the collection so a referenced rule is converted before the correlation that
+    needs its conversion result.
+    """
+    return SigmaCollection.load_ruleset([rules_dir])
+
+
+def backend_supports_correlation(backend) -> bool:
+    """Whether a backend implements correlation rule conversion.
+
+    pySigma ships the correlation conversion methods on its base class, but a
+    backend only opts in by declaring ``correlation_methods``, and of the pinned
+    targets only Loki does. A correlation rule is therefore recorded as
+    unsupported for the others rather than being silently dropped from the bundle
+    or failing the whole build.
+    """
+    return backend.correlation_methods is not None
+
+
+def convert_rule_object(backend, rule, output_format: str | None = None) -> list[str]:
+    """Convert one loaded rule into its finalized document(s).
+
+    Correlation rules go through ``convert_correlation_rule``; everything else
+    through ``convert_rule``. A rule that converts to nothing is an error rather
+    than an empty artifact: the usual cause is a correlation that does not set
+    ``generate: true``, which silently suppresses the rules it references and
+    would quietly delete their alerts from the bundle.
+    """
+    if isinstance(rule, SigmaCorrelationRule):
+        queries = backend.convert_correlation_rule(rule, output_format)
+    else:
+        queries = backend.convert_rule(rule, output_format)
+    if not queries:
+        raise ConversionError(
+            f"{rule.title!r} converted to no queries. If it is referenced by a correlation "
+            "rule, set `generate: true` on that correlation so the referenced rule still "
+            "produces output."
+        )
+    document = backend.finalize(queries, output_format or backend.default_format)
+    return [document] if isinstance(document, str) else list(document)
 
 
 def _relative(path: Path) -> str:
@@ -81,13 +139,27 @@ def _relative(path: Path) -> str:
 def build_artifacts(backend_name: str, rules_dir: Path) -> tuple[dict[str, str], dict]:
     _, extension = BACKENDS[backend_name]
     backend = make_backend(backend_name)
+    output_format = backend.default_format
+    backend.init_processing_pipeline(output_format)
+
     artifacts: dict[str, str] = {}
     manifest: list[dict] = []
+    unsupported: list[dict] = []
 
-    for rule_path in rule_files(rules_dir.resolve()):
-        text = rule_path.read_text(encoding="utf-8")
-        queries = convert_rule(backend, text)
+    for rule in load_ruleset(rules_dir.resolve()).rules:
+        rule_path = Path(rule.source.path)
         relative = _relative(rule_path)
+        if isinstance(rule, SigmaCorrelationRule) and not backend_supports_correlation(backend):
+            unsupported.append(
+                {
+                    "source": relative,
+                    "backend": backend_name,
+                    "reason": "backend does not implement correlation conversion",
+                }
+            )
+            continue
+        text = rule_path.read_text(encoding="utf-8")
+        queries = convert_rule_object(backend, rule, output_format)
         artifact_name = f"{rule_path.stem}.{extension}"
         header = f"# source: {relative}\n# backend: {backend_name}\n"
         artifacts[artifact_name] = header + "\n".join(queries).rstrip("\n") + "\n"
@@ -101,7 +173,7 @@ def build_artifacts(backend_name: str, rules_dir: Path) -> tuple[dict[str, str],
             }
         )
 
-    return artifacts, {"backend": backend_name, "rules": manifest}
+    return artifacts, {"backend": backend_name, "rules": manifest, "unsupported": unsupported}
 
 
 def main(argv: list[str] | None = None) -> int:

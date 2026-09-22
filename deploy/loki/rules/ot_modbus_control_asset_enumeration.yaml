@@ -1,0 +1,62 @@
+# source: rules/sigma/ot/ot_modbus_control_asset_enumeration.yml
+groups:
+- name: ot_modbus_control_asset_enumeration
+  rules:
+  - alert: Modbus_Control_Asset_Enumeration
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects one host reading process data from several distinct control
+        assets
+
+        inside a short window.
+
+
+        A supervisory host polling a single PLC is normal on an OT network. One host
+
+        touching several control assets it has no operational reason to touch is
+
+        consistent with discovery before an operation, and it is the step the committed
+
+        NDR evidence shows four minutes before an unauthorised setpoint write.
+
+
+        This is a correlation rule, not a signature. It counts the distinct
+
+        destinations among the events the referenced rule matches, per source, inside
+
+        a five-minute window. The distinction matters: a first-order rule that counts
+
+        reads cannot tell a polling master from an enumerator, because normal polling
+
+        produces more matches than enumeration does. Only the distinct-destination
+
+        count separates them.
+
+
+        T0846 is asserted because the behaviour enumerates the control assets; T0888
+        is
+
+        asserted because it reads their process state. Both are true of the same
+
+        traffic, and a defender responding to either framing takes the same first
+        step.
+
+        '
+      summary: Modbus Control Asset Enumeration
+    expr: 'sum(count_over_time(count without (dst_ip) (sum by (src_ip, dst_ip) (count_over_time({''alert'':
+      ''Modbus_Process_State_Read_From_Unauthorized_Source'', ''annotations'': {''description'':
+      ''Detects a Modbus read of process data (holding or input registers) from a
+      host\nthat is not an approved operator interface. In a segmented OT network,
+      process\nreads should originate only from the HMI or the supervisory collector;
+      a read\nfrom any other source is reconnaissance or a compromised host mapping
+      the\nprocess before acting on it.\n\nThis rule operates on normalized NDR telemetry
+      (see docs/TELEMETRY.md). The\napproved readers are site-specific and must be
+      tuned per environment.\n'', ''summary'': ''Modbus Process State Read From Unauthorized
+      Source'', ''author'': ''Liam Carvajal''}, ''expr'': ''sum(count_over_time({job=~".+",
+      service="modbus"} | logfmt | direction=~`(?i)^request$` and (function_code=3
+      or function_code=4) and src_ip!~`(?i)^172\\.21\\.0\\.20$` and src_ip!~`(?i)^172\\.22\\.0\\.10$`
+      | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}} {{.register}}" [1m]))
+      or vector(0) > 0'', ''labels'': {''severity'': ''low''}} [5m]))) >= 3 [1m]))
+      or vector(0) > 0'
+    labels:
+      severity: high

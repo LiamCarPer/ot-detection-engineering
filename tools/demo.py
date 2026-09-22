@@ -25,19 +25,22 @@ for extra in (REPO_ROOT, REPO_ROOT / "pipelines"):
     if str(extra) not in sys.path:
         sys.path.insert(0, str(extra))
 
-from convert import BACKENDS, convert_rule  # noqa: E402
+from convert import BACKENDS  # noqa: E402
+from sigma.collection import SigmaCollection  # noqa: E402
 from sigma.rule import SigmaRule  # noqa: E402
 
 from tools import decoder_check  # noqa: E402
 from tools.otde.matcher import match  # noqa: E402
-from tools.otde.rules import sigma_rule_paths  # noqa: E402
+from tools.otde.rules import single_event_rule_paths  # noqa: E402
 
 RULE_ORDER = ("loki", "splunk", "sentinel", "opensearch")
 
 
 def rule_paths_by_title() -> dict[str, Path]:
     paths = {}
-    for path in sigma_rule_paths():
+    # Single-event rules only; the demo walks one event through one rule, and the
+    # correlation rule needs a sequence.
+    for path in single_event_rule_paths():
         rule = SigmaRule.from_yaml(path.read_text(encoding="utf-8"))
         paths[rule.title] = path
     return paths
@@ -52,7 +55,7 @@ def _show_conversions(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
     for backend in RULE_ORDER:
         backend_cls, extension = BACKENDS[backend]
-        query = convert_rule(backend_cls(), text)[0]
+        query = backend_cls().convert(SigmaCollection.from_yaml(text))[0]
         print(f"\n  [{backend} .{extension}]")
         for line in query.splitlines():
             print(f"    {line}")

@@ -1,0 +1,48 @@
+title: Modbus Control Asset Enumeration
+id: 7c4e1b2a-6d3f-4a58-9e21-0b5c8f7a2d10
+status: experimental
+description: |
+  Detects one host reading process data from several distinct control assets
+  inside a short window.
+
+  A supervisory host polling a single PLC is normal on an OT network. One host
+  touching several control assets it has no operational reason to touch is
+  consistent with discovery before an operation, and it is the step the committed
+  NDR evidence shows four minutes before an unauthorised setpoint write.
+
+  This is a correlation rule, not a signature. It counts the distinct
+  destinations among the events the referenced rule matches, per source, inside
+  a five-minute window. The distinction matters: a first-order rule that counts
+  reads cannot tell a polling master from an enumerator, because normal polling
+  produces more matches than enumeration does. Only the distinct-destination
+  count separates them.
+
+  T0846 is asserted because the behaviour enumerates the control assets; T0888 is
+  asserted because it reads their process state. Both are true of the same
+  traffic, and a defender responding to either framing takes the same first step.
+references:
+  - https://attack.mitre.org/techniques/T0846/
+  - https://attack.mitre.org/techniques/T0888/
+author: Liam Carvajal
+date: 2026-09-22
+correlation:
+  generate: true
+  type: value_count
+  rules:
+    - db9f2530-dbb5-4aa7-8bcf-b5e59ea1c9db
+  group-by:
+    - src_ip
+  timespan: 5m
+  condition:
+    field: dst_ip
+    gte: 3
+fields:
+  - src_ip
+falsepositives:
+  - A commissioning or inventory tool that legitimately reads every asset once
+  - A monitoring collector added to the referenced rule's reader allowlist only after this rule was tuned
+  - A control-system upgrade that touches several assets inside a maintenance window
+level: high
+tags:
+  - attack.t0846
+  - attack.t0888

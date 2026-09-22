@@ -20,7 +20,7 @@ metrics are derived from the rules themselves, so they cannot drift.
   the generated Loki, Splunk, Sentinel and OpenSearch queries. No Docker, no
   network. A recorded transcript is in
   [`docs/demo-output.txt`](docs/demo-output.txt).
-- **Run the full check:** `make check` (lint, Sigma validation, 177 tests, the
+- **Run the full check:** `make check` (lint, Sigma validation, 201 tests, the
   Rust decoders, and deployment-bundle drift).
 - **Read the proof:** `deploy/report.md` records 11 generated detection rules
   firing on live traffic in a Dockerized OT lab, the Suricata ruleset running
@@ -49,7 +49,7 @@ not committed). The emulation figures are replayed from a genuine run against
 | Rule fixture agreement (precision) | 1.0 | Rule matches against its own committed positive/negative fixtures. A regression check, not field precision. |
 | Rule fixture agreement (recall) | 1.0 | As above. |
 | Baseline false-positive rate | 0.0 | 50 committed benign events across every protocol and stream the rules consume. |
-| ATT&CK for ICS coverage | 15 / 97 techniques (15.5%) | Intentionally low: a small, fully tested ruleset rather than untested padding. |
+| ATT&CK for ICS coverage | 16 / 97 techniques (16.5%) | Intentionally low: a small, fully tested ruleset rather than untested padding. |
 
 Coverage is intentionally low: this repository seeds the pipeline with a small,
 fully tested ruleset rather than padding coverage with untested rules. The point
@@ -99,6 +99,7 @@ recombined through shared metadata, testing and metrics.
 | :--- | :--- | :--- |
 | Log-based detections (firewall, NDR alerts, application and process events) | Sigma | Portable, converted by pySigma, testable offline. |
 | Protocol DPI (Modbus and DNP3 function codes, S7comm program transfer, OPC UA services) | Native Suricata, plus Rust decoders for DNP3, S7comm and OPC UA application semantics | Sigma cannot express industrial protocol semantics. |
+| Behaviour over time (one host reading several control assets inside a window) | Sigma correlation rules | A per-event signature cannot separate an enumerating host from a polling one: normal polling produces *more* matches than enumeration does. Only a distinct-value count over a window separates them. |
 
 Every rule, regardless of format, carries an ATT&CK for ICS technique, is
 covered by labeled fixtures, and is included in the generated coverage map.
@@ -256,7 +257,8 @@ breakdown is in [deploy/report.md](deploy/report.md).
 
 Implemented: detection-as-code pipeline, OT Sigma rules, native protocol DPI for
 Modbus/TCP, DNP3, OPC UA and S7comm (DNP3, S7comm and OPC UA also decoded in
-Rust for application-layer Sigma rules), multi-platform conversion (Loki,
+Rust for application-layer Sigma rules), a stateful Sigma correlation rule for
+control-asset enumeration, multi-platform conversion (Loki,
 OpenSearch, Splunk SPL, Sentinel KQL), installable deployment bundles, Suricata
 functional validation over committed captures and in a Malcolm pipeline, ATT&CK
 for ICS coverage, adversary emulation, and detection metrics. The pipeline,
