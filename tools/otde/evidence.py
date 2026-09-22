@@ -140,6 +140,33 @@ EXPECTED_COLLECTOR_RULES: dict[str, set[str]] = {
 }
 
 
+# Sensor sample -> behaviour-baseline rule titles the sample must fire.
+EXPECTED_BASELINE_RULES: dict[str, set[str]] = {
+    "suricata/modbus_attack": {
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New OT Communication Pair",
+    },
+    "suricata/modbus_benign": set(),
+    "suricata/dnp3_attack": {
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New OT Communication Pair",
+        "New Protocol Function Code From An OT Asset",
+    },
+    "suricata/dnp3_benign": set(),
+    "zeek/modbus_attack": {
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New OT Communication Pair",
+    },
+    "zeek/modbus_benign": set(),
+    "zeek/dnp3_attack": {
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New OT Communication Pair",
+        "New Protocol Function Code From An OT Asset",
+    },
+    "zeek/dnp3_benign": set(),
+}
+
+
 def read_alert_sids(eve_path: Path) -> set[int]:
     """Return the set of signature ids in an alert-only eve.json."""
     sids: set[int] = set()

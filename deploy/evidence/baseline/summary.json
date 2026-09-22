@@ -1,0 +1,86 @@
+{
+  "baseline": {
+    "assets": 3,
+    "pairs": 2,
+    "services": [
+      "dnp3",
+      "modbus"
+    ]
+  },
+  "baseline_current": true,
+  "rules": [
+    "New OT Communication Pair",
+    "New OT Source Asset Not In The Behaviour Baseline",
+    "New Protocol Function Code From An OT Asset"
+  ],
+  "samples": {
+    "suricata/dnp3_attack": {
+      "events": 9,
+      "expected": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New Protocol Function Code From An OT Asset"
+      ],
+      "observed": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New Protocol Function Code From An OT Asset"
+      ]
+    },
+    "suricata/dnp3_benign": {
+      "events": 1,
+      "expected": [],
+      "observed": []
+    },
+    "suricata/modbus_attack": {
+      "events": 6,
+      "expected": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline"
+      ],
+      "observed": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline"
+      ]
+    },
+    "suricata/modbus_benign": {
+      "events": 6,
+      "expected": [],
+      "observed": []
+    },
+    "zeek/dnp3_attack": {
+      "events": 1,
+      "expected": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New Protocol Function Code From An OT Asset"
+      ],
+      "observed": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New Protocol Function Code From An OT Asset"
+      ]
+    },
+    "zeek/dnp3_benign": {
+      "events": 1,
+      "expected": [],
+      "observed": []
+    },
+    "zeek/modbus_attack": {
+      "events": 6,
+      "expected": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline"
+      ],
+      "observed": [
+        "New OT Communication Pair",
+        "New OT Source Asset Not In The Behaviour Baseline"
+      ]
+    },
+    "zeek/modbus_benign": {
+      "events": 6,
+      "expected": [],
+      "observed": []
+    }
+  }
+}

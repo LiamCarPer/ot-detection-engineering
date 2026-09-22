@@ -59,6 +59,13 @@ jobs:
       - name: Check the collector evidence is current
         run: git diff --exit-code deploy/evidence/collector/summary.json
 
+      - name: Prove behaviour-baseline rules against committed telemetry
+        run: python tools/baseline_check.py
+
+      - name: Check the baseline evidence is current
+        run: git diff --exit-code deploy/evidence/baseline/summary.json
+
+
       - name: Convert to Loki
         run: python pipelines/convert.py --backend loki --check
 
