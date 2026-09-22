@@ -1,0 +1,40 @@
+cases:
+  - name: a device identification request never seen for Modbus
+    expect: match
+    event:
+      timestamp: "2026-09-22T09:10:00Z"
+      product: ot_ndr
+      service: modbus
+      src_ip: 172.21.0.20
+      dst_ip: 172.21.0.10
+      function_code: 43
+
+  - name: a Modbus write the baseline has seen
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T09:10:05Z"
+      product: ot_ndr
+      service: modbus
+      src_ip: 172.21.0.20
+      dst_ip: 172.21.0.10
+      function_code: 6
+
+  - name: a DNP3 read the baseline has seen
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T09:10:10Z"
+      product: ot_ndr
+      service: dnp3
+      src_ip: 172.21.0.20
+      dst_ip: 172.31.0.10
+      function_code: 1
+
+  - name: a service the baseline never observed
+    expect: match
+    event:
+      timestamp: "2026-09-22T09:10:15Z"
+      product: ot_ndr
+      service: s7comm
+      src_ip: 172.21.0.20
+      dst_ip: 172.21.0.10
+      function_code: 26

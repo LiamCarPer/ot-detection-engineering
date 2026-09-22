@@ -1,0 +1,27 @@
+title: New OT Communication Pair
+id: f69f5338-eaaf-48a8-8c5b-293d25b3d2a8
+status: experimental
+description: |
+  Detects a source and destination that have never talked in the learned
+  behaviour baseline. A new pair is how a rogue master, a compromised host
+  probing for reachable controllers, or a misrouted flow first appears — each
+  endpoint may be known, but the conversation between them is not.
+
+  The baseline is built from benign telemetry and committed, so the pair set is
+  explicit and reviewable rather than an implicit allowlist inside a rule.
+references:
+  - https://attack.mitre.org/techniques/T0846/
+author: Liam Carvajal
+date: 2026-09-22
+baseline:
+  type: new_pair
+fields:
+  - src_ip
+  - dst_ip
+  - service
+falsepositives:
+  - A newly commissioned path that is not yet in the baseline
+  - A device that legitimately changes its peer after a network change
+level: medium
+tags:
+  - attack.t0846

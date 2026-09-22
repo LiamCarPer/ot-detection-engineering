@@ -1,0 +1,30 @@
+title: New Protocol Function Code From An OT Asset
+id: 993203a9-008f-4357-af71-0b88bf6fe16a
+status: experimental
+description: |
+  Detects a protocol function code that was never observed for that service in
+  the learned behaviour baseline. A device that only ever reads holding
+  registers does not suddenly issue a program download or a device
+  identification request; the function code is the protocol-native behaviour, and
+  a new one is a stronger signal than a new endpoint.
+
+  The baseline records the function codes observed per service, so this fires on
+  the first use of any function the network has not seen — including a service
+  the baseline never observed at all.
+references:
+  - https://attack.mitre.org/techniques/T0846/
+author: Liam Carvajal
+date: 2026-09-22
+baseline:
+  type: new_function_code
+fields:
+  - src_ip
+  - dst_ip
+  - service
+  - function_code
+falsepositives:
+  - A legitimate engineering action that the baseline period did not include
+  - A newly deployed asset that uses a different function set
+level: medium
+tags:
+  - attack.t0846

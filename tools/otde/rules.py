@@ -22,11 +22,24 @@ from tools.otde.suricata import read_rules
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SIGMA_RULES_DIR = REPO_ROOT / "rules" / "sigma"
 NATIVE_RULES_DIR = REPO_ROOT / "rules" / "native"
+BASELINE_RULES_DIR = REPO_ROOT / "rules" / "baseline"
 METADATA_DIR = REPO_ROOT / "metadata"
 CATALOG_PATH = METADATA_DIR / "attack_ics_catalog.json"
 
 ATTACK_TAG_RE = re.compile(r"^attack\.t(?P<number>\d{4}(?:\.\d{3})?)$")
 CORRELATION_KEY = "correlation"
+BASELINE_KEY = "baseline"
+
+
+def _techniques_from_tags(tags: list[Any]) -> list[str]:
+    techniques: list[str] = []
+    for tag in tags:
+        match = ATTACK_TAG_RE.match(str(tag))
+        if match:
+            technique = f"T{match.group('number').upper()}"
+            if technique not in techniques:
+                techniques.append(technique)
+    return techniques
 
 
 def sigma_rule_paths() -> list[Path]:
@@ -87,15 +100,19 @@ def technique_ids() -> set[str]:
 
 
 def sigma_techniques(rule_path: Path) -> list[str]:
-    rule = load_sigma_rule(rule_path)
-    techniques: list[str] = []
-    for tag in rule.tags:
-        match = ATTACK_TAG_RE.match(str(tag))
-        if match:
-            technique = f"T{match.group('number').upper()}"
-            if technique not in techniques:
-                techniques.append(technique)
-    return techniques
+    return _techniques_from_tags(list(load_sigma_rule(rule_path).tags))
+
+
+def baseline_rule_paths() -> list[Path]:
+    # Sidecars are *.test.yaml, so they do not match the *.yml glob.
+    return sorted(
+        path for path in BASELINE_RULES_DIR.rglob("*.yml") if ".test." not in path.name
+    )
+
+
+def baseline_techniques(rule_path: Path) -> list[str]:
+    data = yaml.safe_load(rule_path.read_text(encoding="utf-8"))
+    return _techniques_from_tags(list(data.get("tags", [])))
 
 
 def native_techniques(rule_path: Path) -> list[str]:
@@ -172,6 +189,10 @@ def detected_techniques() -> dict[str, list[str]]:
     for rule_path in sigma_rule_paths():
         relative = rule_path.relative_to(REPO_ROOT).as_posix()
         for technique in sigma_techniques(rule_path):
+            sources.setdefault(technique, []).append(relative)
+    for rule_path in baseline_rule_paths():
+        relative = rule_path.relative_to(REPO_ROOT).as_posix()
+        for technique in baseline_techniques(rule_path):
             sources.setdefault(technique, []).append(relative)
     for rule_path in native_rule_paths():
         relative = rule_path.relative_to(REPO_ROOT).as_posix()

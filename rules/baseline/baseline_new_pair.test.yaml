@@ -1,0 +1,39 @@
+cases:
+  - name: an enterprise host initiates a new conversation with a PLC
+    expect: match
+    event:
+      timestamp: "2026-09-22T09:05:00Z"
+      product: ot_ndr
+      service: modbus
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      function_code: 6
+
+  - name: the HMI talks to its PLC, a known pair
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T09:05:05Z"
+      product: ot_ndr
+      service: modbus
+      src_ip: 172.21.0.20
+      dst_ip: 172.21.0.10
+      function_code: 6
+
+  - name: the HMI talks to the outstation, a known pair
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T09:05:10Z"
+      product: ot_ndr
+      service: dnp3
+      src_ip: 172.21.0.20
+      dst_ip: 172.31.0.10
+      function_code: 1
+
+  - name: an event with only one endpoint cannot be judged
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T09:05:15Z"
+      product: ot_ndr
+      service: modbus
+      src_ip: 172.21.0.20
+      function_code: 6

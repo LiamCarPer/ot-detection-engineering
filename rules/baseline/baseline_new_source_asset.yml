@@ -1,0 +1,31 @@
+title: New OT Source Asset Not In The Behaviour Baseline
+id: c65a960b-9448-40dd-91b2-0e87d797b812
+status: experimental
+description: |
+  Detects an OT host that is talking on the network but does not appear in the
+  learned behaviour baseline. The baseline is built from benign telemetry, so a
+  source it has never seen is either a newly commissioned device that needs the
+  baseline regenerated, a temporary engineering laptop, or a host that has no
+  operational reason to be on the OT network.
+
+  This is a deviation rule, not a signature: the thing that fires it is the
+  absence of the asset from the baseline, so it is only as current as
+  `baseline/ot-behaviour.json`. That currency is the point — the artefact is
+  committed and reviewed, and a stale baseline is a reviewable event.
+references:
+  - https://attack.mitre.org/techniques/T0888/
+author: Liam Carvajal
+date: 2026-09-22
+baseline:
+  type: new_asset
+  field: src_ip
+fields:
+  - src_ip
+  - dst_ip
+  - service
+falsepositives:
+  - A newly commissioned device, before the baseline is regenerated
+  - A maintenance laptop temporarily attached to the OT network
+level: medium
+tags:
+  - attack.t0888

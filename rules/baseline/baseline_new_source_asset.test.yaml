@@ -1,0 +1,39 @@
+cases:
+  - name: an enterprise host talks to a control asset
+    expect: match
+    event:
+      timestamp: "2026-09-22T09:00:00Z"
+      product: ot_ndr
+      service: modbus
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      function_code: 6
+
+  - name: the HMI talks to a control asset
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T09:00:05Z"
+      product: ot_ndr
+      service: modbus
+      src_ip: 172.21.0.20
+      dst_ip: 172.21.0.10
+      function_code: 6
+
+  - name: a known source with a new destination is not a new source
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T09:00:10Z"
+      product: ot_ndr
+      service: dnp3
+      src_ip: 172.21.0.20
+      dst_ip: 172.31.0.10
+      function_code: 1
+
+  - name: an event without a source address cannot be judged
+    expect: no_match
+    event:
+      timestamp: "2026-09-22T09:00:15Z"
+      product: ot_ndr
+      service: modbus
+      dst_ip: 172.21.0.10
+      function_code: 6
