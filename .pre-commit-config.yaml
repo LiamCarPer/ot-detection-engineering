@@ -1,0 +1,29 @@
+# Shift-left security gates. The same tools run in CI; these make the cheap
+# checks run before a commit so a secret or an unpinned action never reaches it.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.7
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.10
+    hooks:
+      - id: bandit
+        args: [-q, -r, tools, collector, pipelines, coverage]
+        exclude: ^tests/
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: action-pins
+        name: GitHub Actions pinned by commit SHA
+        entry: python tools/check_action_pins.py
+        language: system
+        pass_filenames: false
