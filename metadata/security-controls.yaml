@@ -31,7 +31,7 @@ controls:
   - id: C-005
     title: Software composition analysis (pip-audit, cargo-deny)
     threats: [T-003]
-    status: planned
+    status: implemented
     verify: make security-sca
     evidence: security/run/sca.sh
   - id: C-006
@@ -55,13 +55,13 @@ controls:
   - id: C-009
     title: CI workflow security analysis
     threats: [T-004]
-    status: planned
+    status: implemented
     verify: make security-actions
     evidence: security/run/actions.sh
   - id: C-010
     title: Secret scanning
     threats: [T-005]
-    status: planned
+    status: implemented
     verify: make security-secrets
     evidence: security/run/secrets.sh
   - id: C-011
