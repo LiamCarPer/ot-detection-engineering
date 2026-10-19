@@ -31,20 +31,21 @@ generated coverage is in `coverage/out/security_coverage.md`.
 
 | Category | Requirement | Controls | Status |
 | :--- | :--- | :--- | :--- |
-| V1 Encoding and sanitization | Untrusted input is validated and never interpreted | C-001, C-013 | partial — parsers met, ingest API planned |
-| V2 Validation and business logic | Input has shape, size and rate limits | C-013, C-018 | planned |
-| V4 API and web service | Authenticated, rate-limited, schema-validated API | C-017, C-018 | planned |
-| V6 Authentication | Constant-time secret comparison, no default credentials | C-017 | planned |
-| V8 Authorization | Only authenticated clients submit telemetry | C-017 | planned |
-| V13 Configuration | Secure defaults, no debug in production, non-root container | C-025 | planned |
-| V14 Data protection | No secrets or raw credentials in logs; telemetry minimised in prompts | C-019, C-024 | planned |
+| V1 Encoding and sanitization | Untrusted input is validated and never interpreted | C-001, C-013 | met |
+| V2 Validation and business logic | Input has shape, size and rate limits | C-013, C-018 | met |
+| V4 API and web service | Authenticated, rate-limited, schema-validated API | C-017, C-018 | met |
+| V6 Authentication | Constant-time secret comparison, no default credentials | C-017 | met |
+| V8 Authorization | Only authenticated clients submit telemetry | C-017 | met |
+| V13 Configuration | Secure defaults, no debug in production, non-root container | C-025 | partial — non-root image, read-only runtime and scanning planned |
+| V14 Data protection | No secrets or raw credentials in logs; telemetry minimised in prompts | C-019, C-024 | partial — prompt minimisation and audit met, broader data controls planned |
 | V15 Secure coding and architecture | Threat model, layered controls, fail-safe behaviour | C-003, C-027 | met |
-| V16 Logging and error handling | Decisions auditable; errors do not leak internals | C-024 | planned |
+| V16 Logging and error handling | Decisions auditable; errors do not leak internals | C-024 | met |
 
 ## Honest scope notes
 
-- The repository has **no web application** until the ingest service lands, so
-  the API and authentication rows are `planned`, not claimed.
+- The ingest service is a **real, tested HTTP surface**, so the API and
+authentication rows are `met` on unit/API tests; DAST is a separate, scheduled
+  gate rather than a claim made here.
 - `met` means the control exists and its evidence path is checked by
   `tests/test_security_governance.py`; it does not mean an external audit.
 - Coverage is generated from the threat model, so a threat with only planned

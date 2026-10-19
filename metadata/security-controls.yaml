@@ -79,7 +79,7 @@ controls:
   - id: C-013
     title: Input size and resource limits
     threats: [T-002, T-008]
-    status: planned
+    status: implemented
     verify: make security-api-check
     evidence: services/ingest/app.py
   - id: C-014
@@ -103,39 +103,39 @@ controls:
   - id: C-017
     title: API key authentication with constant-time comparison
     threats: [T-007]
-    status: planned
+    status: implemented
     verify: make security-api-check
     evidence: services/ingest/auth.py
   - id: C-018
     title: Rate limiting and request body caps
     threats: [T-008]
-    status: planned
+    status: implemented
     verify: make security-api-check
     evidence: services/ingest/app.py
   - id: C-019
     title: Prompt-injection isolation and adversarial tests
     threats: [T-009]
-    status: planned
+    status: implemented
     verify: make security-ai-check
-    evidence: services/ingest/tests/test_ai_security.py
+    evidence: tests/test_ingest_ai_security.py
   - id: C-020
     title: Model output schema validation, never executed
     threats: [T-010]
-    status: planned
+    status: implemented
     verify: make security-ai-check
     evidence: services/ingest/ai.py
   - id: C-021
     title: No tool access and mandatory human review
     threats: [T-011]
-    status: planned
+    status: implemented
     verify: make security-ai-check
     evidence: services/ingest/ai.py
   - id: C-022
     title: LLM adversarial test suite (OWASP LLM Top 10)
     threats: [T-009, T-010, T-011]
-    status: planned
+    status: implemented
     verify: make security-ai-check
-    evidence: services/ingest/tests/test_ai_security.py
+    evidence: tests/test_ingest_ai_security.py
   - id: C-023
     title: Detection evasion testing
     threats: [T-012]
@@ -145,7 +145,7 @@ controls:
   - id: C-024
     title: Structured audit log for API and triage decisions
     threats: [T-013]
-    status: planned
+    status: implemented
     verify: make security-api-check
     evidence: services/ingest/app.py
   - id: C-025

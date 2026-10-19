@@ -56,9 +56,10 @@ a control, so the model describes the adversary rather than the mitigation.
 
 Threats whose only controls are `planned` are listed in the generated security
 coverage report. They are accepted for now and tracked, not assumed handled. The
-main residual areas are continuous SCA, artifact signing, the ingest API's
-authentication and rate limiting, and the AI triage controls — all scheduled in
-the security workstream.
+ingest API and AI triage controls (authentication, limits, schema validation,
+prompt isolation, human review) are implemented and tested; the main residual
+areas are continuous SCA and hash pinning, artifact signing/SBOM, container
+scanning, and detection-evasion testing.
 
 ## Maintaining the model
 
