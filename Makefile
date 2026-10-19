@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust security-preflight demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate metrics check clean
+.PHONY: help setup lint validate test rust security-preflight security-api-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate metrics check clean
 
 help:
 	@echo "Targets:"
@@ -19,6 +19,7 @@ help:
 	@echo "  test             Run the rule and tooling test suite"
 	@echo "  rust             Format-check, lint and test the Rust protocol decoders"
 	@echo "  security-preflight  Offline security governance and supply-chain checks"
+	@echo "  security-api-check  Ingest API and AI triage security tests"
 	@echo "  demo             Offline decoder -> Sigma rule -> SIEM query walkthrough"
 	@echo "  convert          Convert Sigma rules to the BACKEND query language (default: loki)"
 	@echo "  convert-all      Convert to loki, opensearch, splunk and sentinel"
@@ -54,6 +55,9 @@ validate: setup
 
 test: setup
 	$(PYTEST)
+
+security-api-check: setup
+	$(PYTEST) tests/test_ingest_api.py tests/test_ingest_ai_security.py
 
 security-preflight: setup
 	$(PY) tools/check_action_pins.py

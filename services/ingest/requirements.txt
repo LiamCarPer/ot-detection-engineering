@@ -1,0 +1,5 @@
+# Ingest service runtime only (the test client lives in the root dev toolchain).
+fastapi==0.149.0
+uvicorn==0.54.0
+jsonschema==4.26.0
+pydantic==2.14.1

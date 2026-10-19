@@ -16,3 +16,9 @@ jsonschema==4.26.0
 ruff==0.16.7
 hypothesis==6.170.2
 scapy==2.7.0
+
+# Ingest service (services/ingest).
+fastapi==0.149.0
+uvicorn==0.54.0
+httpx==0.28.1
+pydantic==2.14.1
