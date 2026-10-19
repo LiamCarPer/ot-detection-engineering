@@ -86,10 +86,14 @@ def match_conduit(
         if conduit is None:
             return False
         ports = conduit.get("ports")
-        port = event.get("dst_port")
-        if not ports or port is None:
+        try:
+            port = int(event.get("dst_port"))
+        except (TypeError, ValueError):
+            # A flow without a numeric port cannot be judged against the conduit.
             return False
-        return int(port) not in ports
+        if not ports:
+            return False
+        return port not in ports
     raise UnsupportedConduitError(f"unsupported conduit type: {kind!r}")
 
 

@@ -67,10 +67,14 @@ def match_baseline(
             return False
         return [src, dst] not in baseline.get("pairs", [])
     if kind == "new_function_code":
-        code = event.get("function_code")
         event_service = event.get("service")
-        if code is None or event_service is None:
+        if event_service is None:
+            return False
+        try:
+            code = int(event.get("function_code"))
+        except (TypeError, ValueError):
+            # A non-numeric function code is not something this rule can judge.
             return False
         known = baseline.get("functions", {}).get(event_service, [])
-        return int(code) not in known
+        return code not in known
     raise UnsupportedBaselineError(f"unsupported baseline type: {kind!r}")
