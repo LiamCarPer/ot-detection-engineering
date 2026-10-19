@@ -1,0 +1,154 @@
+# Threat model for the detection pipeline, the ingest service and the AI triage
+# endpoint. This is the source of truth: metadata/security-controls.yaml maps
+# each threat to the control that mitigates it, and the governance test refuses
+# an orphaned threat or a control with no evidence.
+version: 1
+scope: >-
+  The repository as a product: untrusted protocol input to the decoders, the
+  telemetry pipeline and its collector, the rule corpus and conversion pipeline,
+  the release bundle, the ingest API, the AI-assisted triage endpoint, and the
+  CI/CD path that ships all of it.
+assets:
+  - id: decode-path
+    description: Rust DNP3/S7comm/OPC UA parsers reading attacker-controlled bytes.
+  - id: telemetry-pipeline
+    description: Collectors, normalized contract and the policy/baseline artifacts.
+  - id: rule-corpus
+    description: Sigma/native rules, fixtures and generated SIEM queries.
+  - id: release-bundle
+    description: deploy/ artifacts and the provenance manifest.
+  - id: ingest-api
+    description: HTTP service that accepts and validates telemetry.
+  - id: ai-triage
+    description: LLM-assisted triage of an alert, with a stub provider in CI.
+  - id: ci-supply-chain
+    description: GitHub Actions, Python/Rust dependencies and container images.
+trust_boundaries:
+  - id: sensor-to-collector
+    description: Untrusted network telemetry crosses into the collector.
+  - id: client-to-api
+    description: An untrusted client crosses into the ingest API.
+  - id: log-to-model
+    description: Attacker-controlled log fields cross into the LLM prompt.
+  - id: ci-to-release
+    description: CI inputs (actions, dependencies, images) cross into a signed artifact.
+threats:
+  - id: T-001
+    title: A malformed protocol frame crashes or corrupts the decoder
+    framework: STRIDE
+    category: tampering
+    asset: decode-path
+    abuse_case: An attacker sends a short or malformed TPKT/DNP3 frame to a passive sensor.
+    controls: [C-001, C-002, C-016]
+  - id: T-002
+    title: Hostile input causes resource exhaustion in a parser
+    framework: STRIDE
+    category: denial-of-service
+    asset: decode-path
+    abuse_case: Oversized or deeply nested frames exhaust memory or CPU in the collector.
+    controls: [C-001, C-002, C-013]
+  - id: T-003
+    title: A dependency or toolchain component is compromised or vulnerable
+    framework: STRIDE
+    category: tampering
+    asset: ci-supply-chain
+    abuse_case: A typosquatted package or a vulnerable transitive dependency ships with the tool.
+    controls: [C-004, C-005, C-006, C-007]
+  - id: T-004
+    title: A compromised GitHub Action executes with repository credentials
+    framework: STRIDE
+    category: elevation-of-privilege
+    asset: ci-supply-chain
+    abuse_case: A mutable action tag is repointed at malicious code.
+    controls: [C-008, C-009]
+  - id: T-005
+    title: A credential or secret is committed to the repository
+    framework: STRIDE
+    category: information-disclosure
+    asset: ci-supply-chain
+    abuse_case: A developer commits an API key or token in code, fixtures or CI config.
+    controls: [C-010, C-011]
+  - id: T-006
+    title: A released artifact is substituted after generation
+    framework: STRIDE
+    category: tampering
+    asset: release-bundle
+    abuse_case: An attacker swaps a generated query or ruleset between build and install.
+    controls: [C-012, C-014]
+  - id: T-007
+    title: An unauthenticated or spoofed client submits telemetry
+    framework: STRIDE
+    category: spoofing
+    asset: ingest-api
+    abuse_case: A client without a valid key injects false events or probes the service.
+    controls: [C-004, C-017]
+  - id: T-008
+    title: A client floods the ingest API
+    framework: STRIDE
+    category: denial-of-service
+    asset: ingest-api
+    abuse_case: High request volume or oversized bodies exhaust the service.
+    controls: [C-013, C-018]
+  - id: T-009
+    title: Prompt injection through attacker-controlled log fields
+    framework: OWASP-LLM
+    category: prompt-injection
+    asset: ai-triage
+    abuse_case: A log line contains instructions that try to change the triage verdict.
+    controls: [C-019, C-022]
+  - id: T-010
+    title: Insecure handling of model output
+    framework: OWASP-LLM
+    category: insecure-output-handling
+    asset: ai-triage
+    abuse_case: The model returns a query or command that the system executes or trusts.
+    controls: [C-020, C-022]
+  - id: T-011
+    title: The model is given excessive agency
+    framework: OWASP-LLM
+    category: excessive-agency
+    asset: ai-triage
+    abuse_case: Triage can call tools, change rules or suppress alerts without a human.
+    controls: [C-021, C-022]
+  - id: T-012
+    title: Attacker traffic evades the committed detections
+    framework: STRIDE
+    category: evasion
+    asset: rule-corpus
+    abuse_case: An adversary changes a field or framing just enough to avoid every rule.
+    controls: [C-023]
+  - id: T-013
+    title: Security-relevant actions are not attributable
+    framework: STRIDE
+    category: repudiation
+    asset: ingest-api
+    abuse_case: A rejected or accepted request, or a triage decision, leaves no audit record.
+    controls: [C-024]
+  - id: T-014
+    title: The service container escapes or runs with excess privilege
+    framework: STRIDE
+    category: elevation-of-privilege
+    asset: ingest-api
+    abuse_case: A container that runs as root and mounts the host widens a compromise.
+    controls: [C-025, C-026]
+  - id: T-015
+    title: Security requirements and controls drift from the code
+    framework: NIST-SSDF
+    category: governance
+    asset: rule-corpus
+    abuse_case: A control is documented but no longer implemented or tested.
+    controls: [C-003, C-027]
+  - id: T-016
+    title: Unreviewed or untested logic regresses
+    framework: NIST-SSDF
+    category: governance
+    asset: telemetry-pipeline
+    abuse_case: A change passes review while breaking a security invariant.
+    controls: [C-011, C-015, C-028]
+  - id: T-017
+    title: A vulnerability is reported with no handling process
+    framework: NIST-SSDF
+    category: governance
+    asset: release-bundle
+    abuse_case: A researcher reports an issue and it is lost or disclosed without a fix.
+    controls: [C-029]

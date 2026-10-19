@@ -1,0 +1,15 @@
+# Default owner for everything.
+* @LiamCarPer
+
+# Security-sensitive paths require the security owner's review.
+/metadata/threat-model.yaml @LiamCarPer
+/metadata/security-controls.yaml @LiamCarPer
+/SECURITY.md @LiamCarPer
+/docs/THREAT_MODEL.md @LiamCarPer
+/docs/SECURITY_REQUIREMENTS.md @LiamCarPer
+/docs/SECURE_CODE_REVIEW.md @LiamCarPer
+/docs/VULNERABILITY_MANAGEMENT.md @LiamCarPer
+/.github/workflows/ @LiamCarPer
+/.pre-commit-config.yaml @LiamCarPer
+/tools/*-dpi/ @LiamCarPer
+/services/ @LiamCarPer

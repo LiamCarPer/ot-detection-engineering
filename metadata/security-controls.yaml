@@ -1,0 +1,180 @@
+# Security control register. Each control maps to the threats it mitigates and
+# to the thing that proves it exists. The governance test refuses an orphaned
+# threat, a control with no threat, a duplicate id, or an implemented control
+# whose evidence path is missing.
+version: 1
+controls:
+  - id: C-001
+    title: Bounds-checked, panic-resistant protocol decoders
+    threats: [T-001, T-002]
+    status: implemented
+    verify: make rust
+    evidence: tools/dnp3-dpi/tests/robustness.rs
+  - id: C-002
+    title: Fuzzing campaign for the decoders
+    threats: [T-001, T-002]
+    status: planned
+    verify: make security-fuzz
+    evidence: security/run/fuzz.sh
+  - id: C-003
+    title: Threat and control coverage governance
+    threats: [T-015]
+    status: implemented
+    verify: make security-preflight
+    evidence: tests/test_security_governance.py
+  - id: C-004
+    title: Pinned Python dependencies and Rust toolchain
+    threats: [T-003, T-007]
+    status: implemented
+    verify: make check
+    evidence: requirements.txt
+  - id: C-005
+    title: Software composition analysis (pip-audit, cargo-deny)
+    threats: [T-003]
+    status: planned
+    verify: make security-sca
+    evidence: security/run/sca.sh
+  - id: C-006
+    title: Automated dependency updates
+    threats: [T-003]
+    status: implemented
+    verify: n/a
+    evidence: .github/dependabot.yml
+  - id: C-007
+    title: Hash-pinned Python dependencies
+    threats: [T-003]
+    status: planned
+    verify: make security-sca
+    evidence: security/run/sca.sh
+  - id: C-008
+    title: GitHub Actions pinned by commit SHA
+    threats: [T-004]
+    status: implemented
+    verify: make security-preflight
+    evidence: .github/workflows/ci.yml
+  - id: C-009
+    title: CI workflow security analysis
+    threats: [T-004]
+    status: planned
+    verify: make security-actions
+    evidence: security/run/actions.sh
+  - id: C-010
+    title: Secret scanning
+    threats: [T-005]
+    status: planned
+    verify: make security-secrets
+    evidence: security/run/secrets.sh
+  - id: C-011
+    title: Pre-commit security hooks
+    threats: [T-005, T-016]
+    status: implemented
+    verify: pre-commit run --all-files
+    evidence: .pre-commit-config.yaml
+  - id: C-012
+    title: Deployment artifact digest manifest
+    threats: [T-006]
+    status: implemented
+    verify: make deploy-check
+    evidence: deploy/manifest.json
+  - id: C-013
+    title: Input size and resource limits
+    threats: [T-002, T-008]
+    status: planned
+    verify: make security-api-check
+    evidence: services/ingest/app.py
+  - id: C-014
+    title: Signed release provenance
+    threats: [T-006]
+    status: planned
+    verify: make security-sbom
+    evidence: security/run/sbom.sh
+  - id: C-015
+    title: Property-based tests for the security-critical library
+    threats: [T-016]
+    status: implemented
+    verify: make test
+    evidence: tests/test_properties.py
+  - id: C-016
+    title: Truncation and mutation robustness tests
+    threats: [T-001]
+    status: implemented
+    verify: make rust
+    evidence: tools/s7comm-dpi/tests/robustness.rs
+  - id: C-017
+    title: API key authentication with constant-time comparison
+    threats: [T-007]
+    status: planned
+    verify: make security-api-check
+    evidence: services/ingest/auth.py
+  - id: C-018
+    title: Rate limiting and request body caps
+    threats: [T-008]
+    status: planned
+    verify: make security-api-check
+    evidence: services/ingest/app.py
+  - id: C-019
+    title: Prompt-injection isolation and adversarial tests
+    threats: [T-009]
+    status: planned
+    verify: make security-ai-check
+    evidence: services/ingest/tests/test_ai_security.py
+  - id: C-020
+    title: Model output schema validation, never executed
+    threats: [T-010]
+    status: planned
+    verify: make security-ai-check
+    evidence: services/ingest/ai.py
+  - id: C-021
+    title: No tool access and mandatory human review
+    threats: [T-011]
+    status: planned
+    verify: make security-ai-check
+    evidence: services/ingest/ai.py
+  - id: C-022
+    title: LLM adversarial test suite (OWASP LLM Top 10)
+    threats: [T-009, T-010, T-011]
+    status: planned
+    verify: make security-ai-check
+    evidence: services/ingest/tests/test_ai_security.py
+  - id: C-023
+    title: Detection evasion testing
+    threats: [T-012]
+    status: planned
+    verify: make evasion-check
+    evidence: tools/evasion_check.py
+  - id: C-024
+    title: Structured audit log for API and triage decisions
+    threats: [T-013]
+    status: planned
+    verify: make security-api-check
+    evidence: services/ingest/app.py
+  - id: C-025
+    title: Non-root, read-only service container
+    threats: [T-014]
+    status: planned
+    verify: make security-container
+    evidence: services/ingest/Dockerfile
+  - id: C-026
+    title: Container image scanning
+    threats: [T-014]
+    status: planned
+    verify: make security-container
+    evidence: security/run/container.sh
+  - id: C-027
+    title: Security requirements mapped to NIST SSDF and OWASP ASVS
+    threats: [T-015]
+    status: implemented
+    verify: n/a
+    evidence: docs/SECURITY_REQUIREMENTS.md
+  - id: C-028
+    title: Secure code review checklist
+    threats: [T-016]
+    status: implemented
+    verify: n/a
+    evidence: docs/SECURE_CODE_REVIEW.md
+  - id: C-029
+    title: Vulnerability disclosure and remediation SLA
+    threats: [T-017]
+    status: implemented
+    verify: n/a
+    evidence: SECURITY.md
