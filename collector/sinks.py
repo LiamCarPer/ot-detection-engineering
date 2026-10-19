@@ -9,10 +9,11 @@ agree on routing.
 from __future__ import annotations
 
 import json
-import urllib.request
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from typing import Any
+
+from tools.otde.http import open_http
 
 
 def to_jsonl(events: Iterable[dict[str, Any]]) -> str:
@@ -52,11 +53,11 @@ def to_loki_streams(events: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
 def push_loki(streams: list[dict[str, Any]], url: str, timeout: float = 10.0) -> None:
     """Push pre-built streams to a Loki push endpoint."""
     payload = json.dumps({"streams": streams}).encode("utf-8")
-    request = urllib.request.Request(
+    with open_http(
         url,
         data=payload,
         headers={"Content-Type": "application/json"},
         method="POST",
-    )
-    with urllib.request.urlopen(request, timeout=timeout) as response:
+        timeout=timeout,
+    ) as response:
         response.read()

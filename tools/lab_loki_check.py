@@ -27,7 +27,6 @@ import os
 import sys
 import time
 import urllib.parse
-import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -40,6 +39,7 @@ from tools.otde.evidence import (  # noqa: E402
     LAB_EVENT_JOBS,
     LAB_NDR_SERVICES,
 )
+from tools.otde.http import open_http  # noqa: E402
 
 EVIDENCE_DIR = REPO_ROOT / "deploy" / "evidence" / "lab-loki"
 SUMMARY_PATH = EVIDENCE_DIR / "summary.json"
@@ -51,7 +51,7 @@ SAMPLE_LIMIT = 5
 
 
 def get_json(url: str) -> dict:
-    with urllib.request.urlopen(url, timeout=10) as response:
+    with open_http(url, timeout=10) as response:
         return json.loads(response.read().decode("utf-8"))
 
 

@@ -19,7 +19,6 @@ import subprocess
 import sys
 import time
 import urllib.error
-import urllib.request
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +26,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from tools.otde.evidence import EXPECTED_LOKI_ALERTS  # noqa: E402
+from tools.otde.http import open_http  # noqa: E402
 
 STACK_DIR = REPO_ROOT / "tests" / "loki-stack"
 COMPOSE_FILE = STACK_DIR / "docker-compose.yml"
@@ -234,7 +234,7 @@ def _wait_for(url: str, timeout: float) -> None:
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         try:
-            with urllib.request.urlopen(url, timeout=2) as response:
+            with open_http(url, timeout=2) as response:
                 if response.status < 500:
                     return
         except (urllib.error.URLError, ConnectionError):
@@ -256,13 +256,13 @@ def _push(entries: list[tuple[str, str]]) -> None:
             ]
         }
     )
-    request = urllib.request.Request(
+    with open_http(
         LOKI_PUSH,
         data=payload.encode("utf-8"),
         headers={"Content-Type": "application/json"},
         method="POST",
-    )
-    with urllib.request.urlopen(request, timeout=10) as response:
+        timeout=10,
+    ) as response:
         response.read()
 
 
