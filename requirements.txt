@@ -15,7 +15,7 @@ pytest==9.1.1
 jsonschema==4.26.0
 ruff==0.16.7
 hypothesis==6.170.2
-scapy==2.7.0
+scapy==2.8.0
 
 # Ingest service (services/ingest).
 fastapi==0.149.0
