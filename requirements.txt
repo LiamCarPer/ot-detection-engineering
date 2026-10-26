@@ -13,7 +13,7 @@ PyYAML==6.0.3
 # Development / test tooling (see also: pip install -e ".[dev]").
 pytest==9.1.1
 jsonschema==4.26.0
-ruff==0.16.7
+ruff==0.17.2
 hypothesis==6.170.2
 scapy==2.7.0
 
