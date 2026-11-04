@@ -1,0 +1,35 @@
+title: Enterprise Host Probing Multiple Control Zone Ports
+id: c1a7f9e2-5d48-4b36-8e90-2f4c6a8b1d57
+status: experimental
+description: |
+  Detects one enterprise host whose traffic to the control zone is dropped across
+  several distinct destination ports inside a short window. A single drop is a
+  policy violation covered by the first-order rule; a sweep of many ports is
+  connection enumeration, mapping which controller services are reachable before
+  choosing a target.
+
+  The correlation references the cross-zone drop rule, so ICMP health checks and
+  accepted flows are filtered out before the port count is taken.
+references:
+  - https://attack.mitre.org/techniques/T0840/
+author: Liam Carvajal
+date: 2026-11-04
+correlation:
+  generate: true
+  type: value_count
+  rules:
+    - aaaaba9c-627e-4dfb-adda-4d719c81cb89
+  group-by:
+    - src_ip
+  timespan: 5m
+  condition:
+    field: dst_port
+    gte: 6
+fields:
+  - src_ip
+falsepositives:
+  - A vulnerability scanner run from the enterprise against a documented target range
+  - A misconfigured asset retrying several industrial ports after a firmware change
+level: medium
+tags:
+  - attack.t0840

@@ -1,0 +1,12 @@
+cases:
+  - name: a macro-enabled document carrying an embedded PE
+    expect: match
+    file: tests/yara/samples/malicious/ews_macro_with_pe.docm
+
+  - name: a macro-enabled document with no embedded binary
+    expect: no_match
+    file: tests/yara/samples/benign/ews_macro_clean.docm
+
+  - name: a document with an embedded PE but no macro project
+    expect: no_match
+    file: tests/yara/samples/benign/ews_document_with_pe.docm

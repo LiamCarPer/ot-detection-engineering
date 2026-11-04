@@ -1,0 +1,51 @@
+cases:
+  - name: a controller rejects an invalid data address
+    expect: match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-05T09:04:00Z"
+      direction: response
+      function_code: 131
+      exception_code: 2
+      src_ip: 172.21.0.10
+      dst_ip: 172.22.0.10
+      unit_id: 1
+
+  - name: a controller reports a server failure
+    expect: match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-05T09:04:05Z"
+      direction: response
+      function_code: 131
+      exception_code: 4
+      src_ip: 172.21.0.11
+      dst_ip: 172.22.0.10
+      unit_id: 1
+
+  - name: a normal response carries no exception code
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-05T09:04:10Z"
+      direction: response
+      function_code: 3
+      src_ip: 172.21.0.10
+      dst_ip: 172.22.0.10
+      unit_id: 1
+
+  - name: a request is not a response even if an exception code is present
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-05T09:04:15Z"
+      direction: request
+      function_code: 3
+      exception_code: 2
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1

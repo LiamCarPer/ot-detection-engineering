@@ -1,0 +1,35 @@
+title: Modbus Exception Flood Toward An Operator Interface
+id: f0d5c3a8-7b29-4e61-8a34-5c9f1d6b2e47
+status: experimental
+description: |
+  Detects a sustained stream of Modbus exception responses toward one operator
+  interface. The controller is answering, but rejecting every request, so the HMI
+  cannot read the process state it renders. That is denial of view from the
+  network layer: the operator loses visibility without the controller going
+  offline.
+
+  The correlation references the exception-response rule and groups by the
+  destination, so a single misbehaving client does not aggregate with exceptions
+  aimed at other HMIs.
+references:
+  - https://attack.mitre.org/techniques/T0815/
+author: Liam Carvajal
+date: 2026-11-04
+correlation:
+  generate: true
+  type: event_count
+  rules:
+    - 5a3e8c27-1d64-4f9b-b052-7c6d2e9a4f18
+  group-by:
+    - dst_ip
+  timespan: 5m
+  condition:
+    gte: 10
+fields:
+  - dst_ip
+falsepositives:
+  - A client polling an unsupported register range in a tight loop
+  - A controller rejecting requests while it recovers from a fault
+level: high
+tags:
+  - attack.t0815

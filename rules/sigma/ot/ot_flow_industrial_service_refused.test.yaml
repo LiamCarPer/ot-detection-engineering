@@ -1,0 +1,59 @@
+cases:
+  - name: a Modbus connection is refused
+    expect: match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:01:00Z"
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      dst_port: 502
+      proto: tcp
+      flow_state: REJ
+
+  - name: an S7 connection is reset by the controller
+    expect: match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:01:05Z"
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.11
+      dst_port: 102
+      proto: tcp
+      flow_state: RSTO
+
+  - name: a normal Modbus session is established
+    expect: no_match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:01:10Z"
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.10
+      dst_port: 502
+      proto: tcp
+      flow_state: SF
+
+  - name: a refused HTTPS connection is not an industrial service
+    expect: no_match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:01:15Z"
+      src_ip: 172.24.0.10
+      dst_ip: 172.25.0.2
+      dst_port: 443
+      proto: tcp
+      flow_state: REJ
+
+  - name: a refused flow with no destination port cannot be attributed to a service
+    expect: no_match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:01:20Z"
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      proto: tcp
+      flow_state: REJ

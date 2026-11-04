@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_opcua_node_enumeration.yml
+| search source=ot_ndr-opcua-* | where direction="request" AND (opcua_service in ("BrowseRequest", "BrowseNextRequest")) | stats count() as event_count by secure_channel_id | where event_count >= 20

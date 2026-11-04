@@ -1,0 +1,36 @@
+title: Modbus Exception Response
+id: 5a3e8c27-1d64-4f9b-b052-7c6d2e9a4f18
+status: experimental
+description: |
+  Detects a Modbus exception response: the controller answered, but rejected the
+  request. One exception is a normal response to an invalid or unsupported
+  request; a sustained stream of exceptions toward an operator interface is a
+  denial-of-view signal, because the HMI can no longer read the process state it
+  renders.
+
+  This is the constituent signal for the exception-flood correlation. It is
+  deliberately low severity on its own.
+references:
+  - https://attack.mitre.org/techniques/T0815/
+author: Liam Carvajal
+date: 2026-11-04
+logsource:
+  product: ot_ndr
+  service: modbus
+detection:
+  selection_direction:
+    direction: response
+  selection_exception:
+    exception_code|exists: true
+  condition: selection_direction and selection_exception
+fields:
+  - src_ip
+  - dst_ip
+  - function_code
+  - exception_code
+falsepositives:
+  - A client polling an unsupported register or function
+  - A controller rejecting requests while it is starting up
+level: low
+tags:
+  - attack.t0815

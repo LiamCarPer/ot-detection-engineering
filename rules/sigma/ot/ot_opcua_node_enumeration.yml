@@ -1,0 +1,35 @@
+title: OPC UA Address Space Enumeration
+id: e7b2d9c4-6a15-4f83-9c47-1d3e8b5f2a96
+status: experimental
+description: |
+  Detects one OPC UA session issuing many browse requests inside a short window.
+  A client browses once when it populates its address space view; a sustained
+  browse is point-and-tag identification, walking the node tree to enumerate the
+  process before acting on it.
+
+  The correlation references the browse rule and groups by secure channel, which
+  is the session identity the decoder exposes. A client that reconnects for every
+  request would fall below the per-session count; pair the rule with the first-
+  order browse alert for that case.
+references:
+  - https://attack.mitre.org/techniques/T0861/
+author: Liam Carvajal
+date: 2026-11-04
+correlation:
+  generate: true
+  type: event_count
+  rules:
+    - 71de3736-4142-435e-9f87-70e5c08bd872
+  group-by:
+    - secure_channel_id
+  timespan: 5m
+  condition:
+    gte: 20
+fields:
+  - secure_channel_id
+falsepositives:
+  - An OPC UA client refreshing a large address space after a server restart
+  - An asset inventory or commissioning tool walking every node once
+level: medium
+tags:
+  - attack.t0861

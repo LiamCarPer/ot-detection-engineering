@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_flow_large_transfer.yml
+source=ot_flow-flow-* | where bytes>=5000000

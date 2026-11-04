@@ -1,0 +1,36 @@
+title: Modbus Register Enumeration From One Host
+id: d4c8b1f5-9e27-4a63-b7d1-8c5f2a9e3b60
+status: experimental
+description: |
+  Detects one host reading many distinct Modbus registers inside a short window.
+  Reading a few registers is polling; walking a large slice of the register map
+  is automated collection, harvesting process values before an operation or for
+  intelligence.
+
+  The correlation references the unauthorized process-read rule, so an approved
+  operator interface is filtered out. A host on the allowlist that has been
+  compromised would need a separate allowlist entry removed, which is a
+  deliberate change rather than a silent gap.
+references:
+  - https://attack.mitre.org/techniques/T0802/
+author: Liam Carvajal
+date: 2026-11-04
+correlation:
+  generate: true
+  type: value_count
+  rules:
+    - db9f2530-dbb5-4aa7-8bcf-b5e59ea1c9db
+  group-by:
+    - src_ip
+  timespan: 5m
+  condition:
+    field: register
+    gte: 20
+fields:
+  - src_ip
+falsepositives:
+  - A commissioning or diagnostic tool reading the full register map
+  - A monitoring collector added to the reader allowlist only after this rule was tuned
+level: medium
+tags:
+  - attack.t0802

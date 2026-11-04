@@ -1,0 +1,997 @@
+windows:
+- name: one unauthorized host reads twenty-five distinct registers in four minutes
+  expect: match
+  events:
+  - timestamp: '2026-11-06T10:00:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 100
+  - timestamp: '2026-11-06T10:00:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 101
+  - timestamp: '2026-11-06T10:00:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 102
+  - timestamp: '2026-11-06T10:00:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 103
+  - timestamp: '2026-11-06T10:00:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 104
+  - timestamp: '2026-11-06T10:00:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 105
+  - timestamp: '2026-11-06T10:01:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 106
+  - timestamp: '2026-11-06T10:01:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 107
+  - timestamp: '2026-11-06T10:01:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 108
+  - timestamp: '2026-11-06T10:01:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 109
+  - timestamp: '2026-11-06T10:01:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 110
+  - timestamp: '2026-11-06T10:01:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 111
+  - timestamp: '2026-11-06T10:02:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 112
+  - timestamp: '2026-11-06T10:02:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 113
+  - timestamp: '2026-11-06T10:02:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 114
+  - timestamp: '2026-11-06T10:02:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 115
+  - timestamp: '2026-11-06T10:02:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 116
+  - timestamp: '2026-11-06T10:02:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 117
+  - timestamp: '2026-11-06T10:03:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 118
+  - timestamp: '2026-11-06T10:03:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 119
+  - timestamp: '2026-11-06T10:03:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 120
+  - timestamp: '2026-11-06T10:03:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 121
+  - timestamp: '2026-11-06T10:03:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 122
+  - timestamp: '2026-11-06T10:03:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 123
+  - timestamp: '2026-11-06T10:04:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.20
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 124
+- name: nineteen registers is below the threshold
+  expect: no_match
+  events:
+  - timestamp: '2026-11-06T11:00:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 200
+  - timestamp: '2026-11-06T11:00:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 201
+  - timestamp: '2026-11-06T11:00:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 202
+  - timestamp: '2026-11-06T11:00:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 203
+  - timestamp: '2026-11-06T11:00:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 204
+  - timestamp: '2026-11-06T11:00:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 205
+  - timestamp: '2026-11-06T11:01:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 206
+  - timestamp: '2026-11-06T11:01:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 207
+  - timestamp: '2026-11-06T11:01:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 208
+  - timestamp: '2026-11-06T11:01:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 209
+  - timestamp: '2026-11-06T11:01:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 210
+  - timestamp: '2026-11-06T11:01:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 211
+  - timestamp: '2026-11-06T11:02:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 212
+  - timestamp: '2026-11-06T11:02:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 213
+  - timestamp: '2026-11-06T11:02:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 214
+  - timestamp: '2026-11-06T11:02:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 215
+  - timestamp: '2026-11-06T11:02:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 216
+  - timestamp: '2026-11-06T11:02:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 217
+  - timestamp: '2026-11-06T11:03:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.21
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 218
+- name: an approved reader is filtered out by the referenced rule
+  expect: no_match
+  events:
+  - timestamp: '2026-11-06T12:00:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 300
+  - timestamp: '2026-11-06T12:00:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 301
+  - timestamp: '2026-11-06T12:00:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 302
+  - timestamp: '2026-11-06T12:00:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 303
+  - timestamp: '2026-11-06T12:00:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 304
+  - timestamp: '2026-11-06T12:00:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 305
+  - timestamp: '2026-11-06T12:01:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 306
+  - timestamp: '2026-11-06T12:01:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 307
+  - timestamp: '2026-11-06T12:01:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 308
+  - timestamp: '2026-11-06T12:01:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 309
+  - timestamp: '2026-11-06T12:01:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 310
+  - timestamp: '2026-11-06T12:01:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 311
+  - timestamp: '2026-11-06T12:02:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 312
+  - timestamp: '2026-11-06T12:02:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 313
+  - timestamp: '2026-11-06T12:02:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 314
+  - timestamp: '2026-11-06T12:02:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 315
+  - timestamp: '2026-11-06T12:02:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 316
+  - timestamp: '2026-11-06T12:02:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 317
+  - timestamp: '2026-11-06T12:03:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 318
+  - timestamp: '2026-11-06T12:03:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 319
+  - timestamp: '2026-11-06T12:03:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 320
+  - timestamp: '2026-11-06T12:03:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 321
+  - timestamp: '2026-11-06T12:03:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 322
+  - timestamp: '2026-11-06T12:03:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 323
+  - timestamp: '2026-11-06T12:04:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.22.0.10
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 324
+- name: twenty registers are read but spread beyond the five-minute window
+  expect: no_match
+  events:
+  - timestamp: '2026-11-06T13:00:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 0
+  - timestamp: '2026-11-06T13:00:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 20
+  - timestamp: '2026-11-06T13:00:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 40
+  - timestamp: '2026-11-06T13:01:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 60
+  - timestamp: '2026-11-06T13:01:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 80
+  - timestamp: '2026-11-06T13:01:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 100
+  - timestamp: '2026-11-06T13:02:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 120
+  - timestamp: '2026-11-06T13:02:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 140
+  - timestamp: '2026-11-06T13:02:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 160
+  - timestamp: '2026-11-06T13:03:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 180
+  - timestamp: '2026-11-06T13:03:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 200
+  - timestamp: '2026-11-06T13:03:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 220
+  - timestamp: '2026-11-06T13:04:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 240
+  - timestamp: '2026-11-06T13:04:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 260
+  - timestamp: '2026-11-06T13:04:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 280
+  - timestamp: '2026-11-06T13:05:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 300
+  - timestamp: '2026-11-06T13:05:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 320
+  - timestamp: '2026-11-06T13:05:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 340
+  - timestamp: '2026-11-06T13:06:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 360
+  - timestamp: '2026-11-06T13:06:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.22
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 380
+- name: two hosts each read ten registers
+  expect: no_match
+  events:
+  - timestamp: '2026-11-06T14:00:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.23
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 400
+  - timestamp: '2026-11-06T14:00:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.23
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 401
+  - timestamp: '2026-11-06T14:00:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.23
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 402
+  - timestamp: '2026-11-06T14:00:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.23
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 403
+  - timestamp: '2026-11-06T14:00:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.23
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 404
+  - timestamp: '2026-11-06T14:00:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.23
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 405
+  - timestamp: '2026-11-06T14:01:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.23
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 406
+  - timestamp: '2026-11-06T14:01:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.23
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 407
+  - timestamp: '2026-11-06T14:01:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.23
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 408
+  - timestamp: '2026-11-06T14:01:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.23
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 409
+  - timestamp: '2026-11-06T14:00:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.24
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 500
+  - timestamp: '2026-11-06T14:00:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.24
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 501
+  - timestamp: '2026-11-06T14:00:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.24
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 502
+  - timestamp: '2026-11-06T14:00:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.24
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 503
+  - timestamp: '2026-11-06T14:00:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.24
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 504
+  - timestamp: '2026-11-06T14:00:50Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.24
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 505
+  - timestamp: '2026-11-06T14:01:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.24
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 506
+  - timestamp: '2026-11-06T14:01:10Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.24
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 507
+  - timestamp: '2026-11-06T14:01:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.24
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 508
+  - timestamp: '2026-11-06T14:01:30Z'
+    product: ot_ndr
+    service: modbus
+    direction: request
+    function_code: 3
+    src_ip: 172.24.0.24
+    dst_ip: 172.21.0.10
+    unit_id: 1
+    register: 509

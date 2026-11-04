@@ -1,0 +1,123 @@
+windows:
+- name: one controller reaches three enterprise destinations in five minutes
+  expect: match
+  events:
+  - timestamp: '2026-11-06T01:00:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.40
+    dst_ip: 172.24.0.10
+    dst_port: 443
+  - timestamp: '2026-11-06T01:02:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.40
+    dst_ip: 172.24.0.11
+    dst_port: 80
+  - timestamp: '2026-11-06T01:04:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.40
+    dst_ip: 172.24.0.53
+    dst_port: 53
+- name: the same controller reaches only two destinations
+  expect: no_match
+  events:
+  - timestamp: '2026-11-06T02:00:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.41
+    dst_ip: 172.24.0.10
+    dst_port: 443
+  - timestamp: '2026-11-06T02:02:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.41
+    dst_ip: 172.24.0.11
+    dst_port: 80
+- name: the same destination is contacted three times
+  expect: no_match
+  events:
+  - timestamp: '2026-11-06T03:00:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.42
+    dst_ip: 172.24.0.10
+    dst_port: 443
+  - timestamp: '2026-11-06T03:02:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.42
+    dst_ip: 172.24.0.10
+    dst_port: 443
+  - timestamp: '2026-11-06T03:04:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.42
+    dst_ip: 172.24.0.10
+    dst_port: 443
+- name: three destinations are reached but spread beyond the ten-minute window
+  expect: no_match
+  events:
+  - timestamp: '2026-11-06T04:00:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.43
+    dst_ip: 172.24.0.10
+    dst_port: 443
+  - timestamp: '2026-11-06T04:05:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.43
+    dst_ip: 172.24.0.11
+    dst_port: 80
+  - timestamp: '2026-11-06T04:11:00Z'
+    product: ot_firewall
+    service: iptables
+    action: ACCEPT
+    proto: TCP
+    src_zone: control
+    dst_zone: it
+    src_ip: 172.21.0.43
+    dst_ip: 172.24.0.53
+    dst_port: 53

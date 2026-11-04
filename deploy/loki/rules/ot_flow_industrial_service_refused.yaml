@@ -1,0 +1,36 @@
+# source: rules/sigma/ot/ot_flow_industrial_service_refused.yml
+groups:
+- name: ot_flow_industrial_service_refused
+  rules:
+  - alert: Connection_Refused_Or_Reset_To_An_Industrial_Service
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a flow to an industrial service that was refused or reset
+        rather than
+
+        established. Repeated refusals or resets against a controller, outstation
+        or
+
+        OPC UA server are how a denial-of-control attempt looks from the network:
+        the
+
+        service is reachable but unable to accept work, or the peer is tearing down
+
+        every connection.
+
+
+        A single reset is routine. The rule exists so the flow layer records the
+
+        event; escalation should depend on volume or on correlation with a process
+
+        signal.
+
+        '
+      summary: Connection Refused Or Reset To An Industrial Service
+    expr: sum(count_over_time({job=~".+", service="flow"} | logfmt | (flow_state=~`(?i)^REJ$`
+      or flow_state=~`(?i)^S0$` or flow_state=~`(?i)^RSTO$` or flow_state=~`(?i)^RSTR$`)
+      and (dst_port=102 or dst_port=502 or dst_port=4840 or dst_port=20000) | line_format
+      "{{.src_ip}} {{.dst_ip}} {{.dst_port}} {{.flow_state}}" [1m])) or vector(0)
+      > 0
+    labels:
+      severity: medium

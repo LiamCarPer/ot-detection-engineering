@@ -10,13 +10,14 @@ sample.
 
 | File | Contents | Labels |
 | :--- | :--- | :--- |
-| `positives.jsonl` | 40 events, 2 per single-event Sigma rule | `rule` is the rule the event must fire |
+| `positives.jsonl` | 48 events, 2 per single-event Sigma rule | `rule` is the rule the event must fire |
 | `negatives.jsonl` | 1,000 generated benign events, seed `20260202` | none; every rule must stay silent |
-| `near-misses.jsonl` | 20 events, 1 per single-event rule | none; each differs from its rule in the decisive field |
-| `windows.jsonl` | 6 correlation windows (2 positive, 4 negative) | `expect` is `match` or `no_match` |
+| `near-misses.jsonl` | 24 events, 1 per single-event rule | none; each differs from its rule in the decisive field |
+| `windows.jsonl` | 26 correlation windows (12 positive, 14 negative) across six rules | `expect` is `match` or `no_match` |
 
 The negatives come from `tools/make_benign.py` with a **different seed** than the
-tuning corpus (`20260101`). The generator draws approved hosts, registers,
+tuning corpus (`20260101`), plus one authored near miss per rule (1,024 events
+per rule in total). The generator draws approved hosts, registers,
 volumes and session ids from a seeded RNG and shifts the clock by the seed, so
 the two corpora share no event. `tests/test_heldout.py` enforces that.
 
@@ -52,6 +53,7 @@ window-level and are reported separately from the event-level table.
 - The negatives are generated normal operation, not plant traffic. They bound
   false positives against modelled behaviour; they do not estimate field
   false-positive volume.
-- The correlation set is small (two positive windows), so its interval is wide.
+- The correlation set has two positive windows per rule, so its per-rule
+  interval is wide even though the aggregate is tighter.
 - A rule that fires on a near miss is reported, not hidden. The point of the
   set is to surface that, not to make the table green.

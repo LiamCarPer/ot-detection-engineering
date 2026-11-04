@@ -8,7 +8,10 @@ PowerShell script — not to be executable malware.
 - `malicious/` contains the marker patterns only. The "PE" is an `MZ` header, a
   `PE\0\0` signature and an inert string; nothing in it runs.
 - `benign/` contains the same kind of artifact without the marker pattern, so
-  each rule has a near-miss negative, not just an unrelated file.
+  each rule has a near-miss negative, not just an unrelated file. The Office
+  artifacts include a macro-enabled document with no binary and a document with
+  a binary but no macro project, so the three-way condition is exercised, not
+  just the presence of one marker.
 - `payloads/` is a synthetic protocol payload blob used to prove the same rules
   can scan a payload rather than a file.
 

@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_flow_large_transfer.yml
+bytes >= 5000000

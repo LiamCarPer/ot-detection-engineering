@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_modbus_exception_response.yml
+source=ot_ndr-modbus-* | where direction="response" AND isnotnull(exception_code)

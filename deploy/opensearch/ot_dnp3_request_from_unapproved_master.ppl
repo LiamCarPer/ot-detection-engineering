@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml
+source=ot_ndr-dnp3-* | where direction="request" AND isnotnull(src_ip) AND NOT (src_ip in ("172.21.0.20", "172.23.0.50", "172.22.0.10"))

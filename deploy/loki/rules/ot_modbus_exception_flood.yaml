@@ -1,0 +1,33 @@
+# source: rules/sigma/ot/ot_modbus_exception_flood.yml
+groups:
+- name: ot_modbus_exception_flood
+  rules:
+  - alert: Modbus_Exception_Flood_Toward_An_Operator_Interface
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a sustained stream of Modbus exception responses toward
+        one operator
+
+        interface. The controller is answering, but rejecting every request, so the
+        HMI
+
+        cannot read the process state it renders. That is denial of view from the
+
+        network layer: the operator loses visibility without the controller going
+
+        offline.
+
+
+        The correlation references the exception-response rule and groups by the
+
+        destination, so a single misbehaving client does not aggregate with exceptions
+
+        aimed at other HMIs.
+
+        '
+      summary: Modbus Exception Flood Toward An Operator Interface
+    expr: sum by (dst_ip) (count_over_time({job=~".+", service="modbus"} | logfmt
+      | direction=~`(?i)^response$` and exception_code!="" | line_format "{{.src_ip}}
+      {{.dst_ip}} {{.function_code}} {{.exception_code}}" [5m])) >= 10
+    labels:
+      severity: high

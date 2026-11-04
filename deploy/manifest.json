@@ -1,6 +1,12 @@
 {
   "artifacts": [
     {
+      "source": "rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml",
+      "source_sha256": "6c58af44186ed250a05bc44e62e3e7166b74c6518783d65cb68b52c5c0362a85",
+      "target": "loki/rules/ot_dnp3_request_from_unapproved_master.yaml",
+      "backend": "loki"
+    },
+    {
       "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
       "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
       "target": "loki/rules/ot_dnp3_restart_command.yaml",
@@ -19,9 +25,21 @@
       "backend": "loki"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_control_port_scan.yml",
+      "source_sha256": "0fe66dd4d587b5bab5ebb05d42220b073dde24016072c9417a3c392ab249f393",
+      "target": "loki/rules/ot_firewall_control_port_scan.yaml",
+      "backend": "loki"
+    },
+    {
       "source": "rules/sigma/ot/ot_firewall_control_zone_egress.yml",
       "source_sha256": "d63e2e04d929f54a7829cc7a4e9d326ad8d60d8995e204d4c26a54c82cbb60c2",
       "target": "loki/rules/ot_firewall_control_zone_egress.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_firewall_control_zone_proxy.yml",
+      "source_sha256": "f194ac69cb97429e19c4eaf17eeba67ee20508a67dbd04ee27fcdf662a405531",
+      "target": "loki/rules/ot_firewall_control_zone_proxy.yaml",
       "backend": "loki"
     },
     {
@@ -37,6 +55,18 @@
       "backend": "loki"
     },
     {
+      "source": "rules/sigma/ot/ot_flow_industrial_service_refused.yml",
+      "source_sha256": "7034dbcecd49b0103ebc2406e07b843409e1fd17f1ab91989f954a9eb3d3cc9d",
+      "target": "loki/rules/ot_flow_industrial_service_refused.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_flow_large_transfer.yml",
+      "source_sha256": "5050e3a1ff4abcae03bce7c94c63d55a4b4796c2746801f2c26a54245d442556",
+      "target": "loki/rules/ot_flow_large_transfer.yaml",
+      "backend": "loki"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
       "source_sha256": "1a431bad5e9a45bf43a0240d38e008ddc31f9dc6fc08dc80c2fc1d2e2f935410",
       "target": "loki/rules/ot_modbus_control_asset_enumeration.yaml",
@@ -49,6 +79,18 @@
       "backend": "loki"
     },
     {
+      "source": "rules/sigma/ot/ot_modbus_exception_flood.yml",
+      "source_sha256": "7b94c8936930c8b4eebb6773aca7aa244f13fe856a52210864cb47d59f35c68e",
+      "target": "loki/rules/ot_modbus_exception_flood.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_exception_response.yml",
+      "source_sha256": "42e6225915c91eff2d7f8501197be3fb1ef24b261dcb72b94fcc38ab47d56685",
+      "target": "loki/rules/ot_modbus_exception_response.yaml",
+      "backend": "loki"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_parameter_write.yml",
       "source_sha256": "f7a8222d90214b224220f901505b8c74216d3a44984bf63a2a37c429e6e0e1c9",
       "target": "loki/rules/ot_modbus_parameter_write.yaml",
@@ -58,6 +100,12 @@
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
       "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
       "target": "loki/rules/ot_modbus_process_state_read.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_register_enumeration.yml",
+      "source_sha256": "cbcc5957ed438869847355d1e10776adbde57d2ecd4761596b0c9a8bd1243230",
+      "target": "loki/rules/ot_modbus_register_enumeration.yaml",
       "backend": "loki"
     },
     {
@@ -76,6 +124,12 @@
       "source": "rules/sigma/ot/ot_opcua_method_call.yml",
       "source_sha256": "b8abb791b46c503f1f8fae0a3c203c2971551f229a9c9226b976d56c9a1f5737",
       "target": "loki/rules/ot_opcua_method_call.yaml",
+      "backend": "loki"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_node_enumeration.yml",
+      "source_sha256": "0353bd61aee60a848c4fe4b6e447f4a20f1705496dc634ae3b01aedccdd71bc3",
+      "target": "loki/rules/ot_opcua_node_enumeration.yaml",
       "backend": "loki"
     },
     {
@@ -127,6 +181,12 @@
       "backend": "loki"
     },
     {
+      "source": "rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml",
+      "source_sha256": "6c58af44186ed250a05bc44e62e3e7166b74c6518783d65cb68b52c5c0362a85",
+      "target": "opensearch/ot_dnp3_request_from_unapproved_master.ppl",
+      "backend": "opensearch"
+    },
+    {
       "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
       "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
       "target": "opensearch/ot_dnp3_restart_command.ppl",
@@ -145,9 +205,21 @@
       "backend": "opensearch"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_control_port_scan.yml",
+      "source_sha256": "0fe66dd4d587b5bab5ebb05d42220b073dde24016072c9417a3c392ab249f393",
+      "target": "opensearch/ot_firewall_control_port_scan.ppl",
+      "backend": "opensearch"
+    },
+    {
       "source": "rules/sigma/ot/ot_firewall_control_zone_egress.yml",
       "source_sha256": "d63e2e04d929f54a7829cc7a4e9d326ad8d60d8995e204d4c26a54c82cbb60c2",
       "target": "opensearch/ot_firewall_control_zone_egress.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_firewall_control_zone_proxy.yml",
+      "source_sha256": "f194ac69cb97429e19c4eaf17eeba67ee20508a67dbd04ee27fcdf662a405531",
+      "target": "opensearch/ot_firewall_control_zone_proxy.ppl",
       "backend": "opensearch"
     },
     {
@@ -163,6 +235,18 @@
       "backend": "opensearch"
     },
     {
+      "source": "rules/sigma/ot/ot_flow_industrial_service_refused.yml",
+      "source_sha256": "7034dbcecd49b0103ebc2406e07b843409e1fd17f1ab91989f954a9eb3d3cc9d",
+      "target": "opensearch/ot_flow_industrial_service_refused.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_flow_large_transfer.yml",
+      "source_sha256": "5050e3a1ff4abcae03bce7c94c63d55a4b4796c2746801f2c26a54245d442556",
+      "target": "opensearch/ot_flow_large_transfer.ppl",
+      "backend": "opensearch"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
       "source_sha256": "1a431bad5e9a45bf43a0240d38e008ddc31f9dc6fc08dc80c2fc1d2e2f935410",
       "target": "opensearch/ot_modbus_control_asset_enumeration.ppl",
@@ -175,6 +259,18 @@
       "backend": "opensearch"
     },
     {
+      "source": "rules/sigma/ot/ot_modbus_exception_flood.yml",
+      "source_sha256": "7b94c8936930c8b4eebb6773aca7aa244f13fe856a52210864cb47d59f35c68e",
+      "target": "opensearch/ot_modbus_exception_flood.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_exception_response.yml",
+      "source_sha256": "42e6225915c91eff2d7f8501197be3fb1ef24b261dcb72b94fcc38ab47d56685",
+      "target": "opensearch/ot_modbus_exception_response.ppl",
+      "backend": "opensearch"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_parameter_write.yml",
       "source_sha256": "f7a8222d90214b224220f901505b8c74216d3a44984bf63a2a37c429e6e0e1c9",
       "target": "opensearch/ot_modbus_parameter_write.ppl",
@@ -184,6 +280,12 @@
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
       "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
       "target": "opensearch/ot_modbus_process_state_read.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_register_enumeration.yml",
+      "source_sha256": "cbcc5957ed438869847355d1e10776adbde57d2ecd4761596b0c9a8bd1243230",
+      "target": "opensearch/ot_modbus_register_enumeration.ppl",
       "backend": "opensearch"
     },
     {
@@ -202,6 +304,12 @@
       "source": "rules/sigma/ot/ot_opcua_method_call.yml",
       "source_sha256": "b8abb791b46c503f1f8fae0a3c203c2971551f229a9c9226b976d56c9a1f5737",
       "target": "opensearch/ot_opcua_method_call.ppl",
+      "backend": "opensearch"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_node_enumeration.yml",
+      "source_sha256": "0353bd61aee60a848c4fe4b6e447f4a20f1705496dc634ae3b01aedccdd71bc3",
+      "target": "opensearch/ot_opcua_node_enumeration.ppl",
       "backend": "opensearch"
     },
     {
@@ -253,6 +361,12 @@
       "backend": "opensearch"
     },
     {
+      "source": "rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml",
+      "source_sha256": "6c58af44186ed250a05bc44e62e3e7166b74c6518783d65cb68b52c5c0362a85",
+      "target": "sentinel/ot_dnp3_request_from_unapproved_master.kql",
+      "backend": "sentinel"
+    },
+    {
       "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
       "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
       "target": "sentinel/ot_dnp3_restart_command.kql",
@@ -289,9 +403,27 @@
       "backend": "sentinel"
     },
     {
+      "source": "rules/sigma/ot/ot_flow_industrial_service_refused.yml",
+      "source_sha256": "7034dbcecd49b0103ebc2406e07b843409e1fd17f1ab91989f954a9eb3d3cc9d",
+      "target": "sentinel/ot_flow_industrial_service_refused.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_flow_large_transfer.yml",
+      "source_sha256": "5050e3a1ff4abcae03bce7c94c63d55a4b4796c2746801f2c26a54245d442556",
+      "target": "sentinel/ot_flow_large_transfer.kql",
+      "backend": "sentinel"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
       "source_sha256": "5f1be08596a7155ac619a075f3f1575ffcec6e2f0498e1431dbeb3e89694ebd0",
       "target": "sentinel/ot_modbus_device_identification_scan.kql",
+      "backend": "sentinel"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_exception_response.yml",
+      "source_sha256": "42e6225915c91eff2d7f8501197be3fb1ef24b261dcb72b94fcc38ab47d56685",
+      "target": "sentinel/ot_modbus_exception_response.kql",
       "backend": "sentinel"
     },
     {
@@ -373,6 +505,12 @@
       "backend": "sentinel"
     },
     {
+      "source": "rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml",
+      "source_sha256": "6c58af44186ed250a05bc44e62e3e7166b74c6518783d65cb68b52c5c0362a85",
+      "target": "splunk/ot_dnp3_request_from_unapproved_master.conf",
+      "backend": "splunk"
+    },
+    {
       "source": "rules/sigma/ot/ot_dnp3_restart_command.yml",
       "source_sha256": "c2f751f283f7a059b9c5eea2b5439f9eea52ad7a359b076a5d3fbfe751e4007c",
       "target": "splunk/ot_dnp3_restart_command.conf",
@@ -391,9 +529,21 @@
       "backend": "splunk"
     },
     {
+      "source": "rules/sigma/ot/ot_firewall_control_port_scan.yml",
+      "source_sha256": "0fe66dd4d587b5bab5ebb05d42220b073dde24016072c9417a3c392ab249f393",
+      "target": "splunk/ot_firewall_control_port_scan.conf",
+      "backend": "splunk"
+    },
+    {
       "source": "rules/sigma/ot/ot_firewall_control_zone_egress.yml",
       "source_sha256": "d63e2e04d929f54a7829cc7a4e9d326ad8d60d8995e204d4c26a54c82cbb60c2",
       "target": "splunk/ot_firewall_control_zone_egress.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_firewall_control_zone_proxy.yml",
+      "source_sha256": "f194ac69cb97429e19c4eaf17eeba67ee20508a67dbd04ee27fcdf662a405531",
+      "target": "splunk/ot_firewall_control_zone_proxy.conf",
       "backend": "splunk"
     },
     {
@@ -409,6 +559,18 @@
       "backend": "splunk"
     },
     {
+      "source": "rules/sigma/ot/ot_flow_industrial_service_refused.yml",
+      "source_sha256": "7034dbcecd49b0103ebc2406e07b843409e1fd17f1ab91989f954a9eb3d3cc9d",
+      "target": "splunk/ot_flow_industrial_service_refused.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_flow_large_transfer.yml",
+      "source_sha256": "5050e3a1ff4abcae03bce7c94c63d55a4b4796c2746801f2c26a54245d442556",
+      "target": "splunk/ot_flow_large_transfer.conf",
+      "backend": "splunk"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
       "source_sha256": "1a431bad5e9a45bf43a0240d38e008ddc31f9dc6fc08dc80c2fc1d2e2f935410",
       "target": "splunk/ot_modbus_control_asset_enumeration.conf",
@@ -421,6 +583,18 @@
       "backend": "splunk"
     },
     {
+      "source": "rules/sigma/ot/ot_modbus_exception_flood.yml",
+      "source_sha256": "7b94c8936930c8b4eebb6773aca7aa244f13fe856a52210864cb47d59f35c68e",
+      "target": "splunk/ot_modbus_exception_flood.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_exception_response.yml",
+      "source_sha256": "42e6225915c91eff2d7f8501197be3fb1ef24b261dcb72b94fcc38ab47d56685",
+      "target": "splunk/ot_modbus_exception_response.conf",
+      "backend": "splunk"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_parameter_write.yml",
       "source_sha256": "f7a8222d90214b224220f901505b8c74216d3a44984bf63a2a37c429e6e0e1c9",
       "target": "splunk/ot_modbus_parameter_write.conf",
@@ -430,6 +604,12 @@
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
       "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
       "target": "splunk/ot_modbus_process_state_read.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_register_enumeration.yml",
+      "source_sha256": "cbcc5957ed438869847355d1e10776adbde57d2ecd4761596b0c9a8bd1243230",
+      "target": "splunk/ot_modbus_register_enumeration.conf",
       "backend": "splunk"
     },
     {
@@ -448,6 +628,12 @@
       "source": "rules/sigma/ot/ot_opcua_method_call.yml",
       "source_sha256": "b8abb791b46c503f1f8fae0a3c203c2971551f229a9c9226b976d56c9a1f5737",
       "target": "splunk/ot_opcua_method_call.conf",
+      "backend": "splunk"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_node_enumeration.yml",
+      "source_sha256": "0353bd61aee60a848c4fe4b6e447f4a20f1705496dc634ae3b01aedccdd71bc3",
+      "target": "splunk/ot_opcua_node_enumeration.conf",
       "backend": "splunk"
     },
     {
@@ -525,7 +711,32 @@
   ],
   "unsupported": [
     {
+      "source": "rules/sigma/ot/ot_firewall_control_port_scan.yml",
+      "backend": "sentinel",
+      "reason": "backend does not implement correlation conversion"
+    },
+    {
+      "source": "rules/sigma/ot/ot_firewall_control_zone_proxy.yml",
+      "backend": "sentinel",
+      "reason": "backend does not implement correlation conversion"
+    },
+    {
       "source": "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
+      "backend": "sentinel",
+      "reason": "backend does not implement correlation conversion"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_exception_flood.yml",
+      "backend": "sentinel",
+      "reason": "backend does not implement correlation conversion"
+    },
+    {
+      "source": "rules/sigma/ot/ot_modbus_register_enumeration.yml",
+      "backend": "sentinel",
+      "reason": "backend does not implement correlation conversion"
+    },
+    {
+      "source": "rules/sigma/ot/ot_opcua_node_enumeration.yml",
       "backend": "sentinel",
       "reason": "backend does not implement correlation conversion"
     }

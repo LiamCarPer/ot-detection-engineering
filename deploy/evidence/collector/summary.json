@@ -52,6 +52,7 @@
     "expected": [
       "DNP3 Cold Or Warm Restart Command",
       "DNP3 Control Operation From Unauthorized Master",
+      "DNP3 Request From An Unapproved Master Address",
       "DNP3 Unsolicited Responses Disabled"
     ],
     "inputs": [
@@ -60,6 +61,7 @@
     "observed": [
       "DNP3 Cold Or Warm Restart Command",
       "DNP3 Control Operation From Unauthorized Master",
+      "DNP3 Request From An Unapproved Master Address",
       "DNP3 Unsolicited Responses Disabled"
     ],
     "schema_errors": [],
@@ -104,13 +106,15 @@
   "zeek/dnp3_attack": {
     "events": 1,
     "expected": [
-      "DNP3 Control Operation From Unauthorized Master"
+      "DNP3 Control Operation From Unauthorized Master",
+      "DNP3 Request From An Unapproved Master Address"
     ],
     "inputs": [
       "zeek/dnp3_attack.dnp3.log"
     ],
     "observed": [
-      "DNP3 Control Operation From Unauthorized Master"
+      "DNP3 Control Operation From Unauthorized Master",
+      "DNP3 Request From An Unapproved Master Address"
     ],
     "schema_errors": [],
     "sensor": "zeek"

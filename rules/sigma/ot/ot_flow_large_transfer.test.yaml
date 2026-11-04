@@ -1,0 +1,60 @@
+cases:
+  - name: an engineering workstation copies a large archive
+    expect: match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:02:00Z"
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.20
+      src_port: 41000
+      dst_port: 445
+      proto: tcp
+      bytes: 8000000
+      packets: 6000
+      flow_state: SF
+
+  - name: a historian replicates a large block
+    expect: match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:02:05Z"
+      src_ip: 172.23.0.10
+      dst_ip: 172.22.0.10
+      src_port: 42000
+      dst_port: 8086
+      proto: tcp
+      bytes: 25000000
+      packets: 18000
+      flow_state: SF
+
+  - name: a normal poll is below the threshold
+    expect: no_match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:02:10Z"
+      src_ip: 172.21.0.20
+      dst_ip: 172.31.0.10
+      src_port: 43000
+      dst_port: 20000
+      proto: tcp
+      bytes: 4999999
+      packets: 3000
+      flow_state: SF
+
+  - name: a small control exchange is far below the threshold
+    expect: no_match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:02:15Z"
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.10
+      src_port: 44000
+      dst_port: 502
+      proto: tcp
+      bytes: 500
+      packets: 10
+      flow_state: SF

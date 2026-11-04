@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_flow_industrial_service_refused.yml
+source=ot_flow-flow-* | where (flow_state in ("REJ", "S0", "RSTO", "RSTR")) AND (dst_port in (102, 502, 4840, 20000))

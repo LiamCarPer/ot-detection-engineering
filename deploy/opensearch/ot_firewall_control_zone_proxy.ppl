@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_firewall_control_zone_proxy.yml
+| search source=ot_firewall-iptables-* | where action="ACCEPT" AND src_zone="control" AND dst_zone="it" AND (dst_port in (53, 80, 443)) | stats dc(dst_ip) as value_count by src_ip | where value_count >= 3

@@ -1,0 +1,31 @@
+# source: rules/sigma/ot/ot_flow_large_transfer.yml
+groups:
+- name: ot_flow_large_transfer
+  rules:
+  - alert: Large_Transfer_Between_OT_Assets
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a flow carrying more data than normal OT polling or control
+        traffic.
+
+        Moving tooling or collected data laterally inside the plant produces a volume
+
+        the control protocols do not generate, so a byte threshold is a usable
+
+        first-order signal even without payload inspection.
+
+
+        The threshold is site-specific. It is expressed against a single flow, so
+        a
+
+        slow exfiltration spread over many small flows will not trip it; pair it with
+
+        the flow-volume baseline for that case.
+
+        '
+      summary: Large Transfer Between OT Assets
+    expr: sum(count_over_time({job=~".+", service="flow"} | logfmt | bytes>=5000000
+      | line_format "{{.src_ip}} {{.dst_ip}} {{.bytes}} {{.packets}} {{.duration}}"
+      [1m])) or vector(0) > 0
+    labels:
+      severity: medium

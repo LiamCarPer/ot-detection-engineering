@@ -1,0 +1,32 @@
+# source: rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml
+groups:
+- name: ot_dnp3_request_from_unapproved_master
+  rules:
+  - alert: DNP3_Request_From_An_Unapproved_Master_Address
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a DNP3 request whose source address is not an approved
+        master. This is
+
+        the network-identity counterpart to the link-address allowlist: a rogue
+
+        master can reuse an authorized DNP3 link address while originating from a
+        host
+
+        the plant does not recognize, so checking only `link_source` misses it.
+
+
+        The rule requires `src_ip`, which the Suricata and Zeek collectors emit. The
+
+        Rust decoder works from link frames and has no transport address, so it
+
+        correctly produces no match rather than an unattributed one.
+
+        '
+      summary: DNP3 Request From An Unapproved Master Address
+    expr: sum(count_over_time({job=~".+", service="dnp3"} | logfmt | direction=~`(?i)^request$`
+      and src_ip!="" and src_ip!~`(?i)^172\.21\.0\.20$` and src_ip!~`(?i)^172\.23\.0\.50$`
+      and src_ip!~`(?i)^172\.22\.0\.10$` | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}}
+      {{.link_source}} {{.link_destination}}" [1m])) or vector(0) > 0
+    labels:
+      severity: high

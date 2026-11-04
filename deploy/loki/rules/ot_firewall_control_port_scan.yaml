@@ -1,0 +1,33 @@
+# source: rules/sigma/ot/ot_firewall_control_port_scan.yml
+groups:
+- name: ot_firewall_control_port_scan
+  rules:
+  - alert: Enterprise_Host_Probing_Multiple_Control_Zone_Ports
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects one enterprise host whose traffic to the control zone
+        is dropped across
+
+        several distinct destination ports inside a short window. A single drop is
+        a
+
+        policy violation covered by the first-order rule; a sweep of many ports is
+
+        connection enumeration, mapping which controller services are reachable before
+
+        choosing a target.
+
+
+        The correlation references the cross-zone drop rule, so ICMP health checks
+        and
+
+        accepted flows are filtered out before the port count is taken.
+
+        '
+      summary: Enterprise Host Probing Multiple Control Zone Ports
+    expr: count without (dst_port) (sum by (src_ip, dst_port) (count_over_time({job=~".+",
+      service="iptables"} | logfmt | action=~`(?i)^DROP$` and src_zone=~`(?i)^it$`
+      and dst_zone=~`(?i)^control$` and proto!~`(?i)^ICMP$` | line_format "{{.src_ip}}
+      {{.dst_ip}} {{.dst_port}} {{.proto}}" [5m]))) >= 6
+    labels:
+      severity: medium

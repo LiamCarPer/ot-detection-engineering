@@ -1,0 +1,36 @@
+# source: rules/sigma/ot/ot_modbus_register_enumeration.yml
+groups:
+- name: ot_modbus_register_enumeration
+  rules:
+  - alert: Modbus_Register_Enumeration_From_One_Host
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects one host reading many distinct Modbus registers inside
+        a short window.
+
+        Reading a few registers is polling; walking a large slice of the register
+        map
+
+        is automated collection, harvesting process values before an operation or
+        for
+
+        intelligence.
+
+
+        The correlation references the unauthorized process-read rule, so an approved
+
+        operator interface is filtered out. A host on the allowlist that has been
+
+        compromised would need a separate allowlist entry removed, which is a
+
+        deliberate change rather than a silent gap.
+
+        '
+      summary: Modbus Register Enumeration From One Host
+    expr: count without (register) (sum by (src_ip, register) (count_over_time({job=~".+",
+      service="modbus"} | logfmt | direction=~`(?i)^request$` and (function_code=3
+      or function_code=4) and src_ip!~`(?i)^172\.21\.0\.20$` and src_ip!~`(?i)^172\.22\.0\.10$`
+      | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}} {{.register}}" [5m])))
+      >= 20
+    labels:
+      severity: medium

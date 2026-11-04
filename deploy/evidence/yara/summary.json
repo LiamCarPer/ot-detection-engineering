@@ -14,6 +14,33 @@
       "cases": [
         {
           "expected": "match",
+          "file": "tests/yara/samples/malicious/ews_macro_with_pe.docm",
+          "name": "a macro-enabled document carrying an embedded PE",
+          "observed": true,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/ews_macro_clean.docm",
+          "name": "a macro-enabled document with no embedded binary",
+          "observed": false,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/ews_document_with_pe.docm",
+          "name": "a document with an embedded PE but no macro project",
+          "observed": false,
+          "passed": true
+        }
+      ],
+      "file": "rules/yara/ot_macro_document_with_pe.yar",
+      "rule": "OT_Macro_Document_With_Embedded_PE"
+    },
+    {
+      "cases": [
+        {
+          "expected": "match",
           "file": "tests/yara/samples/malicious/ews_dropper.ps1",
           "name": "a PowerShell dropper combining encoded execution and a remote loader",
           "observed": true,

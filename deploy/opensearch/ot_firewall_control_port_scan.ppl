@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_firewall_control_port_scan.yml
+| search source=ot_firewall-iptables-* | where action="DROP" AND src_zone="it" AND dst_zone="control" AND NOT proto="ICMP" | stats dc(dst_port) as value_count by src_ip | where value_count >= 6

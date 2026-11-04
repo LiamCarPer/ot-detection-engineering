@@ -1,0 +1,42 @@
+title: DNP3 Request From An Unapproved Master Address
+id: 7f1a4d38-2b96-4c5e-9e70-3d8a5f1b6c02
+status: experimental
+description: |
+  Detects a DNP3 request whose source address is not an approved master. This is
+  the network-identity counterpart to the link-address allowlist: a rogue
+  master can reuse an authorized DNP3 link address while originating from a host
+  the plant does not recognize, so checking only `link_source` misses it.
+
+  The rule requires `src_ip`, which the Suricata and Zeek collectors emit. The
+  Rust decoder works from link frames and has no transport address, so it
+  correctly produces no match rather than an unattributed one.
+references:
+  - https://attack.mitre.org/techniques/T0848/
+author: Liam Carvajal
+date: 2026-11-04
+logsource:
+  product: ot_ndr
+  service: dnp3
+detection:
+  selection_direction:
+    direction: request
+  selection_transport:
+    src_ip|exists: true
+  filter_approved_master:
+    src_ip:
+      - 172.21.0.20
+      - 172.23.0.50
+      - 172.22.0.10
+  condition: selection_direction and selection_transport and not filter_approved_master
+fields:
+  - src_ip
+  - dst_ip
+  - function_code
+  - link_source
+  - link_destination
+falsepositives:
+  - A newly commissioned master not yet added to the allowlist
+  - A master that changes its source address during a network migration
+level: high
+tags:
+  - attack.t0848

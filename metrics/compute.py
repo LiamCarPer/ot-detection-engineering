@@ -216,7 +216,8 @@ def render_markdown(metrics: dict) -> str:
             f"{_rate(single_event['recall'], single_event['recall_ci95'])} |",
             "| Held-out single-event false-positive rate | "
             f"{single_event_fpr} "
-            f"({heldout['single_event']['negatives_total']} negatives) |",
+            f"({single_event['fp'] + single_event['tn']:,} rule-negative evaluations; "
+            f"{heldout['single_event']['negatives_total']} events per rule) |",
         ]
     if correlation:
         lines += [
@@ -270,8 +271,8 @@ def render_markdown(metrics: dict) -> str:
         aggregate = single_event["aggregate"]
         lines.append(
             f"| **All single-event rules** | {single_event['positives_total']} | "
-            f"{single_event['negatives_total']} | {aggregate['tp']} | {aggregate['fn']} | "
-            f"{aggregate['fp']} | {aggregate['tn']} | "
+            f"{single_event['negatives_total']} each | {aggregate['tp']} | "
+            f"{aggregate['fn']} | {aggregate['fp']} | {aggregate['tn']} | "
             f"{_rate(aggregate['precision'], aggregate['precision_ci95'])} | "
             f"{_rate(aggregate['recall'], aggregate['recall_ci95'])} | "
             f"{_rate(aggregate['false_positive_rate'], aggregate['false_positive_rate_ci95'])} |"

@@ -128,14 +128,19 @@ EXPECTED_COLLECTOR_RULES: dict[str, set[str]] = {
         "DNP3 Control Operation From Unauthorized Master",
         "DNP3 Unsolicited Responses Disabled",
         "DNP3 Cold Or Warm Restart Command",
+        "DNP3 Request From An Unapproved Master Address",
     },
     "suricata/dnp3_benign": set(),
     # Zeek's modbus.log has no register value, so the parameter-band rule cannot
-    # fire on it; its dnp3.log has no link address, so the control rule's master
-    # allowlist cannot be applied (see collector/README.md).
+    # fire on it; its dnp3.log has no link address, so the control rule's link
+    # allowlist cannot be applied. The transport-level rule can, because Zeek
+    # does emit the conversation endpoints.
     "zeek/modbus_attack": {"Modbus Write From Unauthorized Control Writer"},
     "zeek/modbus_benign": set(),
-    "zeek/dnp3_attack": {"DNP3 Control Operation From Unauthorized Master"},
+    "zeek/dnp3_attack": {
+        "DNP3 Control Operation From Unauthorized Master",
+        "DNP3 Request From An Unapproved Master Address",
+    },
     "zeek/dnp3_benign": set(),
     # Flow records carry no register or function detail, so no Sigma rule targets
     # them yet; they feed the behaviour-baseline rules instead (see below).

@@ -1,0 +1,418 @@
+windows:
+- name: a controller floods one HMI with twelve exceptions in four minutes
+  expect: match
+  events:
+  - timestamp: '2026-11-06T19:00:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:00:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:00:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:01:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:01:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:01:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:02:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:02:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:02:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:03:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:03:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T19:03:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+- name: nine exceptions is below the threshold
+  expect: no_match
+  events:
+  - timestamp: '2026-11-06T20:00:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T20:00:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T20:00:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T20:01:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T20:01:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T20:01:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T20:02:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T20:02:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T20:02:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+- name: twelve exceptions spread beyond the five-minute window
+  expect: no_match
+  events:
+  - timestamp: '2026-11-06T21:00:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:00:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:01:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:02:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:02:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:03:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:04:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:04:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:05:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:06:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:06:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+  - timestamp: '2026-11-06T21:07:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.10
+    unit_id: 1
+- name: twelve exceptions split across four HMIs
+  expect: no_match
+  events:
+  - timestamp: '2026-11-06T22:00:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.30
+    unit_id: 1
+  - timestamp: '2026-11-06T22:00:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.31
+    unit_id: 1
+  - timestamp: '2026-11-06T22:00:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.32
+    unit_id: 1
+  - timestamp: '2026-11-06T22:01:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.33
+    unit_id: 1
+  - timestamp: '2026-11-06T22:01:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.30
+    unit_id: 1
+  - timestamp: '2026-11-06T22:01:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.31
+    unit_id: 1
+  - timestamp: '2026-11-06T22:02:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.32
+    unit_id: 1
+  - timestamp: '2026-11-06T22:02:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.33
+    unit_id: 1
+  - timestamp: '2026-11-06T22:02:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.30
+    unit_id: 1
+  - timestamp: '2026-11-06T22:03:00Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.31
+    unit_id: 1
+  - timestamp: '2026-11-06T22:03:20Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.32
+    unit_id: 1
+  - timestamp: '2026-11-06T22:03:40Z'
+    product: ot_ndr
+    service: modbus
+    direction: response
+    function_code: 131
+    exception_code: 4
+    src_ip: 172.21.0.10
+    dst_ip: 172.22.0.33
+    unit_id: 1

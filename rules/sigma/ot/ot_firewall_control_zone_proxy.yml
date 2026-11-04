@@ -1,0 +1,36 @@
+title: Control Zone Host Reaching Multiple Enterprise Destinations
+id: b8e4d2a6-3c71-4f58-9d02-6a1e7b3c5f94
+status: experimental
+description: |
+  Detects one control-zone host opening accepted connections to several distinct
+  enterprise destinations inside a short window. A single egress flow is covered
+  by the first-order rule; a fan-out to many destinations is the shape of a host
+  being used as a proxy out of the plant, relaying command and control through
+  the enterprise network instead of talking to the internet directly.
+
+  The correlation references the control-zone egress rule, so it only counts
+  flows that the firewall accepted over DNS, HTTP or HTTPS. That keeps routine
+  denied traffic out of the count.
+references:
+  - https://attack.mitre.org/techniques/T0884/
+author: Liam Carvajal
+date: 2026-11-04
+correlation:
+  generate: true
+  type: value_count
+  rules:
+    - f716e14d-c24f-46d2-b4e3-2e6072135595
+  group-by:
+    - src_ip
+  timespan: 10m
+  condition:
+    field: dst_ip
+    gte: 3
+fields:
+  - src_ip
+falsepositives:
+  - A documented maintenance tunnel that reaches several enterprise services
+  - A controller configured to use multiple upstream resolvers or update servers
+level: high
+tags:
+  - attack.t0884

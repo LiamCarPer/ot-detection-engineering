@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml
+direction =~ "request" and isnotempty(src_ip) and (not((src_ip in~ ("172.21.0.20", "172.23.0.50", "172.22.0.10"))))

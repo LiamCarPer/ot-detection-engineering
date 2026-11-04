@@ -1,0 +1,2 @@
+// source: rules/sigma/ot/ot_modbus_exception_response.yml
+direction =~ "response" and isnotempty(exception_code)

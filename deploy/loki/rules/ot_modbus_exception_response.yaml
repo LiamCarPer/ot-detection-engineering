@@ -1,0 +1,32 @@
+# source: rules/sigma/ot/ot_modbus_exception_response.yml
+groups:
+- name: ot_modbus_exception_response
+  rules:
+  - alert: Modbus_Exception_Response
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a Modbus exception response: the controller answered,
+        but rejected the
+
+        request. One exception is a normal response to an invalid or unsupported
+
+        request; a sustained stream of exceptions toward an operator interface is
+        a
+
+        denial-of-view signal, because the HMI can no longer read the process state
+        it
+
+        renders.
+
+
+        This is the constituent signal for the exception-flood correlation. It is
+
+        deliberately low severity on its own.
+
+        '
+      summary: Modbus Exception Response
+    expr: sum(count_over_time({job=~".+", service="modbus"} | logfmt | direction=~`(?i)^response$`
+      and exception_code!="" | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}}
+      {{.exception_code}}" [1m])) or vector(0) > 0
+    labels:
+      severity: low

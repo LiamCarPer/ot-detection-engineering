@@ -1,0 +1,34 @@
+# source: rules/sigma/ot/ot_firewall_control_zone_proxy.yml
+groups:
+- name: ot_firewall_control_zone_proxy
+  rules:
+  - alert: Control_Zone_Host_Reaching_Multiple_Enterprise_Destinations
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects one control-zone host opening accepted connections to
+        several distinct
+
+        enterprise destinations inside a short window. A single egress flow is covered
+
+        by the first-order rule; a fan-out to many destinations is the shape of a
+        host
+
+        being used as a proxy out of the plant, relaying command and control through
+
+        the enterprise network instead of talking to the internet directly.
+
+
+        The correlation references the control-zone egress rule, so it only counts
+
+        flows that the firewall accepted over DNS, HTTP or HTTPS. That keeps routine
+
+        denied traffic out of the count.
+
+        '
+      summary: Control Zone Host Reaching Multiple Enterprise Destinations
+    expr: count without (dst_ip) (sum by (src_ip, dst_ip) (count_over_time({job=~".+",
+      service="iptables"} | logfmt | action=~`(?i)^ACCEPT$` and src_zone=~`(?i)^control$`
+      and dst_zone=~`(?i)^it$` and (dst_port=53 or dst_port=80 or dst_port=443) |
+      line_format "{{.src_ip}} {{.dst_ip}} {{.dst_port}} {{.proto}}" [10m]))) >= 3
+    labels:
+      severity: high

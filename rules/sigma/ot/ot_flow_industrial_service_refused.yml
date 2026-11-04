@@ -1,0 +1,45 @@
+title: Connection Refused Or Reset To An Industrial Service
+id: 8d2f5a90-6c41-4b7e-a3d8-1f9e4c02b6a7
+status: experimental
+description: |
+  Detects a flow to an industrial service that was refused or reset rather than
+  established. Repeated refusals or resets against a controller, outstation or
+  OPC UA server are how a denial-of-control attempt looks from the network: the
+  service is reachable but unable to accept work, or the peer is tearing down
+  every connection.
+
+  A single reset is routine. The rule exists so the flow layer records the
+  event; escalation should depend on volume or on correlation with a process
+  signal.
+references:
+  - https://attack.mitre.org/techniques/T0813/
+author: Liam Carvajal
+date: 2026-11-04
+logsource:
+  product: ot_flow
+  service: flow
+detection:
+  selection_state:
+    flow_state:
+      - REJ
+      - S0
+      - RSTO
+      - RSTR
+  selection_service:
+    dst_port:
+      - 102
+      - 502
+      - 4840
+      - 20000
+  condition: selection_state and selection_service
+fields:
+  - src_ip
+  - dst_ip
+  - dst_port
+  - flow_state
+falsepositives:
+  - A controller restarting or a service deliberately taken out of rotation
+  - A monitoring probe that opens and closes connections without completing a handshake
+level: medium
+tags:
+  - attack.t0813

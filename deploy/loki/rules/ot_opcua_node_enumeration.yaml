@@ -1,0 +1,35 @@
+# source: rules/sigma/ot/ot_opcua_node_enumeration.yml
+groups:
+- name: ot_opcua_node_enumeration
+  rules:
+  - alert: OPC_UA_Address_Space_Enumeration
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects one OPC UA session issuing many browse requests inside
+        a short window.
+
+        A client browses once when it populates its address space view; a sustained
+
+        browse is point-and-tag identification, walking the node tree to enumerate
+        the
+
+        process before acting on it.
+
+
+        The correlation references the browse rule and groups by secure channel, which
+
+        is the session identity the decoder exposes. A client that reconnects for
+        every
+
+        request would fall below the per-session count; pair the rule with the first-
+
+        order browse alert for that case.
+
+        '
+      summary: OPC UA Address Space Enumeration
+    expr: sum by (secure_channel_id) (count_over_time({job=~".+", service="opcua"}
+      | logfmt | direction=~`(?i)^request$` and (opcua_service=~`(?i)^BrowseRequest$`
+      or opcua_service=~`(?i)^BrowseNextRequest$`) | line_format "{{.secure_channel_id}}
+      {{.request_id}}" [5m])) >= 20
+    labels:
+      severity: medium
