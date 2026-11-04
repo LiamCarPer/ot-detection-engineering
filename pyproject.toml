@@ -11,7 +11,7 @@ requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "Liam Carvajal", email = "carvajalperezliam7@gmail.com" }]
 dependencies = [
-    "pysigma>=1.5,<2",
+    "pysigma>=1.5,<3",
     "sigma-cli>=3.1,<4",
     "pySigma-backend-loki>=0.13,<1",
     "pySigma-backend-opensearch>=2,<3",
