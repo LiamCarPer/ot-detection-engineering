@@ -13,6 +13,10 @@ from a real run; nothing is hand-counted.
 | Mean MTTD | 2.45 s | Time from action to first matching alert. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule vs. its own committed fixtures — a regression check. |
 | Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every telemetry domain. |
+| Held-out single-event recall | 40 / 40 (95% CI 0.912–1.0) | 2 labeled positives per rule, authored separately from the fixtures. |
+| Held-out single-event precision | 40 / 40 (95% CI 0.912–1.0) | The same positives against 1,020 held-out negatives. |
+| Held-out single-event false-positive rate | 0 / 1,020 (95% CI 0.0–0.0002) | 1,000 generated at a different seed plus one near miss per rule. |
+| Held-out correlation recall | 2 / 2 windows (95% CI 0.342–1.0) | Window-level; the interval is wide because the set is small. |
 
 ## What is functionally validated
 
@@ -51,6 +55,9 @@ Honest scope, because a detection is only as trustworthy as its evidence:
 
 - The lab is a Dockerized software emulation; there is no physical PLC.
 - Fixture precision/recall is rule/fixture agreement, not field performance.
+- Held-out precision/recall is a better estimate but still not field
+  performance: the positives are authored, the negatives are generated, and
+  two positives per rule leave a wide per-rule interval.
 - Coverage is deliberately small; the point is the process.
 - Emulation covers two steps and four expectations, not every rule.
 - S7comm classic only; OPC UA plaintext only; DNP3 first object header only.
@@ -68,6 +75,6 @@ Full detail in [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
 ```bash
 make setup
 make demo          # decoder -> Sigma match -> generated SIEM queries, offline
-make check         # lint, Sigma validation, 297 tests, Rust, bundle drift
+make check         # lint, Sigma validation, 351 tests, Rust, bundle drift
 make metrics       # coverage, fixture agreement, baseline FPR, emulation replay
 ```

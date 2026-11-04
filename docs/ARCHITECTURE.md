@@ -88,7 +88,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `deploy/` | Committed, installable bundle (Loki ruler, Suricata, Splunk, Sentinel), provenance manifest, runbook and Suricata evidence. |
 | `coverage/` | Derived ATT&CK for ICS coverage map. |
 | `purple/` | Adversary emulation plan, runner, and recorded observations. |
-| `metrics/` | Detection-quality computation and the benign baseline corpus. |
+| `metrics/` | Detection-quality computation, the benign baseline corpus and the held-out evaluation set. |
 | `tests/` | Rule regression, metadata governance, native rule lint, coverage and metrics tests. |
 
 ## Tooling choices
@@ -152,6 +152,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `test_native_rules.py` | Native rules carry required fields, unique reserved SIDs and known technique tags. |
 | `test_emulation.py` | The emulation plan is valid and the evaluation logic computes detection rate and MTTD correctly. |
 | `test_coverage.py`, `test_metrics.py` | Derived coverage and metrics are internally consistent, and no rule fires on the benign baseline. |
+| `test_heldout.py` | The held-out labels name real rules, every positive fires, no held-out event duplicates a fixture, and the negatives reproduce from a second seed. |
 | `test_deploy.py`, `test_deploy_evidence.py` | The bundle matches the rules and the committed Suricata evidence fires the expected signatures. |
 | `test_malcolm_evidence.py` | The committed Malcolm evidence shows the ruleset loading with no failures alongside Malcolm's default rules and firing the expected signatures on every capture. |
 | `test_lab_loki_evidence.py` | The committed lab evidence shows the generated DNP3, OPC UA, S7comm, firewall and process ruler rules firing in OT-Security-Lab on lab-shipped normalized events. |
@@ -166,6 +167,11 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
   from labeled fixtures.
 - **Recall** — true positives divided by true positives plus false negatives,
   from labeled fixtures.
+- **Held-out precision / recall** — the same definitions applied to
+  `metrics/heldout/`, which is authored and generated separately from each
+  rule's fixtures and is never used for tuning. The held-out false-positive rate
+  is measured over 1,020 negatives (1,000 at a second seed plus one near miss per
+  rule). Every rate carries a 95% Wilson interval.
 - **Baseline false-positive rate** — benign events matched by any rule divided by
   all benign events, reported with a 95% Wilson score interval. The committed
   baseline holds 1,000 generated events (seed `20260101`), so a zero result is

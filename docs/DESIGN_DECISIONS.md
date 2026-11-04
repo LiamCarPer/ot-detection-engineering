@@ -171,7 +171,9 @@ team owns.
   performance, and the benign baseline is 1,000 generated events covering normal
   traffic for every protocol and stream the rules consume. A zero result is
   reported as `0/1,000` with a 95% Wilson upper bound of 0.38%, not as a zero
-  false-positive rate.
+  false-positive rate. The held-out set in `metrics/heldout/` is an independent
+  second sample — two authored positives per rule, a second-seed negative corpus
+  and one near miss per rule — but it is still small and is not field data.
 - **Detection is mostly signature-based.** Two behavioural detections now exist —
   a correlation rule that counts distinct destinations per source over a window,
   and behaviour-baseline rules that flag a new asset, pair or function code

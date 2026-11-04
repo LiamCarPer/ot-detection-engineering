@@ -346,8 +346,11 @@ make metrics
 ```
 
 Produces `metrics/out/report.md` and `metrics/out/metrics.json`: coverage, rule
-precision and recall from fixtures, false-positive rate against the benign
-baseline, and emulation detection rate and MTTD.
+precision and recall from fixtures, per-rule precision, recall and
+false-positive rate on the held-out set (with 95% Wilson intervals),
+false-positive rate against the benign baseline, and emulation detection rate
+and MTTD. The held-out set is never used to tune a rule; see
+`metrics/heldout/README.md`.
 
 ## Updating the ATT&CK catalog
 

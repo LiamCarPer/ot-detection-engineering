@@ -20,7 +20,7 @@ metrics are derived from the rules themselves, so they cannot drift.
   the generated Loki, Splunk, Sentinel and OpenSearch queries. No Docker, no
   network. A recorded transcript is in
   [`docs/demo-output.txt`](docs/demo-output.txt).
-- **Run the full check:** `make check` (lint, Sigma validation, 297 tests, the
+- **Run the full check:** `make check` (lint, Sigma validation, 351 tests, the
   Rust decoders, the decoder/collector/baseline/conduit proofs, and
   deployment-bundle drift).
 - **Read the proof:** `deploy/report.md` records the functional validation — 11
@@ -51,6 +51,9 @@ not committed). The emulation figures are replayed from a genuine run against
 | Rule fixture agreement (precision) | 1.0 | Rule matches against its own committed positive/negative fixtures. A regression check, not field precision. |
 | Rule fixture agreement (recall) | 1.0 | As above. |
 | Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | 1,000 generated benign events across every protocol and stream the rules consume. |
+| Held-out recall (single-event) | 40 / 40 (95% CI 0.912–1.0) | Labeled positives authored separately from the rule fixtures. |
+| Held-out precision (single-event) | 40 / 40 (95% CI 0.912–1.0) | Same positives against 1,020 held-out negatives (1,000 generated at a different seed, plus one near miss per rule). |
+| Held-out correlation recall | 2 / 2 positive windows (95% CI 0.342–1.0) | Window-level; the interval is wide because the set is small. |
 | ATT&CK for ICS coverage | 20 / 97 techniques (20.6%) | Intentionally low: a small, fully tested ruleset rather than untested padding. |
 
 Coverage is intentionally low: this repository seeds the pipeline with a small,
@@ -66,7 +69,8 @@ detection is only as trustworthy as the evidence behind it.
   in CI; the native rules are executed by Suricata over committed captures; the
   Loki ruler bundle is executed in a full stack; the decoders' output is run
   through the same matcher the rule tests use; and coverage, precision, recall
-  and false-positive rate are derived from the rules. All of that runs offline
+  and false-positive rate are derived from the rules, with a separate held-out
+  set for the precision/recall estimate. All of that runs offline
   and deterministically.
 - **What is emulated.** The lab this project validates against is a Dockerized
   software emulation of a segmented plant; there is no physical PLC, sensor or
@@ -75,6 +79,11 @@ detection is only as trustworthy as the evidence behind it.
   are computed against fixtures authored alongside each rule, so they measure
   that the rule and its fixtures agree — useful as a regression guard, not as a
   claim about production precision.
+- **Held-out metrics are a better estimate, still not field performance.** The
+  labels in `metrics/heldout/` are authored independently of the rule fixtures,
+  and the negatives come from a different generator seed plus one near miss per
+  rule. The set is small (two positives per rule), so per-rule intervals are
+  wide; the aggregate is the number to quote. See `metrics/heldout/README.md`.
 - **The benign baseline is generated, not harvested.** The baseline
   false-positive rate is measured over 1,000 deterministic events produced by
   `tools/make_benign.py` (seed `20260101`), spanning normal Modbus, DNP3, S7comm
@@ -192,7 +201,7 @@ pipelines/            Sigma-to-backend conversion and deployment bundle builder
 deploy/               Installable bundle: Loki ruler, Suricata, Splunk, Sentinel, OpenSearch
 coverage/             ATT&CK for ICS coverage map generator
 purple/               Adversary emulation plan, runner and recorded observations
-metrics/              Detection-quality computation and benign baseline
+metrics/              Detection-quality computation, benign baseline and held-out set
 tests/                Rule, metadata, coverage and metrics tests
 docs/                 Architecture, design decisions, results, telemetry, lifecycle
 ```
