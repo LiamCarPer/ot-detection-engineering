@@ -4,7 +4,7 @@ pysigma==1.5.0
 # "TypeError: 'str' object is not callable". 3.3.2 is the last working release.
 pyparsing==3.3.2
 sigma-cli==3.1.0
-pySigma-backend-loki==0.13.0
+pySigma-backend-loki==0.15.1
 pySigma-backend-opensearch==2.0.3
 pySigma-backend-splunk==2.1.0
 pySigma-backend-kusto==1.0.1
