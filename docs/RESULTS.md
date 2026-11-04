@@ -8,7 +8,7 @@ from a real run; nothing is hand-counted.
 
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
-| ATT&CK for ICS coverage | 17 / 97 techniques (17.5%) | Intentionally seeded, not padded. |
+| ATT&CK for ICS coverage | 20 / 97 techniques (20.6%) | Intentionally seeded, not padded. |
 | Emulation detection rate | 100% (4 / 4 expectations) | Two adversary steps, replayed from a live lab run. |
 | Mean MTTD | 2.45 s | Time from action to first matching alert. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule vs. its own committed fixtures — a regression check. |
@@ -26,6 +26,7 @@ from a real run; nothing is hand-counted.
 | Real Suricata and Zeek sensor output, NetFlow/IPFIX exports and SNMP traps normalize to the contract; the SNMP device-event rules fire and stay silent on benign samples | `deploy/evidence/collector/summary.json` | `make collector-check` |
 | Behaviour-baseline rules flag a new asset, pair or function code on attack samples and stay silent on benign ones, and the committed baseline is reproducible | `deploy/evidence/baseline/summary.json` | `make baseline-check` |
 | Conduit rules flag cross-zone traffic with no declared conduit or an undeclared service, and report the declared conduits never observed | `deploy/evidence/conduit/summary.json` | `make conduit-check` |
+| YARA rules flag an embedded executable in a project/firmware artifact and a dropper script, stay silent on benign and near-miss artifacts, and scan a payload blob | `deploy/evidence/yara/summary.json` | `make yara-check` |
 | Every single-event rule converts to Loki, Splunk, Sentinel and OpenSearch, with provenance | `deploy/manifest.json` | `make convert-all` |
 | The correlation rule converts for Loki, Splunk and OpenSearch; Sentinel is unsupported and recorded as such | `deploy/manifest.json` (`unsupported`) | `make convert-all` |
 | The correlation rule fires on an event sequence offline and in a live Loki stack | `deploy/evidence/loki/`, fixtures | `make loki-check`, `make test` (Docker) |
@@ -55,6 +56,7 @@ Honest scope, because a detection is only as trustworthy as its evidence:
 - S7comm classic only; OPC UA plaintext only; DNP3 first object header only.
 - The behaviour baseline is a committed snapshot learned from a benign sample; it
   needs regenerating when the network legitimately changes.
+- YARA fixtures are synthetic marker artifacts; no real malware is committed.
 - The conduit policy is a committed model of intent; traffic with an unzoned
   endpoint is out of scope, and the zones and conduits must be kept in step with
   the network.
@@ -66,6 +68,6 @@ Full detail in [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
 ```bash
 make setup
 make demo          # decoder -> Sigma match -> generated SIEM queries, offline
-make check         # lint, Sigma validation, 246 tests, Rust, bundle drift
+make check         # lint, Sigma validation, 288 tests, Rust, bundle drift
 make metrics       # coverage, fixture agreement, baseline FPR, emulation replay
 ```

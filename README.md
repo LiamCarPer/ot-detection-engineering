@@ -20,7 +20,7 @@ metrics are derived from the rules themselves, so they cannot drift.
   the generated Loki, Splunk, Sentinel and OpenSearch queries. No Docker, no
   network. A recorded transcript is in
   [`docs/demo-output.txt`](docs/demo-output.txt).
-- **Run the full check:** `make check` (lint, Sigma validation, 246 tests, the
+- **Run the full check:** `make check` (lint, Sigma validation, 288 tests, the
   Rust decoders, the decoder/collector/baseline/conduit proofs, and
   deployment-bundle drift).
 - **Read the proof:** `deploy/report.md` records the functional validation — 11
@@ -51,7 +51,7 @@ not committed). The emulation figures are replayed from a genuine run against
 | Rule fixture agreement (precision) | 1.0 | Rule matches against its own committed positive/negative fixtures. A regression check, not field precision. |
 | Rule fixture agreement (recall) | 1.0 | As above. |
 | Baseline false-positive rate | 0.0 | 52 committed benign events across every protocol and stream the rules consume. |
-| ATT&CK for ICS coverage | 17 / 97 techniques (17.5%) | Intentionally low: a small, fully tested ruleset rather than untested padding. |
+| ATT&CK for ICS coverage | 20 / 97 techniques (20.6%) | Intentionally low: a small, fully tested ruleset rather than untested padding. |
 
 Coverage is intentionally low: this repository seeds the pipeline with a small,
 fully tested ruleset rather than padding coverage with untested rules. The point
@@ -87,6 +87,10 @@ detection is only as trustworthy as the evidence behind it.
   collector samples. A legitimate network change requires regenerating it, so a
   stale baseline is a reviewable event rather than a silent source of false
   positives — and it is only as good as the benign period it was learned from.
+- **YARA fixtures are synthetic.** The file samples contain the structural
+  markers the rules target (an `MZ`/`PE` signature next to a project or firmware
+  marker) and are inert; real malware is never committed, and the engine is
+  proven against the EICAR test string assembled in memory.
 - **The conduit policy is a committed model of intent.** The conduit rules are
   only as good as `metadata/ot-conduit-policy.yaml`: zones and conduits must be
   kept in step with the network, and traffic with an unzoned endpoint is out of
@@ -128,6 +132,7 @@ recombined through shared metadata, testing and metrics.
 | Flow-level visibility (endpoints, ports, volumes) | Collector `ot_flow` (NetFlow/IPFIX, Zeek `conn.log`) | Where DPI cannot see the payload — encrypted or unknown protocols — a flow still shows a new source or pair, and feeds the baseline rules. |
 | Device availability and configuration (link, restart, config change) | Sigma over the `ot_snmp` contract | Network-device state is a separate data source from protocol traffic, and a link or config change on a switch carrying control traffic is a detection in its own right. |
 | Segmentation drift (a cross-zone path with no declared conduit, or a service the conduit does not permit) | Conduit rules (`rules/conduit`) over `metadata/ot-conduit-policy.yaml` | The intended segmentation is the condition. Sigma cannot reference an external policy, so drift is its own small rule family, and the policy is committed and reviewed like code. |
+| File and firmware content (PLC project files, firmware images, EWS scripts) | YARA (YARA-X) in `rules/yara` | These artifacts never cross the network detection path. YARA matches their structure; the fixtures are synthetic and no real malware is committed. |
 
 Every rule, regardless of format, carries an ATT&CK for ICS technique, is
 covered by labeled fixtures, and is included in the generated coverage map.
@@ -171,6 +176,7 @@ the event contracts.
 rules/sigma/          Sigma rules with *.test.yaml positive/negative fixtures
 rules/baseline/       Behaviour-baseline rules (deviations from learned normal)
 rules/conduit/        Conduit rules (deviations from the segmentation policy)
+rules/yara/           YARA rules for project files, firmware and EWS scripts
 rules/native/         Suricata rules for protocol DPI
 baseline/             Committed OT behaviour baseline and its builder
 metadata/             Pinned ATT&CK for ICS catalog and JSON Schemas
@@ -206,6 +212,7 @@ make decoder-check     # prove the decoders' events fire the Sigma rules
 make collector-check   # prove collector output fires the Sigma rules
 make baseline-check    # prove behaviour-baseline rules against committed telemetry
 make conduit-check     # prove conduit rules against the segmentation policy
+make yara-check        # prove YARA rules against committed file and payload samples
 make metrics           # coverage + emulation replay + metrics report
 ```
 
@@ -291,6 +298,9 @@ breakdown is in [deploy/report.md](deploy/report.md).
   new communication pair or a new protocol function code. This is the asset
   visibility and anomaly-detection half of OT monitoring, expressed as detection
   content with fixtures and evidence rather than as a product feature.
+- **YARA-X file detection** (`rules/yara/`): PLC project files, firmware images
+  and EWS scripts, proven against committed synthetic artifacts and a payload
+  blob, with a runtime EICAR self-test. Real malware is never committed.
 - **Segmentation as code** (`metadata/ot-conduit-policy.yaml`) with conduit rules
   (`rules/conduit`) that flag a cross-zone path with no declared conduit or a
   service the conduit does not permit, and report declared conduits never

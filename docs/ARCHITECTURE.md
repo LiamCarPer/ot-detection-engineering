@@ -32,6 +32,7 @@ Detection content is split by what each format can actually express.
 | Sigma correlation | Behaviour over a window: a fan-out, a burst, a drift. | A per-event signature cannot express a count or a timespan. |
 | Behaviour-baseline (`rules/baseline`) | Deviations from learned normal: a new asset, a new pair, a new function code. | The condition is the committed baseline, not a signature; the baseline is reviewed like code. |
 | Conduit (`rules/conduit`) | Segmentation drift: a cross-zone path with no declared conduit, or a service it does not permit. | The condition is the committed zone/conduit policy, which Sigma cannot reference. |
+| YARA (`rules/yara`) | File and firmware content: PLC project files, firmware images and EWS scripts. | These artifacts never cross the network layer; YARA matches their structure, and the fixtures are synthetic. |
 
 All content is governed identically: every rule carries an ATT&CK for ICS
 technique and feeds the same coverage and metrics calculations.
@@ -67,6 +68,8 @@ metadata/ot-conduit-policy.yaml ──┐
                                   ├─▶ tools/otde/conduit.py ──▶ rules/conduit ──▶ deploy/evidence
 ot_flow / ot_ndr / ot_firewall ───┘
 
+rules/yara/*.yar ──▶ tools/yara_check.py ──▶ file / payload samples ──▶ deploy/evidence
+
 emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
         (or recorded observations)         (against the lab or a replay)
 ```
@@ -75,7 +78,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 
 | Path | Responsibility |
 | :--- | :--- |
-| `rules/` | Detection content: Sigma rules (single-event and correlation), behaviour-baseline and conduit rules, each with `.test.yaml` sidecars, and native Suricata rules. |
+| `rules/` | Detection content: Sigma rules (single-event and correlation), behaviour-baseline, conduit and YARA rules, each with `.test.yaml` sidecars, and native Suricata rules. |
 | `baseline/` | Builds and commits the OT behaviour baseline the deviation rules compare against. |
 | `metadata/` | Pinned ATT&CK for ICS catalog, the zone/conduit policy, and JSON Schemas for rule test cases, correlation test cases, the catalog, the emulation plan, the telemetry contract and the behaviour baseline. |
 | `tools/otde/` | Shared library: rule discovery, technique extraction, Suricata reader, and the pySigma-based validation matcher. |
@@ -113,6 +116,10 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
   rules (`rules/baseline`) compare against it. A baseline that had seen the
   attack it is meant to catch would be worthless, so it is built from benign
   samples only, and its currency is checked in CI.
+- **File content is a separate detection layer.** YARA-X (`rules/yara/`) covers
+  PLC project files, firmware images and EWS scripts that the network detections
+  never see. Fixtures are inert synthetic artifacts; the engine is proven against
+  the EICAR test string assembled in memory, not a committed malware sample.
 - **Segmentation is policy-as-code.** The intended Purdue zones and the conduits
   between them live in `metadata/ot-conduit-policy.yaml`, and the conduit rules
   detect drift from it. This detects violations of the intended segmentation
@@ -139,6 +146,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `test_sigma_correlations.py` | Correlation rules are evaluated over event sequences and a window, and their fixtures hold. |
 | `test_baseline.py`, `test_baseline_evidence.py` | The behaviour baseline is reproducible and schema-valid, and the deviation rules fire on attack samples and stay silent on benign ones. |
 | `test_conduit.py`, `test_conduit_evidence.py` | The zone/conduit policy is schema-valid and the conduit rules flag undeclared paths and services on the committed samples. |
+| `test_yara.py`, `test_yara_evidence.py` | The YARA rules compile, carry valid metadata and fixtures, match the committed synthetic artifacts, scan a payload blob and pass the EICAR self-test. |
 | `test_collector.py`, `test_collector_evidence.py` | The collector's field mappings and the committed collector evidence. |
 | `test_metadata.py` | Rule policy, unique IDs, and ATT&CK tags that exist in the pinned ICS catalog. |
 | `test_native_rules.py` | Native rules carry required fields, unique reserved SIDs and known technique tags. |

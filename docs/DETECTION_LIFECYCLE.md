@@ -217,6 +217,49 @@ cases:
 telemetry, asserts the firings, and records which declared conduits were observed
 and which were not — the drift signal that a documented path is unused.
 
+### A YARA file detection
+
+A detection on the content of an artifact — a PLC project file, a firmware
+image, a script on an engineering workstation — is a YARA rule. It has no
+logsource and no events; it scans bytes.
+
+```yara
+rule OT_Siemens_Project_File_With_Embedded_PE
+{
+  meta:
+    author = "Liam Carvajal"
+    description = "A Siemens project file that carries an embedded executable."
+    date = "2026-11-04"
+    attack_ics = "T0873.001"
+    reference = "https://attack.mitre.org/techniques/T0873/001/"
+    level = "high"
+  strings:
+    $project = "SIMATIC" ascii wide nocase
+    $mz = { 4D 5A }
+    $pe = "PE\x00\x00"
+  condition:
+    $project and $mz and $pe
+}
+```
+
+The sidecar names artifacts rather than events, and every rule needs a positive
+and a near-miss negative:
+
+```yaml
+cases:
+  - name: a Siemens project file carrying an embedded PE
+    expect: match
+    file: tests/yara/samples/malicious/siemens_project_with_pe.bin
+  - name: a Siemens project file with no embedded binary
+    expect: no_match
+    file: tests/yara/samples/benign/siemens_project_clean.bin
+```
+
+The fixtures are **synthetic and inert**; real malware is never committed. The
+engine is proven against the EICAR test string assembled in memory by
+`tools/yara_check.py`. `make yara-check` compiles the rules, scans every fixture,
+scans a protocol payload blob, and writes `deploy/evidence/yara/summary.json`.
+
 ### A protocol DPI detection (native Suricata)
 
 Create or extend a file under `rules/native/suricata/`. Every rule needs `msg`,
