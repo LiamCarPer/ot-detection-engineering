@@ -34,6 +34,7 @@ from generate_coverage import build_report  # noqa: E402
 from sigma.collection import SigmaCollection  # noqa: E402
 from sigma.correlations import SigmaCorrelationRule  # noqa: E402
 from sigma.rule import SigmaRule  # noqa: E402
+from stats import rounded_interval  # noqa: E402
 
 from tools.otde.correlation import match_correlation  # noqa: E402
 from tools.otde.matcher import match  # noqa: E402
@@ -134,10 +135,13 @@ def baseline_metrics(events: list[dict]) -> dict:
         matches = [name for name, rule in rules if match(rule, event)]
         if matches:
             false_positives.append({"event_index": index, "rules": matches})
+    false_positive_events = len(false_positives)
+    low, high = rounded_interval(false_positive_events, len(events))
     return {
         "events_total": len(events),
-        "false_positive_events": len(false_positives),
-        "false_positive_rate": _ratio(len(false_positives), len(events)),
+        "false_positive_events": false_positive_events,
+        "false_positive_rate": _ratio(false_positive_events, len(events)),
+        "false_positive_rate_ci95": [low, high],
         "details": false_positives,
     }
 
@@ -165,6 +169,10 @@ def render_markdown(metrics: dict) -> str:
     fixture = metrics["rule_validation"]["aggregate"]
     baseline = metrics["baseline"]
     emulation = metrics["emulation"]
+    baseline_ci = baseline.get("false_positive_rate_ci95")
+    baseline_scope = f"{baseline['events_total']} events"
+    if baseline_ci:
+        baseline_scope += f", 95% CI {baseline_ci[0]}–{baseline_ci[1]}"
 
     lines = [
         "# Detection Metrics",
@@ -177,7 +185,7 @@ def render_markdown(metrics: dict) -> str:
         f"| Rule fixture agreement (recall) | {fixture['recall']} |",
         f"| Fixture false-positive rate | {fixture['false_positive_rate']} |",
         f"| Baseline false-positive rate | {baseline['false_positive_rate']} "
-        f"({baseline['events_total']} events) |",
+        f"({baseline_scope}) |",
     ]
     if emulation:
         lines += [
@@ -207,6 +215,11 @@ def render_markdown(metrics: dict) -> str:
         f"{baseline['false_positive_events']} of {baseline['events_total']} benign "
         "events matched a rule.",
     ]
+    if baseline_ci:
+        lines.append(
+            f"95% Wilson interval on the false-positive rate: "
+            f"{baseline_ci[0]}–{baseline_ci[1]}."
+        )
     return "\n".join(lines) + "\n"
 
 
