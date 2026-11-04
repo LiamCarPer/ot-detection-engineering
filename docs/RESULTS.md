@@ -8,22 +8,22 @@ from a real run; nothing is hand-counted.
 
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
-| ATT&CK for ICS coverage | 20 / 97 techniques (20.6%) | Intentionally seeded, not padded. |
+| ATT&CK for ICS coverage | 29 / 97 techniques (29.9%) | Intentionally seeded, not padded. |
 | Emulation detection rate | 100% (4 / 4 expectations) | Two adversary steps, replayed from a live lab run. |
 | Mean MTTD | 2.45 s | Time from action to first matching alert. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule vs. its own committed fixtures — a regression check. |
 | Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every telemetry domain. |
-| Held-out single-event recall | 40 / 40 (95% CI 0.912–1.0) | 2 labeled positives per rule, authored separately from the fixtures. |
-| Held-out single-event precision | 40 / 40 (95% CI 0.912–1.0) | The same positives against 1,020 held-out negatives. |
-| Held-out single-event false-positive rate | 0 / 1,020 (95% CI 0.0–0.0002) | 1,000 generated at a different seed plus one near miss per rule. |
-| Held-out correlation recall | 2 / 2 windows (95% CI 0.342–1.0) | Window-level; the interval is wide because the set is small. |
+| Held-out single-event recall | 48 / 48 (95% CI 0.926–1.0) | 2 labeled positives per rule, authored separately from the fixtures. |
+| Held-out single-event precision | 48 / 48 (95% CI 0.926–1.0) | The same positives against 1,024 held-out negatives per rule. |
+| Held-out single-event false-positive rate | 0 / 1,024 per rule (95% CI 0.0–0.0037) | 1,000 generated at a different seed plus one near miss per rule. |
+| Held-out correlation recall | 12 / 12 windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
 
 ## What is functionally validated
 
 | Claim | Evidence | Reproduce |
 | :--- | :--- | :--- |
 | Native Suricata rules fire on all four protocols, benign captures are silent | `deploy/evidence/*/eve.json`, `deploy/evidence/summary.json` | `make suricata-check` (Docker) |
-| The Loki ruler bundle fires all 18 rules — including the correlation rule — in a full stack | `deploy/evidence/loki/` | `make loki-check` (Docker) |
+| The Loki ruler bundle fires the 18 rules in the live Loki proof, including the original correlation, in a full stack; the newer breadth rules are fixture-proven and included in the bundle | `deploy/evidence/loki/` | `make loki-check` (Docker) |
 | The ruleset loads and fires inside a Malcolm pipeline alongside 59,188 default rules | `deploy/evidence/malcolm/` | `tools/malcolm_check.py` |
 | The generated rules fire on live traffic in a real-endpoint OT lab (DNP3, OPC UA, S7comm) | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
 | The Rust decoders' output satisfies the Sigma rules | `deploy/evidence/decoders/summary.json` | `make decoder-check` |
@@ -32,8 +32,8 @@ from a real run; nothing is hand-counted.
 | Conduit rules flag cross-zone traffic with no declared conduit or an undeclared service, and report the declared conduits never observed | `deploy/evidence/conduit/summary.json` | `make conduit-check` |
 | YARA rules flag an embedded executable in a project/firmware artifact and a dropper script, stay silent on benign and near-miss artifacts, and scan a payload blob | `deploy/evidence/yara/summary.json` | `make yara-check` |
 | Every single-event rule converts to Loki, Splunk, Sentinel and OpenSearch, with provenance | `deploy/manifest.json` | `make convert-all` |
-| The correlation rule converts for Loki, Splunk and OpenSearch; Sentinel is unsupported and recorded as such | `deploy/manifest.json` (`unsupported`) | `make convert-all` |
-| The correlation rule fires on an event sequence offline and in a live Loki stack | `deploy/evidence/loki/`, fixtures | `make loki-check`, `make test` (Docker) |
+| Every correlation rule converts for Loki, Splunk and OpenSearch; Sentinel records them as unsupported | `deploy/manifest.json` (`unsupported`) | `make convert-all` |
+| Every correlation rule fires on its labeled windows offline; the original correlation also fires in a live Loki stack | `deploy/evidence/loki/`, fixtures | `make loki-check`, `make test` (Docker) |
 
 See [deploy/report.md](../deploy/report.md) for the full functional report.
 
@@ -75,6 +75,6 @@ Full detail in [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
 ```bash
 make setup
 make demo          # decoder -> Sigma match -> generated SIEM queries, offline
-make check         # lint, Sigma validation, 351 tests, Rust, bundle drift
+make check         # lint, Sigma validation, 435 tests, Rust, bundle drift
 make metrics       # coverage, fixture agreement, baseline FPR, emulation replay
 ```

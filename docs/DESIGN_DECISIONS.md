@@ -181,6 +181,13 @@ team owns.
   implements only `value_count`, and the behaviour baseline is a snapshot learned
   from a small benign sample rather than a continuously updated model, so its
   false-positive behaviour is bounded by how representative that sample is.
+- **A Manipulation-of-View rule was withdrawn.** A rule flagging a Modbus
+  response from a non-PLC source looked plausible, but the collector normalizes
+  `src_ip`/`dst_ip` from the flow, not from the packet direction, so a
+  `direction: response` event's source is not necessarily the responder. The
+  collector proof fired it on benign traffic. Rather than special-case one
+  producer or ship a rule that mis-attributes, it was removed; T0832 stays
+  uncovered until the contract carries a responder field.
 - **Encrypted channels.** OPC UA service bodies are only visible on `None`/`Sign`
   channels; `SignAndEncrypt` yields metadata but no service. The S7comm decoder
   handles classic S7comm only, not S7comm Plus.

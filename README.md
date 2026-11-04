@@ -20,7 +20,7 @@ metrics are derived from the rules themselves, so they cannot drift.
   the generated Loki, Splunk, Sentinel and OpenSearch queries. No Docker, no
   network. A recorded transcript is in
   [`docs/demo-output.txt`](docs/demo-output.txt).
-- **Run the full check:** `make check` (lint, Sigma validation, 351 tests, the
+- **Run the full check:** `make check` (lint, Sigma validation, 435 tests, the
   Rust decoders, the decoder/collector/baseline/conduit proofs, and
   deployment-bundle drift).
 - **Read the proof:** `deploy/report.md` records the functional validation — 11
@@ -51,10 +51,10 @@ not committed). The emulation figures are replayed from a genuine run against
 | Rule fixture agreement (precision) | 1.0 | Rule matches against its own committed positive/negative fixtures. A regression check, not field precision. |
 | Rule fixture agreement (recall) | 1.0 | As above. |
 | Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | 1,000 generated benign events across every protocol and stream the rules consume. |
-| Held-out recall (single-event) | 40 / 40 (95% CI 0.912–1.0) | Labeled positives authored separately from the rule fixtures. |
-| Held-out precision (single-event) | 40 / 40 (95% CI 0.912–1.0) | Same positives against 1,020 held-out negatives (1,000 generated at a different seed, plus one near miss per rule). |
-| Held-out correlation recall | 2 / 2 positive windows (95% CI 0.342–1.0) | Window-level; the interval is wide because the set is small. |
-| ATT&CK for ICS coverage | 20 / 97 techniques (20.6%) | Intentionally low: a small, fully tested ruleset rather than untested padding. |
+| Held-out recall (single-event) | 48 / 48 (95% CI 0.926–1.0) | Labeled positives authored separately from the rule fixtures. |
+| Held-out precision (single-event) | 48 / 48 (95% CI 0.926–1.0) | Same positives against 1,024 held-out negatives per rule (1,000 generated at a different seed, plus one near miss per rule). |
+| Held-out correlation recall | 12 / 12 positive windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
+| ATT&CK for ICS coverage | 29 / 97 techniques (29.9%) | Intentionally seeded: a tested rule per technique rather than untested padding. |
 
 Coverage is intentionally low: this repository seeds the pipeline with a small,
 fully tested ruleset rather than padding coverage with untested rules. The point
@@ -112,7 +112,7 @@ detection is only as trustworthy as the evidence behind it.
   (`None`/`Sign`, not `SignAndEncrypt`); the DNP3 decoder reads the first object
   header only; and the native Modbus/DNP3 rules require Suricata's application
   layer to be enabled.
-- **The correlation rule needs a workaround for a defect in the pinned Loki
+- **Correlation rules need a workaround for a defect in the pinned Loki
   backend.** Its ruler output format finalises a correlation by wrapping the
   query in `count_over_time()`, which a metric expression cannot be an argument
   to, and by interpolating the referenced rule's ruler *document* into the
@@ -323,8 +323,9 @@ breakdown is in [deploy/report.md](deploy/report.md).
 
 Implemented: detection-as-code pipeline, OT Sigma rules, native protocol DPI for
 Modbus/TCP, DNP3, OPC UA and S7comm (DNP3, S7comm and OPC UA also decoded in
-Rust for application-layer Sigma rules), a stateful Sigma correlation rule for
-control-asset enumeration, multi-platform conversion (Loki,
+Rust for application-layer Sigma rules), stateful Sigma correlation rules for
+control-asset enumeration, proxy fan-out, port sweeps, register enumeration,
+OPC UA browsing and exception floods, multi-platform conversion (Loki,
 OpenSearch, Splunk SPL, Sentinel KQL), installable deployment bundles, Suricata
 functional validation over committed captures and in a Malcolm pipeline, ATT&CK
 for ICS coverage, adversary emulation, and detection metrics. The pipeline,
