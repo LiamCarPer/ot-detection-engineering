@@ -6,16 +6,20 @@ window. This module adds the missing half so a correlation rule can be proven
 offline, against labeled positive and negative event sequences, in the same way
 every single-event rule is proven against its fixture.
 
-Only ``value_count`` correlations are implemented, because that is the only type
-the repository uses. Anything else raises ``UnsupportedCorrelationError`` rather
-than returning a result the test never really exercised — the same rule the
-single-event matcher applies to unimplemented Sigma features.
+``value_count`` and ``event_count`` are implemented. Anything else raises
+``UnsupportedCorrelationError`` rather than returning a result the test never
+really exercised — the same rule the single-event matcher applies to
+unimplemented Sigma features.
 
-Semantics implemented: of the events the referenced rules match, group by the
-correlation's ``group-by`` fields, count the distinct values of the condition's
-field inside a sliding ``timespan`` window, and compare that count with the
-condition operator. An event's position in the window comes from its
-``timestamp``; an event without one is an error, not a silent zero.
+Semantics implemented, over the events the referenced rules match and grouped by
+the correlation's ``group-by`` fields inside a sliding ``timespan`` window:
+
+- ``value_count`` counts the distinct values of the condition's ``field``.
+- ``event_count`` counts the events themselves.
+
+Either count is compared with the condition operator. An event's position in the
+window comes from its ``timestamp``; an event without one is an error, not a
+silent zero.
 """
 
 from __future__ import annotations
@@ -51,10 +55,10 @@ CONDITION_OPERATORS = {
 
 def match_correlation(rule: SigmaCorrelationRule, events: Sequence[Mapping[str, Any]]) -> bool:
     """Return True if ``events`` satisfy the correlation rule."""
-    if rule.type != SigmaCorrelationType.VALUE_COUNT:
+    if rule.type not in (SigmaCorrelationType.VALUE_COUNT, SigmaCorrelationType.EVENT_COUNT):
         raise UnsupportedCorrelationError(
             f"correlation type '{rule.type.name.lower()}' is not implemented; "
-            "only value_count is supported"
+            "only value_count and event_count are supported"
         )
     if not rule.referenced_rules or any(
         reference.rule is None for reference in rule.referenced_rules
@@ -69,7 +73,7 @@ def match_correlation(rule: SigmaCorrelationRule, events: Sequence[Mapping[str, 
         )
     if condition.op not in CONDITION_OPERATORS:
         raise UnsupportedCorrelationError(f"unsupported condition operator: {condition.op}")
-    if not condition.fieldref:
+    if rule.type == SigmaCorrelationType.VALUE_COUNT and not condition.fieldref:
         raise UnsupportedCorrelationError(
             f"value_count correlation '{rule.title}' has no field reference to count"
         )
@@ -80,7 +84,7 @@ def match_correlation(rule: SigmaCorrelationRule, events: Sequence[Mapping[str, 
         )
 
     threshold = condition.count
-    field = str(condition.fieldref)
+    field = str(condition.fieldref) if condition.fieldref else None
     group_by = [str(group) for group in (rule.group_by or [])]
     window = rule.timespan.seconds
 
@@ -96,14 +100,24 @@ def match_correlation(rule: SigmaCorrelationRule, events: Sequence[Mapping[str, 
     # A sliding window: the count has to reach the threshold inside some window
     # of the declared length, not merely somewhere in the sequence.
     for start in sorted({moment for moment, _ in matched}):
-        distinct: dict[tuple, set] = defaultdict(set)
-        for moment, event in matched:
-            if not start <= moment < start + span:
-                continue
-            key = tuple(lookup_field(event, group) for group in group_by)
-            distinct[key].add(lookup_field(event, field))
-        if any(compare(len(values), threshold) for values in distinct.values()):
-            return True
+        if rule.type == SigmaCorrelationType.VALUE_COUNT:
+            distinct: dict[tuple, set] = defaultdict(set)
+            for moment, event in matched:
+                if not start <= moment < start + span:
+                    continue
+                key = tuple(lookup_field(event, group) for group in group_by)
+                distinct[key].add(lookup_field(event, field))
+            if any(compare(len(values), threshold) for values in distinct.values()):
+                return True
+        else:
+            counts: dict[tuple, int] = defaultdict(int)
+            for moment, event in matched:
+                if not start <= moment < start + span:
+                    continue
+                key = tuple(lookup_field(event, group) for group in group_by)
+                counts[key] += 1
+            if any(compare(count, threshold) for count in counts.values()):
+                return True
     return False
 
 

@@ -84,9 +84,18 @@ def test_correlation_matches_expected_windows(rule_path: Path) -> None:
     assert not failures, f"{rule_path.relative_to(REPO_ROOT)}:\n" + "\n".join(failures)
 
 
+def _enumeration_rule() -> SigmaCorrelationRule:
+    """The value_count rule the boundary tests were written against."""
+    return next(
+        rule
+        for rule in resolved_correlation_rules()
+        if str(rule.id) == "7c4e1b2a-6d3f-4a58-9e21-0b5c8f7a2d10"
+    )
+
+
 def test_window_boundary_is_exclusive() -> None:
     """The count has to fall inside the window, not merely reach it at the edge."""
-    rule = resolved_correlation_rules()[0]
+    rule = _enumeration_rule()
 
     def event(minute: int, second: int, destination: str) -> dict:
         return {
@@ -122,30 +131,28 @@ def test_unsupported_correlation_type_fails_loudly() -> None:
     """A correlation type this harness cannot evaluate must not return a result."""
     synthetic = SigmaCollection.from_yaml(
         """
-        title: Synthetic Event Count
+        title: Synthetic Temporal Correlation
         id: 00000000-0000-4000-8000-0000000000ff
         status: experimental
         correlation:
-          type: event_count
+          type: temporal
           rules:
             - db9f2530-dbb5-4aa7-8bcf-b5e59ea1c9db
           group-by:
             - src_ip
           timespan: 5m
-          condition:
-            gte: 3
         """,
         resolve_references=False,
     ).rules[0]
     assert isinstance(synthetic, SigmaCorrelationRule)
 
-    with pytest.raises(UnsupportedCorrelationError, match="event_count"):
+    with pytest.raises(UnsupportedCorrelationError, match="temporal"):
         match_correlation(synthetic, [{"timestamp": "2026-05-01T10:00:00.000Z"}])
 
 
 def test_events_without_a_timestamp_fail_loudly() -> None:
     """A window cannot be evaluated without a clock, so it must not silently pass."""
-    rule = resolved_correlation_rules()[0]
+    rule = _enumeration_rule()
     with pytest.raises(UnsupportedCorrelationError, match="timestamp"):
         match_correlation(
             rule,
