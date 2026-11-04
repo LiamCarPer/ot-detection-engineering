@@ -190,6 +190,7 @@ def render_markdown(metrics: dict) -> str:
     heldout = metrics.get("heldout")
     single_event = heldout["single_event"]["aggregate"] if heldout else None
     correlation = heldout["correlation"]["aggregate"] if heldout else None
+    yara = heldout.get("yara", {}).get("aggregate") if heldout else None
 
     lines = [
         "# Detection Metrics",
@@ -224,6 +225,12 @@ def render_markdown(metrics: dict) -> str:
             "| Held-out correlation recall | "
             f"{_rate(correlation['recall'], correlation['recall_ci95'])} "
             f"({heldout['correlation']['positives_total']} positive windows) |",
+        ]
+    if yara:
+        lines += [
+            "| Held-out YARA recall | "
+            f"{_rate(yara['recall'], yara['recall_ci95'])} "
+            f"({heldout['yara']['positives_total']} positive artifacts) |",
         ]
     if emulation:
         lines += [
@@ -301,6 +308,34 @@ def render_markdown(metrics: dict) -> str:
         lines.append(
             f"| **All correlation rules** | {correlation['positives_total']} | "
             f"{correlation['negatives_total']} | {aggregate['tp']} | {aggregate['fn']} | "
+            f"{aggregate['fp']} | {aggregate['tn']} | "
+            f"{_rate(aggregate['precision'], aggregate['precision_ci95'])} | "
+            f"{_rate(aggregate['recall'], aggregate['recall_ci95'])} |"
+        )
+
+        yara = heldout["yara"]
+        lines += [
+            "",
+            "## Held-out YARA rules",
+            "",
+            f"{yara['positives_total']} labeled artifacts against "
+            f"{yara['negatives_total']} shared negative artifacts.",
+            "",
+            "| Rule | Pos | Neg | TP | FN | FP | TN | Precision (95% CI) | "
+            "Recall (95% CI) |",
+            "| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        ]
+        for rule in yara["per_rule"]:
+            lines.append(
+                f"| {rule['title']} | {rule['positives']} | {rule['negatives']} | "
+                f"{rule['tp']} | {rule['fn']} | {rule['fp']} | {rule['tn']} | "
+                f"{_rate(rule['precision'], rule['precision_ci95'])} | "
+                f"{_rate(rule['recall'], rule['recall_ci95'])} |"
+            )
+        aggregate = yara["aggregate"]
+        lines.append(
+            f"| **All YARA rules** | {yara['positives_total']} | "
+            f"{yara['negatives_total']} | {aggregate['tp']} | {aggregate['fn']} | "
             f"{aggregate['fp']} | {aggregate['tn']} | "
             f"{_rate(aggregate['precision'], aggregate['precision_ci95'])} | "
             f"{_rate(aggregate['recall'], aggregate['recall_ci95'])} |"

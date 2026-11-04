@@ -14,6 +14,8 @@ sample.
 | `negatives.jsonl` | 1,000 generated benign events, seed `20260202` | none; every rule must stay silent |
 | `near-misses.jsonl` | 24 events, 1 per single-event rule | none; each differs from its rule in the decisive field |
 | `windows.jsonl` | 26 correlation windows (12 positive, 14 negative) across six rules | `expect` is `match` or `no_match` |
+| `yara.jsonl` | 8 labeled artifacts, 2 per YARA rule | `rule` is the rule the file must match |
+| `files/negatives/` | 8 shared negative artifacts | none; every YARA rule must stay silent |
 
 The negatives come from `tools/make_benign.py` with a **different seed** than the
 tuning corpus (`20260101`), plus one authored near miss per rule (1,024 events
@@ -45,6 +47,10 @@ quote for the ruleset as a whole.
 Correlation rules are measured on windows, so their precision and recall are
 window-level and are reported separately from the event-level table.
 
+YARA rules are measured on files: 2 labeled positives per rule against 8 shared
+negatives. A positive is credited only to the rule it names; a negative that any
+rule matches is that rule's false positive.
+
 ## What this does not prove
 
 - The positives are authored, not captured in the field. They test that each
@@ -55,5 +61,8 @@ window-level and are reported separately from the event-level table.
   false-positive volume.
 - The correlation set has two positive windows per rule, so its per-rule
   interval is wide even though the aggregate is tighter.
+- The YARA set has two files per rule and eight shared negatives, so its
+  per-rule interval is wide and its false-positive bound is looser than the
+  event-level set.
 - A rule that fires on a near miss is reported, not hidden. The point of the
   set is to surface that, not to make the table green.

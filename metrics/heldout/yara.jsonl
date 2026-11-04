@@ -1,0 +1,8 @@
+{"file": "metrics/heldout/files/positives/siemens_project_with_pe_heldout.bin", "name": "held-out Siemens project archive carrying an embedded PE", "rule": "rules/yara/ot_siemens_project_file_with_pe.yar"}
+{"file": "metrics/heldout/files/positives/siemens_project_with_pe_heldout_2.bin", "name": "held-out Siemens project archive with an embedded PE, second copy", "rule": "rules/yara/ot_siemens_project_file_with_pe.yar"}
+{"file": "metrics/heldout/files/positives/s7_firmware_with_pe_heldout.bin", "name": "held-out S7-1500 firmware carrying an embedded PE", "rule": "rules/yara/ot_s7_firmware_with_pe.yar"}
+{"file": "metrics/heldout/files/positives/ews_dropper_heldout.ps1", "name": "held-out PowerShell download-and-execute chain", "rule": "rules/yara/ot_powershell_dropper_on_ews.yar"}
+{"file": "metrics/heldout/files/positives/ews_macro_with_pe_heldout.docm", "name": "held-out macro document carrying an embedded PE", "rule": "rules/yara/ot_macro_document_with_pe.yar"}
+{"file": "metrics/heldout/files/positives/s7_firmware_with_pe_heldout_2.bin", "name": "second held-out S7-1500 firmware carrying an embedded PE", "rule": "rules/yara/ot_s7_firmware_with_pe.yar"}
+{"file": "metrics/heldout/files/positives/ews_dropper_heldout_2.ps1", "name": "held-out encoded PowerShell piped to a shell", "rule": "rules/yara/ot_powershell_dropper_on_ews.yar"}
+{"file": "metrics/heldout/files/positives/ews_macro_with_pe_heldout_2.docm", "name": "second held-out macro document carrying an embedded PE", "rule": "rules/yara/ot_macro_document_with_pe.yar"}

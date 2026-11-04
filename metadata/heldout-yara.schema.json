@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "heldout-yara.schema.json",
+  "title": "Held-out YARA positive",
+  "description": "One labeled positive artifact in the held-out set: a file that the named YARA rule must match, never used as the rule's own fixture.",
+  "type": "object",
+  "required": ["rule", "name", "file"],
+  "additionalProperties": false,
+  "properties": {
+    "rule": {
+      "type": "string",
+      "pattern": "^rules/yara/[A-Za-z0-9_.-]+\\.yar$",
+      "description": "Repository-relative path to the YARA rule this artifact should match."
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "file": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Repository-relative path to the artifact to scan."
+    }
+  }
+}

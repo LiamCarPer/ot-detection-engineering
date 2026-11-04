@@ -24,11 +24,14 @@ sys.path.insert(0, str(REPO_ROOT / "coverage"))
 
 from heldout_eval import (  # noqa: E402
     NEGATIVE_SEED,
+    YARA_NEGATIVES_DIR,
     heldout_metrics,
     load_negatives,
     load_positives,
     load_windows,
+    load_yara_positives,
     resolved_rules,
+    yara_identifier,
 )
 
 from tools.make_benign import DEFAULT_SEED, build  # noqa: E402
@@ -38,6 +41,7 @@ from tools.otde.rules import (  # noqa: E402
     load_sigma_rule,
     sigma_rule_paths,
     single_event_rule_paths,
+    yara_rule_paths,
 )
 
 HELDOUT = REPO_ROOT / "metrics" / "heldout"
@@ -81,10 +85,13 @@ def _fixture_events() -> set[str]:
 def test_positive_and_window_rows_conform_to_schema() -> None:
     positive_schema = _validator("heldout-positive.schema.json")
     window_schema = _validator("heldout-window.schema.json")
+    yara_schema = _validator("heldout-yara.schema.json")
     for row in _rows(HELDOUT / "positives.jsonl"):
         positive_schema.validate(row)
     for row in _rows(HELDOUT / "windows.jsonl"):
         window_schema.validate(row)
+    for row in _rows(HELDOUT / "yara.jsonl"):
+        yara_schema.validate(row)
 
 
 def test_negatives_conform_to_the_telemetry_contract() -> None:
@@ -158,9 +165,48 @@ def test_negatives_do_not_overlap_the_tuning_corpus() -> None:
     assert not (tuning & held_out)
 
 
+def test_every_yara_rule_has_a_held_out_positive() -> None:
+    known = {path.relative_to(REPO_ROOT).as_posix() for path in yara_rule_paths()}
+    labeled = {positive.rule for positive in load_yara_positives()}
+    assert known == labeled, (
+        f"rules without held-out positives: {sorted(known - labeled)}; "
+        f"positives for unknown rules: {sorted(labeled - known)}"
+    )
+
+
+@pytest.mark.parametrize(
+    "positive", load_yara_positives(), ids=lambda p: f"{p.rule}:{p.name}"
+)
+def test_every_held_out_yara_positive_matches_its_rule(positive) -> None:
+    import yara_x
+
+    rule_path = REPO_ROOT / positive.rule
+    identifier = yara_identifier(rule_path)
+    compiled = yara_x.compile(rule_path.read_text(encoding="utf-8"))
+    matches = {
+        rule.identifier
+        for rule in yara_x.Scanner(compiled)
+        .scan((REPO_ROOT / positive.file).read_bytes())
+        .matching_rules
+    }
+    assert identifier in matches, positive.name
+
+
+def test_no_held_out_artifact_duplicates_a_yara_fixture() -> None:
+    fixture_root = REPO_ROOT / "tests" / "yara" / "samples"
+    fixture_bytes = {
+        path.read_bytes() for path in fixture_root.rglob("*") if path.is_file()
+    }
+    held_out = [
+        REPO_ROOT / positive.file for positive in load_yara_positives()
+    ] + [path for path in YARA_NEGATIVES_DIR.iterdir() if path.is_file()]
+    leaked = [path for path in held_out if path.read_bytes() in fixture_bytes]
+    assert not leaked, f"held-out artifacts duplicate fixtures: {leaked}"
+
+
 def test_holdout_metrics_are_internally_consistent() -> None:
     metrics = heldout_metrics()
-    for section in ("single_event", "correlation"):
+    for section in ("single_event", "correlation", "yara"):
         rows = metrics[section]["per_rule"]
         assert rows, section
         aggregate = metrics[section]["aggregate"]
