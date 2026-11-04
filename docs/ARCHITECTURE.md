@@ -171,7 +171,8 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
   `metrics/heldout/`, which is authored and generated separately from each
   rule's fixtures and is never used for tuning. The held-out false-positive rate
   is measured over 1,024 negatives per rule (1,000 at a second seed plus one
-  near miss per rule). Every rate carries a 95% Wilson interval.
+  near miss per rule); YARA is measured over 2 files per rule and 8 shared
+  negatives. Every rate carries a 95% Wilson interval.
 - **Baseline false-positive rate** — benign events matched by any rule divided by
   all benign events, reported with a 95% Wilson score interval. The committed
   baseline holds 1,000 generated events (seed `20260101`), so a zero result is

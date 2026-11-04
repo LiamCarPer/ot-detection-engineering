@@ -17,6 +17,7 @@ from a real run; nothing is hand-counted.
 | Held-out single-event precision | 48 / 48 (95% CI 0.926–1.0) | The same positives against 1,024 held-out negatives per rule. |
 | Held-out single-event false-positive rate | 0 / 1,024 per rule (95% CI 0.0–0.0037) | 1,000 generated at a different seed plus one near miss per rule. |
 | Held-out correlation recall | 12 / 12 windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
+| Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
 
 ## What is functionally validated
 
@@ -75,6 +76,6 @@ Full detail in [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
 ```bash
 make setup
 make demo          # decoder -> Sigma match -> generated SIEM queries, offline
-make check         # lint, Sigma validation, 435 tests, Rust, bundle drift
+make check         # lint, Sigma validation, 445 tests, Rust, bundle drift
 make metrics       # coverage, fixture agreement, baseline FPR, emulation replay
 ```

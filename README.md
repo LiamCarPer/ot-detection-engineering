@@ -20,7 +20,7 @@ metrics are derived from the rules themselves, so they cannot drift.
   the generated Loki, Splunk, Sentinel and OpenSearch queries. No Docker, no
   network. A recorded transcript is in
   [`docs/demo-output.txt`](docs/demo-output.txt).
-- **Run the full check:** `make check` (lint, Sigma validation, 435 tests, the
+- **Run the full check:** `make check` (lint, Sigma validation, 445 tests, the
   Rust decoders, the decoder/collector/baseline/conduit proofs, and
   deployment-bundle drift).
 - **Read the proof:** `deploy/report.md` records the functional validation — 11
@@ -54,6 +54,7 @@ not committed). The emulation figures are replayed from a genuine run against
 | Held-out recall (single-event) | 48 / 48 (95% CI 0.926–1.0) | Labeled positives authored separately from the rule fixtures. |
 | Held-out precision (single-event) | 48 / 48 (95% CI 0.926–1.0) | Same positives against 1,024 held-out negatives per rule (1,000 generated at a different seed, plus one near miss per rule). |
 | Held-out correlation recall | 12 / 12 positive windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
+| Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
 | ATT&CK for ICS coverage | 29 / 97 techniques (29.9%) | Intentionally seeded: a tested rule per technique rather than untested padding. |
 
 Coverage is intentionally low: this repository seeds the pipeline with a small,
