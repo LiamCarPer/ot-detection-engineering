@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "heldout-window.schema.json",
+  "title": "Held-out correlation window",
+  "description": "One labeled window in the held-out set for a correlation rule. Positive windows must fire; negative windows must stay silent. Never used as the rule's own fixture.",
+  "type": "object",
+  "required": ["rule", "name", "expect", "events"],
+  "additionalProperties": false,
+  "properties": {
+    "rule": {
+      "type": "string",
+      "pattern": "^rules/sigma/ot/[A-Za-z0-9_.-]+\\.yml$",
+      "description": "Repository-relative path to the correlation rule this window is labeled for."
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "expect": { "enum": ["match", "no_match"] },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Ordered normalized telemetry events evaluated as a sequence.",
+      "items": {
+        "type": "object",
+        "minProperties": 1
+      }
+    }
+  }
+}

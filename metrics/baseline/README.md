@@ -12,7 +12,7 @@ hand-written lines.
 | Generator | `tools/make_benign.py` |
 | Seed | `20260101` |
 | Events | 1,000 |
-| Determinism | Fixed template order, fixed variation, fixed timestamps; regenerating writes a byte-identical file. |
+| Determinism | Seeded RNG for field values, fixed template order, clock shifted by the seed; regenerating writes a byte-identical file. |
 
 ```bash
 python tools/make_benign.py

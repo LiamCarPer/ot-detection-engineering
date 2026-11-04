@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -323,31 +324,95 @@ def _templates() -> list[dict[str, Any]]:
     ]
 
 
-def _vary(event: dict[str, Any], index: int) -> dict[str, Any]:
-    """Vary values deterministically without leaving normal behaviour."""
+def _vary(event: dict[str, Any], rng: random.Random) -> dict[str, Any]:
+    """Vary values deterministically without leaving normal behaviour.
+
+    Every choice stays inside the set the rules treat as benign: approved
+    writers and readers, authorized DNP3 link addresses, writes below the
+    safety band, and declared firewall conduits. The randomness exists so a
+    second seed produces a genuine second sample rather than the same events
+    with a shifted timestamp.
+    """
     varied = dict(event)
-    if "register" in varied and varied.get("direction") == "request":
-        if varied.get("function_code") in (6, 16):
-            # Stay well below the safety-critical parameter band.
-            varied["register"] = 100 + (index * 7) % 3_800
+    service = varied.get("service")
+    direction = varied.get("direction")
+
+    if service == "modbus":
+        varied["unit_id"] = rng.choice([1, 2])
+        if direction == "request":
+            if varied.get("function_code") in (6, 16):
+                # Stay well below the safety-critical parameter band.
+                varied["register"] = rng.randint(100, 3_899)
+                if "value" in varied:
+                    varied["value"] = rng.randint(0, 1)
+            else:
+                varied["register"] = rng.randint(0, 999)
+        if "src_ip" in varied and direction == "request":
+            varied["src_ip"] = rng.choice(["172.21.0.20", "172.22.0.10"])
+        if "dst_ip" in varied:
+            varied["dst_ip"] = rng.choice(
+                ["172.21.0.10", "172.21.0.11", "172.21.0.12"]
+            )
+    elif service == "dnp3":
+        if direction == "request":
+            varied["link_source"] = rng.choice([1, 2])
+            varied["link_destination"] = rng.choice([10, 11, 12])
+            if "object_group" in varied:
+                varied["object_group"] = rng.randint(1, 30)
+            if "control_code" in varied:
+                varied["control_code"] = rng.randint(1, 4)
         else:
-            varied["register"] = (index * 13) % 1_000
-    if "value" in varied:
-        varied["value"] = index % 2
-    if "tank_level_pct" in varied and varied.get("event_type") == "process_update":
-        varied["tank_level_pct"] = 35 + (index * 11) % 45
-    if varied.get("service") == "flow":
-        varied["bytes"] = 200 + (index * 37) % 4_000
-        varied["packets"] = 6 + index % 20
+            varied["link_source"] = rng.choice([10, 11, 12])
+            varied["link_destination"] = rng.choice([1, 2])
+    elif service == "s7comm":
+        if direction == "request":
+            varied["src_ip"] = rng.choice(["172.21.0.20", "172.22.0.10"])
+        if "pdu_reference" in varied:
+            varied["pdu_reference"] = rng.randint(1, 500)
+    elif service == "opcua":
+        if "request_id" in varied:
+            varied["request_id"] = rng.randint(1, 10_000)
+        if "secure_channel_id" in varied:
+            varied["secure_channel_id"] = rng.randint(1, 20)
+    elif service == "iptables":
+        # Keep the zone and service pair from the template, so the conduit is
+        # unchanged; only the host and ephemeral port move.
+        if "dst_ip" in varied:
+            parts = varied["dst_ip"].split(".")
+            parts[-1] = str(rng.randint(2, 60))
+            varied["dst_ip"] = ".".join(parts)
+        varied["src_port"] = rng.randint(1024, 65_000)
+    elif service == "safety_monitor":
+        if varied.get("event_type") == "process_update":
+            varied["tank_level_pct"] = rng.randint(35, 79)
+            if "value" in varied:
+                varied["value"] = rng.randint(0, 1)
+    elif service == "flow":
+        varied["bytes"] = rng.randint(200, 4_200)
+        varied["packets"] = rng.randint(6, 25)
+        varied["duration"] = round(rng.uniform(0.005, 0.05), 3)
+        varied["src_port"] = rng.randint(1024, 65_000)
+    elif service == "snmp":
+        varied["device"] = rng.choice(
+            ["172.21.0.40", "172.21.0.41", "172.21.0.50"]
+        )
+        if "src_ip" in varied:
+            varied["src_ip"] = varied["device"]
+        if varied.get("event_type") == "heartbeat":
+            varied["snmp_value"] = str(rng.randint(100_000, 999_999))
     return varied
 
 
 def build(count: int = DEFAULT_COUNT, seed: int = DEFAULT_SEED) -> list[dict[str, Any]]:
     templates = _templates()
-    start = datetime(2026, 1, 1, tzinfo=UTC)
+    rng = random.Random(seed)
+    # Shift the clock by the seed as well, so two seeds never share an event.
+    start = datetime(2026, 1, 1, tzinfo=UTC) + timedelta(
+        seconds=(seed % 10_000) * STEP_SECONDS
+    )
     events: list[dict[str, Any]] = []
     for index in range(count):
-        event = _vary(templates[index % len(templates)], index + seed)
+        event = _vary(templates[index % len(templates)], rng)
         event["timestamp"] = (
             (start + timedelta(seconds=STEP_SECONDS * index)).isoformat().replace("+00:00", "Z")
         )

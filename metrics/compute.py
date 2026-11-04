@@ -31,6 +31,7 @@ if str(REPO_ROOT / "coverage") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "coverage"))
 
 from generate_coverage import build_report  # noqa: E402
+from heldout_eval import heldout_metrics  # noqa: E402
 from sigma.collection import SigmaCollection  # noqa: E402
 from sigma.correlations import SigmaCorrelationRule  # noqa: E402
 from sigma.rule import SigmaRule  # noqa: E402
@@ -160,8 +161,21 @@ def build_metrics(baseline_path: Path, emulation_path: Path) -> dict:
         "coverage": coverage,
         "rule_validation": {"per_rule": per_rule, "aggregate": fixture},
         "baseline": baseline_metrics(load_baseline(baseline_path)),
+        "heldout": heldout_metrics(),
         "emulation": emulation["summary"] if emulation else None,
     }
+
+
+def _ci(interval: list[float] | None) -> str:
+    if not interval:
+        return "—"
+    return f"{interval[0]}–{interval[1]}"
+
+
+def _rate(value: float | None, interval: list[float] | None) -> str:
+    if value is None:
+        return "—"
+    return f"{value} ({_ci(interval)})"
 
 
 def render_markdown(metrics: dict) -> str:
@@ -173,6 +187,9 @@ def render_markdown(metrics: dict) -> str:
     baseline_scope = f"{baseline['events_total']} events"
     if baseline_ci:
         baseline_scope += f", 95% CI {baseline_ci[0]}–{baseline_ci[1]}"
+    heldout = metrics.get("heldout")
+    single_event = heldout["single_event"]["aggregate"] if heldout else None
+    correlation = heldout["correlation"]["aggregate"] if heldout else None
 
     lines = [
         "# Detection Metrics",
@@ -187,6 +204,26 @@ def render_markdown(metrics: dict) -> str:
         f"| Baseline false-positive rate | {baseline['false_positive_rate']} "
         f"({baseline_scope}) |",
     ]
+    if single_event:
+        single_event_fpr = _rate(
+            single_event["false_positive_rate"],
+            single_event["false_positive_rate_ci95"],
+        )
+        lines += [
+            "| Held-out single-event precision | "
+            f"{_rate(single_event['precision'], single_event['precision_ci95'])} |",
+            "| Held-out single-event recall | "
+            f"{_rate(single_event['recall'], single_event['recall_ci95'])} |",
+            "| Held-out single-event false-positive rate | "
+            f"{single_event_fpr} "
+            f"({heldout['single_event']['negatives_total']} negatives) |",
+        ]
+    if correlation:
+        lines += [
+            "| Held-out correlation recall | "
+            f"{_rate(correlation['recall'], correlation['recall_ci95'])} "
+            f"({heldout['correlation']['positives_total']} positive windows) |",
+        ]
     if emulation:
         lines += [
             f"| Emulation detection rate | {emulation['detection_rate_pct']}% |",
@@ -206,6 +243,66 @@ def render_markdown(metrics: dict) -> str:
         lines.append(
             f"| {rule['title']} | {rule['tp']} | {rule['fn']} | {rule['fp']} | "
             f"{rule['tn']} | {rule['precision']} | {rule['recall']} |"
+        )
+
+    if heldout:
+        single_event = heldout["single_event"]
+        lines += [
+            "",
+            "## Held-out single-event rules",
+            "",
+            f"{single_event['positives_total']} labeled positives against "
+            f"{single_event['negatives_total']} held-out negatives (generated from a "
+            "different seed than the tuning corpus, plus one near miss per rule).",
+            "",
+            "| Rule | Pos | Neg | TP | FN | FP | TN | Precision (95% CI) | "
+            "Recall (95% CI) | FP rate (95% CI) |",
+            "| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        ]
+        for rule in single_event["per_rule"]:
+            lines.append(
+                f"| {rule['title']} | {rule['positives']} | {rule['negatives']} | "
+                f"{rule['tp']} | {rule['fn']} | {rule['fp']} | {rule['tn']} | "
+                f"{_rate(rule['precision'], rule['precision_ci95'])} | "
+                f"{_rate(rule['recall'], rule['recall_ci95'])} | "
+                f"{_rate(rule['false_positive_rate'], rule['false_positive_rate_ci95'])} |"
+            )
+        aggregate = single_event["aggregate"]
+        lines.append(
+            f"| **All single-event rules** | {single_event['positives_total']} | "
+            f"{single_event['negatives_total']} | {aggregate['tp']} | {aggregate['fn']} | "
+            f"{aggregate['fp']} | {aggregate['tn']} | "
+            f"{_rate(aggregate['precision'], aggregate['precision_ci95'])} | "
+            f"{_rate(aggregate['recall'], aggregate['recall_ci95'])} | "
+            f"{_rate(aggregate['false_positive_rate'], aggregate['false_positive_rate_ci95'])} |"
+        )
+
+        correlation = heldout["correlation"]
+        lines += [
+            "",
+            "## Held-out correlation rules",
+            "",
+            f"{correlation['positives_total']} positive windows against "
+            f"{correlation['negatives_total']} negative windows.",
+            "",
+            "| Rule | Pos | Neg | TP | FN | FP | TN | Precision (95% CI) | "
+            "Recall (95% CI) |",
+            "| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        ]
+        for rule in correlation["per_rule"]:
+            lines.append(
+                f"| {rule['title']} | {rule['positives']} | {rule['negatives']} | "
+                f"{rule['tp']} | {rule['fn']} | {rule['fp']} | {rule['tn']} | "
+                f"{_rate(rule['precision'], rule['precision_ci95'])} | "
+                f"{_rate(rule['recall'], rule['recall_ci95'])} |"
+            )
+        aggregate = correlation["aggregate"]
+        lines.append(
+            f"| **All correlation rules** | {correlation['positives_total']} | "
+            f"{correlation['negatives_total']} | {aggregate['tp']} | {aggregate['fn']} | "
+            f"{aggregate['fp']} | {aggregate['tn']} | "
+            f"{_rate(aggregate['precision'], aggregate['precision_ci95'])} | "
+            f"{_rate(aggregate['recall'], aggregate['recall_ci95'])} |"
         )
 
     lines += [

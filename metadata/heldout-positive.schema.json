@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "heldout-positive.schema.json",
+  "title": "Held-out positive event",
+  "description": "One labeled positive in the held-out set: an event that the named rule must fire on, never used as the rule's own fixture.",
+  "type": "object",
+  "required": ["rule", "name", "event"],
+  "additionalProperties": false,
+  "properties": {
+    "rule": {
+      "type": "string",
+      "pattern": "^rules/sigma/ot/[A-Za-z0-9_.-]+\\.yml$",
+      "description": "Repository-relative path to the single-event rule this event should match."
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "event": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Normalized telemetry event evaluated against the rule."
+    }
+  }
+}
