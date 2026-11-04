@@ -167,9 +167,11 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 - **Recall** — true positives divided by true positives plus false negatives,
   from labeled fixtures.
 - **Baseline false-positive rate** — benign events matched by any rule divided by
-  all benign events. The committed baseline holds 52 events, so this catches a
-  rule that fires on clearly benign telemetry rather than estimating field
-  false-positive volume.
+  all benign events, reported with a 95% Wilson score interval. The committed
+  baseline holds 1,000 generated events (seed `20260101`), so a zero result is
+  reported as `0/1,000` with an upper bound of 0.38%, not as certainty. It
+  catches a rule that fires on modelled normal operation; it does not estimate
+  field false-positive volume.
 - **Detection rate** — emulation expectations that fired divided by all
   expectations.
 - **MTTD** — mean time from the start of an emulation step to the first matching

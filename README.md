@@ -20,7 +20,7 @@ metrics are derived from the rules themselves, so they cannot drift.
   the generated Loki, Splunk, Sentinel and OpenSearch queries. No Docker, no
   network. A recorded transcript is in
   [`docs/demo-output.txt`](docs/demo-output.txt).
-- **Run the full check:** `make check` (lint, Sigma validation, 288 tests, the
+- **Run the full check:** `make check` (lint, Sigma validation, 297 tests, the
   Rust decoders, the decoder/collector/baseline/conduit proofs, and
   deployment-bundle drift).
 - **Read the proof:** `deploy/report.md` records the functional validation — 11
@@ -50,7 +50,7 @@ not committed). The emulation figures are replayed from a genuine run against
 | Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, replayed from the recorded lab run. |
 | Rule fixture agreement (precision) | 1.0 | Rule matches against its own committed positive/negative fixtures. A regression check, not field precision. |
 | Rule fixture agreement (recall) | 1.0 | As above. |
-| Baseline false-positive rate | 0.0 | 52 committed benign events across every protocol and stream the rules consume. |
+| Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | 1,000 generated benign events across every protocol and stream the rules consume. |
 | ATT&CK for ICS coverage | 20 / 97 techniques (20.6%) | Intentionally low: a small, fully tested ruleset rather than untested padding. |
 
 Coverage is intentionally low: this repository seeds the pipeline with a small,
@@ -75,11 +75,14 @@ detection is only as trustworthy as the evidence behind it.
   are computed against fixtures authored alongside each rule, so they measure
   that the rule and its fixtures agree — useful as a regression guard, not as a
   claim about production precision.
-- **The benign baseline is small.** The baseline false-positive rate is measured
-  over 52 committed benign events spanning normal Modbus, DNP3, S7comm and OPC UA
-  traffic, zone-firewall decisions and process updates. It is authored, not
-  harvested from a plant, so it catches a rule that fires on clearly
-  benign telemetry, not enough to estimate field false-positive volume.
+- **The benign baseline is generated, not harvested.** The baseline
+  false-positive rate is measured over 1,000 deterministic events produced by
+  `tools/make_benign.py` (seed `20260101`), spanning normal Modbus, DNP3, S7comm
+  and OPC UA traffic, zone-firewall decisions, flows, process updates and SNMP.
+  It checks that no rule fires on modelled normal operation; the honest claim is
+  `0/1,000` with a 95% Wilson upper bound of **0.38%**, not "0.0 FPR". Because it
+  is generated rather than captured, it cannot estimate field false-positive
+  volume; see `metrics/baseline/README.md`.
 - **Emulation scope.** The emulation plan covers two adversary steps and four
   expectations; it does not exercise every rule.
 - **The behaviour baseline is a committed snapshot.** The deviation rules are

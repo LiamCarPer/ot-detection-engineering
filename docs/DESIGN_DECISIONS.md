@@ -168,8 +168,10 @@ team owns.
 - **Coverage is intentionally low** (16 of 97 ICS techniques). The point is the
   engineering process, which scales unchanged to a large ruleset.
 - **Fixture precision and recall measure rule/fixture agreement**, not field
-  performance, and the benign baseline is 52 authored events covering normal
-  traffic for every protocol and stream the rules consume.
+  performance, and the benign baseline is 1,000 generated events covering normal
+  traffic for every protocol and stream the rules consume. A zero result is
+  reported as `0/1,000` with a 95% Wilson upper bound of 0.38%, not as a zero
+  false-positive rate.
 - **Detection is mostly signature-based.** Two behavioural detections now exist —
   a correlation rule that counts distinct destinations per source over a window,
   and behaviour-baseline rules that flag a new asset, pair or function code
