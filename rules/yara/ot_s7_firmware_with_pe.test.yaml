@@ -1,0 +1,12 @@
+cases:
+  - name: an S7-1500 firmware image carrying an embedded PE
+    expect: match
+    file: tests/yara/samples/malicious/s7_firmware_with_pe.bin
+
+  - name: an S7-1500 firmware image with no embedded binary
+    expect: no_match
+    file: tests/yara/samples/benign/s7_firmware_clean.bin
+
+  - name: a Siemens project file is not a firmware image
+    expect: no_match
+    file: tests/yara/samples/malicious/siemens_project_with_pe.bin

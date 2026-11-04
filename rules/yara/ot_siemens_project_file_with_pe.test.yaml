@@ -1,0 +1,12 @@
+cases:
+  - name: a Siemens project file carrying an embedded PE
+    expect: match
+    file: tests/yara/samples/malicious/siemens_project_with_pe.bin
+
+  - name: a Siemens project file with no embedded binary
+    expect: no_match
+    file: tests/yara/samples/benign/siemens_project_clean.bin
+
+  - name: an S7 firmware blob is not a Siemens project file
+    expect: no_match
+    file: tests/yara/samples/malicious/s7_firmware_with_pe.bin

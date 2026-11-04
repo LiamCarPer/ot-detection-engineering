@@ -24,6 +24,7 @@ SIGMA_RULES_DIR = REPO_ROOT / "rules" / "sigma"
 NATIVE_RULES_DIR = REPO_ROOT / "rules" / "native"
 BASELINE_RULES_DIR = REPO_ROOT / "rules" / "baseline"
 CONDUIT_RULES_DIR = REPO_ROOT / "rules" / "conduit"
+YARA_RULES_DIR = REPO_ROOT / "rules" / "yara"
 METADATA_DIR = REPO_ROOT / "metadata"
 CATALOG_PATH = METADATA_DIR / "attack_ics_catalog.json"
 
@@ -127,6 +128,38 @@ def conduit_techniques(rule_path: Path) -> list[str]:
     return _techniques_from_tags(list(data.get("tags", [])))
 
 
+def yara_rule_paths() -> list[Path]:
+    return sorted(
+        path for path in YARA_RULES_DIR.rglob("*.yar") if ".test." not in path.name
+    )
+
+
+def yara_techniques(rule_path: Path) -> list[str]:
+    """Techniques from a YARA rule's ``attack_ics`` metadata entry."""
+    text = rule_path.read_text(encoding="utf-8")
+    return [value.upper() for value in re.findall(r'attack_ics\s*=\s*"([^"]+)"', text)]
+
+
+@dataclass(frozen=True)
+class YaraCase:
+    name: str
+    expect_match: bool
+    file: str
+
+
+def load_yara_cases(rule_path: Path) -> list[YaraCase]:
+    """Load the artifacts a YARA rule is proven against."""
+    raw = yaml.safe_load(cases_path_for(rule_path).read_text(encoding="utf-8"))
+    return [
+        YaraCase(
+            name=entry["name"],
+            expect_match=entry["expect"] == "match",
+            file=entry["file"],
+        )
+        for entry in raw["cases"]
+    ]
+
+
 def native_techniques(rule_path: Path) -> list[str]:
     techniques: list[str] = []
     for rule in read_rules(rule_path):
@@ -209,6 +242,10 @@ def detected_techniques() -> dict[str, list[str]]:
     for rule_path in conduit_rule_paths():
         relative = rule_path.relative_to(REPO_ROOT).as_posix()
         for technique in conduit_techniques(rule_path):
+            sources.setdefault(technique, []).append(relative)
+    for rule_path in yara_rule_paths():
+        relative = rule_path.relative_to(REPO_ROOT).as_posix()
+        for technique in yara_techniques(rule_path):
             sources.setdefault(technique, []).append(relative)
     for rule_path in native_rule_paths():
         relative = rule_path.relative_to(REPO_ROOT).as_posix()

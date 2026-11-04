@@ -1,0 +1,91 @@
+{
+  "payload_scan": {
+    "expected": [
+      "OT_S7_Firmware_With_Embedded_PE"
+    ],
+    "file": "tests/yara/samples/payloads/s7_block_with_pe.bin",
+    "matches": [
+      "OT_S7_Firmware_With_Embedded_PE"
+    ],
+    "passed": true
+  },
+  "rules": [
+    {
+      "cases": [
+        {
+          "expected": "match",
+          "file": "tests/yara/samples/malicious/ews_dropper.ps1",
+          "name": "a PowerShell dropper combining encoded execution and a remote loader",
+          "observed": true,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/ews_admin.ps1",
+          "name": "a routine administrative PowerShell script",
+          "observed": false,
+          "passed": true
+        }
+      ],
+      "file": "rules/yara/ot_powershell_dropper_on_ews.yar",
+      "rule": "OT_PowerShell_Dropper_On_EWS"
+    },
+    {
+      "cases": [
+        {
+          "expected": "match",
+          "file": "tests/yara/samples/malicious/s7_firmware_with_pe.bin",
+          "name": "an S7-1500 firmware image carrying an embedded PE",
+          "observed": true,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/s7_firmware_clean.bin",
+          "name": "an S7-1500 firmware image with no embedded binary",
+          "observed": false,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/malicious/siemens_project_with_pe.bin",
+          "name": "a Siemens project file is not a firmware image",
+          "observed": false,
+          "passed": true
+        }
+      ],
+      "file": "rules/yara/ot_s7_firmware_with_pe.yar",
+      "rule": "OT_S7_Firmware_With_Embedded_PE"
+    },
+    {
+      "cases": [
+        {
+          "expected": "match",
+          "file": "tests/yara/samples/malicious/siemens_project_with_pe.bin",
+          "name": "a Siemens project file carrying an embedded PE",
+          "observed": true,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/siemens_project_clean.bin",
+          "name": "a Siemens project file with no embedded binary",
+          "observed": false,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/malicious/s7_firmware_with_pe.bin",
+          "name": "an S7 firmware blob is not a Siemens project file",
+          "observed": false,
+          "passed": true
+        }
+      ],
+      "file": "rules/yara/ot_siemens_project_file_with_pe.yar",
+      "rule": "OT_Siemens_Project_File_With_Embedded_PE"
+    }
+  ],
+  "selftest": {
+    "eicar": true
+  }
+}

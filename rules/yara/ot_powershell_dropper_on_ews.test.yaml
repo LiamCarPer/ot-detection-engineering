@@ -1,0 +1,8 @@
+cases:
+  - name: a PowerShell dropper combining encoded execution and a remote loader
+    expect: match
+    file: tests/yara/samples/malicious/ews_dropper.ps1
+
+  - name: a routine administrative PowerShell script
+    expect: no_match
+    file: tests/yara/samples/benign/ews_admin.ps1

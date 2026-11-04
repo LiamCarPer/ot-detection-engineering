@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust security-preflight security-api-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate metrics check clean
+.PHONY: help setup lint validate test rust security-preflight security-api-check yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate metrics check clean
 
 help:
 	@echo "Targets:"
@@ -20,6 +20,7 @@ help:
 	@echo "  rust             Format-check, lint and test the Rust protocol decoders"
 	@echo "  security-preflight  Offline security governance and supply-chain checks"
 	@echo "  security-api-check  Ingest API and AI triage security tests"
+	@echo "  yara-check       Prove YARA rules against committed file and payload samples"
 	@echo "  demo             Offline decoder -> Sigma rule -> SIEM query walkthrough"
 	@echo "  convert          Convert Sigma rules to the BACKEND query language (default: loki)"
 	@echo "  convert-all      Convert to loki, opensearch, splunk and sentinel"
@@ -55,6 +56,9 @@ validate: setup
 
 test: setup
 	$(PYTEST)
+
+yara-check: setup
+	$(PY) tools/yara_check.py
 
 security-api-check: setup
 	$(PYTEST) tests/test_ingest_api.py tests/test_ingest_ai_security.py
@@ -121,7 +125,7 @@ metrics: setup
 		--observations purple/emulation/lab-observations.json
 	$(PY) metrics/compute.py
 
-check: lint validate test rust security-preflight decoder-check collector-check baseline-check conduit-check deploy-check
+check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check deploy-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target

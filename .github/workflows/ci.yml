@@ -73,6 +73,12 @@ jobs:
       - name: Check the conduit evidence is current
         run: git diff --exit-code deploy/evidence/conduit/summary.json
 
+      - name: Prove YARA rules against committed artifacts
+        run: python tools/yara_check.py
+
+      - name: Check the YARA evidence is current
+        run: git diff --exit-code deploy/evidence/yara/summary.json
+
 
       - name: Convert to Loki
         run: python pipelines/convert.py --backend loki --check
