@@ -34,11 +34,20 @@
             "minItems": 1,
             "items": {
               "type": "object",
-              "required": ["signal", "technique", "rule"],
+              "required": ["signal", "technique", "lab_technique", "rule"],
               "additionalProperties": false,
               "properties": {
                 "signal": { "type": "string", "minLength": 1 },
-                "technique": { "type": "string", "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$" },
+                "technique": {
+                  "type": "string",
+                  "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$",
+                  "description": "The technique the repository rule is mapped to."
+                },
+                "lab_technique": {
+                  "type": "string",
+                  "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$",
+                  "description": "The technique the lab's ground-truth alert carries. Checked against the alert's mitre_id at evaluation time."
+                },
                 "rule": { "type": "string", "minLength": 1 }
               }
             }

@@ -8,10 +8,13 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "purple" / "runner"))
 
 from run_emulation import (  # noqa: E402
+    EmulationDataError,
     evaluate,
     load_plan,
     main,
@@ -26,16 +29,32 @@ OBSERVATIONS = {
         "started_at": "2026-09-13T02:14:00+00:00",
         "finished_at": "2026-09-13T02:14:30+00:00",
         "alerts": [
-            {"timestamp": "2026-09-13T02:14:07Z", "alert_type": "UNAUTHORIZED_MODBUS_WRITE"},
-            {"timestamp": "2026-09-13T02:14:05Z", "alert_type": "CROSS_ZONE_VIOLATION"},
-            {"timestamp": "2026-09-13T02:14:20Z", "alert_type": "OT_BRUTE_FORCE_SCAN"},
+            {
+                "timestamp": "2026-09-13T02:14:07Z",
+                "alert_type": "UNAUTHORIZED_MODBUS_WRITE",
+                "mitre_id": "T0831",
+            },
+            {
+                "timestamp": "2026-09-13T02:14:05Z",
+                "alert_type": "CROSS_ZONE_VIOLATION",
+                "mitre_id": "T0886",
+            },
+            {
+                "timestamp": "2026-09-13T02:14:20Z",
+                "alert_type": "OT_BRUTE_FORCE_SCAN",
+                "mitre_id": "T0846",
+            },
         ],
     },
     "physics-aware-safety-violation": {
         "started_at": "2026-09-13T02:15:00+00:00",
         "finished_at": "2026-09-13T02:15:30+00:00",
         "alerts": [
-            {"timestamp": "2026-09-13T02:15:02Z", "alert_type": "PROCESS_SAFETY_VIOLATION"},
+            {
+                "timestamp": "2026-09-13T02:15:02Z",
+                "alert_type": "PROCESS_SAFETY_VIOLATION",
+                "mitre_id": "T0836",
+            },
         ],
     },
 }
@@ -70,7 +89,11 @@ def test_missing_signal_is_a_miss() -> None:
 def test_alert_outside_window_is_ignored() -> None:
     observations = copy.deepcopy(OBSERVATIONS)
     observations["physics-aware-safety-violation"]["alerts"] = [
-        {"timestamp": "2026-09-13T02:14:59Z", "alert_type": "PROCESS_SAFETY_VIOLATION"}
+        {
+            "timestamp": "2026-09-13T02:14:59Z",
+            "alert_type": "PROCESS_SAFETY_VIOLATION",
+            "mitre_id": "T0836",
+        }
     ]
     summary = evaluate(load_plan(), observations)["summary"]
     assert summary["expectations_detected"] == 3
@@ -81,6 +104,21 @@ def test_plan_with_wrong_technique_mapping_is_rejected() -> None:
     plan["steps"][1]["expectations"][0]["technique"] = "T0886"
     problems = validate_plan(plan)
     assert any("does not detect" in problem for problem in problems)
+
+
+def test_alert_with_wrong_lab_technique_fails_loudly() -> None:
+    """The lab's label must match the plan, not just the alert_type."""
+    observations = copy.deepcopy(OBSERVATIONS)
+    observations["enterprise-pivot-and-write"]["alerts"][0]["mitre_id"] = "T9999"
+    with pytest.raises(EmulationDataError, match="expected lab technique"):
+        evaluate(load_plan(), observations)
+
+
+def test_plan_with_unknown_lab_technique_is_rejected() -> None:
+    plan = copy.deepcopy(load_plan())
+    plan["steps"][0]["expectations"][0]["lab_technique"] = "T9999"
+    problems = validate_plan(plan)
+    assert any("unknown lab technique" in problem for problem in problems)
 
 
 def test_render_markdown_contains_summary() -> None:
@@ -113,7 +151,13 @@ def test_run_plan_records_execution_windows(tmp_path: Path) -> None:
     alerts = tmp_path / "alerts.json"
     alerts.write_text(
         json.dumps(
-            [{"timestamp": "2026-09-13T02:14:07Z", "alert_type": "UNAUTHORIZED_MODBUS_WRITE"}]
+            [
+                {
+                    "timestamp": "2026-09-13T02:14:07Z",
+                    "alert_type": "UNAUTHORIZED_MODBUS_WRITE",
+                    "mitre_id": "T0831",
+                }
+            ]
         )
     )
     plan = {

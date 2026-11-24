@@ -45,6 +45,10 @@ DEFAULT_SCHEMA = REPO_ROOT / "purple" / "emulation" / "plan.schema.json"
 DEFAULT_OUT = REPO_ROOT / "purple" / "results"
 
 
+class EmulationDataError(RuntimeError):
+    """Raised when recorded lab data contradicts the plan or its labels."""
+
+
 def load_plan(path: Path = DEFAULT_PLAN) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
@@ -73,14 +77,15 @@ def validate_plan(plan: dict, schema_path: Path = DEFAULT_SCHEMA) -> list[str]:
             technique = expectation["technique"]
             if technique not in known:
                 problems.append(f"{step['id']}: unknown technique {technique}")
+            lab_technique = expectation.get("lab_technique")
+            if lab_technique not in known:
+                problems.append(f"{step['id']}: unknown lab technique {lab_technique}")
             rule_path = REPO_ROOT / expectation["rule"]
             if not rule_path.exists():
                 problems.append(f"{step['id']}: rule not found: {expectation['rule']}")
                 continue
             if technique not in techniques_for(rule_path):
-                problems.append(
-                    f"{step['id']}: {expectation['rule']} does not detect {technique}"
-                )
+                problems.append(f"{step['id']}: {expectation['rule']} does not detect {technique}")
     return problems
 
 
@@ -102,9 +107,10 @@ def load_alerts(path: Path) -> list[dict]:
     return [json.loads(line) for line in text.splitlines() if line.strip()]
 
 
-def _first_matching_alert(
+def _alerts_in_window(
     alerts: list[dict], signal: str, started: datetime, finished: datetime | None
-) -> dict | None:
+) -> list[tuple[datetime, dict]]:
+    """Return the signal's alerts inside the step's window, oldest first."""
     matches = []
     for alert in alerts:
         if alert.get("alert_type") != signal:
@@ -118,9 +124,33 @@ def _first_matching_alert(
         if finished is not None and moment > finished:
             continue
         matches.append((moment, alert))
-    if not matches:
-        return None
-    return min(matches, key=lambda item: item[0])[1]
+    return sorted(matches, key=lambda item: item[0])
+
+
+def _check_lab_technique(
+    step: dict, expectation: dict, candidates: list[tuple[datetime, dict]]
+) -> None:
+    """Fail if a matched alert carries a technique other than the plan's label.
+
+    The plan's ``technique`` is the repository rule's mapping; ``lab_technique``
+    is the label the lab's ground truth carries. They can legitimately differ
+    (a rule detects the command, the lab alert describes the impact), but the
+    difference must be declared and the recorded data must match it. Without
+    this check a mismatch passes silently because the runner only compares
+    ``alert_type``.
+    """
+    expected = expectation.get("lab_technique")
+    if not expected:
+        return
+    observed = {
+        str(alert.get("mitre_id")) for _, alert in candidates if alert.get("mitre_id") is not None
+    }
+    mismatched = [alert for _, alert in candidates if str(alert.get("mitre_id")) != expected]
+    if mismatched:
+        raise EmulationDataError(
+            f"{step['id']}/{expectation['signal']}: expected lab technique "
+            f"{expected}, observed {sorted(observed) or ['<missing>']}"
+        )
 
 
 def evaluate(plan: dict, observations: dict) -> dict:
@@ -140,26 +170,28 @@ def evaluate(plan: dict, observations: dict) -> dict:
         expectation_results = []
         for expectation in step["expectations"]:
             expectations_total += 1
-            alert = (
-                _first_matching_alert(alerts, expectation["signal"], started, finished)
+            candidates = (
+                _alerts_in_window(alerts, expectation["signal"], started, finished)
                 if started is not None
-                else None
+                else []
             )
+            _check_lab_technique(step, expectation, candidates)
+            alert = candidates[0][1] if candidates else None
             detected = alert is not None
             mttd = None
             if detected:
                 expectations_detected += 1
                 if started is not None:
-                    mttd = round(
-                        (parse_timestamp(alert["timestamp"]) - started).total_seconds(), 3
-                    )
+                    mttd = round((parse_timestamp(alert["timestamp"]) - started).total_seconds(), 3)
                     mttds.append(mttd)
             expectation_results.append(
                 {
                     "signal": expectation["signal"],
                     "technique": expectation["technique"],
+                    "lab_technique": expectation.get("lab_technique"),
                     "rule": expectation["rule"],
                     "detected": detected,
+                    "alert_mitre_id": alert.get("mitre_id") if alert else None,
                     "mttd_seconds": mttd,
                 }
             )
