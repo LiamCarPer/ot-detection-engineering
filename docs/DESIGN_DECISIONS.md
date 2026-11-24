@@ -165,8 +165,10 @@ team owns.
 
 ## Known limitations
 
-- **Coverage is intentionally low** (16 of 97 ICS techniques). The point is the
-  engineering process, which scales unchanged to a large ruleset.
+- **Coverage is prioritized, not maximized.** The raw ATT&CK for ICS number is
+  29 of 97 techniques. The gaps are deliberate: Privilege Escalation needs
+  host/auth telemetry, and several Impact techniques need process context. The
+  point is the engineering process, which scales unchanged to a larger ruleset.
 - **Fixture precision and recall measure rule/fixture agreement**, not field
   performance, and the benign baseline is 1,000 generated events covering normal
   traffic for every protocol and stream the rules consume. A zero result is

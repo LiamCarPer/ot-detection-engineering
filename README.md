@@ -4,62 +4,91 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![ATT&CK for ICS](https://img.shields.io/badge/ATT%26CK%20for%20ICS-v19.2-cc0000)](metadata/attack_ics_catalog.json)
 
-Detection-as-code for operational technology: OT Sigma rules, native protocol
-DPI, MITRE ATT&CK for ICS coverage, purple-team validation, and measurable
-detection quality.
+**A detection-as-code operating model for OT/ICS, demonstrated end to end on a
+segmented water-treatment lab.**
 
-Detections are treated as software. They live in version control, are validated
-and tested in CI, are converted to each target platform from a single source of
-truth, and are proven against adversary emulation. Coverage and detection
-metrics are derived from the rules themselves, so they cannot drift.
+Most detection portfolios stop at a folder of Sigma rules. This one closes the
+loop: threat model → telemetry → detection → fixture and held-out validation →
+conversion and deployment → adversary emulation → measured tuning. Every headline
+claim has an artifact and a command, and the repository says plainly what it does
+not prove.
 
-## Start here
+## What to look at first
 
-- **See it run in a minute:** `make setup && make demo` decodes a real DNP3,
-  S7comm and OPC UA frame, matches each event against the Sigma rules, and prints
-  the generated Loki, Splunk, Sentinel and OpenSearch queries. No Docker, no
-  network. A recorded transcript is in
-  [`docs/demo-output.txt`](docs/demo-output.txt).
-- **Run the full check:** `make check` (lint, Sigma validation, 445 tests, the
-  Rust decoders, the decoder/collector/baseline/conduit proofs, and
-  deployment-bundle drift).
-- **Read the proof:** `deploy/report.md` records the functional validation — 11
-  of the 13 generated rules firing on live traffic in a Dockerized OT lab, the
-  Suricata ruleset running inside a Malcolm pipeline, and the
-  decoder/collector/baseline/conduit proofs.
-- **Understand the tradeoffs:** `docs/DESIGN_DECISIONS.md` explains why the
-  system is built this way and what it does not do.
-- **One-page summary:** [`docs/RESULTS.md`](docs/RESULTS.md) lists every claim,
-  its evidence and how to reproduce it.
+| Time | Start here | Why |
+| :-- | :-- | :-- |
+| 2 min | [`docs/RESULTS.md`](docs/RESULTS.md) | The numbers, their scope, and what they do not mean. |
+| 5 min | [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md) | A reviewer's path from summary to code, including where to be skeptical. |
+| 10 min | [`deploy/report.md`](deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
+| 20 min | [`docs/CLAIMS.md`](docs/CLAIMS.md) | Every claim → evidence → the command that proves it. |
+| 30 min | [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md) | Tradeoffs, failures, and the rule that was withdrawn. |
 
-## Results
+## The 90-second version
 
-Every figure is derived from the rules themselves and kept honest by tests:
-`tests/test_readme.py` fails if this table drifts from `make metrics`, and the
-committed evidence under `deploy/evidence/` is guarded by its own tests. Generate
-the full report with `make metrics` (it writes `metrics/out/report.md`, which is
-not committed). The emulation figures are replayed from a genuine run against
-[OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) on 2026-09-13
-(lab `6d68b6f`); the raw capture is committed at
-`purple/emulation/lab-observations.json` and documented in
-[`purple/emulation/lab-run.md`](purple/emulation/lab-run.md).
+- **What it detects.** 29 ATT&CK for ICS techniques across 24 single-event Sigma
+  rules, 6 correlation rules, 4 YARA rules and 24 native Suricata signatures,
+  chosen for a segmented water-treatment plant and mapped to a committed threat
+  model.
+- **What it proves.** Every rule is fixture-tested; the Sigma rules are
+  held-out-tested; the native rules run in Suricata over real captures; the
+  Sigma rules run in a live Loki stack and in a Malcolm pipeline; the Rust
+  decoders are proven against the rules they feed.
+- **What it tunes.** The repo records the failures its checks found: a Modbus
+  response rule that could not attribute the responder and was withdrawn, a DNP3
+  allowlist that missed the benign master, and a Suricata exception rule that
+  used invalid syntax. The point is the loop, not a perfect first draft.
+- **What it is not.** The benign corpus is generated, the lab is a Dockerised
+  plant, and the purple-team run is two steps and one run. Those are
+  limitations, not footnotes.
+
+## Coverage: prioritized, not padded
+
+Raw ATT&CK for ICS coverage is **29 / 97 techniques (29.9%)**. That number is
+deliberately not the headline. The catalogue includes techniques that are not
+observable from the telemetry this repository has — network, flow, file and
+process — and padding it with untested tags would make the repo worse, not
+better.
+
+| Tactic | Covered | Why the gap is acceptable |
+| :-- | --: | :-- |
+| Initial Access | 4 / 12 | EWS, remote-service and rogue-master paths are covered; phishing delivery is file-based, not log-based. |
+| Execution | 3 / 10 | Protocol-level execution is covered; host execution needs EDR telemetry the lab does not have. |
+| Persistence | 2 / 10 | PLC program download and project-file tampering are covered; host persistence needs EDR. |
+| Privilege Escalation | 0 / 2 | Deliberately uncovered: it requires host/auth telemetry, and tagging a network rule would be dishonest. |
+| Evasion | 2 / 9 | Protocol-visible evasion is covered; host evasion needs EDR. |
+| Discovery | 3 / 8 | Port, register and device-identification discovery are covered. |
+| Lateral Movement | 4 / 11 | Cross-zone, rogue-master and large-transfer paths are covered. |
+| Collection | 4 / 11 | Register and address-space enumeration are covered. |
+| Command and Control | 2 / 3 | Control-zone egress and proxy fan-out are covered; a live C2 channel is not built. |
+| Inhibit Response Function | 4 / 20 | Device restart, interface down, configuration change and detection-service health are covered. |
+| Impair Process Control | 4 / 8 | Unauthorized writes, parameter writes, safety violations and mode changes are covered. |
+| Impact | 3 / 12 | View/control denial and safety impact are covered; physical damage needs process context. |
+
+The per-tactic breakdown is generated from the rules by
+`coverage/generate_coverage.py`; it is not hand-maintained.
+
+## Results at a glance
 
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
-| Emulation detection rate | 100% (4 / 4 expectations) | Two emulation steps — enterprise pivot (Modbus write, cross-zone traffic, I/O brute force) and a process-safety violation. |
-| Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, replayed from the recorded lab run. |
-| Rule fixture agreement (precision) | 1.0 | Rule matches against its own committed positive/negative fixtures. A regression check, not field precision. |
-| Rule fixture agreement (recall) | 1.0 | As above. |
-| Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | 1,000 generated benign events across every protocol and stream the rules consume. |
-| Held-out recall (single-event) | 48 / 48 (95% CI 0.926–1.0) | Labeled positives authored separately from the rule fixtures. |
-| Held-out precision (single-event) | 48 / 48 (95% CI 0.926–1.0) | Same positives against 1,024 held-out negatives per rule (1,000 generated at a different seed, plus one near miss per rule). |
+| Detection content | 24 Sigma + 6 correlation + 4 YARA + 24 native | Single-event and windowed log rules, file rules, and protocol DPI. |
+| Emulation detection rate | 100% (4 / 4 expectations) | Two emulation steps, one recorded lab run; the lab's `mitre_id` is cross-checked against the plan. |
+| Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, replayed from the recorded run (`n=4`, one run). |
+| Rule fixture agreement | precision 1.0, recall 1.0 | Rule matches against its own committed fixtures. A regression check, not field precision. |
+| Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every protocol and stream the rules consume. |
+| Held-out single-event recall | 48 / 48 (95% CI 0.926–1.0) | Labeled positives authored separately from the rule fixtures. |
+| Held-out single-event precision | 48 / 48 (95% CI 0.926–1.0) | Same positives against 1,024 held-out negatives per rule. |
 | Held-out correlation recall | 12 / 12 positive windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
 | Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
-| ATT&CK for ICS coverage | 29 / 97 techniques (29.9%) | Intentionally seeded: a tested rule per technique rather than untested padding. |
 
-Coverage is intentionally low: this repository seeds the pipeline with a small,
-fully tested ruleset rather than padding coverage with untested rules. The point
-is the engineering process, which scales to a large ruleset unchanged.
+## What is not the headline
+
+The repository also contains a security-engineering workstream: a threat model,
+29 controls, SAST/SCA/secrets/actions gates, a FastAPI ingest service and an LLM
+triage endpoint with OWASP LLM Top 10 tests. It is real and tested, but it is
+supporting evidence. The OT detection loop is the story. See
+[`docs/AI_SECURITY.md`](docs/AI_SECURITY.md) and
+[`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) if you want that part.
 
 ## Scope and limitations
 
@@ -275,7 +304,7 @@ fires there rather than only in isolation. The Loki ruler bundle is deployed
 into [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab), a live
 segmented lab with real DNP3, OPC UA and S7comm endpoints. After the lab's own
 adversary emulations run, `tools/lab_loki_check.py` confirms **11 of the 13
-generated rules firing on live lab traffic** — every DNP3, OPC UA, S7comm,
+rules the lab exercises firing on live lab traffic** — every DNP3, OPC UA, S7comm,
 firewall and process rule. The two generated Modbus rules are validated offline
 instead: the lab reports Modbus as JSON alert events, not normalized `ot_ndr`
 telemetry. The proof is committed under `deploy/evidence/lab-loki/`; the full

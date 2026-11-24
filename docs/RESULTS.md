@@ -2,15 +2,22 @@
 
 One page of what this repository proves, the evidence for each claim, and how to
 reproduce it. Everything here is machine-checked by the test suite or captured
-from a real run; nothing is hand-counted.
+from a real run; nothing is hand-counted. The full claim-to-evidence map is in
+[`docs/CLAIMS.md`](CLAIMS.md), and the reviewer's path is in
+[`docs/REVIEWER_GUIDE.md`](REVIEWER_GUIDE.md).
+
+Coverage is not a score. The raw ATT&CK for ICS number is
+**29 / 97 techniques (29.9%)**; it is deliberately not the headline, and the
+per-tactic rationale for the gaps is in the README.
 
 ## Headline
 
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
-| ATT&CK for ICS coverage | 29 / 97 techniques (29.9%) | Intentionally seeded, not padded. |
-| Emulation detection rate | 100% (4 / 4 expectations) | Two adversary steps, replayed from a live lab run. |
-| Mean MTTD | 2.45 s | Time from action to first matching alert. |
+| ATT&CK for ICS coverage | 29 prioritized techniques (raw 29 / 97, 29.9%) | Chosen against the plant threat model; gaps are listed, not padded. |
+| Detection content | 24 Sigma + 6 correlation + 4 YARA + 24 native | Single-event and windowed log rules, file rules, and protocol DPI. |
+| Emulation detection rate | 100% (4 / 4 expectations) | Two adversary steps, one recorded lab run; the lab's `mitre_id` is cross-checked against the plan. |
+| Mean MTTD | 2.45 s | Time from action to first matching alert (`n=4`, one run). |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule vs. its own committed fixtures — a regression check. |
 | Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every telemetry domain. |
 | Held-out single-event recall | 48 / 48 (95% CI 0.926–1.0) | 2 labeled positives per rule, authored separately from the fixtures. |
@@ -26,7 +33,7 @@ from a real run; nothing is hand-counted.
 | Native Suricata rules fire on all four protocols, benign captures are silent | `deploy/evidence/*/eve.json`, `deploy/evidence/summary.json` | `make suricata-check` (Docker) |
 | The Loki ruler bundle fires the 18 rules in the live Loki proof, including the original correlation, in a full stack; the newer breadth rules are fixture-proven and included in the bundle | `deploy/evidence/loki/` | `make loki-check` (Docker) |
 | The ruleset loads and fires inside a Malcolm pipeline alongside 59,188 default rules | `deploy/evidence/malcolm/` | `tools/malcolm_check.py` |
-| The generated rules fire on live traffic in a real-endpoint OT lab (DNP3, OPC UA, S7comm) | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
+| The rules the lab exercises fire on live traffic in a real-endpoint OT lab (DNP3, OPC UA, S7comm); 11 of 13 are confirmed | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
 | The Rust decoders' output satisfies the Sigma rules | `deploy/evidence/decoders/summary.json` | `make decoder-check` |
 | Real Suricata and Zeek sensor output, NetFlow/IPFIX exports and SNMP traps normalize to the contract; the SNMP device-event rules fire and stay silent on benign samples | `deploy/evidence/collector/summary.json` | `make collector-check` |
 | Behaviour-baseline rules flag a new asset, pair or function code on attack samples and stay silent on benign ones, and the committed baseline is reproducible | `deploy/evidence/baseline/summary.json` | `make baseline-check` |
@@ -76,6 +83,6 @@ Full detail in [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
 ```bash
 make setup
 make demo          # decoder -> Sigma match -> generated SIEM queries, offline
-make check         # lint, Sigma validation, 445 tests, Rust, bundle drift
+make check         # lint, Sigma validation, tests, Rust, bundle drift
 make metrics       # coverage, fixture agreement, baseline FPR, emulation replay
 ```
