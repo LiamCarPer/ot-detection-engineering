@@ -8,7 +8,8 @@ this page is to let a reviewer choose a depth and get to the evidence quickly.
 | Time | Path | What you will see |
 | :-- | :-- | :-- |
 | 2 min | [`docs/RESULTS.md`](RESULTS.md) | The numbers, their scope, and what they do not mean. |
-| 5 min | [`deploy/report.md`](../deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
+| 5 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](CASE_STUDY_ALERT_FLOOD.md) | Real lab data: 151 alerts → 24 episodes → 5 operational events, with the triage judgment. |
+| 10 min | [`deploy/report.md`](../deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
 | 15 min | [`docs/CLAIMS.md`](CLAIMS.md) | Every headline claim mapped to an artifact and a command. |
 | 30 min | [`docs/ARCHITECTURE.md`](ARCHITECTURE.md), [`docs/DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) | The data flow, the tradeoffs, and the rules that were withdrawn. |
 | Deep dive | This page's "Where to be skeptical" and the code paths below. | The parts a staff engineer will actually probe. |
@@ -32,6 +33,8 @@ If you only read code, read these in order:
    plan's declared `lab_technique`.
 6. [`metrics/heldout_eval.py`](../metrics/heldout_eval.py) — per-rule precision,
    recall and false-positive rate with Wilson intervals.
+7. [`analysis/lab_case_study.py`](../analysis/lab_case_study.py) — alert
+   normalization, episode collapse and campaign clustering on real lab data.
 
 ## What this repository answers
 
@@ -42,6 +45,7 @@ If you only read code, read these in order:
 | How do you prove the native rules actually fire? | [`deploy/report.md`](../deploy/report.md), `make suricata-check` |
 | How do you prove the Sigma rules work in a real SIEM? | [`deploy/report.md`](../deploy/report.md), `make loki-check` |
 | How do you handle a rule that turns out to be wrong? | [`docs/DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) — the T0832 withdrawal |
+| How do you turn an alert flood into operational events? | [`docs/CASE_STUDY_ALERT_FLOOD.md`](CASE_STUDY_ALERT_FLOOD.md), `make case-study` |
 | How do you measure a detection programme? | [`docs/RESULTS.md`](RESULTS.md), `make metrics` |
 | How do you emulate an adversary and score it? | [`purple/emulation/lab-run.md`](../purple/emulation/lab-run.md), `make emulate-validate` |
 
@@ -70,6 +74,9 @@ points alone. These are the questions I would ask.
   tag-gaming.
 - **The lab is a Dockerised plant.** There is no physical PLC, sensor or
   actuator. The safety monitor sees a simulated process, not a real one.
+- **The case study is one lab burst.** 151 alerts in 160 seconds is not a
+  production queue, and there are no analyst action timestamps, so it does not
+  compute time saved. It computes queue reduction.
 - **The security/AI workstream is supporting evidence.** The threat model,
   controls, ingest API and LLM triage are real and tested, but they are not the
   OT detection story.
@@ -81,6 +88,7 @@ make setup
 make demo       # decoder -> Sigma match -> generated SIEM queries, no Docker
 make check      # lint, Sigma validation, tests, Rust, bundle drift
 make metrics    # coverage, fixture/held-out metrics, emulation replay
+make case-study # regenerate the lab alert-flood analysis
 ```
 
 The container and live-lab checks are separate:

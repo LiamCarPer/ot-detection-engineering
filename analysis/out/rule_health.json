@@ -1,0 +1,157 @@
+{
+  "rules": [
+    {
+      "alert_type": "CROSS_ZONE_VIOLATION",
+      "duplicate_ratio": 0.9189,
+      "episodes": 6,
+      "first_seen": "2026-11-24T01:49:40.394101Z",
+      "last_seen": "2026-11-24T01:52:10.652801Z",
+      "raw_alerts": 74,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "UNAUTHORIZED_MODBUS_WRITE",
+      "duplicate_ratio": 0.9259,
+      "episodes": 2,
+      "first_seen": "2026-11-24T01:49:41.404932Z",
+      "last_seen": "2026-11-24T01:52:04.997142Z",
+      "raw_alerts": 27,
+      "unique_sources": 2
+    },
+    {
+      "alert_type": "PROCESS_SAFETY_VIOLATION",
+      "duplicate_ratio": 0.8571,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:50:27.575600Z",
+      "last_seen": "2026-11-24T01:50:30.623447Z",
+      "raw_alerts": 7,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "DNP3_UNAUTHORIZED_CONTROL",
+      "duplicate_ratio": 0.8333,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:50:41.378892Z",
+      "last_seen": "2026-11-24T01:50:42.184569Z",
+      "raw_alerts": 6,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "S7COMM_PROGRAM_DOWNLOAD",
+      "duplicate_ratio": 0.8333,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:51:11.083005Z",
+      "last_seen": "2026-11-24T01:51:12.039336Z",
+      "raw_alerts": 6,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "S7COMM_PROGRAM_UPLOAD",
+      "duplicate_ratio": 0.8333,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:51:12.535198Z",
+      "last_seen": "2026-11-24T01:51:13.540584Z",
+      "raw_alerts": 6,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "OT_BRUTE_FORCE_SCAN",
+      "duplicate_ratio": 0.75,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:49:44.444118Z",
+      "last_seen": "2026-11-24T01:50:03.241985Z",
+      "raw_alerts": 4,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "S7COMM_CHANGE_OPERATING_MODE",
+      "duplicate_ratio": 0.75,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:51:11.066176Z",
+      "last_seen": "2026-11-24T01:51:11.073695Z",
+      "raw_alerts": 4,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "HMI_LOGIN_FAILURE",
+      "duplicate_ratio": 0.6667,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:50:17.625049Z",
+      "last_seen": "2026-11-24T01:50:17.625338Z",
+      "raw_alerts": 3,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "DNP3_RESTART_COMMAND",
+      "duplicate_ratio": 0.5,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:50:42.584431Z",
+      "last_seen": "2026-11-24T01:50:42.586728Z",
+      "raw_alerts": 2,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "DNP3_UNSOLICITED_DISABLED",
+      "duplicate_ratio": 0.5,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:50:42.988830Z",
+      "last_seen": "2026-11-24T01:50:42.991260Z",
+      "raw_alerts": 2,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "OPCUA_BROWSE_REQUEST",
+      "duplicate_ratio": 0.5,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:50:57.803968Z",
+      "last_seen": "2026-11-24T01:50:57.806001Z",
+      "raw_alerts": 2,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "OPCUA_WRITE_REQUEST",
+      "duplicate_ratio": 0.5,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:50:57.822950Z",
+      "last_seen": "2026-11-24T01:50:57.826340Z",
+      "raw_alerts": 2,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "OPCUA_METHOD_CALL",
+      "duplicate_ratio": 0.5,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:50:57.834092Z",
+      "last_seen": "2026-11-24T01:50:57.841044Z",
+      "raw_alerts": 2,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "OT_PORT_SCAN",
+      "duplicate_ratio": 0.0,
+      "episodes": 2,
+      "first_seen": "2026-11-24T01:51:11.043643Z",
+      "last_seen": "2026-11-24T01:52:08.153852Z",
+      "raw_alerts": 2,
+      "unique_sources": 2
+    },
+    {
+      "alert_type": "C2_BEACON",
+      "duplicate_ratio": 0.0,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:51:45.442705Z",
+      "last_seen": "2026-11-24T01:51:45.442705Z",
+      "raw_alerts": 1,
+      "unique_sources": 1
+    },
+    {
+      "alert_type": "DETECTION_SERVICE_DOWN",
+      "duplicate_ratio": 0.0,
+      "episodes": 1,
+      "first_seen": "2026-11-24T01:52:20.686022Z",
+      "last_seen": "2026-11-24T01:52:20.686022Z",
+      "raw_alerts": 1,
+      "unique_sources": 1
+    }
+  ]
+}

@@ -25,6 +25,7 @@ per-tactic rationale for the gaps is in the README.
 | Held-out single-event false-positive rate | 0 / 1,024 per rule (95% CI 0.0–0.0037) | 1,000 generated at a different seed plus one near miss per rule. |
 | Held-out correlation recall | 12 / 12 windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
 | Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
+| Alert-flood case study | 151 alerts → 24 episodes → 5 operational events | One 160-second lab burst; no analyst action timestamps. |
 
 ## What is functionally validated
 
@@ -85,4 +86,5 @@ make setup
 make demo          # decoder -> Sigma match -> generated SIEM queries, offline
 make check         # lint, Sigma validation, tests, Rust, bundle drift
 make metrics       # coverage, fixture agreement, baseline FPR, emulation replay
+make case-study    # regenerate the lab alert-flood analysis
 ```

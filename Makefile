@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust security-preflight security-api-check yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate metrics check clean
+.PHONY: help setup lint validate test rust security-preflight security-api-check yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate case-study case-study-check metrics check clean
 
 help:
 	@echo "Targets:"
@@ -35,8 +35,10 @@ help:
 	@echo "  lab-loki-check   Refresh the OT-Security-Lab ruler evidence (lab required)"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate the adversary emulation plan"
+	@echo "  case-study       Regenerate the lab alert-flood analysis"
+	@echo "  case-study-check Fail if the committed analysis has drifted"
 	@echo "  metrics          Generate coverage, replay emulation, compute metrics"
-	@echo "  check            lint + validate + test + rust + decoder/collector/baseline/conduit proofs + deploy-check"
+	@echo "  check            lint + validate + test + rust + decoder/collector/baseline/conduit proofs + deploy-check + case-study-check"
 
 $(VENV)/bin/activate: requirements.txt
 	python3 -m venv $(VENV)
@@ -118,6 +120,13 @@ coverage: setup
 emulate-validate: setup
 	$(PY) purple/runner/run_emulation.py --validate
 
+case-study: setup
+	$(PY) analysis/lab_case_study.py --input analysis/data/lab-2026-11-24 --out analysis/out
+	$(PY) analysis/lab_case_study.py --input analysis/data/lab-2026-11-24 --out analysis/out --check
+
+case-study-check: setup
+	$(PY) analysis/lab_case_study.py --input analysis/data/lab-2026-11-24 --out analysis/out --check
+
 # Replays the recorded lab run so metrics are reproducible without a lab.
 metrics: setup
 	$(PY) coverage/generate_coverage.py
@@ -125,7 +134,7 @@ metrics: setup
 		--observations purple/emulation/lab-observations.json
 	$(PY) metrics/compute.py
 
-check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check deploy-check
+check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check deploy-check case-study-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target

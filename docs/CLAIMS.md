@@ -28,7 +28,8 @@ or “52 benign events” are stale and must not be used.
 | Held-out correlation | **12 / 12** positive windows, **0** false positives over 14 negative windows |
 | Held-out YARA | **8 / 8** artifacts, **0** false positives over 8 shared negatives |
 | Purple team | **4 / 4** expectations, mean MTTD **2.45 s** (`n=4`, one run) |
-| Test suite | 456 tests at the time of this audit; the count is not a quality claim |
+| Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
+| Test suite | 467 tests at the time of this audit; the count is not a quality claim |
 | Live lab | **11 of the 13 rules the lab exercises** fire on live traffic |
 
 ## Claims
@@ -59,6 +60,9 @@ or “52 benign events” are stale and must not be used.
 | No held-out event duplicates a rule fixture | Verified | `tests/test_heldout.py` | `make test` |
 | The purple-team plan validates that each referenced rule detects the plan's technique | Verified | `purple/emulation/emulation-plan.yaml`, `tools/otde/evidence.py` | `make emulate-validate` |
 | The purple-team runner fails when a lab alert's `mitre_id` disagrees with the plan's `lab_technique` | Verified | `purple/runner/run_emulation.py` | `tests/test_emulation.py` |
+| The alert-flood case study is reproducible from a pinned lab snapshot | Verified | `analysis/data/lab-2026-11-24/`, `analysis/out/` | `make case-study-check`, `tests/test_lab_case_study.py` |
+| 151 lab alerts collapse to 24 one-minute episodes and 5 operational events, with every alert assigned | Verified | `analysis/out/summary.json` | `tests/test_lab_case_study.py` |
+| The analysis keeps the secondary SIEM and runtime datasets separate from the 160-second burst | Verified | `analysis/out/report.md` | `tests/test_lab_case_study.py` |
 | The recorded purple-team run detected 4 / 4 expectations at a mean MTTD of 2.45 s | Implemented (`n=4`, one run) | `purple/emulation/lab-observations.json`, `purple/results/` | `make metrics` (replay) |
 | Security controls and threats are governed as code | Verified | `metadata/security-controls.yaml`, `metadata/threat-model.yaml` | `make security-preflight`, `tests/test_security_governance.py` |
 | CI runs the offline checks; container and live-lab evidence is committed and guarded rather than re-run | Verified | `.github/workflows/ci.yml`, `tests/test_*_evidence.py` | CI |
@@ -79,6 +83,7 @@ These are deliberately not claimed. They are also listed in
 | 24/7 SOC operations | No on-call rota, shift handover, or production incident load. |
 | Physical process safety | The lab is a software emulation; there is no physical PLC, sensor or actuator. |
 | Real malware analysis | Out of scope by design. Public-sample analysis in an isolated lab would be the credible next step. |
+| Production triage / MTTA | The case study has no analyst acknowledgement or resolution timestamps; it measures queue reduction, not human performance. |
 
 ## How to audit this file
 

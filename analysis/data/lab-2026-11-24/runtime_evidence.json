@@ -1,0 +1,132 @@
+{
+  "alerts": {
+    "alert_counts": {
+      "C2_BEACON": 4,
+      "CROSS_ZONE_VIOLATION": 352,
+      "DETECTION_SERVICE_DOWN": 6,
+      "DNP3_RESTART_COMMAND": 6,
+      "DNP3_UNAUTHORIZED_CONTROL": 18,
+      "DNP3_UNSOLICITED_DISABLED": 6,
+      "HMI_LOGIN_FAILURE": 9,
+      "OPCUA_BROWSE_REQUEST": 6,
+      "OPCUA_METHOD_CALL": 6,
+      "OPCUA_WRITE_REQUEST": 6,
+      "OT_BRUTE_FORCE_SCAN": 15,
+      "OT_PORT_SCAN": 11,
+      "PROCESS_SAFETY_VIOLATION": 18,
+      "S7COMM_CHANGE_OPERATING_MODE": 12,
+      "S7COMM_PROGRAM_DOWNLOAD": 18,
+      "S7COMM_PROGRAM_UPLOAD": 20,
+      "UNAUTHORIZED_MODBUS_WRITE": 68
+    },
+    "distinct_sources": [
+      "172.22.0.30",
+      "172.23.0.20",
+      "172.24.0.10",
+      "172.24.0.30"
+    ]
+  },
+  "captured_at": "2026-10-25T01:01:45Z",
+  "grafana_datasources": [
+    "InfluxDB-Historian",
+    "Loki"
+  ],
+  "historian_last_values": {
+    "plc_distribution": {
+      "pressure": 0
+    },
+    "plc_intake": {
+      "level": 42
+    },
+    "plc_treatment": {
+      "chlorine": 0
+    }
+  },
+  "ruler_rules": {
+    "C2_Beacon_From_OT_Host": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "CrossZoneViolation": {
+      "health": "ok",
+      "state": "firing"
+    },
+    "DNP3_Cold_Or_Warm_Restart_Command": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "DNP3_Control_Operation_From_Unauthorized_Master": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "DNP3_Unsolicited_Responses_Disabled": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "Detection_Service_Stopped": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "Industrial_Protocol_Traffic_From_Enterprise_To_Control_Zone": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "ModbusExceptionFlood": {
+      "health": "ok",
+      "state": "firing"
+    },
+    "Modbus_Device_Identification_Scan": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "Modbus_Write_From_Unauthorized_Control_Writer": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "NoOTAlertsIngested": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "OPC_UA_Address_Space_Browse": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "OPC_UA_Method_Call_Request": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "OPC_UA_Write_Request": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "OT_Port_Scan_From_External_Zone": {
+      "health": "ok",
+      "state": "firing"
+    },
+    "ProcessSafetyViolation": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "Process_Safety_Violation_From_Physics_Aware_Monitor": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "S7comm_PLC_Control_Or_Stop": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "S7comm_Program_Download": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "S7comm_Program_Upload": {
+      "health": "ok",
+      "state": "inactive"
+    },
+    "UnauthorizedModbusWrite": {
+      "health": "ok",
+      "state": "inactive"
+    }
+  },
+  "window_seconds": 3600
+}

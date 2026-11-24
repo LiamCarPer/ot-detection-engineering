@@ -89,6 +89,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `coverage/` | Derived ATT&CK for ICS coverage map. |
 | `purple/` | Adversary emulation plan, runner, and recorded observations. |
 | `metrics/` | Detection-quality computation, the benign baseline corpus and the held-out evaluation set. |
+| `analysis/` | Pinned lab snapshots and reproducible analyses, including the alert-flood triage case study. |
 | `tests/` | Rule regression, metadata governance, native rule lint, coverage and metrics tests. |
 
 ## Tooling choices

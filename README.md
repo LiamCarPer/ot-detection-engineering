@@ -19,6 +19,7 @@ not prove.
 | :-- | :-- | :-- |
 | 2 min | [`docs/RESULTS.md`](docs/RESULTS.md) | The numbers, their scope, and what they do not mean. |
 | 5 min | [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md) | A reviewer's path from summary to code, including where to be skeptical. |
+| 6 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](docs/CASE_STUDY_ALERT_FLOOD.md) | 151 lab alerts → 24 episodes → 5 operational events, and what I would suppress. |
 | 10 min | [`deploy/report.md`](deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
 | 20 min | [`docs/CLAIMS.md`](docs/CLAIMS.md) | Every claim → evidence → the command that proves it. |
 | 30 min | [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md) | Tradeoffs, failures, and the rule that was withdrawn. |
@@ -40,6 +41,17 @@ not prove.
 - **What it is not.** The benign corpus is generated, the lab is a Dockerised
   plant, and the purple-team run is two steps and one run. Those are
   limitations, not footnotes.
+
+## Case study: 151 alerts in 160 seconds
+
+A fresh lab run produced **151 alerts across 17 types from four sources in 160
+seconds**. The case study collapses them into **24 one-minute episodes** and
+**five operational events** — four adversary campaigns and one sensor-health
+event — and explains what to suppress, what to keep, and what the reduction
+does not prove.
+
+[Read the case study](docs/CASE_STUDY_ALERT_FLOOD.md) ·
+[generated report](analysis/out/report.md)
 
 ## Coverage: prioritized, not padded
 
@@ -100,8 +112,9 @@ detection is only as trustworthy as the evidence behind it.
   Loki ruler bundle is executed in a full stack; the decoders' output is run
   through the same matcher the rule tests use; and coverage, precision, recall
   and false-positive rate are derived from the rules, with a separate held-out
-  set for the precision/recall estimate. All of that runs offline
-  and deterministically.
+  set for the precision/recall estimate. The lab alert-flood analysis is
+  regenerated from a pinned snapshot and checked for drift. All of that runs
+  offline and deterministically.
 - **What is emulated.** The lab this project validates against is a Dockerized
   software emulation of a segmented plant; there is no physical PLC, sensor or
   actuator. The emulation figures come from a recorded run against that lab.
@@ -232,6 +245,7 @@ deploy/               Installable bundle: Loki ruler, Suricata, Splunk, Sentinel
 coverage/             ATT&CK for ICS coverage map generator
 purple/               Adversary emulation plan, runner and recorded observations
 metrics/              Detection-quality computation, benign baseline and held-out set
+analysis/             Reproducible lab-data analyses and the alert-flood case study
 tests/                Rule, metadata, coverage and metrics tests
 docs/                 Architecture, design decisions, results, telemetry, lifecycle
 ```

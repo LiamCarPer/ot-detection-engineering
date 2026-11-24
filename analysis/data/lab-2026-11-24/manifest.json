@@ -1,0 +1,27 @@
+{
+  "snapshot": "lab-2026-11-24",
+  "source_repository": "https://github.com/LiamCarPer/OT-Security-Lab",
+  "source_commit": "df9fae4799b56a7aad7338967421ee4b0430cdda",
+  "captured_at": "2026-11-24T01:49:40.394101Z",
+  "captured_until": "2026-11-24T01:52:20.686022Z",
+  "timezone": "UTC (the lab containers emit naive UTC timestamps)",
+  "scenario": "The lab's compliance/attack simulation run: enterprise pivot, compromised EWS, PowerShell operator write, HMI login failures, and a detection-service stop.",
+  "files": {
+    "alerts.jsonl": {
+      "sha256": "64762ded14477d08c7a64ba916fbe0b03bf13df9181ac408381de53a60168ff9",
+      "bytes": 41621,
+      "lines": 151
+    },
+    "siem_alerts.jsonl": {
+      "sha256": "4dde48df9465c0685b6c946160e23c2947cc58a0514dbbaba3275804d7f9521f",
+      "bytes": 183064,
+      "lines": 364
+    },
+    "runtime_evidence.json": {
+      "sha256": "221d346f9255064ff894ed8804c0718e583f5956d52d3d5485ac0b520e35dae8",
+      "bytes": 3066,
+      "lines": 132
+    }
+  },
+  "transformations": "None. The NDJSON files are copied as emitted; the analysis treats naive timestamps as UTC."
+}
