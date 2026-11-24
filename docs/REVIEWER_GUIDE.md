@@ -9,6 +9,7 @@ this page is to let a reviewer choose a depth and get to the evidence quickly.
 | :-- | :-- | :-- |
 | 2 min | [`docs/RESULTS.md`](RESULTS.md) | The numbers, their scope, and what they do not mean. |
 | 5 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](CASE_STUDY_ALERT_FLOOD.md) | Real lab data: 151 alerts → 24 episodes → 5 operational events, with the triage judgment. |
+| 8 min | [`docs/STATE_DETECTIONS.md`](STATE_DETECTIONS.md) | Drift, change-window and per-asset behaviour: what needs context, and why. |
 | 8 min | [`deploy/evidence/health/report.md`](../deploy/evidence/health/report.md) | Owners, runbooks, observed volume and the stable/experimental split. |
 | 10 min | [`deploy/report.md`](../deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
 | 15 min | [`docs/CLAIMS.md`](CLAIMS.md) | Every headline claim mapped to an artifact and a command. |
@@ -38,6 +39,8 @@ If you only read code, read these in order:
    normalization, episode collapse and campaign clustering on real lab data.
 8. [`tools/detection_health.py`](../tools/detection_health.py) — the catalogue
    gate: one entry per rule, stable rules need runbooks and observed volume.
+9. [`tools/otde/stateful.py`](../tools/otde/stateful.py) — drift, change-window
+   and per-asset protocol evaluation.
 
 ## What this repository answers
 
@@ -50,6 +53,7 @@ If you only read code, read these in order:
 | How do you handle a rule that turns out to be wrong? | [`docs/DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) — the T0832 withdrawal |
 | How do you turn an alert flood into operational events? | [`docs/CASE_STUDY_ALERT_FLOOD.md`](CASE_STUDY_ALERT_FLOOD.md), `make case-study` |
 | How do you own a rule after it ships? | [`deploy/evidence/health/report.md`](../deploy/evidence/health/report.md), [`docs/runbooks/`](runbooks/), `make health` |
+| How do you detect something that needs context? | [`docs/STATE_DETECTIONS.md`](STATE_DETECTIONS.md), `make stateful-check` |
 | How do you validate detections against an adversary? | [`docs/PURPLE_TEAM.md`](PURPLE_TEAM.md), `make purple-check` |
 | How do you measure a detection programme? | [`docs/RESULTS.md`](RESULTS.md), `make metrics` |
 | How do you emulate an adversary and score it? | [`purple/emulation/lab-run.md`](../purple/emulation/lab-run.md), `make emulate-validate` |
@@ -83,6 +87,9 @@ points alone. These are the questions I would ask.
 - **The case study is one lab burst.** 151 alerts in 160 seconds is not a
   production queue, and there are no analyst action timestamps, so it does not
   compute time saved. It computes queue reduction.
+- **The stateful baselines are not field baselines.** The process envelope is
+  built from the generated benign corpus and the per-asset profile from the
+  small committed benign samples. They are reviewable, not production-trained.
 - **Purple-team coverage and MTTD come from different runs.** The 2026-11-24 run
   proves 14/14 signals across 8 steps with 0 unexpected alerts; the 2026-09-13
   run is the only one with action start timestamps and provides the 2.45 s MTTD.

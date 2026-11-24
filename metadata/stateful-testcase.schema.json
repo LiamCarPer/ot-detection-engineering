@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "stateful-testcase.schema.json",
+  "title": "Stateful detection test cases",
+  "description": "Schema for the *.test.yaml sidecar of a stateful rule. A stateful rule is evaluated over a sequence, so the sidecar carries `windows` with labeled events.",
+  "type": "object",
+  "required": ["windows"],
+  "additionalProperties": false,
+  "properties": {
+    "windows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "expect", "events"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "expect": { "enum": ["match", "no_match"] },
+          "events": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "object", "minProperties": 1 }
+          }
+        }
+      }
+    }
+  }
+}

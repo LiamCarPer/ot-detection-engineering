@@ -1,0 +1,37 @@
+title: Process Value Drift From Learned Baseline
+id: 6a1f4c2d-9b3e-4d71-8a52-1c7e5f9b2d04
+status: experimental
+description: |
+  Detects a process value that moves several standard deviations away from its
+  learned per-asset baseline and stays there for several consecutive samples. A
+  single high reading can be a sensor spike; a sustained shift is a setpoint
+  change, a stuck sensor, or a process moving outside its normal envelope.
+
+  The baseline is committed and reviewed rather than learned inside the rule, so
+  a threshold change is a reviewable diff. A slow drift that stays inside the
+  envelope is still out of scope for this detection.
+references:
+  - https://attack.mitre.org/techniques/T0831/
+author: Liam Carvajal
+date: 2026-11-24
+stateful:
+  type: value_drift
+  baseline: baseline/process-values.json
+  product: ot_process
+  event_type: process_update
+  field: tank_level_pct
+  z_threshold: 3.0
+  consecutive: 3
+  direction: both
+fields:
+  - asset
+  - register
+  - tank_level_pct
+  - timestamp
+falsepositives:
+  - A real process upset that the operations team already knows about
+  - A sensor calibration change that shifts the reading without changing the process
+  - A deliberate process override during a documented emergency
+level: high
+tags:
+  - attack.t0831

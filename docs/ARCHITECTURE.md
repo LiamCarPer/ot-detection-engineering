@@ -32,6 +32,7 @@ Detection content is split by what each format can actually express.
 | Sigma correlation | Behaviour over a window: a fan-out, a burst, a drift. | A per-event signature cannot express a count or a timespan. |
 | Behaviour-baseline (`rules/baseline`) | Deviations from learned normal: a new asset, a new pair, a new function code. | The condition is the committed baseline, not a signature; the baseline is reviewed like code. |
 | Conduit (`rules/conduit`) | Segmentation drift: a cross-zone path with no declared conduit, or a service it does not permit. | The condition is the committed zone/conduit policy, which Sigma cannot reference. |
+| Stateful (`rules/stateful`) | Value drift, approved change-window joins and per-asset protocol profiles. | These need consecutive samples, a calendar, or a per-asset baseline; a single-event rule or a count cannot express them. |
 | YARA (`rules/yara`) | File and firmware content: PLC project files, firmware images and EWS scripts. | These artifacts never cross the network layer; YARA matches their structure, and the fixtures are synthetic. |
 
 All content is governed identically: every rule carries an ATT&CK for ICS
@@ -78,11 +79,12 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 
 | Path | Responsibility |
 | :--- | :--- |
-| `rules/` | Detection content: Sigma rules (single-event and correlation), behaviour-baseline, conduit and YARA rules, each with `.test.yaml` sidecars, and native Suricata rules. |
+| `rules/` | Detection content: Sigma rules (single-event and correlation), behaviour-baseline, conduit, stateful and YARA rules, each with `.test.yaml` sidecars, and native Suricata rules. |
 | `baseline/` | Builds and commits the OT behaviour baseline the deviation rules compare against. |
 | `metadata/` | Pinned ATT&CK for ICS catalog, the detection catalogue, the zone/conduit policy, and JSON Schemas for rule test cases, correlation test cases, the catalog, the detection catalogue, the emulation plan, the telemetry contract and the behaviour baseline. |
 | `tools/otde/` | Shared library: rule discovery, technique extraction, Suricata reader, and the pySigma-based validation matcher. |
 | `tools/detection_health.py` | Validates the detection catalogue against the rules and generates the health report. |
+| `tools/otde/stateful.py` | Evaluates drift, change-window and per-asset protocol stateful rules. |
 | `collector/` | Produces the telemetry contract from real sensor output (Suricata `eve.json`, Zeek OT logs), with schema validation and routing. |
 | `tools/dnp3-dpi/`, `tools/s7comm-dpi/`, `tools/opcua-dpi/` | Dependency-free Rust decoders (Cargo workspace) that emit normalized `ot_ndr` events for the DNP3, S7comm and OPC UA Sigma rules. |
 | `pipelines/` | Sigma-to-backend conversion and the deployment bundle builder. |

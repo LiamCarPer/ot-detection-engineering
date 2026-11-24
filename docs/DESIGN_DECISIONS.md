@@ -163,6 +163,21 @@ configures a device. That keeps the segmentation knowledge in the detection
 layer, where it is tested, and leaves enforcement to the firewall the operations
 team owns.
 
+## Why stateful detections are a separate family
+
+Three detections need context that Sigma's single-event and count primitives
+do not express: a process value that stays outside its learned envelope for
+several samples, a write that falls outside an approved change window, and a
+known asset that starts using a new protocol service.
+
+I could have stretched `value_count` or added a bespoke Sigma feature, but the
+rule would then look portable while the evaluator silently did something the
+Sigma semantics do not define. A separate `rules/stateful` family makes the
+context explicit: the baseline or calendar is a committed artifact, the
+evaluator supports exactly three types and raises on anything else, and every
+rule has labeled windows. The cost is that these rules do not convert to the
+four SIEM backends; the benefit is that they are honest about what they need.
+
 ## Known limitations
 
 - **Coverage is prioritized, not maximized.** The raw ATT&CK for ICS number is

@@ -117,6 +117,26 @@ and `event_count` are implemented by the offline evaluator
 (`tools/otde/correlation.py`); any other correlation type raises rather than
 returning a result the test never exercised.
 
+### A stateful detection
+
+A detection whose condition needs consecutive samples, a calendar join or a
+per-asset profile lives in `rules/stateful/`. It declares a `stateful:` block
+with its type, baseline or calendar, and a `windows` sidecar with labeled event
+sequences:
+
+```yaml
+stateful:
+  type: value_drift
+  baseline: baseline/process-values.json
+  field: tank_level_pct
+  z_threshold: 3.0
+  consecutive: 3
+```
+
+`python tools/stateful_check.py` rebuilds the baselines, evaluates every
+window and writes `deploy/evidence/stateful/summary.json`. The design notes
+are in [`docs/STATE_DETECTIONS.md`](STATE_DETECTIONS.md).
+
 ### A behaviour-baseline detection
 
 A detection whose condition is "this was never normal" — a new asset, a new

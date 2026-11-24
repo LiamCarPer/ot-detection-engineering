@@ -1182,3 +1182,60 @@ rules:
   runbook: null
   last_validated: '2026-09-22'
   version: 1
+- id: 2f9c5d18-7a64-4e03-9b28-6c1d4f8a3e71
+  rule: rules/stateful/stateful_asset_protocol_baseline.yml
+  title: New Protocol Service Or Function On A Known Asset
+  kind: stateful
+  techniques:
+  - T0846
+  severity: medium
+  data_source: ot_ndr (multi-protocol)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A firmware or logic update that adds a legitimate service or function
+  - A maintenance tool that uses a function code outside the baseline period
+  - A newly commissioned asset that was not in the baseline yet
+  runbook: null
+  last_validated: '2026-11-24'
+  version: 1
+- id: 8d3b7e41-2c96-4a58-bf13-5e7a9d6c1b82
+  rule: rules/stateful/stateful_engineering_change_window.yml
+  title: Engineering Change Outside Approved Window
+  kind: stateful
+  techniques:
+  - T0843
+  severity: high
+  data_source: ot_ndr (multi-protocol writes)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - An emergency change that was not added to the calendar
+  - A maintenance window recorded in a different time zone
+  - A new engineering workstation not yet named in the calendar
+  runbook: null
+  last_validated: '2026-11-24'
+  version: 1
+- id: 6a1f4c2d-9b3e-4d71-8a52-1c7e5f9b2d04
+  rule: rules/stateful/stateful_process_value_drift.yml
+  title: Process Value Drift From Learned Baseline
+  kind: stateful
+  techniques:
+  - T0831
+  severity: high
+  data_source: ot_process/safety_monitor
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A real process upset that the operations team already knows about
+  - A sensor calibration change that shifts the reading without changing the process
+  - A deliberate process override during a documented emergency
+  runbook: null
+  last_validated: '2026-11-24'
+  version: 1

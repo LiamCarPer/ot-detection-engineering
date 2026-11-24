@@ -1,0 +1,60 @@
+windows:
+  - name: a write outside every approved change window
+    expect: match
+    events:
+      - timestamp: "2026-12-01T13:00:00Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        src_ip: 172.21.0.20
+        dst_ip: 172.21.0.10
+        function_code: 6
+        register: 1024
+
+  - name: a write inside a window but from the wrong source
+    expect: match
+    events:
+      - timestamp: "2026-12-01T11:00:00Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        src_ip: 172.24.0.99
+        dst_ip: 172.21.0.10
+        function_code: 6
+        register: 1024
+
+  - name: a write inside its approved window
+    expect: no_match
+    events:
+      - timestamp: "2026-12-01T11:00:00Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        src_ip: 172.21.0.20
+        dst_ip: 172.21.0.10
+        function_code: 16
+        register: 1024
+
+  - name: a read outside every window is not a change
+    expect: no_match
+    events:
+      - timestamp: "2026-12-01T13:00:00Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        src_ip: 172.21.0.20
+        dst_ip: 172.21.0.10
+        function_code: 3
+        register: 1024
+
+  - name: an S7 write inside its approved window
+    expect: no_match
+    events:
+      - timestamp: "2026-12-02T01:30:00Z"
+        product: ot_ndr
+        service: s7comm
+        direction: request
+        src_ip: 172.23.0.4
+        dst_ip: 172.21.0.11
+        function_code: 26
+        pdu_reference: 1

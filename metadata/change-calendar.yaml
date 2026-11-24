@@ -1,0 +1,25 @@
+# Approved engineering-change windows.
+#
+# This is the policy the change-window stateful rule joins against. A write from
+# an engineering workstation to a controller is approved only when a window
+# matches the source, destination, service and time. Keep this file in step with
+# the change-management system; an emergency change should be added here with a
+# short retroactive window and a reason, not suppressed.
+version: 1
+windows:
+  - id: CHG-2026-12-01-001
+    starts: "2026-12-01T10:00:00Z"
+    ends: "2026-12-01T12:00:00Z"
+    src_ip: 172.21.0.20
+    dst_ip: 172.21.0.10
+    service: modbus
+    approved_by: OT Change Board
+    reason: Quarterly setpoint update
+  - id: CHG-2026-12-02-002
+    starts: "2026-12-02T01:00:00Z"
+    ends: "2026-12-02T02:00:00Z"
+    src_ip: 172.23.0.4
+    dst_ip: 172.21.0.11
+    service: s7comm
+    approved_by: Controls Engineering
+    reason: PLC logic update

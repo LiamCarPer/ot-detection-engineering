@@ -41,6 +41,8 @@ from tools.otde.rules import (  # noqa: E402
     native_rule_paths,
     sigma_techniques,
     single_event_rule_paths,
+    stateful_rule_paths,
+    stateful_techniques,
     yara_rule_paths,
     yara_techniques,
 )
@@ -83,6 +85,7 @@ def discover_rules() -> dict[str, Rule]:
         (yara_rule_paths(), "yara", yara_techniques),
         (baseline_rule_paths(), "baseline", baseline_techniques),
         (conduit_rule_paths(), "conduit", conduit_techniques),
+        (stateful_rule_paths(), "stateful", stateful_techniques),
     ):
         for path in paths:
             if kind == "yara":
@@ -92,7 +95,7 @@ def discover_rules() -> dict[str, Rule]:
                     raise ValueError(f"{path} has no YARA rule identifier")
                 rule_id = match.group(1)
                 title = rule_id
-            elif kind in ("baseline", "conduit"):
+            elif kind in ("baseline", "conduit", "stateful"):
                 data = yaml.safe_load(path.read_text(encoding="utf-8"))
                 rule_id = str(data["id"])
                 title = str(data["title"])

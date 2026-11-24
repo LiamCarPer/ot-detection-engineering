@@ -79,6 +79,12 @@ jobs:
       - name: Check the YARA evidence is current
         run: git diff --exit-code deploy/evidence/yara/summary.json
 
+      - name: Prove stateful detections and their baselines
+        run: python tools/stateful_check.py
+
+      - name: Check the stateful evidence is current
+        run: git diff --exit-code deploy/evidence/stateful/summary.json
+
 
       - name: Convert to Loki
         run: python pipelines/convert.py --backend loki --check

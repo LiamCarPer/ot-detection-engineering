@@ -15,7 +15,7 @@ per-tactic rationale for the gaps is in the README.
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
 | ATT&CK for ICS coverage | 29 prioritized techniques (raw 29 / 97, 29.9%) | Chosen against the plant threat model; gaps are listed, not padded. |
-| Detection content | 24 Sigma + 6 correlation + 4 YARA + 24 native | Single-event and windowed log rules, file rules, and protocol DPI. |
+| Detection content | 24 Sigma + 6 correlation + 4 YARA + 24 native + 3 stateful (plus 3 baseline + 2 conduit) | 66 catalogued rules across all families. |
 | Emulation detection rate (MTTD run) | 100% (4 / 4 expectations) | 2026-09-13 run, two steps; the lab's `mitre_id` is cross-checked against the plan. |
 | Mean MTTD | 2.45 s | Time from action to first matching alert, 2026-09-13 run (`n=4`, one run). |
 | Purple-team coverage | 14 / 14 expectations (8 steps) | 2026-11-24 replay; 0 unexpected, benign window passed, MTTD not measured. |
@@ -27,7 +27,8 @@ per-tactic rationale for the gaps is in the README.
 | Held-out correlation recall | 12 / 12 windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
 | Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
 | Alert-flood case study | 151 alerts → 24 episodes → 5 operational events | One 160-second lab burst; no analyst action timestamps. |
-| Detection catalogue | 63 rules, 6 stable, 0 gaps | 12 rules have observed lab volume; 57 are experimental. |
+| Detection catalogue | 66 rules, 6 stable, 0 gaps | 12 rules have observed lab volume; 60 are experimental. |
+| Stateful detections | 3 rules, 15 windows, baselines current | Drift, approved change window, per-asset protocol profile. |
 
 ## What is functionally validated
 

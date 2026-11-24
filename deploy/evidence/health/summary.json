@@ -6,16 +6,17 @@
     "correlation": 6,
     "native": 24,
     "sigma": 24,
+    "stateful": 3,
     "yara": 4
   },
   "by_severity": {
     "critical": 2,
-    "high": 42,
+    "high": 44,
     "low": 2,
-    "medium": 17
+    "medium": 18
   },
   "by_status": {
-    "experimental": 57,
+    "experimental": 60,
     "stable": 6
   },
   "catalog_version": 1,
@@ -1028,18 +1029,66 @@
       "severity": "high",
       "status": "experimental",
       "title": "Flow On A Port Outside The Declared Conduit"
+    },
+    {
+      "age_days": 0,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "2f9c5d18-7a64-4e03-9b28-6c1d4f8a3e71",
+      "kind": "stateful",
+      "last_validated": "2026-11-24",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "medium",
+      "status": "experimental",
+      "title": "New Protocol Service Or Function On A Known Asset"
+    },
+    {
+      "age_days": 0,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "8d3b7e41-2c96-4a58-bf13-5e7a9d6c1b82",
+      "kind": "stateful",
+      "last_validated": "2026-11-24",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "high",
+      "status": "experimental",
+      "title": "Engineering Change Outside Approved Window"
+    },
+    {
+      "age_days": 0,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "6a1f4c2d-9b3e-4d71-8a52-1c7e5f9b2d04",
+      "kind": "stateful",
+      "last_validated": "2026-11-24",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "high",
+      "status": "experimental",
+      "title": "Process Value Drift From Learned Baseline"
     }
   ],
   "schema_errors": [],
   "totals": {
-    "discovered_rules": 63,
+    "discovered_rules": 66,
     "gaps": 0,
-    "rules": 63,
+    "rules": 66,
     "stable": 6,
     "stable_stale": 0,
     "stable_with_observed_volume": 6,
     "stable_with_runbook": 6,
-    "warnings": 57,
+    "warnings": 60,
     "with_observed_volume": 12
   },
   "warnings": [
@@ -1327,6 +1376,21 @@
       "id": "f1f5a75c-12a9-4ede-ae8c-812c239e6a57",
       "issue": "no runbook; no observed volume",
       "title": "Flow On A Port Outside The Declared Conduit"
+    },
+    {
+      "id": "2f9c5d18-7a64-4e03-9b28-6c1d4f8a3e71",
+      "issue": "no runbook; no observed volume",
+      "title": "New Protocol Service Or Function On A Known Asset"
+    },
+    {
+      "id": "8d3b7e41-2c96-4a58-bf13-5e7a9d6c1b82",
+      "issue": "no runbook; no observed volume",
+      "title": "Engineering Change Outside Approved Window"
+    },
+    {
+      "id": "6a1f4c2d-9b3e-4d71-8a52-1c7e5f9b2d04",
+      "issue": "no runbook; no observed volume",
+      "title": "Process Value Drift From Learned Baseline"
     }
   ]
 }

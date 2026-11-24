@@ -22,6 +22,7 @@ not prove.
 | 6 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](docs/CASE_STUDY_ALERT_FLOOD.md) | 151 lab alerts → 24 episodes → 5 operational events, and what I would suppress. |
 | 10 min | [`docs/PURPLE_TEAM.md`](docs/PURPLE_TEAM.md) | 14 expectations across 8 steps, 0 unexpected alerts, benign window passed. |
 | 10 min | [`deploy/report.md`](deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
+| 8 min | [`docs/STATE_DETECTIONS.md`](docs/STATE_DETECTIONS.md) | Drift, change-window and per-asset behaviour: what needs context, and why. |
 | 8 min | [`deploy/evidence/health/report.md`](deploy/evidence/health/report.md) | The detection catalogue: owners, runbooks, observed volume, stable vs experimental. |
 | 20 min | [`docs/CLAIMS.md`](docs/CLAIMS.md) | Every claim → evidence → the command that proves it. |
 | 30 min | [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md) | Tradeoffs, failures, and the rule that was withdrawn. |
@@ -29,9 +30,9 @@ not prove.
 ## The 90-second version
 
 - **What it detects.** 29 ATT&CK for ICS techniques across 24 single-event Sigma
-  rules, 6 correlation rules, 4 YARA rules and 24 native Suricata signatures,
-  chosen for a segmented water-treatment plant and mapped to a committed threat
-  model.
+  rules, 6 correlation rules, 4 YARA rules, 24 native Suricata signatures and 3
+  stateful detections, chosen for a segmented water-treatment plant and mapped
+  to a committed threat model.
 - **What it proves.** Every rule is fixture-tested; the Sigma rules are
   held-out-tested; the native rules run in Suricata over real captures; the
   Sigma rules run in a live Loki stack and in a Malcolm pipeline; the Rust
@@ -63,7 +64,7 @@ severity, data source, expected volume, runbook and lifecycle status. `make
 health` refuses a rule without an entry, an entry without a rule, a technique
 mismatch, or a `stable` rule without a runbook or observed volume.
 
-Current: **63 rules, 6 stable, 0 gaps, 12 with observed lab volume**.
+Current: **66 rules, 6 stable, 0 gaps, 12 with observed lab volume**.
 [Health report](deploy/evidence/health/report.md) ·
 [Runbooks](docs/runbooks/) ·
 [Catalogue schema](metadata/detection-catalog.schema.json)
@@ -200,6 +201,7 @@ recombined through shared metadata, testing and metrics.
 | Protocol DPI (Modbus and DNP3 function codes, S7comm program transfer, OPC UA services) | Native Suricata, plus Rust decoders for DNP3, S7comm and OPC UA application semantics | Sigma cannot express industrial protocol semantics. |
 | Behaviour over time (one host reading several control assets inside a window) | Sigma correlation rules | A per-event signature cannot separate an enumerating host from a polling one: normal polling produces *more* matches than enumeration does. Only a distinct-value count over a window separates them. |
 | Behaviour relative to learned normal (new asset, new communication pair, new function code) | Behaviour-baseline rules (`rules/baseline`) | No per-event signature can say "this asset was never here". The rule needs the learned baseline, which is committed and reviewed rather than hidden inside the rule. |
+| Behaviour that needs state or policy (value drift, approved change window, per-asset protocol profile) | Stateful rules (`rules/stateful`) | A single event or a count cannot express "three samples outside the envelope" or "this write is outside its change window". |
 | Flow-level visibility (endpoints, ports, volumes) | Collector `ot_flow` (NetFlow/IPFIX, Zeek `conn.log`) | Where DPI cannot see the payload — encrypted or unknown protocols — a flow still shows a new source or pair, and feeds the baseline rules. |
 | Device availability and configuration (link, restart, config change) | Sigma over the `ot_snmp` contract | Network-device state is a separate data source from protocol traffic, and a link or config change on a switch carrying control traffic is a detection in its own right. |
 | Segmentation drift (a cross-zone path with no declared conduit, or a service the conduit does not permit) | Conduit rules (`rules/conduit`) over `metadata/ot-conduit-policy.yaml` | The intended segmentation is the condition. Sigma cannot reference an external policy, so drift is its own small rule family, and the policy is committed and reviewed like code. |
@@ -247,6 +249,7 @@ the event contracts.
 rules/sigma/          Sigma rules with *.test.yaml positive/negative fixtures
 rules/baseline/       Behaviour-baseline rules (deviations from learned normal)
 rules/conduit/        Conduit rules (deviations from the segmentation policy)
+rules/stateful/       Stateful rules (drift, change windows, per-asset profiles)
 rules/yara/           YARA rules for project files, firmware and EWS scripts
 rules/native/         Suricata rules for protocol DPI
 baseline/             Committed OT behaviour baseline and its builder

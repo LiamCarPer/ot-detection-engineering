@@ -22,6 +22,7 @@ from tools.otde.rules import (  # noqa: E402
     correlation_rule_paths,
     native_rule_paths,
     single_event_rule_paths,
+    stateful_rule_paths,
     yara_rule_paths,
 )
 from tools.otde.suricata import read_rules  # noqa: E402
@@ -49,7 +50,8 @@ def test_claims_rule_counts_match_the_repository() -> None:
     expected = (
         f"{len(single_event_rule_paths())} Sigma + "
         f"{len(correlation_rule_paths())} correlation + "
-        f"{len(yara_rule_paths())} YARA + {native} native"
+        f"{len(yara_rule_paths())} YARA + {native} native + "
+        f"{len(stateful_rule_paths())} stateful"
     )
     assert expected in CLAIMS.read_text(encoding="utf-8")
 

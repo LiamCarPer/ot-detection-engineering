@@ -1,0 +1,126 @@
+{
+  "baselines": {
+    "asset_current": true,
+    "calendar_valid": true,
+    "calendar_windows": 2,
+    "process_current": true
+  },
+  "rules": [
+    {
+      "rule": "rules/stateful/stateful_asset_protocol_baseline.yml",
+      "schema_errors": [],
+      "title": "New Protocol Service Or Function On A Known Asset",
+      "windows": [
+        {
+          "expected": "match",
+          "name": "a Modbus-only PLC receives an S7comm request",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "match",
+          "name": "a Modbus PLC receives a function code it never used",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "the normal Modbus read",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "the normal DNP3 request to the outstation",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "an unknown asset is the new-asset rule's job",
+          "observed": "no_match",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "rule": "rules/stateful/stateful_engineering_change_window.yml",
+      "schema_errors": [],
+      "title": "Engineering Change Outside Approved Window",
+      "windows": [
+        {
+          "expected": "match",
+          "name": "a write outside every approved change window",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "match",
+          "name": "a write inside a window but from the wrong source",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "a write inside its approved window",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "a read outside every window is not a change",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "an S7 write inside its approved window",
+          "observed": "no_match",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "rule": "rules/stateful/stateful_process_value_drift.yml",
+      "schema_errors": [],
+      "title": "Process Value Drift From Learned Baseline",
+      "windows": [
+        {
+          "expected": "match",
+          "name": "three consecutive tank-level samples far above the learned mean",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "two high samples then a normal sample",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "a single high sample",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "a normal tank level",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "an asset with no learned baseline cannot be judged by this rule",
+          "observed": "no_match",
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "rules": 3,
+    "windows": 15,
+    "windows_passed": 15
+  }
+}

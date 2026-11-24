@@ -1,0 +1,29 @@
+title: New Protocol Service Or Function On A Known Asset
+id: 2f9c5d18-7a64-4e03-9b28-6c1d4f8a3e71
+status: experimental
+description: |
+  Detects a known OT asset receiving a service or function code that it never
+  used in the benign baseline. A function code that is normal on one PLC can be
+  new on another; this rule is per destination asset, not per service.
+
+  An unknown asset is a different detection (the new-asset baseline rule); this
+  rule only fires when the asset is known and its protocol behaviour changes.
+references:
+  - https://attack.mitre.org/techniques/T0846/
+author: Liam Carvajal
+date: 2026-11-24
+stateful:
+  type: asset_protocol_baseline
+  baseline: baseline/asset-behaviour.json
+fields:
+  - src_ip
+  - dst_ip
+  - service
+  - function_code
+falsepositives:
+  - A firmware or logic update that adds a legitimate service or function
+  - A maintenance tool that uses a function code outside the baseline period
+  - A newly commissioned asset that was not in the baseline yet
+level: medium
+tags:
+  - attack.t0846

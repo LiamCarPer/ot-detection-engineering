@@ -1,0 +1,39 @@
+title: Engineering Change Outside Approved Window
+id: 8d3b7e41-2c96-4a58-bf13-5e7a9d6c1b82
+status: experimental
+description: |
+  Detects a write to a controller from an engineering workstation that does not
+  fall inside an approved change window. The calendar is committed policy, so an
+  emergency change must be recorded rather than suppressed.
+
+  This is not a signature on the write itself; an approved engineering change is
+  a normal event. The condition is the absence of a matching window in
+  `metadata/change-calendar.yaml`.
+references:
+  - https://attack.mitre.org/techniques/T0843/
+author: Liam Carvajal
+date: 2026-11-24
+stateful:
+  type: change_window
+  calendar: metadata/change-calendar.yaml
+  products:
+    - ot_ndr
+  write_function_codes:
+    - 6
+    - 16
+    - 26
+    - 27
+    - 28
+fields:
+  - src_ip
+  - dst_ip
+  - service
+  - function_code
+  - timestamp
+falsepositives:
+  - An emergency change that was not added to the calendar
+  - A maintenance window recorded in a different time zone
+  - A new engineering workstation not yet named in the calendar
+level: high
+tags:
+  - attack.t0843

@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust security-preflight security-api-check yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate purple purple-check case-study case-study-check health health-check metrics check clean
+.PHONY: help setup lint validate test rust security-preflight security-api-check yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check stateful-check lab-loki-check coverage emulate-validate purple purple-check case-study case-study-check health health-check metrics check clean
 
 help:
 	@echo "Targets:"
@@ -32,6 +32,7 @@ help:
 	@echo "  collector-check  Prove collector output fires the Sigma rules"
 	@echo "  baseline-check   Prove behaviour-baseline rules against committed telemetry"
 	@echo "  conduit-check    Prove conduit rules against the declared segmentation policy"
+	@echo "  stateful-check   Prove stateful detections and their baselines"
 	@echo "  lab-loki-check   Refresh the OT-Security-Lab ruler evidence (lab required)"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate both adversary emulation plans"
@@ -115,6 +116,9 @@ baseline-check: setup
 conduit-check: setup
 	$(PY) tools/conduit_check.py
 
+stateful-check: setup
+	$(PY) tools/stateful_check.py --check
+
 lab-loki-check: setup
 	$(PY) tools/lab_loki_check.py
 
@@ -156,7 +160,7 @@ metrics: setup
 		--out deploy/evidence/purple
 	$(PY) metrics/compute.py
 
-check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check deploy-check purple-check case-study-check health-check
+check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check stateful-check deploy-check purple-check case-study-check health-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target

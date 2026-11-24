@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "generated_from": [
+    "metrics/baseline/benign-events.jsonl"
+  ],
+  "field": "tank_level_pct",
+  "assets": {
+    "plc_intake": {
+      "mean": 57.667,
+      "std": 11.484,
+      "samples": 30
+    },
+    "plc_treatment": {
+      "mean": 59.9,
+      "std": 10.297,
+      "samples": 30
+    }
+  }
+}

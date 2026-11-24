@@ -24,6 +24,7 @@ SIGMA_RULES_DIR = REPO_ROOT / "rules" / "sigma"
 NATIVE_RULES_DIR = REPO_ROOT / "rules" / "native"
 BASELINE_RULES_DIR = REPO_ROOT / "rules" / "baseline"
 CONDUIT_RULES_DIR = REPO_ROOT / "rules" / "conduit"
+STATEFUL_RULES_DIR = REPO_ROOT / "rules" / "stateful"
 YARA_RULES_DIR = REPO_ROOT / "rules" / "yara"
 METADATA_DIR = REPO_ROOT / "metadata"
 CATALOG_PATH = METADATA_DIR / "attack_ics_catalog.json"
@@ -124,6 +125,17 @@ def conduit_rule_paths() -> list[Path]:
 
 
 def conduit_techniques(rule_path: Path) -> list[str]:
+    data = yaml.safe_load(rule_path.read_text(encoding="utf-8"))
+    return _techniques_from_tags(list(data.get("tags", [])))
+
+
+def stateful_rule_paths() -> list[Path]:
+    return sorted(
+        path for path in STATEFUL_RULES_DIR.rglob("*.yml") if ".test." not in path.name
+    )
+
+
+def stateful_techniques(rule_path: Path) -> list[str]:
     data = yaml.safe_load(rule_path.read_text(encoding="utf-8"))
     return _techniques_from_tags(list(data.get("tags", [])))
 
@@ -246,6 +258,10 @@ def detected_techniques() -> dict[str, list[str]]:
     for rule_path in yara_rule_paths():
         relative = rule_path.relative_to(REPO_ROOT).as_posix()
         for technique in yara_techniques(rule_path):
+            sources.setdefault(technique, []).append(relative)
+    for rule_path in stateful_rule_paths():
+        relative = rule_path.relative_to(REPO_ROOT).as_posix()
+        for technique in stateful_techniques(rule_path):
             sources.setdefault(technique, []).append(relative)
     for rule_path in native_rule_paths():
         relative = rule_path.relative_to(REPO_ROOT).as_posix()
