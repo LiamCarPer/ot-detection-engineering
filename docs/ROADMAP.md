@@ -44,3 +44,38 @@ next and what I deliberately did not do.
 Read [`docs/CLAIMS.md`](CLAIMS.md) and [`docs/DEMO.md`](DEMO.md) together. The
 demo is the short path through the work; the claims register is the evidence
 behind every number. If a number is not in the claims register, do not quote it.
+
+## Current implementation
+
+Implemented: detection-as-code pipeline, OT Sigma rules, native protocol DPI for
+Modbus/TCP, DNP3, OPC UA and S7comm, stateful correlation rules for
+control-asset enumeration, proxy fan-out, port sweeps, register enumeration,
+OPC UA browsing and exception floods, a stateful detection family, multi-platform
+conversion (Loki, OpenSearch, Splunk SPL, Sentinel KQL), installable deployment
+bundles, Suricata validation over captures and in a Malcolm pipeline, ATT&CK for
+ICS coverage, adversary emulation, a detection catalogue and health report, and
+performance evidence. The pipeline, conversion, tests, coverage, catalogue,
+stateful and performance evidence run in CI; the container, Malcolm and live-lab
+validations run locally and their committed evidence is guarded by tests.
+
+## Integration status
+
+- [x] Install the Suricata ruleset into
+      [OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline)
+      and run it with Malcolm's own Suricata image and default ruleset.
+- [x] Install the Loki ruler bundle into
+      [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) and confirm
+      the DNP3, OPC UA, S7comm, firewall and process rules on live traffic.
+- [ ] Run emulation against the live lab in CI and publish live metrics.
+- [ ] Add Wazuh as a conversion target.
+
+## Protocol coverage
+
+- [x] Modbus/TCP — native Suricata function-code DPI.
+- [x] DNP3 — native Suricata function/object DPI plus a Rust application-layer
+      decoder and Sigma rules.
+- [x] S7comm — native Suricata function-code DPI plus a Rust application-layer
+      decoder and Sigma rules.
+- [x] OPC UA — native Suricata TCP message-header DPI plus a Rust service
+      decoder and Sigma rules.
+- [ ] PROFINET (layer-2 / DCE-RPC; needs non-IP rule hooks).

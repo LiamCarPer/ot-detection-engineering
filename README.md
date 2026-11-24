@@ -7,41 +7,30 @@
 **A detection-as-code operating model for OT/ICS, demonstrated end to end on a
 segmented water-treatment lab.**
 
-A detection repository can stop at a folder of Sigma rules. This one closes the
-loop: threat model → telemetry → detection → fixture and held-out validation →
-conversion and deployment → adversary emulation → measured tuning. Every headline
-claim has an artifact and a command, and the repository says plainly what it does
-not prove.
+This repository treats detections as software: one Sigma source, four SIEM
+targets, native protocol DPI, fixture and held-out validation, adversary
+emulation, a detection catalogue and measured performance. Every headline claim
+has an artifact and a command, and the repository says plainly what it does not
+prove.
 
-## What to look at first
+## Start here
 
-| Time | Start here | Why |
+| Time | Path | Why |
 | :-- | :-- | :-- |
-| 3 min | [`docs/DEMO.md`](docs/DEMO.md) | The offline demo: decoders → case study → purple team → catalogue → performance. |
 | 2 min | [`docs/RESULTS.md`](docs/RESULTS.md) | The numbers, their scope, and what they do not mean. |
-| 5 min | [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md) | A reviewer's path from summary to code, including where to be skeptical. |
-| 6 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](docs/CASE_STUDY_ALERT_FLOOD.md) | 151 lab alerts → 24 episodes → 5 operational events, and what I would suppress. |
-| 10 min | [`docs/PURPLE_TEAM.md`](docs/PURPLE_TEAM.md) | 14 expectations across 8 steps, 0 unexpected alerts, benign window passed. |
-| 10 min | [`deploy/report.md`](deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
-| 8 min | [`docs/STATE_DETECTIONS.md`](docs/STATE_DETECTIONS.md) | Drift, change-window and per-asset behaviour: what needs context, and why. |
-| 8 min | [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md) | Decoder p99, replay throughput, SLOs and what they do not measure. |
-| 8 min | [`deploy/evidence/health/report.md`](deploy/evidence/health/report.md) | The detection catalogue: owners, runbooks, observed volume, stable vs experimental. |
-| 10 min | [`docs/WRITEUP.md`](docs/WRITEUP.md) | The narrative: the loop, what it found, and what went wrong. |
-| 20 min | [`docs/CLAIMS.md`](docs/CLAIMS.md) | Every claim → evidence → the command that proves it. |
-| 30 min | [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md) | Tradeoffs, failures, and the rule that was withdrawn. |
-
-## Demo
-
-A three-minute offline demo is in [`docs/DEMO.md`](docs/DEMO.md). It walks
-from the decoder-to-query path through the alert-flood case study, the
-purple team, the detection catalogue and the performance evidence.
+| 3 min | [`docs/DEMO.md`](docs/DEMO.md) | The offline demo: decoders → case study → purple team → catalogue → performance. |
+| 5 min | [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md) | A deeper path from summary to code, including where to be skeptical. |
+| 6 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](docs/CASE_STUDY_ALERT_FLOOD.md) | 151 lab alerts → 24 episodes → 5 operational events, and what to suppress. |
+| 8 min | [`docs/PURPLE_TEAM.md`](docs/PURPLE_TEAM.md) | 14 expectations across 8 steps, 0 unexpected alerts, benign window passed. |
+| 10 min | [`docs/CLAIMS.md`](docs/CLAIMS.md) | Every claim → evidence → the command that proves it. |
+| 15 min | [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md) | Tradeoffs, failures, and the rule that was withdrawn. |
 
 ## The 90-second version
 
 - **What it detects.** 29 ATT&CK for ICS techniques across 24 single-event Sigma
-  rules, 6 correlation rules, 4 YARA rules, 24 native Suricata signatures and 3
-  stateful detections, chosen for a segmented water-treatment plant and mapped
-  to a committed threat model.
+  rules, 6 correlation rules, 4 YARA rules, 24 native Suricata signatures, 3
+  stateful detections and 5 baseline/conduit rules, chosen for a segmented
+  water-treatment plant and mapped to a committed threat model.
 - **What it proves.** Every rule is fixture-tested; the Sigma rules are
   held-out-tested; the native rules run in Suricata over real captures; the
   Sigma rules run in a live Loki stack and in a Malcolm pipeline; the Rust
@@ -57,7 +46,7 @@ purple team, the detection catalogue and the performance evidence.
 ## Case study: 151 alerts in 160 seconds
 
 A fresh lab run produced **151 alerts across 17 types from four sources in 160
-seconds**. The case study collapses them into **24 one-minute episodes** and
+seconds**. The analysis collapses them into **24 one-minute episodes** and
 **five operational events** — four adversary campaigns and one sensor-health
 event — and explains what to suppress, what to keep, and what the reduction
 does not prove.
@@ -75,16 +64,14 @@ mismatch, or a `stable` rule without a runbook or observed volume.
 
 Current: **66 rules, 6 stable, 0 gaps, 12 with observed lab volume**.
 [Health report](deploy/evidence/health/report.md) ·
-[Runbooks](docs/runbooks/) ·
-[Catalogue schema](metadata/detection-catalog.schema.json)
+[Runbooks](docs/runbooks/)
 
 ## Coverage: prioritized, not padded
 
 Raw ATT&CK for ICS coverage is **29 / 97 techniques (29.9%)**. That number is
-deliberately not the headline. The catalogue includes techniques that are not
-observable from the telemetry this repository has — network, flow, file and
-process — and padding it with untested tags would make the repo worse, not
-better.
+deliberately not the headline: the catalogue includes techniques that are not
+observable from the telemetry this repository has, and padding it with untested
+tags would make the repo worse, not better.
 
 | Tactic | Covered | Why the gap is acceptable |
 | :-- | --: | :-- |
@@ -101,14 +88,14 @@ better.
 | Impair Process Control | 4 / 8 | Unauthorized writes, parameter writes, safety violations and mode changes are covered. |
 | Impact | 3 / 12 | View/control denial and safety impact are covered; physical damage needs process context. |
 
-The per-tactic breakdown is generated by `coverage/generate_coverage.py`;
-this table is checked against it by `tests/test_claims.py`.
+The table is generated by `coverage/generate_coverage.py` and checked against it
+by `tests/test_claims.py`.
 
 ## Results at a glance
 
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
-| Detection content | 24 Sigma + 6 correlation + 4 YARA + 24 native | Single-event and windowed log rules, file rules, and protocol DPI. |
+| Detection content | 66 catalogued rules: 24 Sigma + 6 correlation + 4 YARA + 24 native + 3 stateful + 3 baseline + 2 conduit | Every rule is in the detection catalogue. |
 | Emulation detection rate (MTTD run) | 100% (4 / 4 expectations) | 2026-09-13 run, two steps; the lab's `mitre_id` is cross-checked against the plan. |
 | Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, 2026-09-13 run (`n=4`, one run). |
 | Purple-team coverage | 14 / 14 expectations (8 steps) | 2026-11-24 replay; 0 unexpected alerts; benign window passed; MTTD not measured. |
@@ -120,110 +107,6 @@ this table is checked against it by `tests/test_claims.py`.
 | Held-out correlation recall | 12 / 12 positive windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
 | Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
 
-## What is not the headline
-
-The repository also contains a security-engineering workstream: a threat model,
-29 controls, SAST/SCA/secrets/actions gates, a FastAPI ingest service and an LLM
-triage endpoint with OWASP LLM Top 10 tests. It is real and tested, but it is
-supporting evidence. The OT detection loop is the story. See
-[`docs/AI_SECURITY.md`](docs/AI_SECURITY.md) and
-[`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) if you want that part.
-
-## Scope and limitations
-
-The repository is explicit about what is proven and what is not, because a
-detection is only as trustworthy as the evidence behind it.
-
-- **What is machine-checked.** Every rule is parsed, tagged, converted and tested
-  in CI; the native rules are executed by Suricata over committed captures; the
-  Loki ruler bundle is executed in a full stack; the decoders' output is run
-  through the same matcher the rule tests use; and coverage, precision, recall
-  and false-positive rate are derived from the rules, with a separate held-out
-  set for the precision/recall estimate. The lab alert-flood analysis is
-  regenerated from a pinned snapshot and checked for drift. All of that runs
-  offline and deterministically.
-- **What is emulated.** The lab this project validates against is a Dockerized
-  software emulation of a segmented plant; there is no physical PLC, sensor or
-  actuator. The emulation figures come from a recorded run against that lab.
-- **Fixture metrics are agreement, not field performance.** Precision and recall
-  are computed against fixtures authored alongside each rule, so they measure
-  that the rule and its fixtures agree — useful as a regression guard, not as a
-  claim about production precision.
-- **Held-out metrics are a better estimate, still not field performance.** The
-  labels in `metrics/heldout/` are authored independently of the rule fixtures,
-  and the negatives come from a different generator seed plus one near miss per
-  rule. The set is small (two positives per rule), so per-rule intervals are
-  wide; the aggregate is the number to quote. See `metrics/heldout/README.md`.
-- **The benign baseline is generated, not harvested.** The baseline
-  false-positive rate is measured over 1,000 deterministic events produced by
-  `tools/make_benign.py` (seed `20260101`), spanning normal Modbus, DNP3, S7comm
-  and OPC UA traffic, zone-firewall decisions, flows, process updates and SNMP.
-  It checks that no rule fires on modelled normal operation; the honest claim is
-  `0/1,000` with a 95% Wilson upper bound of **0.38%**, not "0.0 FPR". Because it
-  is generated rather than captured, it cannot estimate field false-positive
-  volume; see `metrics/baseline/README.md`.
-- **Emulation scope.** The emulation plan covers two adversary steps and four
-  expectations; it does not exercise every rule.
-- **The behaviour baseline is a committed snapshot.** The deviation rules are
-  only as current as `baseline/ot-behaviour.json`, which is built from the benign
-  collector samples. A legitimate network change requires regenerating it, so a
-  stale baseline is a reviewable event rather than a silent source of false
-  positives — and it is only as good as the benign period it was learned from.
-- **YARA fixtures are synthetic.** The file samples contain the structural
-  markers the rules target (an `MZ`/`PE` signature next to a project or firmware
-  marker) and are inert; real malware is never committed, and the engine is
-  proven against the EICAR test string assembled in memory.
-- **The conduit policy is a committed model of intent.** The conduit rules are
-  only as good as `metadata/ot-conduit-policy.yaml`: zones and conduits must be
-  kept in step with the network, and traffic with an unzoned endpoint is out of
-  scope by design, so an asset that has not been zoned is invisible to them.
-- **Protocol limits.** The S7comm decoder handles classic S7comm only (not
-  S7comm Plus); OPC UA service bodies are only visible on unencrypted channels
-  (`None`/`Sign`, not `SignAndEncrypt`); the DNP3 decoder reads the first object
-  header only; and the native Modbus/DNP3 rules require Suricata's application
-  layer to be enabled.
-- **Correlation rules need a workaround for a defect in the pinned Loki
-  backend.** Its ruler output format finalises a correlation by wrapping the
-  query in `count_over_time()`, which a metric expression cannot be an argument
-  to, and by interpolating the referenced rule's ruler *document* into the
-  subquery selector where LogQL expects a stream selector. Loki rejected the
-  generated rule outright (`syntax error: unexpected COUNT`). The bundle now
-  builds correlation ruler documents from the backend's default-format query —
-  see `pipelines/loki_correlation.py` for the reproduction and the reasoning —
-  and the rule fires in the full Loki stack like every other one. A test guards
-  the shape, because the failure mode is a rule that is silently absent at
-  runtime. Splunk and OpenSearch are converted and inspect clean but have not
-  been executed.
-- **CI vs. local validation.** CI runs the offline checks and the decoder,
-  collector, behaviour-baseline and conduit proofs. The container validations
-  (Suricata, Loki, Malcolm) and the live-lab capture require Docker or the lab,
-  so they run locally and their committed evidence is guarded by tests rather
-  than re-run on every commit.
-
-## Approach
-
-Detection content is split by what each format can actually express, then
-recombined through shared metadata, testing and metrics.
-
-| Content | Format | Rationale |
-| :--- | :--- | :--- |
-| Log-based detections (firewall, NDR alerts, application and process events) | Sigma | Portable, converted by pySigma, testable offline. |
-| Protocol DPI (Modbus and DNP3 function codes, S7comm program transfer, OPC UA services) | Native Suricata, plus Rust decoders for DNP3, S7comm and OPC UA application semantics | Sigma cannot express industrial protocol semantics. |
-| Behaviour over time (one host reading several control assets inside a window) | Sigma correlation rules | A per-event signature cannot separate an enumerating host from a polling one: normal polling produces *more* matches than enumeration does. Only a distinct-value count over a window separates them. |
-| Behaviour relative to learned normal (new asset, new communication pair, new function code) | Behaviour-baseline rules (`rules/baseline`) | No per-event signature can say "this asset was never here". The rule needs the learned baseline, which is committed and reviewed rather than hidden inside the rule. |
-| Behaviour that needs state or policy (value drift, approved change window, per-asset protocol profile) | Stateful rules (`rules/stateful`) | A single event or a count cannot express "three samples outside the envelope" or "this write is outside its change window". |
-| Flow-level visibility (endpoints, ports, volumes) | Collector `ot_flow` (NetFlow/IPFIX, Zeek `conn.log`) | Where DPI cannot see the payload — encrypted or unknown protocols — a flow still shows a new source or pair, and feeds the baseline rules. |
-| Device availability and configuration (link, restart, config change) | Sigma over the `ot_snmp` contract | Network-device state is a separate data source from protocol traffic, and a link or config change on a switch carrying control traffic is a detection in its own right. |
-| Segmentation drift (a cross-zone path with no declared conduit, or a service the conduit does not permit) | Conduit rules (`rules/conduit`) over `metadata/ot-conduit-policy.yaml` | The intended segmentation is the condition. Sigma cannot reference an external policy, so drift is its own small rule family, and the policy is committed and reviewed like code. |
-| File and firmware content (PLC project files, firmware images, EWS scripts) | YARA (YARA-X) in `rules/yara` | These artifacts never cross the network detection path. YARA matches their structure; the fixtures are synthetic and no real malware is committed. |
-
-Every rule, regardless of format, carries an ATT&CK for ICS technique, is
-covered by labeled fixtures, and is included in the generated coverage map.
-
-Log-based rules are converted from Sigma into the platforms detection teams
-actually run: **Loki LogQL**, **OpenSearch PPL**, **Splunk SPL** and
-**Microsoft Sentinel KQL** (Kusto).
-
 ## Architecture
 
 ```
@@ -232,26 +115,20 @@ rules/sigma/**/*.yml ──┐
 rules/native/**/*.rules┘        │
                                 ├─▶ metrics (precision / recall / FPR / coverage)
                                 │
-Sigma rule ──▶ pipelines/convert.py ──▶ Loki LogQL / OpenSearch PPL /
-                                        Splunk SPL / Sentinel KQL + provenance
+Sigma rule ──▶ pipelines/convert.py ──▶ Loki / OpenSearch / Splunk / Sentinel
 
 rules/** ──▶ pipelines/deploy.py ──▶ deploy/ bundle + provenance manifest
 native rules ──▶ tests/captures ──▶ Suricata (container) ──▶ deploy/evidence
 
-DNP3 frames   ──▶ tools/dnp3-dpi (Rust)   ──▶ ot_ndr/dnp3 events   ──▶ Sigma rules
-S7comm frames ──▶ tools/s7comm-dpi (Rust) ──▶ ot_ndr/s7comm events ──▶ Sigma rules
-OPC UA msgs   ──▶ tools/opcua-dpi (Rust)  ──▶ ot_ndr/opcua events  ──▶ Sigma rules
+DNP3/S7comm/OPC UA frames ──▶ tools/*-dpi (Rust) ──▶ ot_ndr events ──▶ Sigma rules
+Suricata / Zeek / NetFlow / SNMP ──▶ collector/ ──▶ contract events ──▶ Sigma rules
 
-Suricata eve.json / Zeek OT logs ──▶ collector/ ──▶ contract events ──▶ Sigma rules
-                                                        (schema-validated, routed)
-
-emulation plan ──▶ purple/runner ──▶ detection rate + MTTD ──▶ metrics
+emulation plan ──▶ purple/runner ──▶ coverage + MTTD ──▶ metrics
 ```
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the design rationale,
-[docs/DESIGN_DECISIONS.md](docs/DESIGN_DECISIONS.md) for why the system is built
-this way and what it does not do, and [docs/TELEMETRY.md](docs/TELEMETRY.md) for
-the event contracts.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the data flow and tooling,
+[docs/TELEMETRY.md](docs/TELEMETRY.md) for the event contracts, and
+[docs/DESIGN_DECISIONS.md](docs/DESIGN_DECISIONS.md) for the tradeoffs.
 
 ## Repository layout
 
@@ -262,21 +139,20 @@ rules/conduit/        Conduit rules (deviations from the segmentation policy)
 rules/stateful/       Stateful rules (drift, change windows, per-asset profiles)
 rules/yara/           YARA rules for project files, firmware and EWS scripts
 rules/native/         Suricata rules for protocol DPI
-baseline/             Committed OT behaviour baseline and its builder
+baseline/             Committed behaviour and process baselines and their builders
 metadata/             ATT&CK catalog, detection catalogue, policies and JSON Schemas
 tools/otde/           Shared library: discovery, technique extraction, matcher
-tools/dnp3-dpi/       Rust DNP3 decoder emitting normalized ot_ndr/dnp3 events
-tools/s7comm-dpi/     Rust S7comm decoder emitting normalized ot_ndr/s7comm events
-tools/opcua-dpi/      Rust OPC UA decoder emitting normalized ot_ndr/opcua events
-collector/            Normalizes Suricata eve.json and Zeek OT logs into the contract
+tools/*-dpi/          Rust DNP3, S7comm and OPC UA decoders
+tools/perf/           Rust decoder microbenchmark
+collector/            Normalizes sensor output into the telemetry contract
 pipelines/            Sigma-to-backend conversion and deployment bundle builder
-deploy/               Installable bundle: Loki ruler, Suricata, Splunk, Sentinel, OpenSearch
+deploy/               Installable bundle and committed evidence
 coverage/             ATT&CK for ICS coverage map generator
 purple/               Adversary emulation plan, runner and recorded observations
-metrics/              Detection-quality computation, benign baseline and held-out set
+metrics/              Detection-quality computation, baseline and held-out set
 analysis/             Reproducible lab-data analyses and the alert-flood case study
-tests/                Rule, metadata, coverage and metrics tests
-docs/                 Architecture, design decisions, results, runbooks and lifecycle
+tests/                Rule, metadata, coverage, metrics and evidence tests
+docs/                 Architecture, scope, design decisions, results and runbooks
 ```
 
 ## Quickstart
@@ -284,43 +160,33 @@ docs/                 Architecture, design decisions, results, runbooks and life
 ```bash
 make setup             # create .venv and install the toolchain
 make demo              # offline decoder -> Sigma rule -> SIEM query walkthrough
-make check             # lint + sigma-cli validation + tests + Rust + bundle drift
-make convert BACKEND=loki
-make convert BACKEND=opensearch
-make convert BACKEND=splunk     # Splunk SPL
-make convert BACKEND=sentinel   # Microsoft Sentinel KQL
-make convert-all                # all four target platforms
+make check             # lint, Sigma validation, tests, Rust, evidence checks
+make metrics           # coverage, held-out metrics, emulation replay
+make case-study        # regenerate the lab alert-flood analysis
+make purple-check      # validate the purple-team evidence
+make health-check      # validate the detection catalogue
+make perf-check        # validate the performance evidence
+make convert-all       # Loki, OpenSearch, Splunk and Sentinel
 make deploy            # build the installable bundle under deploy/
-make suricata-check    # validate the native rules over captures (Docker)
-make loki-check        # prove the Loki ruler bundle in a full stack (Docker)
-make decoder-check     # prove the decoders' events fire the Sigma rules
-make collector-check   # prove collector output fires the Sigma rules
-make baseline-check    # prove behaviour-baseline rules against committed telemetry
-make conduit-check     # prove conduit rules against the segmentation policy
-make yara-check        # prove YARA rules against committed file and payload samples
-make metrics           # coverage + emulation replay + metrics report
 ```
 
-`make check` and `make metrics` need no SIEM, lab or external data source: the
-ATT&CK catalog is pinned in-tree, fixtures are committed, and dependencies are
-pinned in `requirements.txt`. `make suricata-check` and `make loki-check` require
-Docker (both pull their images on first run); `make lab-loki-check` requires the
-live lab.
+`make check` and `make metrics` need no SIEM, lab or external data source. The
+container validations (`make suricata-check`, `make loki-check`) require Docker;
+`make lab-loki-check` requires the live lab.
 
 ## Detection lifecycle
 
 ```
-author ─▶ validate ─▶ test ─▶ convert/bundle ─▶ emulate ─▶ measure
+author ─▶ validate ─▶ test ─▶ convert/bundle ─▶ emulate ─▶ measure ─▶ operate
 ```
 
 1. **Author** a rule with an ATT&CK for ICS tag and labeled fixtures.
 2. **Validate** with `sigma check` and the metadata governance tests.
 3. **Test** each rule against positive and negative events.
-4. **Convert and bundle** one rule into Loki, OpenSearch, Splunk and Sentinel
-   queries, and into an installable `deploy/` bundle with recorded provenance.
+4. **Convert and bundle** one rule into four SIEM languages with provenance.
 5. **Emulate** an adversary action in the lab and confirm the expected detection.
-6. **Measure** coverage, precision, recall, false-positive rate, detection rate
-   and MTTD.
+6. **Measure** coverage, precision, recall, false-positive rate and MTTD.
+7. **Operate** the rule through the catalogue, runbook and health gate.
 
 Full instructions are in [docs/DETECTION_LIFECYCLE.md](docs/DETECTION_LIFECYCLE.md).
 
@@ -328,114 +194,43 @@ Full instructions are in [docs/DETECTION_LIFECYCLE.md](docs/DETECTION_LIFECYCLE.
 
 `make deploy` turns the rules into an installable bundle under [`deploy/`](deploy/):
 Grafana Loki ruler alerts, a Suricata ruleset, Splunk saved searches and Sentinel
-queries, with a provenance manifest and a per-platform runbook
-([deploy/DEPLOY.md](deploy/DEPLOY.md)). `python pipelines/deploy.py --check`
-fails CI when the committed bundle drifts from the rules.
+queries, with a provenance manifest and a per-platform runbook. The bundles are
+functionally validated, not just linted: Suricata runs over the committed
+captures, the Loki ruler runs in a full stack, and the decoders' output is fed
+through the same matcher as the rule tests. The results are in
+[deploy/report.md](deploy/report.md), including the Malcolm pipeline and the
+11-of-13 live-lab rule proof.
 
-The bundles are functionally validated, not just linted. `make suricata-check`
-runs Suricata in a container over the committed captures in `tests/captures/`,
-`make loki-check` runs the generated Loki ruler rules in a full stack (Loki,
-Alertmanager, Grafana), and `make decoder-check` runs the Rust decoders over the
-committed example frames and feeds the decoded events through the Sigma rules.
-Each refreshes evidence in `deploy/evidence/`. The results are recorded in
-[deploy/report.md](deploy/report.md): every attack capture fires exactly the
-expected signatures, every Loki ruler alert fires, every protocol rule fires on
-the decoded events, and no benign input produces an alert. The Suricata ruleset
-is also installed into a Malcolm pipeline and run with Malcolm's own Suricata
-image and default ruleset (`tools/malcolm_check.py`), confirming it loads and
-fires there rather than only in isolation. The Loki ruler bundle is deployed
-into [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab), a live
-segmented lab with real DNP3, OPC UA and S7comm endpoints. After the lab's own
-adversary emulations run, `tools/lab_loki_check.py` confirms **11 of the 13
-rules the lab exercises firing on live lab traffic** — every DNP3, OPC UA, S7comm,
-firewall and process rule. The two generated Modbus rules are validated offline
-instead: the lab reports Modbus as JSON alert events, not normalized `ot_ndr`
-telemetry. The proof is committed under `deploy/evidence/lab-loki/`; the full
-breakdown is in [deploy/report.md](deploy/report.md).
+## Scope
 
-## Tooling
+- **Machine-checked offline.** Every rule is parsed, tagged, tested and
+  converted in CI; the analysis, catalogue and performance evidence are
+  regenerated and checked for drift.
+- **The lab is a Dockerised plant.** There is no physical PLC, sensor or
+  actuator.
+- **The benign corpus is generated.** The honest claim is `0/1,000` with a 95%
+  Wilson upper bound of **0.38%**, not "0.0 FPR". It cannot estimate field
+  false-positive volume.
+- **Held-out labels are authored.** They are independent of the rule fixtures,
+  but the set is small and the per-rule intervals are wide.
+- **No production telemetry or 24/7 SOC.** There is no on-call rota, shift
+  handover or production incident load.
 
-- **pySigma / sigma-cli** for parsing, validation and conversion, with the
-  official Loki, OpenSearch, Splunk and Kusto (Sentinel KQL) backends.
-- **JSON Schema** for rule test cases, the ATT&CK catalog and the emulation plan.
-- **Pinned ATT&CK for ICS v19.2** catalog, regenerated from the upstream STIX
-  collection by `scripts/build_attack_catalog.py`.
-- **A pySigma-based validation matcher** that interprets pySigma's parsed rule
-  model and raises on unsupported features instead of passing silently.
-- **Dependency-free Rust protocol decoders** (`tools/dnp3-dpi`,
-  `tools/s7comm-dpi` and `tools/opcua-dpi`, `#![forbid(unsafe_code)]`) that
-  validate framing (CRC-16/DNP for DNP3) and emit the normalized events the DNP3,
-  S7comm and OPC UA Sigma rules consume.
-- **Suricata functional validation in a container** over generated captures
-  (Scapy), with committed alert evidence, so the native rules are proven to fire
-  rather than only parsed.
-- **Decoder-to-rule validation**: each decoder's committed example frames are
-  decoded and the resulting events are run through the same pySigma matcher the
-  rule tests use, so the decoders and their Sigma rules cannot drift apart.
-- **A telemetry collector** (`collector/`) that normalizes real Suricata
-  `eve.json`, Zeek OT logs and `conn.log`, NetFlow/IPFIX exports and SNMP traps
-  into the contract, validates each event against
-  `metadata/telemetry.schema.json`, and is proven to fire the rules
-  (`make collector-check`) — so the telemetry the rules assume is produced in
-  the repository rather than assumed.
-- **A learned OT behaviour baseline** (`baseline/`), built from benign telemetry
-  and committed, with behaviour rules (`rules/baseline`) that flag a new asset, a
-  new communication pair or a new protocol function code. This is the asset
-  visibility and anomaly-detection half of OT monitoring, expressed as detection
-  content with fixtures and evidence rather than as a product feature.
-- **YARA-X file detection** (`rules/yara/`): PLC project files, firmware images
-  and EWS scripts, proven against committed synthetic artifacts and a payload
-  blob, with a runtime EICAR self-test. Real malware is never committed.
-- **Segmentation as code** (`metadata/ot-conduit-policy.yaml`) with conduit rules
-  (`rules/conduit`) that flag a cross-zone path with no declared conduit or a
-  service the conduit does not permit, and report declared conduits never
-  observed. It detects drift from the intended Purdue segmentation rather than
-  configuring it.
+The detailed limits are in [docs/SCOPE.md](docs/SCOPE.md), and every claim is in
+[docs/CLAIMS.md](docs/CLAIMS.md).
 
-## Status and roadmap
+## Further reading
 
-Implemented: detection-as-code pipeline, OT Sigma rules, native protocol DPI for
-Modbus/TCP, DNP3, OPC UA and S7comm (DNP3, S7comm and OPC UA also decoded in
-Rust for application-layer Sigma rules), stateful Sigma correlation rules for
-control-asset enumeration, proxy fan-out, port sweeps, register enumeration,
-OPC UA browsing and exception floods, multi-platform conversion (Loki,
-OpenSearch, Splunk SPL, Sentinel KQL), installable deployment bundles, Suricata
-functional validation over committed captures and in a Malcolm pipeline, ATT&CK
-for ICS coverage, adversary emulation, and detection metrics. The pipeline,
-conversion, tests, coverage and metrics run in CI; the container, Malcolm and
-live-lab validations run locally and their committed evidence is guarded by
-tests.
-
-Integration status:
-
-- [x] Install the Suricata ruleset into
-      [OT-NDR-Malcolm-Pipeline](https://github.com/LiamCarPer/OT-NDR-Malcolm-Pipeline)
-      and run it with Malcolm's own Suricata image and default ruleset over the
-      captures, recording provenance in `deploy/evidence/malcolm/`.
-- [x] Install the Loki ruler bundle into
-      [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) and confirm
-      the generated DNP3, OPC UA, S7comm, firewall and process rules firing on
-      live lab traffic, recording provenance in `deploy/evidence/lab-loki/`.
-- [ ] Run emulation against the live lab in CI and publish live metrics.
-- [ ] Add Wazuh as a conversion target.
-
-Protocol coverage:
-
-- [x] Modbus/TCP — native Suricata function-code DPI.
-- [x] DNP3 — native Suricata function/object DPI, plus a Rust application-layer
-      decoder with Sigma rules over the decoded events.
-- [x] S7comm — native Suricata function-code DPI (program download/upload, PLC
-      stop, unauthorized write), plus a Rust application-layer decoder with
-      Sigma rules for program transfer and mode changes.
-- [x] OPC UA — native Suricata TCP message-header DPI, plus a Rust service
-      decoder with Sigma rules for plaintext (None/Sign) channels.
-- [ ] PROFINET (layer-2 / DCE-RPC; needs non-IP rule hooks).
-
-## For reviewers
-
-- [Operations walkthrough](docs/OPERATIONS.md) — one rule from catalogue to rollback.
+- [Purple team](docs/PURPLE_TEAM.md) — coverage, MTTD and the lab-only gaps.
+- [Stateful detections](docs/STATE_DETECTIONS.md) — drift, change windows and per-asset profiles.
+- [Performance](docs/PERFORMANCE.md) — decoder p99, replay throughput and SLOs.
+- [Operations](docs/OPERATIONS.md) — one rule from catalogue to rollback.
 - [Write-up](docs/WRITEUP.md) — the loop, the findings and the failures.
 - [Roadmap](docs/ROADMAP.md) — what is next and what is deliberately not done.
+
+Also included: a security-engineering workstream (threat model, 29 controls,
+ingest API, LLM triage tests) as supporting evidence. See
+[docs/AI_SECURITY.md](docs/AI_SECURITY.md).
 
 ## Related projects
 

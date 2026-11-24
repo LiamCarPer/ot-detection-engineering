@@ -216,3 +216,36 @@ detection content:
 - `purple/runner/run_emulation.py --execute` runs the plan against
   [OT-Security-Lab](https://github.com/LiamCarPer/OT-Security-Lab) via
   `docker exec`.
+
+## Tooling inventory
+
+- **pySigma / sigma-cli** for parsing, validation and conversion, with the
+  official Loki, OpenSearch, Splunk and Kusto (Sentinel KQL) backends.
+- **JSON Schema** for rule test cases, the ATT&CK catalog, the detection
+  catalogue, the change calendar and the emulation plan.
+- **Pinned ATT&CK for ICS v19.2** catalog, regenerated from the upstream STIX
+  collection by `scripts/build_attack_catalog.py`.
+- **A pySigma-based validation matcher** that interprets pySigma's parsed rule
+  model and raises on unsupported features instead of passing silently.
+- **Dependency-free Rust protocol decoders** (`tools/dnp3-dpi`,
+  `tools/s7comm-dpi`, `tools/opcua-dpi`, `#![forbid(unsafe_code)]`) that
+  validate framing (CRC-16/DNP for DNP3) and emit the normalized events the
+  Sigma rules consume.
+- **A dependency-free Rust microbenchmark** (`tools/perf`) for the three
+  decoders.
+- **Suricata functional validation** in a container over generated captures
+  (Scapy), with committed alert evidence.
+- **Decoder-to-rule validation**: each decoder's committed example frames are
+  decoded and the resulting events are run through the same pySigma matcher the
+  rule tests use.
+- **A telemetry collector** (`collector/`) that normalizes Suricata `eve.json`,
+  Zeek OT logs, NetFlow/IPFIX exports and SNMP traps into the contract, validates
+  each event against `metadata/telemetry.schema.json`, and is proven to fire the
+  rules.
+- **A learned OT behaviour baseline** (`baseline/`) and a per-asset protocol
+  profile, with deviation and stateful rules that consume them.
+- **YARA-X file detection** (`rules/yara/`) for PLC project files, firmware
+  images and EWS scripts, proven against synthetic artifacts and the EICAR
+  self-test.
+- **Segmentation as code** (`metadata/ot-conduit-policy.yaml`) with conduit rules
+  that flag drift from the intended Purdue segmentation.
