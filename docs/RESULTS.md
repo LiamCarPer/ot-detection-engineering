@@ -16,8 +16,9 @@ per-tactic rationale for the gaps is in the README.
 | :--- | ---: | :--- |
 | ATT&CK for ICS coverage | 29 prioritized techniques (raw 29 / 97, 29.9%) | Chosen against the plant threat model; gaps are listed, not padded. |
 | Detection content | 24 Sigma + 6 correlation + 4 YARA + 24 native | Single-event and windowed log rules, file rules, and protocol DPI. |
-| Emulation detection rate | 100% (4 / 4 expectations) | Two adversary steps, one recorded lab run; the lab's `mitre_id` is cross-checked against the plan. |
-| Mean MTTD | 2.45 s | Time from action to first matching alert (`n=4`, one run). |
+| Emulation detection rate (MTTD run) | 100% (4 / 4 expectations) | 2026-09-13 run, two steps; the lab's `mitre_id` is cross-checked against the plan. |
+| Mean MTTD | 2.45 s | Time from action to first matching alert, 2026-09-13 run (`n=4`, one run). |
+| Purple-team coverage | 14 / 14 expectations (8 steps) | 2026-11-24 replay; 0 unexpected, benign window passed, MTTD not measured. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule vs. its own committed fixtures — a regression check. |
 | Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every telemetry domain. |
 | Held-out single-event recall | 48 / 48 (95% CI 0.926–1.0) | 2 labeled positives per rule, authored separately from the fixtures. |
@@ -44,6 +45,7 @@ per-tactic rationale for the gaps is in the README.
 | Every single-event rule converts to Loki, Splunk, Sentinel and OpenSearch, with provenance | `deploy/manifest.json` | `make convert-all` |
 | Every correlation rule converts for Loki, Splunk and OpenSearch; Sentinel records them as unsupported | `deploy/manifest.json` (`unsupported`) | `make convert-all` |
 | Every correlation rule fires on its labeled windows offline; the original correlation also fires in a live Loki stack | `deploy/evidence/loki/`, fixtures | `make loki-check`, `make test` (Docker) |
+| The purple-team coverage run detects 14 / 14 expectations across 8 steps, with 0 unexpected alerts and a passing benign window | `deploy/evidence/purple/` | `make purple-check` |
 
 See [deploy/report.md](../deploy/report.md) for the full functional report.
 
@@ -69,7 +71,8 @@ Honest scope, because a detection is only as trustworthy as its evidence:
   performance: the positives are authored, the negatives are generated, and
   two positives per rule leave a wide per-rule interval.
 - Coverage is prioritized, not maximized; the per-tactic gaps are deliberate and listed in the README.
-- Emulation covers two steps and four expectations, not every rule.
+- The MTTD run covers two steps and four expectations; the coverage run covers
+  eight steps and fourteen expectations. Neither covers every rule.
 - S7comm classic only; OPC UA plaintext only; DNP3 first object header only.
 - The behaviour baseline is a committed snapshot learned from a benign sample; it
   needs regenerating when the network legitimately changes.

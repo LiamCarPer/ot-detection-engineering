@@ -9,6 +9,15 @@
     "name": { "type": "string", "minLength": 1 },
     "version": { "type": "integer", "minimum": 1 },
     "description": { "type": "string" },
+    "benign": {
+      "type": "object",
+      "description": "A quiet window that must produce no unexpected alerts.",
+      "required": ["duration_seconds"],
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": { "type": "integer", "minimum": 1 }
+      }
+    },
     "steps": {
       "type": "array",
       "minItems": 1,

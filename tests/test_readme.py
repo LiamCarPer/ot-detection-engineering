@@ -20,7 +20,9 @@ from generate_coverage import build_report  # noqa: E402
 from run_emulation import evaluate, load_plan  # noqa: E402
 
 README_PATH = REPO_ROOT / "README.md"
-OBSERVATIONS_PATH = REPO_ROOT / "purple" / "emulation" / "lab-observations.json"
+OLD_PLAN = REPO_ROOT / "purple" / "emulation" / "emulation-plan-2026-09-13.yaml"
+OLD_OBSERVATIONS = REPO_ROOT / "purple" / "emulation" / "lab-observations-2026-09-13.json"
+PURPLE_RESULTS = REPO_ROOT / "deploy" / "evidence" / "purple" / "emulation_results.json"
 
 
 def test_readme_coverage_matches_the_coverage_map() -> None:
@@ -33,12 +35,23 @@ def test_readme_coverage_matches_the_coverage_map() -> None:
     assert expected in readme, f"README coverage is stale; expected {expected!r}"
 
 
-def test_readme_emulation_matches_the_committed_run() -> None:
+def test_readme_mttd_matches_the_recorded_run() -> None:
     readme = README_PATH.read_text(encoding="utf-8")
-    observations = json.loads(OBSERVATIONS_PATH.read_text(encoding="utf-8"))
-    summary = evaluate(load_plan(), observations)["summary"]
+    observations = json.loads(OLD_OBSERVATIONS.read_text(encoding="utf-8"))
+    summary = evaluate(load_plan(OLD_PLAN), observations)["summary"]
     assert f"{summary['mean_mttd_seconds']} s" in readme, "README MTTD is stale"
     assert (
         f"{summary['expectations_detected']} / {summary['expectations_total']} expectations"
         in readme
     ), "README detection rate is stale"
+
+
+def test_readme_purple_coverage_matches_the_replay() -> None:
+    readme = README_PATH.read_text(encoding="utf-8")
+    summary = json.loads(PURPLE_RESULTS.read_text(encoding="utf-8"))["summary"]
+    expected = (
+        f"{summary['expectations_detected']} / {summary['expectations_total']} expectations"
+    )
+    assert expected in readme, "README purple coverage is stale"
+    assert "8 steps" in readme
+    assert f"{summary['unexpected_alerts']} unexpected" in readme

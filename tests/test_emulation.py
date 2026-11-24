@@ -24,6 +24,9 @@ from run_emulation import (  # noqa: E402
     validate_plan,
 )
 
+OLD_PLAN = REPO_ROOT / "purple" / "emulation" / "emulation-plan-2026-09-13.yaml"
+NEW_OBSERVATIONS = REPO_ROOT / "purple" / "emulation" / "lab-observations.json"
+
 OBSERVATIONS = {
     "enterprise-pivot-and-write": {
         "started_at": "2026-09-13T02:14:00+00:00",
@@ -60,12 +63,19 @@ OBSERVATIONS = {
 }
 
 
-def test_plan_is_valid() -> None:
+def test_plans_are_valid() -> None:
     assert validate_plan(load_plan()) == []
+    assert validate_plan(load_plan(OLD_PLAN)) == []
+
+
+def test_new_plan_covers_eight_steps_and_fourteen_expectations() -> None:
+    plan = load_plan()
+    assert len(plan["steps"]) == 8
+    assert sum(len(step["expectations"]) for step in plan["steps"]) == 14
 
 
 def test_evaluate_detects_all_expectations() -> None:
-    results = evaluate(load_plan(), OBSERVATIONS)
+    results = evaluate(load_plan(OLD_PLAN), OBSERVATIONS)
     summary = results["summary"]
     assert summary["expectations_total"] == 4
     assert summary["expectations_detected"] == 4
@@ -81,7 +91,7 @@ def test_missing_signal_is_a_miss() -> None:
         for alert in observations["enterprise-pivot-and-write"]["alerts"]
         if alert["alert_type"] != "OT_BRUTE_FORCE_SCAN"
     ]
-    summary = evaluate(load_plan(), observations)["summary"]
+    summary = evaluate(load_plan(OLD_PLAN), observations)["summary"]
     assert summary["expectations_detected"] == 3
     assert summary["detection_rate_pct"] == 75.0
 
@@ -95,7 +105,7 @@ def test_alert_outside_window_is_ignored() -> None:
             "mitre_id": "T0836",
         }
     ]
-    summary = evaluate(load_plan(), observations)["summary"]
+    summary = evaluate(load_plan(OLD_PLAN), observations)["summary"]
     assert summary["expectations_detected"] == 3
 
 
@@ -111,7 +121,7 @@ def test_alert_with_wrong_lab_technique_fails_loudly() -> None:
     observations = copy.deepcopy(OBSERVATIONS)
     observations["enterprise-pivot-and-write"]["alerts"][0]["mitre_id"] = "T9999"
     with pytest.raises(EmulationDataError, match="expected lab technique"):
-        evaluate(load_plan(), observations)
+        evaluate(load_plan(OLD_PLAN), observations)
 
 
 def test_plan_with_unknown_lab_technique_is_rejected() -> None:
@@ -122,9 +132,51 @@ def test_plan_with_unknown_lab_technique_is_rejected() -> None:
 
 
 def test_render_markdown_contains_summary() -> None:
-    report = render_markdown(evaluate(load_plan(), OBSERVATIONS))
+    report = render_markdown(evaluate(load_plan(OLD_PLAN), OBSERVATIONS))
     assert "Adversary Emulation Results" in report
     assert "100.0%" in report
+
+
+def test_new_lab_run_replays_fourteen_of_fourteen() -> None:
+    observations = json.loads(NEW_OBSERVATIONS.read_text(encoding="utf-8"))
+    results = evaluate(load_plan(), observations)
+    summary = results["summary"]
+    assert summary["expectations_total"] == 14
+    assert summary["expectations_detected"] == 14
+    assert summary["detection_rate_pct"] == 100.0
+    assert summary["unexpected_alerts"] == 0
+    assert summary["benign_passed"] is True
+    assert summary["mean_mttd_seconds"] is None
+
+
+def test_unexpected_alerts_are_counted() -> None:
+    observations = json.loads(NEW_OBSERVATIONS.read_text(encoding="utf-8"))
+    step = observations["steps"]["enterprise-cross-zone"]
+    observations["alerts"].append(
+        {
+            "timestamp": step["window_started_at"],
+            "alert_type": "C2_BEACON",
+            "source_ip": "172.23.0.20",
+            "mitre_id": "T0869",
+        }
+    )
+    summary = evaluate(load_plan(), observations)["summary"]
+    assert summary["unexpected_alerts"] == 1
+
+
+def test_benign_window_fails_on_an_alert() -> None:
+    observations = json.loads(NEW_OBSERVATIONS.read_text(encoding="utf-8"))
+    observations["alerts"].append(
+        {
+            "timestamp": observations["benign"]["window_started_at"],
+            "alert_type": "CROSS_ZONE_VIOLATION",
+            "source_ip": "172.24.0.10",
+            "mitre_id": "T0886",
+        }
+    )
+    benign = evaluate(load_plan(), observations)["benign"]
+    assert benign["passed"] is False
+    assert len(benign["alerts"]) == 1
 
 
 def test_naive_timestamp_is_treated_as_utc() -> None:

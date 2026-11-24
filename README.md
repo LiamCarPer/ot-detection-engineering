@@ -20,6 +20,7 @@ not prove.
 | 2 min | [`docs/RESULTS.md`](docs/RESULTS.md) | The numbers, their scope, and what they do not mean. |
 | 5 min | [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md) | A reviewer's path from summary to code, including where to be skeptical. |
 | 6 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](docs/CASE_STUDY_ALERT_FLOOD.md) | 151 lab alerts → 24 episodes → 5 operational events, and what I would suppress. |
+| 10 min | [`docs/PURPLE_TEAM.md`](docs/PURPLE_TEAM.md) | 14 expectations across 8 steps, 0 unexpected alerts, benign window passed. |
 | 10 min | [`deploy/report.md`](deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
 | 8 min | [`deploy/evidence/health/report.md`](deploy/evidence/health/report.md) | The detection catalogue: owners, runbooks, observed volume, stable vs experimental. |
 | 20 min | [`docs/CLAIMS.md`](docs/CLAIMS.md) | Every claim → evidence → the command that proves it. |
@@ -40,8 +41,8 @@ not prove.
   allowlist that missed the benign master, and a Suricata exception rule that
   used invalid syntax. The point is the loop, not a perfect first draft.
 - **What it is not.** The benign corpus is generated, the lab is a Dockerised
-  plant, and the purple-team run is two steps and one run. Those are
-  limitations, not footnotes.
+  plant, and the purple-team evidence is one 8-step coverage replay plus a
+  separate 2-step MTTD run. Those are limitations, not footnotes.
 
 ## Case study: 151 alerts in 160 seconds
 
@@ -98,8 +99,9 @@ this table is checked against it by `tests/test_claims.py`.
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
 | Detection content | 24 Sigma + 6 correlation + 4 YARA + 24 native | Single-event and windowed log rules, file rules, and protocol DPI. |
-| Emulation detection rate | 100% (4 / 4 expectations) | Two emulation steps, one recorded lab run; the lab's `mitre_id` is cross-checked against the plan. |
-| Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, replayed from the recorded run (`n=4`, one run). |
+| Emulation detection rate (MTTD run) | 100% (4 / 4 expectations) | 2026-09-13 run, two steps; the lab's `mitre_id` is cross-checked against the plan. |
+| Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, 2026-09-13 run (`n=4`, one run). |
+| Purple-team coverage | 14 / 14 expectations (8 steps) | 2026-11-24 replay; 0 unexpected alerts; benign window passed; MTTD not measured. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule matches against its own committed fixtures. A regression check, not field precision. |
 | Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every protocol and stream the rules consume. |
 | Held-out single-event recall | 48 / 48 (95% CI 0.926–1.0) | Labeled positives authored separately from the rule fixtures. |

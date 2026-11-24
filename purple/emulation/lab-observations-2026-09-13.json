@@ -1,0 +1,198 @@
+{
+  "enterprise-pivot-and-write": {
+    "started_at": "2026-09-13T20:47:03.059192+00:00",
+    "finished_at": "2026-09-13T20:47:14.586141+00:00",
+    "alerts": [
+      {
+        "timestamp": "2026-09-13T20:47:03.713013",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:04.735704",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:04.735722",
+        "alert_type": "UNAUTHORIZED_MODBUS_WRITE",
+        "source_ip": "172.24.0.10",
+        "target_register": 1,
+        "mitre_id": "T0831",
+        "description": "Unauthorized Modbus write command detected from an untrusted source."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:05.752749",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:06.262620",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:06.782185",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:07.296065",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:07.820589",
+        "alert_type": "OT_BRUTE_FORCE_SCAN",
+        "source_ip": "172.24.0.10",
+        "error_count": 5,
+        "mitre_id": "T0846",
+        "description": "Excessive Modbus exceptions detected. Possible scanning or brute-force activity."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:07.820732",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:08.337105",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:08.851807",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      }
+    ]
+  },
+  "physics-aware-safety-violation": {
+    "started_at": "2026-09-13T20:47:14.586360+00:00",
+    "finished_at": "2026-09-13T20:47:22.535192+00:00",
+    "alerts": [
+      {
+        "timestamp": "2026-09-13T20:47:03.713013",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:04.735704",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:04.735722",
+        "alert_type": "UNAUTHORIZED_MODBUS_WRITE",
+        "source_ip": "172.24.0.10",
+        "target_register": 1,
+        "mitre_id": "T0831",
+        "description": "Unauthorized Modbus write command detected from an untrusted source."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:05.752749",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:06.262620",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:06.782185",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:07.296065",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:07.820589",
+        "alert_type": "OT_BRUTE_FORCE_SCAN",
+        "source_ip": "172.24.0.10",
+        "error_count": 5,
+        "mitre_id": "T0846",
+        "description": "Excessive Modbus exceptions detected. Possible scanning or brute-force activity."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:07.820732",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:08.337105",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:08.851807",
+        "alert_type": "CROSS_ZONE_VIOLATION",
+        "source_ip": "172.24.0.10",
+        "dest_ip": "172.21.0.10",
+        "mitre_id": "T0886",
+        "description": "Unauthorized direct communication from IT to Control zone detected."
+      },
+      {
+        "timestamp": "2026-09-13T20:47:17.293135",
+        "alert_type": "PROCESS_SAFETY_VIOLATION",
+        "source_ip": "172.22.0.10",
+        "details": "Current Tank Level: 95%, Command: OPEN Inlet Valve",
+        "mitre_id": "T0836",
+        "description": "Safety Interlock Violation: Attempted to open inlet valve while container is at overflow capacity."
+      }
+    ]
+  }
+}

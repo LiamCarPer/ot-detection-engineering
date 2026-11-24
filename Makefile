@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust security-preflight security-api-check yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate case-study case-study-check health health-check metrics check clean
+.PHONY: help setup lint validate test rust security-preflight security-api-check yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate purple purple-check case-study case-study-check health health-check metrics check clean
 
 help:
 	@echo "Targets:"
@@ -34,13 +34,15 @@ help:
 	@echo "  conduit-check    Prove conduit rules against the declared segmentation policy"
 	@echo "  lab-loki-check   Refresh the OT-Security-Lab ruler evidence (lab required)"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
-	@echo "  emulate-validate Validate the adversary emulation plan"
+	@echo "  emulate-validate Validate both adversary emulation plans"
+	@echo "  purple           Regenerate the purple-team coverage evidence"
+	@echo "  purple-check     Fail if the purple-team evidence has drifted"
 	@echo "  case-study       Regenerate the lab alert-flood analysis"
 	@echo "  case-study-check Fail if the committed analysis has drifted"
 	@echo "  health           Regenerate the detection catalogue health report"
 	@echo "  health-check     Fail if the catalogue or health report has drifted"
 	@echo "  metrics          Generate coverage, replay emulation, compute metrics"
-	@echo "  check            lint + validate + test + rust + decoder/collector/baseline/conduit proofs + deploy-check + case-study-check + health-check"
+	@echo "  check            lint + validate + test + rust + proofs + deploy-check + purple-check + case-study-check + health-check"
 
 $(VENV)/bin/activate: requirements.txt
 	python3 -m venv $(VENV)
@@ -121,6 +123,13 @@ coverage: setup
 
 emulate-validate: setup
 	$(PY) purple/runner/run_emulation.py --validate
+	$(PY) purple/runner/run_emulation.py --plan purple/emulation/emulation-plan-2026-09-13.yaml --validate
+
+purple: setup
+	$(PY) purple/runner/run_emulation.py --observations purple/emulation/lab-observations.json --out deploy/evidence/purple
+
+purple-check: setup
+	$(PY) purple/runner/run_emulation.py --observations purple/emulation/lab-observations.json --out deploy/evidence/purple --check
 
 case-study: setup
 	$(PY) analysis/lab_case_study.py --input analysis/data/lab-2026-11-24 --out analysis/out
@@ -139,10 +148,15 @@ health-check: setup
 metrics: setup
 	$(PY) coverage/generate_coverage.py
 	$(PY) purple/runner/run_emulation.py \
-		--observations purple/emulation/lab-observations.json
+		--plan purple/emulation/emulation-plan-2026-09-13.yaml \
+		--observations purple/emulation/lab-observations-2026-09-13.json \
+		--out purple/results
+	$(PY) purple/runner/run_emulation.py \
+		--observations purple/emulation/lab-observations.json \
+		--out deploy/evidence/purple
 	$(PY) metrics/compute.py
 
-check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check deploy-check case-study-check health-check
+check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check deploy-check purple-check case-study-check health-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target

@@ -49,6 +49,9 @@ from tools.otde.rules import (  # noqa: E402
 
 DEFAULT_BASELINE = REPO_ROOT / "metrics" / "baseline" / "benign-events.jsonl"
 DEFAULT_EMULATION = REPO_ROOT / "purple" / "results" / "emulation_results.json"
+DEFAULT_PURPLE = (
+    REPO_ROOT / "deploy" / "evidence" / "purple" / "emulation_results.json"
+)
 DEFAULT_OUT = REPO_ROOT / "metrics" / "out"
 
 
@@ -157,12 +160,14 @@ def build_metrics(baseline_path: Path, emulation_path: Path) -> dict:
     per_rule, fixture = fixture_metrics()
     coverage = build_report()["summary"]
     emulation = load_emulation(emulation_path)
+    purple = load_emulation(DEFAULT_PURPLE)
     return {
         "coverage": coverage,
         "rule_validation": {"per_rule": per_rule, "aggregate": fixture},
         "baseline": baseline_metrics(load_baseline(baseline_path)),
         "heldout": heldout_metrics(),
         "emulation": emulation["summary"] if emulation else None,
+        "purple_coverage": purple["summary"] if purple else None,
     }
 
 
@@ -183,6 +188,7 @@ def render_markdown(metrics: dict) -> str:
     fixture = metrics["rule_validation"]["aggregate"]
     baseline = metrics["baseline"]
     emulation = metrics["emulation"]
+    purple = metrics.get("purple_coverage")
     baseline_ci = baseline.get("false_positive_rate_ci95")
     baseline_scope = f"{baseline['events_total']} events"
     if baseline_ci:
@@ -234,11 +240,21 @@ def render_markdown(metrics: dict) -> str:
         ]
     if emulation:
         lines += [
-            f"| Emulation detection rate | {emulation['detection_rate_pct']}% |",
+            f"| Emulation detection rate (MTTD run) | {emulation['detection_rate_pct']}% |",
             f"| Mean MTTD | {emulation['mean_mttd_seconds']} s |",
         ]
     else:
         lines.append("| Emulation detection rate | not run |")
+    if purple:
+        benign = purple.get("benign_passed")
+        lines += [
+            "| Purple-team coverage | "
+            f"{purple['expectations_detected']} / {purple['expectations_total']} "
+            f"({purple['detection_rate_pct']}%) |",
+            f"| Purple-team unexpected alerts | {purple['unexpected_alerts']} |",
+            "| Purple-team benign window | "
+            f"{'passed' if benign else 'failed' if benign is False else 'not measured'} |",
+        ]
 
     lines += [
         "",

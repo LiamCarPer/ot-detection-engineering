@@ -27,10 +27,11 @@ or “52 benign events” are stale and must not be used.
 | Held-out single-event | **48 / 48** positives, **0** false positives over 1,024 negatives per rule |
 | Held-out correlation | **12 / 12** positive windows, **0** false positives over 14 negative windows |
 | Held-out YARA | **8 / 8** artifacts, **0** false positives over 8 shared negatives |
-| Purple team | **4 / 4** expectations, mean MTTD **2.45 s** (`n=4`, one run) |
+| Purple team (MTTD run) | **4 / 4** expectations, mean MTTD **2.45 s** (`n=4`, one run) |
+| Purple team (coverage run) | **14 / 14** expectations, 8 steps, 0 unexpected, benign passed |
 | Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
 | Detection catalogue | **63 rules, 6 stable, 12 with observed lab volume, 0 gaps** |
-| Test suite | 478 tests at the time of this audit; the count is not a quality claim |
+| Test suite | 483 tests at the time of this audit; the count is not a quality claim |
 | Live lab | **11 of the 13 rules the lab exercises** fire on live traffic |
 
 ## Claims
@@ -67,7 +68,9 @@ or “52 benign events” are stale and must not be used.
 | Every rule has exactly one detection-catalogue entry, and every entry has a rule | Verified | `metadata/detection-catalog.yaml` | `make health-check`, `tests/test_detection_health.py` |
 | A stable rule has an owner, data source, runbook, observed volume and validation date | Verified | `metadata/detection-catalog.yaml`, `docs/runbooks/` | `make health-check` |
 | The catalogue's observed volume matches the Phase 1 lab analysis | Verified | `analysis/out/rule_health.json` | `tests/test_detection_health.py` |
-| The recorded purple-team run detected 4 / 4 expectations at a mean MTTD of 2.45 s | Implemented (`n=4`, one run) | `purple/emulation/lab-observations.json`, `purple/results/` | `make metrics` (replay) |
+| The recorded purple-team MTTD run detected 4 / 4 expectations at a mean MTTD of 2.45 s | Implemented (`n=4`, one run) | `purple/emulation/lab-observations-2026-09-13.json`, `purple/results/` | `make metrics` (replay) |
+| The 2026-11-24 purple-team run detected 14 / 14 expectations across 8 steps | Verified | `deploy/evidence/purple/emulation_results.json` | `make purple-check`, `tests/test_emulation.py` |
+| The 2026-11-24 purple-team run produced 0 unexpected alerts and passed a 30-second benign window | Verified | `deploy/evidence/purple/emulation_results.json` | `make purple-check` |
 | Security controls and threats are governed as code | Verified | `metadata/security-controls.yaml`, `metadata/threat-model.yaml` | `make security-preflight`, `tests/test_security_governance.py` |
 | CI runs the offline checks; container and live-lab evidence is committed and guarded rather than re-run | Verified | `.github/workflows/ci.yml`, `tests/test_*_evidence.py` | CI |
 | No real malware is committed; YARA samples are inert and the engine is proven with EICAR in memory | Verified | `tests/yara/samples/README.md`, `tools/yara_check.py` | `make yara-check` |
@@ -81,13 +84,15 @@ These are deliberately not claimed. They are also listed in
 | :-- | :-- |
 | Production field telemetry | The repo has no plant traffic. The benign corpus is generated and the lab is a Dockerised plant. |
 | Host and authentication telemetry | Privilege Escalation is `0/2` because the repo has no host/auth source; tagging a network rule would be tag-gaming. |
-| Purple-team breadth and repeatability | Two steps, four expectations, one recorded run. The runner now scores the lab label but does not yet score unexpected alerts or repeat runs. |
+| Purple-team breadth and repeatability | The coverage run is 8 steps / 14 expectations and the MTTD run is 2 steps / 4 expectations. The coverage run is one replay; repeated coverage runs and analyst MTTA are not measured. |
 | Live execution of every rule | The live-lab proof covers 11 of 13 exercised rules; the newer breadth rules are fixture-proven and bundle-converted. |
 | Commercial BAS | AttackIQ is commercial; the lab uses a deterministic harness and an optional Caldera profile. |
 | 24/7 SOC operations | No on-call rota, shift handover, or production incident load. |
 | Physical process safety | The lab is a software emulation; there is no physical PLC, sensor or actuator. |
 | Real malware analysis | Out of scope by design. Public-sample analysis in an isolated lab would be the credible next step. |
 | Production triage / MTTA | The case study has no analyst acknowledgement or resolution timestamps; it measures queue reduction, not human performance. |
+| MTTD on the coverage run | The 2026-11-24 snapshot has alert timestamps but not action start timestamps; MTTD comes only from the 2026-09-13 run. |
+| HMI-login, C2-beacon and OT-port-scan coverage | The lab emits those alerts, but the repository has no matching rule; they are not scored in the purple plan. |
 | Operational maturity of most rules | 57 of 63 rules are `experimental`; only 6 have runbooks and 12 have observed lab volume. |
 
 ## How to audit this file

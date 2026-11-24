@@ -1,0 +1,219 @@
+{
+  "plan": "Water treatment OT emulation",
+  "steps": [
+    {
+      "id": "enterprise-cross-zone",
+      "name": "Enterprise host reaches the control zone",
+      "technique": "T0886",
+      "detected": true,
+      "unexpected_alerts": [],
+      "expectations": [
+        {
+          "signal": "CROSS_ZONE_VIOLATION",
+          "technique": "T0886",
+          "lab_technique": "T0886",
+          "rule": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
+          "detected": true,
+          "alert_mitre_id": "T0886",
+          "mttd_seconds": null
+        }
+      ]
+    },
+    {
+      "id": "enterprise-modbus-write",
+      "name": "Enterprise host writes a Modbus register",
+      "technique": "T1692.001",
+      "detected": true,
+      "unexpected_alerts": [],
+      "expectations": [
+        {
+          "signal": "UNAUTHORIZED_MODBUS_WRITE",
+          "technique": "T1692.001",
+          "lab_technique": "T0831",
+          "rule": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
+          "detected": true,
+          "alert_mitre_id": "T0831",
+          "mttd_seconds": null
+        }
+      ]
+    },
+    {
+      "id": "enterprise-brute-force",
+      "name": "Modbus exception burst",
+      "technique": "T0806",
+      "detected": true,
+      "unexpected_alerts": [],
+      "expectations": [
+        {
+          "signal": "OT_BRUTE_FORCE_SCAN",
+          "technique": "T0806",
+          "lab_technique": "T0846",
+          "rule": "rules/native/suricata/modbus_dpi.rules",
+          "detected": true,
+          "alert_mitre_id": "T0846",
+          "mttd_seconds": null
+        }
+      ]
+    },
+    {
+      "id": "process-safety-violation",
+      "name": "Unsafe command while the process is in a danger state",
+      "technique": "T0831",
+      "detected": true,
+      "unexpected_alerts": [],
+      "expectations": [
+        {
+          "signal": "PROCESS_SAFETY_VIOLATION",
+          "technique": "T0831",
+          "lab_technique": "T0836",
+          "rule": "rules/sigma/ot/ot_process_safety_violation.yml",
+          "detected": true,
+          "alert_mitre_id": "T0836",
+          "mttd_seconds": null
+        }
+      ]
+    },
+    {
+      "id": "dnp3-control-campaign",
+      "name": "DNP3 control, restart and unsolicited-response changes",
+      "technique": "T1692.001",
+      "detected": true,
+      "unexpected_alerts": [],
+      "expectations": [
+        {
+          "signal": "DNP3_UNAUTHORIZED_CONTROL",
+          "technique": "T1692.001",
+          "lab_technique": "T1692.001",
+          "rule": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
+          "detected": true,
+          "alert_mitre_id": "T1692.001",
+          "mttd_seconds": null
+        },
+        {
+          "signal": "DNP3_RESTART_COMMAND",
+          "technique": "T0816",
+          "lab_technique": "T0816",
+          "rule": "rules/sigma/ot/ot_dnp3_restart_command.yml",
+          "detected": true,
+          "alert_mitre_id": "T0816",
+          "mttd_seconds": null
+        },
+        {
+          "signal": "DNP3_UNSOLICITED_DISABLED",
+          "technique": "T0878",
+          "lab_technique": "T0878",
+          "rule": "rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml",
+          "detected": true,
+          "alert_mitre_id": "T0878",
+          "mttd_seconds": null
+        }
+      ]
+    },
+    {
+      "id": "opcua-discovery-campaign",
+      "name": "OPC UA browse, write and method call",
+      "technique": "T0888",
+      "detected": true,
+      "unexpected_alerts": [],
+      "expectations": [
+        {
+          "signal": "OPCUA_BROWSE_REQUEST",
+          "technique": "T0888",
+          "lab_technique": "T0888",
+          "rule": "rules/sigma/ot/ot_opcua_browse_request.yml",
+          "detected": true,
+          "alert_mitre_id": "T0888",
+          "mttd_seconds": null
+        },
+        {
+          "signal": "OPCUA_WRITE_REQUEST",
+          "technique": "T1692.001",
+          "lab_technique": "T1692.001",
+          "rule": "rules/sigma/ot/ot_opcua_write_request.yml",
+          "detected": true,
+          "alert_mitre_id": "T1692.001",
+          "mttd_seconds": null
+        },
+        {
+          "signal": "OPCUA_METHOD_CALL",
+          "technique": "T0871",
+          "lab_technique": "T0871",
+          "rule": "rules/sigma/ot/ot_opcua_method_call.yml",
+          "detected": true,
+          "alert_mitre_id": "T0871",
+          "mttd_seconds": null
+        }
+      ]
+    },
+    {
+      "id": "s7-program-campaign",
+      "name": "S7comm program download, upload and mode change",
+      "technique": "T0843",
+      "detected": true,
+      "unexpected_alerts": [],
+      "expectations": [
+        {
+          "signal": "S7COMM_PROGRAM_DOWNLOAD",
+          "technique": "T0843",
+          "lab_technique": "T0843",
+          "rule": "rules/sigma/ot/ot_s7comm_program_download.yml",
+          "detected": true,
+          "alert_mitre_id": "T0843",
+          "mttd_seconds": null
+        },
+        {
+          "signal": "S7COMM_PROGRAM_UPLOAD",
+          "technique": "T0845",
+          "lab_technique": "T0845",
+          "rule": "rules/sigma/ot/ot_s7comm_program_upload.yml",
+          "detected": true,
+          "alert_mitre_id": "T0845",
+          "mttd_seconds": null
+        },
+        {
+          "signal": "S7COMM_CHANGE_OPERATING_MODE",
+          "technique": "T0858",
+          "lab_technique": "T0858",
+          "rule": "rules/sigma/ot/ot_s7comm_change_operating_mode.yml",
+          "detected": true,
+          "alert_mitre_id": "T0858",
+          "mttd_seconds": null
+        }
+      ]
+    },
+    {
+      "id": "operator-workstation-write",
+      "name": "PowerShell Modbus write from the operator workstation",
+      "technique": "T1692.001",
+      "detected": true,
+      "unexpected_alerts": [],
+      "expectations": [
+        {
+          "signal": "UNAUTHORIZED_MODBUS_WRITE",
+          "technique": "T1692.001",
+          "lab_technique": "T0831",
+          "rule": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
+          "detected": true,
+          "alert_mitre_id": "T0831",
+          "mttd_seconds": null
+        }
+      ]
+    }
+  ],
+  "benign": {
+    "window_started_at": "2026-11-24T01:52:21.686022Z",
+    "window_finished_at": "2026-11-24T01:52:51.686022Z",
+    "alerts": [],
+    "passed": true
+  },
+  "summary": {
+    "expectations_total": 14,
+    "expectations_detected": 14,
+    "detection_rate_pct": 100.0,
+    "mean_mttd_seconds": null,
+    "max_mttd_seconds": null,
+    "unexpected_alerts": 0,
+    "benign_alerts": 0,
+    "benign_passed": true
+  }
+}

@@ -95,8 +95,11 @@ jobs:
       - name: Check the deployment bundle is current
         run: python pipelines/deploy.py --check
 
-      - name: Validate emulation plan
-        run: python purple/runner/run_emulation.py --validate
+      - name: Validate emulation plans
+        run: |
+          python purple/runner/run_emulation.py --validate
+          python purple/runner/run_emulation.py \
+            --plan purple/emulation/emulation-plan-2026-09-13.yaml --validate
 
       - name: Generate ATT&CK for ICS coverage map
         run: python coverage/generate_coverage.py
@@ -104,7 +107,12 @@ jobs:
       - name: Compute detection metrics
         run: |
           python purple/runner/run_emulation.py \
-            --observations purple/emulation/lab-observations.json
+            --plan purple/emulation/emulation-plan-2026-09-13.yaml \
+            --observations purple/emulation/lab-observations-2026-09-13.json \
+            --out purple/results
+          python purple/runner/run_emulation.py \
+            --observations purple/emulation/lab-observations.json \
+            --out deploy/evidence/purple
           python metrics/compute.py
 
       - name: Upload coverage map and metrics

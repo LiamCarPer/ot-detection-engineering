@@ -195,8 +195,9 @@ team owns.
 - **Encrypted channels.** OPC UA service bodies are only visible on `None`/`Sign`
   channels; `SignAndEncrypt` yields metadata but no service. The S7comm decoder
   handles classic S7comm only, not S7comm Plus.
-- **The emulation plan is small** — two steps and four expectations — so the
-  detection-rate and MTTD figures are directional, not a benchmark.
+- **The emulation plans are small.** The MTTD run is two steps and four
+  expectations; the coverage run is eight steps and fourteen expectations.
+  The figures are directional, not a benchmark.
 
 ## If I continued
 

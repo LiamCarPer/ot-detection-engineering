@@ -108,12 +108,16 @@ def load_alerts(path: Path) -> list[dict]:
 
 
 def _alerts_in_window(
-    alerts: list[dict], signal: str, started: datetime, finished: datetime | None
+    alerts: list[dict], signal: str | None, started: datetime, finished: datetime | None
 ) -> list[tuple[datetime, dict]]:
-    """Return the signal's alerts inside the step's window, oldest first."""
+    """Return the matching alerts inside the window, oldest first.
+
+    ``signal=None`` returns every alert in the window, which is what the
+    unexpected-alert and benign-window checks need.
+    """
     matches = []
     for alert in alerts:
-        if alert.get("alert_type") != signal:
+        if signal is not None and alert.get("alert_type") != signal:
             continue
         timestamp = alert.get("timestamp")
         if not timestamp:
@@ -158,21 +162,37 @@ def evaluate(plan: dict, observations: dict) -> dict:
     expectations_total = 0
     expectations_detected = 0
     mttds: list[float] = []
+    plan_expected_types = {
+        expectation["signal"]
+        for step in plan["steps"]
+        for expectation in step["expectations"]
+    }
+
+    # The multi-step replay format stores the alert list once and a window per
+    # step. The single-step format stores alerts inside each step. Support both.
+    global_alerts = observations.get("alerts") if "steps" in observations else None
 
     for step in plan["steps"]:
-        observation = observations.get(step["id"], {})
+        if global_alerts is not None:
+            observation = observations["steps"].get(step["id"], {})
+            alerts = global_alerts
+        else:
+            observation = observations.get(step["id"], {})
+            alerts = observation.get("alerts", [])
+
         started_raw = observation.get("started_at")
         started = parse_timestamp(started_raw) if started_raw else None
-        finished_raw = observation.get("finished_at")
-        finished = parse_timestamp(finished_raw) if finished_raw else None
-        alerts = observation.get("alerts", [])
+        window_start_raw = observation.get("window_started_at") or started_raw
+        window_start = parse_timestamp(window_start_raw) if window_start_raw else None
+        window_end_raw = observation.get("window_finished_at") or observation.get("finished_at")
+        window_end = parse_timestamp(window_end_raw) if window_end_raw else None
 
         expectation_results = []
         for expectation in step["expectations"]:
             expectations_total += 1
             candidates = (
-                _alerts_in_window(alerts, expectation["signal"], started, finished)
-                if started is not None
+                _alerts_in_window(alerts, expectation["signal"], window_start, window_end)
+                if window_start is not None
                 else []
             )
             _check_lab_technique(step, expectation, candidates)
@@ -196,19 +216,70 @@ def evaluate(plan: dict, observations: dict) -> dict:
                 }
             )
 
+        unexpected = []
+        if window_start is not None:
+            unexpected = [
+                {
+                    "timestamp": alert.get("timestamp"),
+                    "alert_type": alert.get("alert_type"),
+                    "source_ip": alert.get("source_ip"),
+                    "mitre_id": alert.get("mitre_id"),
+                }
+                for _, alert in _alerts_in_window(alerts, None, window_start, window_end)
+                if alert.get("alert_type") not in plan_expected_types
+            ]
+
         steps.append(
             {
                 "id": step["id"],
                 "name": step["name"],
                 "technique": step.get("technique"),
                 "detected": all(item["detected"] for item in expectation_results),
+                "unexpected_alerts": unexpected,
                 "expectations": expectation_results,
             }
         )
 
+    benign = None
+    benign_observation = observations.get("benign")
+    if benign_observation:
+        benign_start_raw = benign_observation.get("started_at") or benign_observation.get(
+            "window_started_at"
+        )
+        benign_end_raw = benign_observation.get("finished_at") or benign_observation.get(
+            "window_finished_at"
+        )
+        benign_alerts = (
+            global_alerts
+            if global_alerts is not None
+            else benign_observation.get("alerts", [])
+        )
+        found = []
+        if benign_start_raw and benign_end_raw:
+            found = [
+                {
+                    "timestamp": alert.get("timestamp"),
+                    "alert_type": alert.get("alert_type"),
+                    "source_ip": alert.get("source_ip"),
+                }
+                for _, alert in _alerts_in_window(
+                    benign_alerts,
+                    None,
+                    parse_timestamp(benign_start_raw),
+                    parse_timestamp(benign_end_raw),
+                )
+            ]
+        benign = {
+            "window_started_at": benign_start_raw,
+            "window_finished_at": benign_end_raw,
+            "alerts": found,
+            "passed": not found,
+        }
+
     return {
         "plan": plan["name"],
         "steps": steps,
+        "benign": benign,
         "summary": {
             "expectations_total": expectations_total,
             "expectations_detected": expectations_detected,
@@ -217,6 +288,9 @@ def evaluate(plan: dict, observations: dict) -> dict:
             else 0.0,
             "mean_mttd_seconds": round(sum(mttds) / len(mttds), 3) if mttds else None,
             "max_mttd_seconds": round(max(mttds), 3) if mttds else None,
+            "unexpected_alerts": sum(len(step["unexpected_alerts"]) for step in steps),
+            "benign_alerts": len(benign["alerts"]) if benign else None,
+            "benign_passed": benign["passed"] if benign else None,
         },
     }
 
@@ -262,6 +336,15 @@ def render_markdown(results: dict) -> str:
         f"{summary['expectations_total']} detected "
         f"({summary['detection_rate_pct']}%)",
         f"- Mean MTTD: {mean_mttd if mean_mttd is not None else 'n/a'} s",
+        f"- Unexpected alerts in step windows: {summary['unexpected_alerts']}",
+    ]
+    if results.get("benign") is not None:
+        benign = results["benign"]
+        lines.append(
+            f"- Benign window: {'passed' if benign['passed'] else 'failed'} "
+            f"({len(benign['alerts'])} alert(s))"
+        )
+    lines += [
         "",
         "| Step | Technique | Signal | Detected | MTTD (s) |",
         "| :--- | :--- | :--- | :--- | ---: |",
@@ -287,6 +370,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--settle-seconds", type=float, default=3.0)
     parser.add_argument("--out", default=str(DEFAULT_OUT))
     parser.add_argument("--validate", action="store_true", help="Validate the plan and exit")
+    parser.add_argument("--check", action="store_true", help="Fail if committed evidence drifts")
     args = parser.parse_args(argv)
 
     plan = load_plan(Path(args.plan))
@@ -310,7 +394,26 @@ def main(argv: list[str] | None = None) -> int:
         observations = run_plan(plan, Path(args.alerts), args.settle_seconds)
 
     results = evaluate(plan, observations)
+    report = render_markdown(results)
     out_dir = Path(args.out)
+
+    if args.check:
+        expected = {
+            "emulation_results.json": json.dumps(results, indent=2) + "\n",
+            "emulation_report.md": report,
+        }
+        stale = [
+            name
+            for name, content in expected.items()
+            if not (out_dir / name).exists()
+            or (out_dir / name).read_text(encoding="utf-8") != content
+        ]
+        if stale:
+            print(f"emulation evidence is stale: {', '.join(stale)}")
+            return 1
+        print("emulation evidence is current")
+        return 0
+
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "observations.json").write_text(
         json.dumps(observations, indent=2) + "\n", encoding="utf-8"
@@ -318,12 +421,15 @@ def main(argv: list[str] | None = None) -> int:
     (out_dir / "emulation_results.json").write_text(
         json.dumps(results, indent=2) + "\n", encoding="utf-8"
     )
-    (out_dir / "emulation_report.md").write_text(render_markdown(results), encoding="utf-8")
+    (out_dir / "emulation_report.md").write_text(report, encoding="utf-8")
 
     summary = results["summary"]
     print(
         f"detection rate: {summary['expectations_detected']}/{summary['expectations_total']} "
-        f"({summary['detection_rate_pct']}%) -> {out_dir}"
+        f"({summary['detection_rate_pct']}%), "
+        f"unexpected {summary['unexpected_alerts']}, "
+        f"benign {'n/a' if summary['benign_passed'] is None else summary['benign_passed']} "
+        f"-> {out_dir}"
     )
     return 0
 
