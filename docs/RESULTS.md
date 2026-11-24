@@ -66,7 +66,7 @@ Honest scope, because a detection is only as trustworthy as its evidence:
 - Held-out precision/recall is a better estimate but still not field
   performance: the positives are authored, the negatives are generated, and
   two positives per rule leave a wide per-rule interval.
-- Coverage is deliberately small; the point is the process.
+- Coverage is prioritized, not maximized; the per-tactic gaps are deliberate and listed in the README.
 - Emulation covers two steps and four expectations, not every rule.
 - S7comm classic only; OPC UA plaintext only; DNP3 first object header only.
 - The behaviour baseline is a committed snapshot learned from a benign sample; it

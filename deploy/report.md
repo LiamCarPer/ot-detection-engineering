@@ -92,10 +92,11 @@ Findings:
 ## Loki ruler
 
 `make loki-check` starts the stack in `tests/loki-stack/`, mounts the generated
-`deploy/loki/rules/`, ships attack and benign telemetry for every rule — one log
-line per single-event rule, and a windowed sequence for the correlation rule —
-and confirms through an Alertmanager webhook which alerts fire. All 18 generated
-rules are covered, including the correlation rule, whose query the bundle builds
+`deploy/loki/rules/`, ships attack and benign telemetry for every rule in the
+smoke-test set — one log line per single-event rule, and a windowed sequence for
+the correlation rule — and confirms through an Alertmanager webhook which alerts
+fire. All 18 rules in the smoke-test set are covered, including the original
+correlation rule, whose query the bundle builds
 from the backend's default-format query because the pinned backend's ruler output
 was not valid LogQL (see `pipelines/loki_correlation.py`).
 

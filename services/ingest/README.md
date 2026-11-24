@@ -7,12 +7,12 @@ properties are tested rather than asserted.
 ## Run
 
 ```bash
-INGEST_API_KEY=... uvicorn services.ingest.app:app --host 0.0.0.0 --port 8080
+INGEST_API_KEY=... uvicorn services.ingest.app:create_app --factory --host 0.0.0.0 --port 8080
 ```
 
 | Variable | Default | Meaning |
 | :--- | :--- | :--- |
-| `INGEST_API_KEY` | `change-me` | Required `x-api-key`. Set a real secret in any deployment. |
+| `INGEST_API_KEY` | **required** | Required `x-api-key`. There is no default credential: the service refuses to start without it. |
 | `INGEST_MAX_BODY_BYTES` | `65536` | Request body cap (the edge should also cap). |
 | `INGEST_EVENT_RATE` | `120` | Requests per window per client on `/events`. |
 | `INGEST_TRIAGE_RATE` | `30` | Requests per window per client on `/triage`. |

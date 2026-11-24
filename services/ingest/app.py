@@ -132,6 +132,3 @@ def create_app(
         return output
 
     return app
-
-
-app = create_app()

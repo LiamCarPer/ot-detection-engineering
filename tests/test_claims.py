@@ -8,6 +8,7 @@ commands the register names.
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -51,6 +52,25 @@ def test_claims_rule_counts_match_the_repository() -> None:
         f"{len(yara_rule_paths())} YARA + {native} native"
     )
     assert expected in CLAIMS.read_text(encoding="utf-8")
+
+
+def test_readme_per_tactic_table_matches_the_coverage_map() -> None:
+    text = README.read_text(encoding="utf-8")
+    start = text.index("## Coverage: prioritized, not padded")
+    end = text.index("## Results at a glance", start)
+    rows = re.findall(r"^\| ([^|]+?) \| (\d+) / (\d+) \|", text[start:end], re.MULTILINE)
+    observed = {
+        name.strip().lower(): (int(covered), int(total))
+        for name, covered, total in rows
+    }
+    expected = {
+        tactic["name"].lower(): (
+            tactic["techniques_covered"],
+            tactic["techniques_total"],
+        )
+        for tactic in build_report()["tactics"]
+    }
+    assert observed == expected
 
 
 def test_readme_and_results_use_the_same_coverage_framing() -> None:

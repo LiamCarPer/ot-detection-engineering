@@ -17,9 +17,15 @@ def _env_int(name: str, default: int) -> int:
 class Settings:
     """Service configuration. Every limit is explicit and bounded."""
 
-    api_key: str = field(default_factory=lambda: os.environ.get("INGEST_API_KEY", "change-me"))
+    api_key: str = field(default_factory=lambda: os.environ.get("INGEST_API_KEY", ""))
     max_body_bytes: int = field(default_factory=lambda: _env_int("INGEST_MAX_BODY_BYTES", 65_536))
     event_rate_limit: int = field(default_factory=lambda: _env_int("INGEST_EVENT_RATE", 120))
     triage_rate_limit: int = field(default_factory=lambda: _env_int("INGEST_TRIAGE_RATE", 30))
     rate_window_seconds: float = 60.0
     max_triage_chars: int = 4_000
+
+    def __post_init__(self) -> None:
+        if not self.api_key:
+            raise ValueError(
+                "INGEST_API_KEY is required; the service has no default credential"
+            )

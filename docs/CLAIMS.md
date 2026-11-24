@@ -28,7 +28,7 @@ or “52 benign events” are stale and must not be used.
 | Held-out correlation | **12 / 12** positive windows, **0** false positives over 14 negative windows |
 | Held-out YARA | **8 / 8** artifacts, **0** false positives over 8 shared negatives |
 | Purple team | **4 / 4** expectations, mean MTTD **2.45 s** (`n=4`, one run) |
-| Test suite | 453 tests at the time of this audit; the count is not a quality claim |
+| Test suite | 456 tests at the time of this audit; the count is not a quality claim |
 | Live lab | **11 of the 13 rules the lab exercises** fire on live traffic |
 
 ## Claims

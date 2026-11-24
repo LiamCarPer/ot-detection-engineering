@@ -21,4 +21,4 @@ USER app
 EXPOSE 8080
 
 # No --reload, no debug, no access log (the structured audit log is separate).
-CMD ["uvicorn", "services.ingest.app:app", "--host", "0.0.0.0", "--port", "8080", "--no-access-log"]
+CMD ["uvicorn", "services.ingest.app:create_app", "--factory", "--host", "0.0.0.0", "--port", "8080", "--no-access-log"]

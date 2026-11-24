@@ -112,8 +112,8 @@ windows:
 
 At least one positive and one negative window are required, and the negative ones
 carry the weight: a high-rate poll of one asset, a fan-out spread beyond the
-window, and an approved reader the referenced rule filters out. Only
-`value_count` is implemented by the offline evaluator
+window, and an approved reader the referenced rule filters out. `value_count`
+and `event_count` are implemented by the offline evaluator
 (`tools/otde/correlation.py`); any other correlation type raises rather than
 returning a result the test never exercised.
 

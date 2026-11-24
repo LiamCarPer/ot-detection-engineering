@@ -176,13 +176,15 @@ team owns.
   false-positive rate. The held-out set in `metrics/heldout/` is an independent
   second sample — two authored positives per rule, a second-seed negative corpus
   and one near miss per rule — but it is still small and is not field data.
-- **Detection is mostly signature-based.** Two behavioural detections now exist —
-  a correlation rule that counts distinct destinations per source over a window,
-  and behaviour-baseline rules that flag a new asset, pair or function code
-  against a committed baseline — but both are narrow. The correlation evaluator
-  implements only `value_count`, and the behaviour baseline is a snapshot learned
-  from a small benign sample rather than a continuously updated model, so its
-  false-positive behaviour is bounded by how representative that sample is.
+- **Detection is still mostly signature-based.** Six correlation rules add
+  windowed behaviour — destination fan-out, port sweeps, register enumeration,
+  browse bursts and exception floods — over both `value_count` and
+  `event_count`, and behaviour-baseline rules flag a new asset, pair or function
+  code against a committed baseline. They are deliberately narrow: the
+  correlation evaluator supports the two count types the repository uses, and
+  the behaviour baseline is a snapshot learned from a small benign sample rather
+  than a continuously updated model, so its false-positive behaviour is bounded
+  by how representative that sample is.
 - **A Manipulation-of-View rule was withdrawn.** A rule flagging a Modbus
   response from a non-PLC source looked plausible, but the collector normalizes
   `src_ip`/`dst_ip` from the flow, not from the packet direction, so a

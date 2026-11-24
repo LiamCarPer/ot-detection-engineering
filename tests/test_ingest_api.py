@@ -42,6 +42,17 @@ def test_health_is_public() -> None:
     assert _client().get("/healthz").json() == {"status": "ok"}
 
 
+def test_settings_require_an_api_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("INGEST_API_KEY", raising=False)
+    with pytest.raises(ValueError, match="INGEST_API_KEY"):
+        Settings()
+
+
+def test_settings_reject_an_empty_api_key() -> None:
+    with pytest.raises(ValueError, match="INGEST_API_KEY"):
+        Settings(api_key="")
+
+
 def test_events_require_a_valid_api_key() -> None:
     client = _client()
     assert client.post("/events", json=_event()).status_code == 401
