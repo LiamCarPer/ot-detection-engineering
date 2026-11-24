@@ -7,6 +7,7 @@ this page is to let a reviewer choose a depth and get to the evidence quickly.
 
 | Time | Path | What you will see |
 | :-- | :-- | :-- |
+| 3 min | [`docs/DEMO.md`](DEMO.md) | The offline demo path: decoders, case study, purple team, catalogue, performance. |
 | 2 min | [`docs/RESULTS.md`](RESULTS.md) | The numbers, their scope, and what they do not mean. |
 | 5 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](CASE_STUDY_ALERT_FLOOD.md) | Real lab data: 151 alerts → 24 episodes → 5 operational events, with the triage judgment. |
 | 8 min | [`docs/STATE_DETECTIONS.md`](STATE_DETECTIONS.md) | Drift, change-window and per-asset behaviour: what needs context, and why. |
@@ -60,6 +61,7 @@ If you only read code, read these in order:
 | How do you detect something that needs context? | [`docs/STATE_DETECTIONS.md`](STATE_DETECTIONS.md), `make stateful-check` |
 | Does it work at scale? | [`docs/PERFORMANCE.md`](PERFORMANCE.md), `make perf-check` |
 | How do you validate detections against an adversary? | [`docs/PURPLE_TEAM.md`](PURPLE_TEAM.md), `make purple-check` |
+| How would you operate one of these rules? | [`docs/OPERATIONS.md`](OPERATIONS.md), [`docs/runbooks/`](runbooks/) |
 | How do you measure a detection programme? | [`docs/RESULTS.md`](RESULTS.md), `make metrics` |
 | How do you emulate an adversary and score it? | [`purple/emulation/lab-run.md`](../purple/emulation/lab-run.md), `make emulate-validate` |
 

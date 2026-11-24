@@ -32,7 +32,7 @@ or “52 benign events” are stale and must not be used.
 | Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
 | Detection catalogue | **66 rules, 6 stable, 12 with observed lab volume, 0 gaps** |
 | Performance | **11–23M decoder frames/s; ~3,400 replay events/s** on the recorded host |
-| Test suite | 502 tests at the time of this audit; the count is not a quality claim |
+| Test suite | 507 tests at the time of this audit; the count is not a quality claim |
 | Live lab | **11 of the 13 rules the lab exercises** fire on live traffic |
 
 ## Claims
@@ -73,6 +73,7 @@ or “52 benign events” are stale and must not be used.
 | The change calendar is schema-valid and reviewed as code | Verified | `metadata/change-calendar.yaml` | `tests/test_stateful.py` |
 | The decoder microbenchmark records throughput and p99 per frame and passes its SLO | Verified (hardware-specific) | `deploy/evidence/perf/summary.json` | `make perf-check`, `tests/test_perf.py` |
 | The offline replay processes 10,000 benign events through 24 rules with 0 matches | Verified | `deploy/evidence/perf/summary.json` | `make perf-check` |
+| The CV bullets, write-up, demo and operations walkthrough use the current evidence and state their scope | Verified | `docs/CV_BULLETS.md`, `docs/WRITEUP.md`, `docs/DEMO.md`, `docs/OPERATIONS.md` | `tests/test_cv_bullets.py` |
 | The catalogue's observed volume matches the Phase 1 lab analysis | Verified | `analysis/out/rule_health.json` | `tests/test_detection_health.py` |
 | The recorded purple-team MTTD run detected 4 / 4 expectations at a mean MTTD of 2.45 s | Implemented (`n=4`, one run) | `purple/emulation/lab-observations-2026-09-13.json`, `purple/results/` | `make metrics` (replay) |
 | The 2026-11-24 purple-team run detected 14 / 14 expectations across 8 steps | Verified | `deploy/evidence/purple/emulation_results.json` | `make purple-check`, `tests/test_emulation.py` |

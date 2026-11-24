@@ -17,6 +17,7 @@ not prove.
 
 | Time | Start here | Why |
 | :-- | :-- | :-- |
+| 3 min | [`docs/DEMO.md`](docs/DEMO.md) | The offline demo: decoders → case study → purple team → catalogue → performance. |
 | 2 min | [`docs/RESULTS.md`](docs/RESULTS.md) | The numbers, their scope, and what they do not mean. |
 | 5 min | [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md) | A reviewer's path from summary to code, including where to be skeptical. |
 | 6 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](docs/CASE_STUDY_ALERT_FLOOD.md) | 151 lab alerts → 24 episodes → 5 operational events, and what I would suppress. |
@@ -25,8 +26,15 @@ not prove.
 | 8 min | [`docs/STATE_DETECTIONS.md`](docs/STATE_DETECTIONS.md) | Drift, change-window and per-asset behaviour: what needs context, and why. |
 | 8 min | [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md) | Decoder p99, replay throughput, SLOs and what they do not measure. |
 | 8 min | [`deploy/evidence/health/report.md`](deploy/evidence/health/report.md) | The detection catalogue: owners, runbooks, observed volume, stable vs experimental. |
+| 10 min | [`docs/WRITEUP.md`](docs/WRITEUP.md) | The narrative: the loop, what it found, and what went wrong. |
 | 20 min | [`docs/CLAIMS.md`](docs/CLAIMS.md) | Every claim → evidence → the command that proves it. |
 | 30 min | [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md) | Tradeoffs, failures, and the rule that was withdrawn. |
+
+## Demo
+
+A three-minute offline demo is in [`docs/DEMO.md`](docs/DEMO.md). It walks
+from the decoder-to-query path through the alert-flood case study, the
+purple team, the detection catalogue and the performance evidence.
 
 ## The 90-second version
 
@@ -422,6 +430,13 @@ Protocol coverage:
 - [x] OPC UA — native Suricata TCP message-header DPI, plus a Rust service
       decoder with Sigma rules for plaintext (None/Sign) channels.
 - [ ] PROFINET (layer-2 / DCE-RPC; needs non-IP rule hooks).
+
+## For reviewers
+
+- [Operations walkthrough](docs/OPERATIONS.md) — one rule from catalogue to rollback.
+- [Write-up](docs/WRITEUP.md) — the loop, the findings and the failures.
+- [CV bullets](docs/CV_BULLETS.md) — what I would say, with scope.
+- [Roadmap](docs/ROADMAP.md) — what is next and what is deliberately not done.
 
 ## Related projects
 
