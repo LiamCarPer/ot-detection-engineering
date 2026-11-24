@@ -435,7 +435,6 @@ Protocol coverage:
 
 - [Operations walkthrough](docs/OPERATIONS.md) — one rule from catalogue to rollback.
 - [Write-up](docs/WRITEUP.md) — the loop, the findings and the failures.
-- [CV bullets](docs/CV_BULLETS.md) — what I would say, with scope.
 - [Roadmap](docs/ROADMAP.md) — what is next and what is deliberately not done.
 
 ## Related projects

@@ -16,10 +16,10 @@ What I did not have was evidence that the rules mattered.
 
 The first honest measurements were uncomfortable:
 
-- **17.5% coverage** and **52 benign events** was the old CV line. It was stale,
-  and the benign sample was too small to mean anything.
-- A **0.0 false-positive rate** on 52 hand-written events is not a claim; the
-  95% upper bound is ~6.9%.
+- Earlier measurements were stale, and the benign sample was too small to
+  support a false-positive claim.
+- A zero false-positive result on a small hand-written sample is not a claim;
+  the confidence interval is wide.
 - The purple team was two steps and one run.
 - The docs and the code disagreed in places.
 
@@ -78,8 +78,8 @@ The most useful parts of the repo are the failures:
   MITRE labels disagreed with the plan silently. It now checks the lab label and
   fails on an undeclared mismatch.
 - **Several docs were stale.** The claims register and tests now keep the
-  headline numbers honest, including an explicit warning against the old
-  17.5%/52-event line.
+  headline numbers honest, including an explicit warning that older draft
+  figures are not current.
 
 ## What this is not
 

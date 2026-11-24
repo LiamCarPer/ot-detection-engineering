@@ -85,10 +85,10 @@ def test_readme_and_results_use_the_same_coverage_framing() -> None:
     assert raw in RESULTS.read_text(encoding="utf-8")
 
 
-def test_claims_register_marks_stale_numbers_as_stale() -> None:
+def test_claims_register_marks_only_the_canonical_numbers_current() -> None:
     text = CLAIMS.read_text(encoding="utf-8")
-    assert "17.5%" in text and "stale" in text.lower()
-    assert "52 benign events" in text
+    assert "Older draft figures" in text
+    assert "not current" in text
 
 
 def test_reviewer_guide_links_to_the_claims_register() -> None:

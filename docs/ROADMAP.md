@@ -41,7 +41,6 @@ next and what I deliberately did not do.
 
 ## How to judge the repo
 
-Read [`docs/CV_BULLETS.md`](CV_BULLETS.md) and [`docs/CLAIMS.md`](CLAIMS.md)
-together. The bullets are what I would say in an interview; the claims register
-is the evidence behind them. If a number is not in the claims register, do not
-quote it.
+Read [`docs/CLAIMS.md`](CLAIMS.md) and [`docs/DEMO.md`](DEMO.md) together. The
+demo is the short path through the work; the claims register is the evidence
+behind every number. If a number is not in the claims register, do not quote it.
