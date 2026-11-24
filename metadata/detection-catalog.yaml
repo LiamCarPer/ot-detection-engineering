@@ -1,0 +1,1184 @@
+version: 1
+rules:
+- id: 7f1a4d38-2b96-4c5e-9e70-3d8a5f1b6c02
+  rule: rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml
+  title: DNP3 Request From An Unapproved Master Address
+  kind: sigma
+  techniques:
+  - T0848
+  severity: high
+  data_source: ot_ndr/dnp3
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A newly commissioned master not yet added to the allowlist
+  - A master that changes its source address during a network migration
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: fecd2fd4-e612-48be-8d1c-ebbd0679783e
+  rule: rules/sigma/ot/ot_dnp3_restart_command.yml
+  title: DNP3 Cold Or Warm Restart Command
+  kind: sigma
+  techniques:
+  - T0816
+  severity: high
+  data_source: ot_ndr/dnp3
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 2
+    episodes: 1
+    duplicate_ratio: 0.5
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - DNP3_RESTART_COMMAND
+  known_false_positives:
+  - A planned restart during a maintenance window or firmware update
+  - Commissioning of a new outstation
+  runbook: null
+  last_validated: '2026-09-13'
+  version: 1
+- id: c56a5b89-e153-4ae5-aed9-2397f691b4d4
+  rule: rules/sigma/ot/ot_dnp3_unauthorized_control.yml
+  title: DNP3 Control Operation From Unauthorized Master
+  kind: sigma
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: ot_ndr/dnp3
+  owner: Liam Carvajal
+  status: stable
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 6
+    episodes: 1
+    duplicate_ratio: 0.8333
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - DNP3_UNAUTHORIZED_CONTROL
+  known_false_positives:
+  - A newly commissioned control master not yet added to the allowlist
+  - An authorized master that changes its DNP3 link address
+  runbook: docs/runbooks/dnp3-unauthorized-control.md
+  last_validated: '2026-11-24'
+  version: 1
+- id: fdb03386-8bc9-4991-bb23-73c15b1d5e5f
+  rule: rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml
+  title: DNP3 Unsolicited Responses Disabled
+  kind: sigma
+  techniques:
+  - T0878
+  severity: medium
+  data_source: ot_ndr/dnp3
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 2
+    episodes: 1
+    duplicate_ratio: 0.5
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - DNP3_UNSOLICITED_DISABLED
+  known_false_positives:
+  - A planned maintenance procedure that temporarily disables unsolicited reporting
+  - Commissioning of a new outstation
+  runbook: null
+  last_validated: '2026-09-13'
+  version: 1
+- id: f716e14d-c24f-46d2-b4e3-2e6072135595
+  rule: rules/sigma/ot/ot_firewall_control_zone_egress.yml
+  title: Control Zone Egress To The Enterprise Over A Standard Port
+  kind: sigma
+  techniques:
+  - T0869
+  severity: high
+  data_source: ot_firewall/iptables
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A documented maintenance tunnel to a specific enterprise service
+  - A time-synchronisation or backup flow explicitly authorised by policy
+  runbook: null
+  last_validated: '2026-09-15'
+  version: 1
+- id: aaaaba9c-627e-4dfb-adda-4d719c81cb89
+  rule: rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+  title: Industrial Protocol Traffic From Enterprise To Control Zone
+  kind: sigma
+  techniques:
+  - T0886
+  severity: high
+  data_source: ot_firewall/iptables
+  owner: Liam Carvajal
+  status: stable
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 74
+    episodes: 6
+    duplicate_ratio: 0.9189
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - CROSS_ZONE_VIOLATION
+  known_false_positives:
+  - The zone gateway itself when performing a reachability health check
+  - A monitoring collector explicitly authorized to poll the control zone
+  runbook: docs/runbooks/cross-zone-violation.md
+  last_validated: '2026-11-24'
+  version: 1
+- id: 5733a795-2920-4af1-b06b-f0af81267da6
+  rule: rules/sigma/ot/ot_firewall_enterprise_control_service.yml
+  title: Enterprise Host Permitted To Reach A Control Zone Service
+  kind: sigma
+  techniques:
+  - T0866
+  severity: critical
+  data_source: ot_firewall/iptables
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A time-boxed, documented maintenance path from the enterprise to a controller
+  runbook: null
+  last_validated: '2026-09-15'
+  version: 1
+- id: 8d2f5a90-6c41-4b7e-a3d8-1f9e4c02b6a7
+  rule: rules/sigma/ot/ot_flow_industrial_service_refused.yml
+  title: Connection Refused Or Reset To An Industrial Service
+  kind: sigma
+  techniques:
+  - T0813
+  severity: medium
+  data_source: ot_flow/flow
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A controller restarting or a service deliberately taken out of rotation
+  - A monitoring probe that opens and closes connections without completing a handshake
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: 2e6c9b14-7a58-4d03-8f21-9b4d6e1c3a80
+  rule: rules/sigma/ot/ot_flow_large_transfer.yml
+  title: Large Transfer Between OT Assets
+  kind: sigma
+  techniques:
+  - T0867
+  severity: medium
+  data_source: ot_flow/flow
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A scheduled backup or historian replication inside the plant
+  - An engineering workstation copying a project archive
+  - A firmware or patch distribution to many assets
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: 6cb1ea58-c9cb-4be9-ad51-0e536b56e4b9
+  rule: rules/sigma/ot/ot_modbus_device_identification_scan.yml
+  title: Modbus Device Identification Scan
+  kind: sigma
+  techniques:
+  - T0888
+  severity: medium
+  data_source: ot_ndr/modbus
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - Authorized asset inventory or network discovery tooling
+  - Commissioning of a new PLC during a planned maintenance window
+  runbook: null
+  last_validated: '2026-09-13'
+  version: 1
+- id: 5a3e8c27-1d64-4f9b-b052-7c6d2e9a4f18
+  rule: rules/sigma/ot/ot_modbus_exception_response.yml
+  title: Modbus Exception Response
+  kind: sigma
+  techniques:
+  - T0815
+  severity: low
+  data_source: ot_ndr/modbus
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A client polling an unsupported register or function
+  - A controller rejecting requests while it is starting up
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: dff8d708-aec1-49d0-be71-d74976a84f5e
+  rule: rules/sigma/ot/ot_modbus_parameter_write.yml
+  title: Modbus Write To Safety Critical Parameter Register
+  kind: sigma
+  techniques:
+  - T0836
+  severity: high
+  data_source: ot_ndr/modbus
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A documented engineering change to the safety parameter band during a window
+  - A controller whose register map legitimately extends above 4000
+  runbook: null
+  last_validated: '2026-09-15'
+  version: 1
+- id: db9f2530-dbb5-4aa7-8bcf-b5e59ea1c9db
+  rule: rules/sigma/ot/ot_modbus_process_state_read.yml
+  title: Modbus Process State Read From Unauthorized Source
+  kind: sigma
+  techniques:
+  - T0801
+  severity: low
+  data_source: ot_ndr/modbus
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A newly commissioned monitoring collector not yet added to the allowlist
+  - A diagnostic tool run by an engineer from an unlisted jump host
+  runbook: null
+  last_validated: '2026-09-15'
+  version: 1
+- id: 62dc6867-340d-4560-a957-53826aa802eb
+  rule: rules/sigma/ot/ot_modbus_unauthorized_write.yml
+  title: Modbus Write From Unauthorized Control Writer
+  kind: sigma
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: ot_ndr/modbus
+  owner: Liam Carvajal
+  status: stable
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 27
+    episodes: 2
+    duplicate_ratio: 0.9259
+    unique_sources: 2
+    window_seconds: 160
+  lab_alert_types:
+  - UNAUTHORIZED_MODBUS_WRITE
+  known_false_positives:
+  - A newly commissioned engineering workstation not yet added to the allowlist
+  - An authorized asset migration that changes the source address of the HMI
+  runbook: docs/runbooks/modbus-unauthorized-write.md
+  last_validated: '2026-11-24'
+  version: 1
+- id: 71de3736-4142-435e-9f87-70e5c08bd872
+  rule: rules/sigma/ot/ot_opcua_browse_request.yml
+  title: OPC UA Address Space Browse
+  kind: sigma
+  techniques:
+  - T0888
+  severity: medium
+  data_source: ot_ndr/opcua
+  owner: Liam Carvajal
+  status: stable
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 2
+    episodes: 1
+    duplicate_ratio: 0.5
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - OPCUA_BROWSE_REQUEST
+  known_false_positives:
+  - An OPC UA client populating its address space view on connect
+  - An authorized asset inventory or commissioning tool
+  runbook: docs/runbooks/opcua-browse-request.md
+  last_validated: '2026-11-24'
+  version: 1
+- id: a75c42a5-baf9-4c3b-8171-35eaaf58e4ec
+  rule: rules/sigma/ot/ot_opcua_method_call.yml
+  title: OPC UA Method Call Request
+  kind: sigma
+  techniques:
+  - T0871
+  severity: high
+  data_source: ot_ndr/opcua
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 2
+    episodes: 1
+    duplicate_ratio: 0.5
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - OPCUA_METHOD_CALL
+  known_false_positives:
+  - An authorized OPC UA client invoking a legitimate method
+  runbook: null
+  last_validated: '2026-09-14'
+  version: 1
+- id: be36ecf4-e509-4683-a287-d53d1315a7a0
+  rule: rules/sigma/ot/ot_opcua_write_request.yml
+  title: OPC UA Write Request
+  kind: sigma
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: ot_ndr/opcua
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 2
+    episodes: 1
+    duplicate_ratio: 0.5
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - OPCUA_WRITE_REQUEST
+  known_false_positives:
+  - An authorized OPC UA client performing a planned setpoint change
+  runbook: null
+  last_validated: '2026-09-14'
+  version: 1
+- id: 2569c23f-8db1-428e-b708-251d73855980
+  rule: rules/sigma/ot/ot_process_safety_violation.yml
+  title: Process Safety Violation From Physics-Aware Monitor
+  kind: sigma
+  techniques:
+  - T0831
+  severity: critical
+  data_source: ot_process/safety_monitor
+  owner: Liam Carvajal
+  status: stable
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 7
+    episodes: 1
+    duplicate_ratio: 0.8571
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - PROCESS_SAFETY_VIOLATION
+  known_false_positives:
+  - A deliberate process override performed during a documented emergency
+  runbook: docs/runbooks/process-safety-violation.md
+  last_validated: '2026-11-24'
+  version: 1
+- id: d2003c38-34b8-4f8a-b8dc-409e1a5eeb23
+  rule: rules/sigma/ot/ot_s7comm_change_operating_mode.yml
+  title: S7comm PLC Control Or Stop
+  kind: sigma
+  techniques:
+  - T0858
+  severity: high
+  data_source: ot_ndr/s7comm
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 4
+    episodes: 1
+    duplicate_ratio: 0.75
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - S7COMM_CHANGE_OPERATING_MODE
+  known_false_positives:
+  - A planned controller stop during maintenance or a firmware update
+  runbook: null
+  last_validated: '2026-09-14'
+  version: 1
+- id: e252ae54-8784-4286-ad9f-2b007c508ee5
+  rule: rules/sigma/ot/ot_s7comm_program_download.yml
+  title: S7comm Program Download
+  kind: sigma
+  techniques:
+  - T0843
+  severity: high
+  data_source: ot_ndr/s7comm
+  owner: Liam Carvajal
+  status: stable
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 6
+    episodes: 1
+    duplicate_ratio: 0.8333
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - S7COMM_PROGRAM_DOWNLOAD
+  known_false_positives:
+  - A planned engineering change or firmware update
+  runbook: docs/runbooks/s7comm-program-download.md
+  last_validated: '2026-11-24'
+  version: 1
+- id: c231db54-8929-42bd-8d9c-3ca276d037c6
+  rule: rules/sigma/ot/ot_s7comm_program_upload.yml
+  title: S7comm Program Upload
+  kind: sigma
+  techniques:
+  - T0845
+  severity: medium
+  data_source: ot_ndr/s7comm
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume:
+    source: lab-2026-11-24
+    raw_alerts: 6
+    episodes: 1
+    duplicate_ratio: 0.8333
+    unique_sources: 1
+    window_seconds: 160
+  lab_alert_types:
+  - S7COMM_PROGRAM_UPLOAD
+  known_false_positives:
+  - A backup or an engineering tool reading blocks during maintenance
+  runbook: null
+  last_validated: '2026-09-14'
+  version: 1
+- id: 1560f62b-dbef-4f8a-aa08-4e3aca2fcc77
+  rule: rules/sigma/ot/ot_snmp_config_change.yml
+  title: OT Device Configuration Change
+  kind: sigma
+  techniques:
+  - T0836
+  severity: medium
+  data_source: ot_snmp/snmp
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A documented change during a maintenance window
+  - An automated configuration-management push
+  runbook: null
+  last_validated: '2026-09-22'
+  version: 1
+- id: 3f1822fa-8392-42d9-9445-6a2de38ee068
+  rule: rules/sigma/ot/ot_snmp_device_restart.yml
+  title: OT Device Restart
+  kind: sigma
+  techniques:
+  - T0816
+  severity: high
+  data_source: ot_snmp/snmp
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A planned firmware update or power maintenance
+  - A device rebooting after a recoverable fault
+  runbook: null
+  last_validated: '2026-09-22'
+  version: 1
+- id: 1a9db62d-dc76-430a-8f66-b4de7372d626
+  rule: rules/sigma/ot/ot_snmp_interface_down.yml
+  title: Network Interface Down On An OT Device
+  kind: sigma
+  techniques:
+  - T0814
+  severity: medium
+  data_source: ot_snmp/snmp
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A planned maintenance window or a physical cable change
+  - A flapping uplink that recovers within seconds
+  runbook: null
+  last_validated: '2026-09-22'
+  version: 1
+- id: c1a7f9e2-5d48-4b36-8e90-2f4c6a8b1d57
+  rule: rules/sigma/ot/ot_firewall_control_port_scan.yml
+  title: Enterprise Host Probing Multiple Control Zone Ports
+  kind: correlation
+  techniques:
+  - T0840
+  severity: medium
+  data_source: correlation over referenced rules
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A vulnerability scanner run from the enterprise against a documented target range
+  - A misconfigured asset retrying several industrial ports after a firmware change
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: b8e4d2a6-3c71-4f58-9d02-6a1e7b3c5f94
+  rule: rules/sigma/ot/ot_firewall_control_zone_proxy.yml
+  title: Control Zone Host Reaching Multiple Enterprise Destinations
+  kind: correlation
+  techniques:
+  - T0884
+  severity: high
+  data_source: correlation over referenced rules
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A documented maintenance tunnel that reaches several enterprise services
+  - A controller configured to use multiple upstream resolvers or update servers
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: 7c4e1b2a-6d3f-4a58-9e21-0b5c8f7a2d10
+  rule: rules/sigma/ot/ot_modbus_control_asset_enumeration.yml
+  title: Modbus Control Asset Enumeration
+  kind: correlation
+  techniques:
+  - T0846
+  - T0888
+  severity: high
+  data_source: correlation over referenced rules
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A commissioning or inventory tool that legitimately reads every asset once
+  - A monitoring collector added to the referenced rule's reader allowlist only after this rule was tuned
+  - A control-system upgrade that touches several assets inside a maintenance window
+  runbook: null
+  last_validated: '2026-09-22'
+  version: 1
+- id: f0d5c3a8-7b29-4e61-8a34-5c9f1d6b2e47
+  rule: rules/sigma/ot/ot_modbus_exception_flood.yml
+  title: Modbus Exception Flood Toward An Operator Interface
+  kind: correlation
+  techniques:
+  - T0815
+  severity: high
+  data_source: correlation over referenced rules
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A client polling an unsupported register range in a tight loop
+  - A controller rejecting requests while it recovers from a fault
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: d4c8b1f5-9e27-4a63-b7d1-8c5f2a9e3b60
+  rule: rules/sigma/ot/ot_modbus_register_enumeration.yml
+  title: Modbus Register Enumeration From One Host
+  kind: correlation
+  techniques:
+  - T0802
+  severity: medium
+  data_source: correlation over referenced rules
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A commissioning or diagnostic tool reading the full register map
+  - A monitoring collector added to the reader allowlist only after this rule was tuned
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: e7b2d9c4-6a15-4f83-9c47-1d3e8b5f2a96
+  rule: rules/sigma/ot/ot_opcua_node_enumeration.yml
+  title: OPC UA Address Space Enumeration
+  kind: correlation
+  techniques:
+  - T0861
+  severity: medium
+  data_source: correlation over referenced rules
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - An OPC UA client refreshing a large address space after a server restart
+  - An asset inventory or commissioning tool walking every node once
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: OT_Macro_Document_With_Embedded_PE
+  rule: rules/yara/ot_macro_document_with_pe.yar
+  title: OT_Macro_Document_With_Embedded_PE
+  kind: yara
+  techniques:
+  - T0865
+  severity: high
+  data_source: file content
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: OT_PowerShell_Dropper_On_EWS
+  rule: rules/yara/ot_powershell_dropper_on_ews.yar
+  title: OT_PowerShell_Dropper_On_EWS
+  kind: yara
+  techniques:
+  - T0853
+  severity: high
+  data_source: file content
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: OT_S7_Firmware_With_Embedded_PE
+  rule: rules/yara/ot_s7_firmware_with_pe.yar
+  title: OT_S7_Firmware_With_Embedded_PE
+  kind: yara
+  techniques:
+  - T1693.001
+  severity: high
+  data_source: file content
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: OT_Siemens_Project_File_With_Embedded_PE
+  rule: rules/yara/ot_siemens_project_file_with_pe.yar
+  title: OT_Siemens_Project_File_With_Embedded_PE
+  kind: yara
+  techniques:
+  - T0873.001
+  severity: high
+  data_source: file content
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: '2026-11-04'
+  version: 1
+- id: sid:9000005
+  rule: rules/native/suricata/dnp3_dpi.rules
+  title: OT DNP3 Direct Operate From Unauthorized Master
+  kind: native
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: suricata native (dnp3)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000005
+- id: sid:9000006
+  rule: rules/native/suricata/dnp3_dpi.rules
+  title: OT DNP3 Write From Unauthorized Master
+  kind: native
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: suricata native (dnp3)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000006
+- id: sid:9000007
+  rule: rules/native/suricata/dnp3_dpi.rules
+  title: OT DNP3 Device Attribute Scan (Object Group 0)
+  kind: native
+  techniques:
+  - T0888
+  severity: medium
+  data_source: suricata native (dnp3)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000007
+- id: sid:9000010
+  rule: rules/native/suricata/dnp3_dpi.rules
+  title: OT DNP3 Select Control Operation
+  kind: native
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: suricata native (dnp3)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000010
+- id: sid:9000011
+  rule: rules/native/suricata/dnp3_dpi.rules
+  title: OT DNP3 Operate Control Operation
+  kind: native
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: suricata native (dnp3)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000011
+- id: sid:9000012
+  rule: rules/native/suricata/dnp3_dpi.rules
+  title: OT DNP3 Direct Operate No Ack Control Operation
+  kind: native
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: suricata native (dnp3)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000012
+- id: sid:9000013
+  rule: rules/native/suricata/dnp3_dpi.rules
+  title: OT DNP3 Unsolicited Responses Disabled
+  kind: native
+  techniques:
+  - T0878
+  severity: high
+  data_source: suricata native (dnp3)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000013
+- id: sid:9000014
+  rule: rules/native/suricata/dnp3_dpi.rules
+  title: OT DNP3 Cold Restart Command
+  kind: native
+  techniques:
+  - T0816
+  severity: high
+  data_source: suricata native (dnp3)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000014
+- id: sid:9000015
+  rule: rules/native/suricata/dnp3_dpi.rules
+  title: OT DNP3 Warm Restart Command
+  kind: native
+  techniques:
+  - T0816
+  severity: high
+  data_source: suricata native (dnp3)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000015
+- id: sid:9000001
+  rule: rules/native/suricata/modbus_dpi.rules
+  title: OT Modbus Write Single Register From Unauthorized Control Writer
+  kind: native
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: suricata native (modbus)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000001
+- id: sid:9000002
+  rule: rules/native/suricata/modbus_dpi.rules
+  title: OT Modbus Write Multiple Registers From Unauthorized Control Writer
+  kind: native
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: suricata native (modbus)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000002
+- id: sid:9000003
+  rule: rules/native/suricata/modbus_dpi.rules
+  title: OT Modbus Device Identification Scan
+  kind: native
+  techniques:
+  - T0888
+  severity: medium
+  data_source: suricata native (modbus)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000003
+- id: sid:9000004
+  rule: rules/native/suricata/modbus_dpi.rules
+  title: OT Modbus Write To Undefined Holding Register
+  kind: native
+  techniques:
+  - T0806
+  severity: medium
+  data_source: suricata native (modbus)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000004
+- id: sid:9000008
+  rule: rules/native/suricata/opcua_dpi.rules
+  title: OT OPC UA OpenSecureChannel From Unauthorized Client
+  kind: native
+  techniques:
+  - T0886
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000008
+- id: sid:9000009
+  rule: rules/native/suricata/opcua_dpi.rules
+  title: OT OPC UA Hello From Unapproved Client
+  kind: native
+  techniques:
+  - T0886
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000009
+- id: sid:9000020
+  rule: rules/native/suricata/s7comm_dpi.rules
+  title: OT S7comm Request Download
+  kind: native
+  techniques:
+  - T0843
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000020
+- id: sid:9000021
+  rule: rules/native/suricata/s7comm_dpi.rules
+  title: OT S7comm Download Block
+  kind: native
+  techniques:
+  - T0843
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000021
+- id: sid:9000022
+  rule: rules/native/suricata/s7comm_dpi.rules
+  title: OT S7comm Download Ended
+  kind: native
+  techniques:
+  - T0843
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000022
+- id: sid:9000023
+  rule: rules/native/suricata/s7comm_dpi.rules
+  title: OT S7comm Start Upload
+  kind: native
+  techniques:
+  - T0845
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000023
+- id: sid:9000024
+  rule: rules/native/suricata/s7comm_dpi.rules
+  title: OT S7comm Upload
+  kind: native
+  techniques:
+  - T0845
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000024
+- id: sid:9000025
+  rule: rules/native/suricata/s7comm_dpi.rules
+  title: OT S7comm End Upload
+  kind: native
+  techniques:
+  - T0845
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000025
+- id: sid:9000026
+  rule: rules/native/suricata/s7comm_dpi.rules
+  title: OT S7comm PLC Control
+  kind: native
+  techniques:
+  - T0858
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000026
+- id: sid:9000027
+  rule: rules/native/suricata/s7comm_dpi.rules
+  title: OT S7comm PLC Stop
+  kind: native
+  techniques:
+  - T0858
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000027
+- id: sid:9000028
+  rule: rules/native/suricata/s7comm_dpi.rules
+  title: OT S7comm Write Variable From Unauthorized Client
+  kind: native
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: suricata native (tcp)
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives: []
+  runbook: null
+  last_validated: null
+  version: 1
+  sid: 9000028
+- id: 993203a9-008f-4357-af71-0b88bf6fe16a
+  rule: rules/baseline/baseline_new_function_code.yml
+  title: New Protocol Function Code From An OT Asset
+  kind: baseline
+  techniques:
+  - T0846
+  severity: medium
+  data_source: behaviour baseline
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A legitimate engineering action that the baseline period did not include
+  - A newly deployed asset that uses a different function set
+  runbook: null
+  last_validated: '2026-09-22'
+  version: 1
+- id: f69f5338-eaaf-48a8-8c5b-293d25b3d2a8
+  rule: rules/baseline/baseline_new_pair.yml
+  title: New OT Communication Pair
+  kind: baseline
+  techniques:
+  - T0846
+  severity: medium
+  data_source: behaviour baseline
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A newly commissioned path that is not yet in the baseline
+  - A device that legitimately changes its peer after a network change
+  runbook: null
+  last_validated: '2026-09-22'
+  version: 1
+- id: c65a960b-9448-40dd-91b2-0e87d797b812
+  rule: rules/baseline/baseline_new_source_asset.yml
+  title: New OT Source Asset Not In The Behaviour Baseline
+  kind: baseline
+  techniques:
+  - T0888
+  severity: medium
+  data_source: behaviour baseline
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A newly commissioned device, before the baseline is regenerated
+  - A maintenance laptop temporarily attached to the OT network
+  runbook: null
+  last_validated: '2026-09-22'
+  version: 1
+- id: 5e9fe595-96f2-4283-98bd-a278832ed291
+  rule: rules/conduit/conduit_undeclared_path.yml
+  title: Flow Through An Undeclared Zone Conduit
+  kind: conduit
+  techniques:
+  - T0886
+  severity: high
+  data_source: conduit policy
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A documented temporary path that has not been added to the policy
+  - A new subnet that has not been zoned yet
+  runbook: null
+  last_validated: '2026-09-22'
+  version: 1
+- id: f1f5a75c-12a9-4ede-ae8c-812c239e6a57
+  rule: rules/conduit/conduit_undeclared_service.yml
+  title: Flow On A Port Outside The Declared Conduit
+  kind: conduit
+  techniques:
+  - T0886
+  severity: high
+  data_source: conduit policy
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A documented maintenance service on an otherwise permitted path
+  - A service that should be added to the conduit definition
+  runbook: null
+  last_validated: '2026-09-22'
+  version: 1

@@ -26,6 +26,7 @@ per-tactic rationale for the gaps is in the README.
 | Held-out correlation recall | 12 / 12 windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
 | Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
 | Alert-flood case study | 151 alerts → 24 episodes → 5 operational events | One 160-second lab burst; no analyst action timestamps. |
+| Detection catalogue | 63 rules, 6 stable, 0 gaps | 12 rules have observed lab volume; 57 are experimental. |
 
 ## What is functionally validated
 

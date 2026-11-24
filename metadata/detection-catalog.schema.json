@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "detection-catalog.schema.json",
+  "title": "Detection catalogue",
+  "description": "Operational metadata for every detection rule: owner, severity, data source, expected volume, runbook, validation age and lifecycle status. It is separate from the rule itself so a rule can be reviewed as code while its operating context is reviewed as policy.",
+  "type": "object",
+  "required": ["version", "rules"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id", "rule", "title", "kind", "techniques", "severity", "data_source",
+          "owner", "status", "expected_volume", "known_false_positives", "runbook",
+          "last_validated", "version"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "rule": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "kind": {
+            "enum": ["sigma", "correlation", "yara", "native", "baseline", "conduit"]
+          },
+          "techniques": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$" }
+          },
+          "severity": { "enum": ["low", "medium", "high", "critical"] },
+          "data_source": { "type": "string", "minLength": 1 },
+          "owner": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["experimental", "stable", "deprecated"] },
+          "expected_volume": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "required": [
+                  "source", "raw_alerts", "episodes", "duplicate_ratio",
+                  "unique_sources", "window_seconds"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "source": { "type": "string", "minLength": 1 },
+                  "raw_alerts": { "type": "integer", "minimum": 0 },
+                  "episodes": { "type": "integer", "minimum": 0 },
+                  "duplicate_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "unique_sources": { "type": "integer", "minimum": 0 },
+                  "window_seconds": { "type": "integer", "minimum": 1 }
+                }
+              }
+            ]
+          },
+          "lab_alert_types": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "known_false_positives": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "runbook": { "type": ["string", "null"] },
+          "last_validated": {
+            "type": ["string", "null"],
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "version": { "type": "integer", "minimum": 1 },
+          "sid": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  }
+}

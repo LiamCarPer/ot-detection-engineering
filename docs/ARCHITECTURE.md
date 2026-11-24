@@ -80,8 +80,9 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | :--- | :--- |
 | `rules/` | Detection content: Sigma rules (single-event and correlation), behaviour-baseline, conduit and YARA rules, each with `.test.yaml` sidecars, and native Suricata rules. |
 | `baseline/` | Builds and commits the OT behaviour baseline the deviation rules compare against. |
-| `metadata/` | Pinned ATT&CK for ICS catalog, the zone/conduit policy, and JSON Schemas for rule test cases, correlation test cases, the catalog, the emulation plan, the telemetry contract and the behaviour baseline. |
+| `metadata/` | Pinned ATT&CK for ICS catalog, the detection catalogue, the zone/conduit policy, and JSON Schemas for rule test cases, correlation test cases, the catalog, the detection catalogue, the emulation plan, the telemetry contract and the behaviour baseline. |
 | `tools/otde/` | Shared library: rule discovery, technique extraction, Suricata reader, and the pySigma-based validation matcher. |
+| `tools/detection_health.py` | Validates the detection catalogue against the rules and generates the health report. |
 | `collector/` | Produces the telemetry contract from real sensor output (Suricata `eve.json`, Zeek OT logs), with schema validation and routing. |
 | `tools/dnp3-dpi/`, `tools/s7comm-dpi/`, `tools/opcua-dpi/` | Dependency-free Rust decoders (Cargo workspace) that emit normalized `ot_ndr` events for the DNP3, S7comm and OPC UA Sigma rules. |
 | `pipelines/` | Sigma-to-backend conversion and the deployment bundle builder. |
@@ -90,6 +91,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `purple/` | Adversary emulation plan, runner, and recorded observations. |
 | `metrics/` | Detection-quality computation, the benign baseline corpus and the held-out evaluation set. |
 | `analysis/` | Pinned lab snapshots and reproducible analyses, including the alert-flood triage case study. |
+| `docs/runbooks/` | Operational runbooks for every stable rule, linked from the catalogue. |
 | `tests/` | Rule regression, metadata governance, native rule lint, coverage and metrics tests. |
 
 ## Tooling choices

@@ -5,7 +5,7 @@ automated checks, and every number in the report is derived from the rules
 themselves.
 
 ```
-author ─▶ validate ─▶ test ─▶ convert/bundle ─▶ emulate ─▶ measure
+author ─▶ validate ─▶ test ─▶ convert/bundle ─▶ emulate ─▶ measure ─▶ operate
 ```
 
 ## 1. Author
@@ -351,6 +351,25 @@ false-positive rate on the held-out set (with 95% Wilson intervals),
 false-positive rate against the benign baseline, and emulation detection rate
 and MTTD. The held-out set is never used to tune a rule; see
 `metrics/heldout/README.md`.
+
+## 7. Operate
+
+Every rule has an entry in `metadata/detection-catalog.yaml` with an owner,
+severity, data source, expected volume, runbook and lifecycle status. A rule
+without an entry, or a `stable` rule without a runbook and observed volume,
+fails `make health-check`.
+
+The health report joins the catalogue to the lab analysis and flags stale
+volume, missing owners, missing runbooks and rules that have never been
+validated. It is generated, not hand-written:
+
+```bash
+make health
+make health-check
+```
+
+The output is `deploy/evidence/health/report.md`. Runbooks live under
+`docs/runbooks/`.
 
 ## Updating the ATT&CK catalog
 

@@ -21,6 +21,7 @@ not prove.
 | 5 min | [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md) | A reviewer's path from summary to code, including where to be skeptical. |
 | 6 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](docs/CASE_STUDY_ALERT_FLOOD.md) | 151 lab alerts → 24 episodes → 5 operational events, and what I would suppress. |
 | 10 min | [`deploy/report.md`](deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
+| 8 min | [`deploy/evidence/health/report.md`](deploy/evidence/health/report.md) | The detection catalogue: owners, runbooks, observed volume, stable vs experimental. |
 | 20 min | [`docs/CLAIMS.md`](docs/CLAIMS.md) | Every claim → evidence → the command that proves it. |
 | 30 min | [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md) | Tradeoffs, failures, and the rule that was withdrawn. |
 
@@ -52,6 +53,19 @@ does not prove.
 
 [Read the case study](docs/CASE_STUDY_ALERT_FLOOD.md) ·
 [generated report](analysis/out/report.md)
+
+## Detection health
+
+Every rule has an operational entry in
+[`metadata/detection-catalog.yaml`](metadata/detection-catalog.yaml): owner,
+severity, data source, expected volume, runbook and lifecycle status. `make
+health` refuses a rule without an entry, an entry without a rule, a technique
+mismatch, or a `stable` rule without a runbook or observed volume.
+
+Current: **63 rules, 6 stable, 0 gaps, 12 with observed lab volume**.
+[Health report](deploy/evidence/health/report.md) ·
+[Runbooks](docs/runbooks/) ·
+[Catalogue schema](metadata/detection-catalog.schema.json)
 
 ## Coverage: prioritized, not padded
 
@@ -234,7 +248,7 @@ rules/conduit/        Conduit rules (deviations from the segmentation policy)
 rules/yara/           YARA rules for project files, firmware and EWS scripts
 rules/native/         Suricata rules for protocol DPI
 baseline/             Committed OT behaviour baseline and its builder
-metadata/             Pinned ATT&CK for ICS catalog and JSON Schemas
+metadata/             ATT&CK catalog, detection catalogue, policies and JSON Schemas
 tools/otde/           Shared library: discovery, technique extraction, matcher
 tools/dnp3-dpi/       Rust DNP3 decoder emitting normalized ot_ndr/dnp3 events
 tools/s7comm-dpi/     Rust S7comm decoder emitting normalized ot_ndr/s7comm events
@@ -247,7 +261,7 @@ purple/               Adversary emulation plan, runner and recorded observations
 metrics/              Detection-quality computation, benign baseline and held-out set
 analysis/             Reproducible lab-data analyses and the alert-flood case study
 tests/                Rule, metadata, coverage and metrics tests
-docs/                 Architecture, design decisions, results, telemetry, lifecycle
+docs/                 Architecture, design decisions, results, runbooks and lifecycle
 ```
 
 ## Quickstart

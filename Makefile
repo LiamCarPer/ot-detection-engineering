@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust security-preflight security-api-check yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate case-study case-study-check metrics check clean
+.PHONY: help setup lint validate test rust security-preflight security-api-check yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check lab-loki-check coverage emulate-validate case-study case-study-check health health-check metrics check clean
 
 help:
 	@echo "Targets:"
@@ -37,8 +37,10 @@ help:
 	@echo "  emulate-validate Validate the adversary emulation plan"
 	@echo "  case-study       Regenerate the lab alert-flood analysis"
 	@echo "  case-study-check Fail if the committed analysis has drifted"
+	@echo "  health           Regenerate the detection catalogue health report"
+	@echo "  health-check     Fail if the catalogue or health report has drifted"
 	@echo "  metrics          Generate coverage, replay emulation, compute metrics"
-	@echo "  check            lint + validate + test + rust + decoder/collector/baseline/conduit proofs + deploy-check + case-study-check"
+	@echo "  check            lint + validate + test + rust + decoder/collector/baseline/conduit proofs + deploy-check + case-study-check + health-check"
 
 $(VENV)/bin/activate: requirements.txt
 	python3 -m venv $(VENV)
@@ -127,6 +129,12 @@ case-study: setup
 case-study-check: setup
 	$(PY) analysis/lab_case_study.py --input analysis/data/lab-2026-11-24 --out analysis/out --check
 
+health: setup
+	$(PY) tools/detection_health.py
+
+health-check: setup
+	$(PY) tools/detection_health.py --check
+
 # Replays the recorded lab run so metrics are reproducible without a lab.
 metrics: setup
 	$(PY) coverage/generate_coverage.py
@@ -134,7 +142,7 @@ metrics: setup
 		--observations purple/emulation/lab-observations.json
 	$(PY) metrics/compute.py
 
-check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check deploy-check case-study-check
+check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check deploy-check case-study-check health-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target

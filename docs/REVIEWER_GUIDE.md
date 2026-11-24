@@ -9,6 +9,7 @@ this page is to let a reviewer choose a depth and get to the evidence quickly.
 | :-- | :-- | :-- |
 | 2 min | [`docs/RESULTS.md`](RESULTS.md) | The numbers, their scope, and what they do not mean. |
 | 5 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](CASE_STUDY_ALERT_FLOOD.md) | Real lab data: 151 alerts → 24 episodes → 5 operational events, with the triage judgment. |
+| 8 min | [`deploy/evidence/health/report.md`](../deploy/evidence/health/report.md) | Owners, runbooks, observed volume and the stable/experimental split. |
 | 10 min | [`deploy/report.md`](../deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
 | 15 min | [`docs/CLAIMS.md`](CLAIMS.md) | Every headline claim mapped to an artifact and a command. |
 | 30 min | [`docs/ARCHITECTURE.md`](ARCHITECTURE.md), [`docs/DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) | The data flow, the tradeoffs, and the rules that were withdrawn. |
@@ -35,6 +36,8 @@ If you only read code, read these in order:
    recall and false-positive rate with Wilson intervals.
 7. [`analysis/lab_case_study.py`](../analysis/lab_case_study.py) — alert
    normalization, episode collapse and campaign clustering on real lab data.
+8. [`tools/detection_health.py`](../tools/detection_health.py) — the catalogue
+   gate: one entry per rule, stable rules need runbooks and observed volume.
 
 ## What this repository answers
 
@@ -46,6 +49,7 @@ If you only read code, read these in order:
 | How do you prove the Sigma rules work in a real SIEM? | [`deploy/report.md`](../deploy/report.md), `make loki-check` |
 | How do you handle a rule that turns out to be wrong? | [`docs/DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) — the T0832 withdrawal |
 | How do you turn an alert flood into operational events? | [`docs/CASE_STUDY_ALERT_FLOOD.md`](CASE_STUDY_ALERT_FLOOD.md), `make case-study` |
+| How do you own a rule after it ships? | [`deploy/evidence/health/report.md`](../deploy/evidence/health/report.md), [`docs/runbooks/`](runbooks/), `make health` |
 | How do you measure a detection programme? | [`docs/RESULTS.md`](RESULTS.md), `make metrics` |
 | How do you emulate an adversary and score it? | [`purple/emulation/lab-run.md`](../purple/emulation/lab-run.md), `make emulate-validate` |
 
@@ -77,6 +81,9 @@ points alone. These are the questions I would ask.
 - **The case study is one lab burst.** 151 alerts in 160 seconds is not a
   production queue, and there are no analyst action timestamps, so it does not
   compute time saved. It computes queue reduction.
+- **Only six rules are `stable`.** The other 57 are `experimental` and most
+  have no runbook or observed volume. That is the honest state of the
+  catalogue, not a claim that every rule is operationally ready.
 - **The security/AI workstream is supporting evidence.** The threat model,
   controls, ingest API and LLM triage are real and tested, but they are not the
   OT detection story.

@@ -29,7 +29,8 @@ or “52 benign events” are stale and must not be used.
 | Held-out YARA | **8 / 8** artifacts, **0** false positives over 8 shared negatives |
 | Purple team | **4 / 4** expectations, mean MTTD **2.45 s** (`n=4`, one run) |
 | Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
-| Test suite | 467 tests at the time of this audit; the count is not a quality claim |
+| Detection catalogue | **63 rules, 6 stable, 12 with observed lab volume, 0 gaps** |
+| Test suite | 478 tests at the time of this audit; the count is not a quality claim |
 | Live lab | **11 of the 13 rules the lab exercises** fire on live traffic |
 
 ## Claims
@@ -63,6 +64,9 @@ or “52 benign events” are stale and must not be used.
 | The alert-flood case study is reproducible from a pinned lab snapshot | Verified | `analysis/data/lab-2026-11-24/`, `analysis/out/` | `make case-study-check`, `tests/test_lab_case_study.py` |
 | 151 lab alerts collapse to 24 one-minute episodes and 5 operational events, with every alert assigned | Verified | `analysis/out/summary.json` | `tests/test_lab_case_study.py` |
 | The analysis keeps the secondary SIEM and runtime datasets separate from the 160-second burst | Verified | `analysis/out/report.md` | `tests/test_lab_case_study.py` |
+| Every rule has exactly one detection-catalogue entry, and every entry has a rule | Verified | `metadata/detection-catalog.yaml` | `make health-check`, `tests/test_detection_health.py` |
+| A stable rule has an owner, data source, runbook, observed volume and validation date | Verified | `metadata/detection-catalog.yaml`, `docs/runbooks/` | `make health-check` |
+| The catalogue's observed volume matches the Phase 1 lab analysis | Verified | `analysis/out/rule_health.json` | `tests/test_detection_health.py` |
 | The recorded purple-team run detected 4 / 4 expectations at a mean MTTD of 2.45 s | Implemented (`n=4`, one run) | `purple/emulation/lab-observations.json`, `purple/results/` | `make metrics` (replay) |
 | Security controls and threats are governed as code | Verified | `metadata/security-controls.yaml`, `metadata/threat-model.yaml` | `make security-preflight`, `tests/test_security_governance.py` |
 | CI runs the offline checks; container and live-lab evidence is committed and guarded rather than re-run | Verified | `.github/workflows/ci.yml`, `tests/test_*_evidence.py` | CI |
@@ -84,6 +88,7 @@ These are deliberately not claimed. They are also listed in
 | Physical process safety | The lab is a software emulation; there is no physical PLC, sensor or actuator. |
 | Real malware analysis | Out of scope by design. Public-sample analysis in an isolated lab would be the credible next step. |
 | Production triage / MTTA | The case study has no analyst acknowledgement or resolution timestamps; it measures queue reduction, not human performance. |
+| Operational maturity of most rules | 57 of 63 rules are `experimental`; only 6 have runbooks and 12 have observed lab volume. |
 
 ## How to audit this file
 
