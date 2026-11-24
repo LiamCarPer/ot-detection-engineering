@@ -10,6 +10,7 @@ this page is to let a reviewer choose a depth and get to the evidence quickly.
 | 2 min | [`docs/RESULTS.md`](RESULTS.md) | The numbers, their scope, and what they do not mean. |
 | 5 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](CASE_STUDY_ALERT_FLOOD.md) | Real lab data: 151 alerts → 24 episodes → 5 operational events, with the triage judgment. |
 | 8 min | [`docs/STATE_DETECTIONS.md`](STATE_DETECTIONS.md) | Drift, change-window and per-asset behaviour: what needs context, and why. |
+| 8 min | [`docs/PERFORMANCE.md`](PERFORMANCE.md) | Decoder p99, replay throughput, SLOs and what they do not measure. |
 | 8 min | [`deploy/evidence/health/report.md`](../deploy/evidence/health/report.md) | Owners, runbooks, observed volume and the stable/experimental split. |
 | 10 min | [`deploy/report.md`](../deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
 | 15 min | [`docs/CLAIMS.md`](CLAIMS.md) | Every headline claim mapped to an artifact and a command. |
@@ -41,6 +42,9 @@ If you only read code, read these in order:
    gate: one entry per rule, stable rules need runbooks and observed volume.
 9. [`tools/otde/stateful.py`](../tools/otde/stateful.py) — drift, change-window
    and per-asset protocol evaluation.
+10. [`tools/perf/src/main.rs`](../tools/perf/src/main.rs) — the decoder
+    microbenchmark, and [`tools/perf_check.py`](../tools/perf_check.py) for
+    the replay and evidence.
 
 ## What this repository answers
 
@@ -54,6 +58,7 @@ If you only read code, read these in order:
 | How do you turn an alert flood into operational events? | [`docs/CASE_STUDY_ALERT_FLOOD.md`](CASE_STUDY_ALERT_FLOOD.md), `make case-study` |
 | How do you own a rule after it ships? | [`deploy/evidence/health/report.md`](../deploy/evidence/health/report.md), [`docs/runbooks/`](runbooks/), `make health` |
 | How do you detect something that needs context? | [`docs/STATE_DETECTIONS.md`](STATE_DETECTIONS.md), `make stateful-check` |
+| Does it work at scale? | [`docs/PERFORMANCE.md`](PERFORMANCE.md), `make perf-check` |
 | How do you validate detections against an adversary? | [`docs/PURPLE_TEAM.md`](PURPLE_TEAM.md), `make purple-check` |
 | How do you measure a detection programme? | [`docs/RESULTS.md`](RESULTS.md), `make metrics` |
 | How do you emulate an adversary and score it? | [`purple/emulation/lab-run.md`](../purple/emulation/lab-run.md), `make emulate-validate` |
@@ -87,6 +92,9 @@ points alone. These are the questions I would ask.
 - **The case study is one lab burst.** 151 alerts in 160 seconds is not a
   production queue, and there are no analyst action timestamps, so it does not
   compute time saved. It computes queue reduction.
+- **The performance numbers are not production numbers.** The host is a desktop,
+  the decoder frames are small, there is no pcap replay or backpressure test,
+  and the replay benchmark measures the Python validation matcher.
 - **The stateful baselines are not field baselines.** The process envelope is
   built from the generated benign corpus and the per-asset profile from the
   small committed benign samples. They are reviewable, not production-trained.

@@ -29,6 +29,7 @@ per-tactic rationale for the gaps is in the README.
 | Alert-flood case study | 151 alerts → 24 episodes → 5 operational events | One 160-second lab burst; no analyst action timestamps. |
 | Detection catalogue | 66 rules, 6 stable, 0 gaps | 12 rules have observed lab volume; 60 are experimental. |
 | Stateful detections | 3 rules, 15 windows, baselines current | Drift, approved change window, per-asset protocol profile. |
+| Performance | 11–23M decoder frames/s; ~3,400 replay events/s | Release build; small example frames; hardware in `docs/PERFORMANCE.md`. |
 
 ## What is functionally validated
 

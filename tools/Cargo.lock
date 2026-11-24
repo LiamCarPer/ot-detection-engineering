@@ -11,5 +11,14 @@ name = "opcua-dpi"
 version = "0.1.0"
 
 [[package]]
+name = "ot-perf"
+version = "0.1.0"
+dependencies = [
+ "dnp3-dpi",
+ "opcua-dpi",
+ "s7comm-dpi",
+]
+
+[[package]]
 name = "s7comm-dpi"
 version = "0.1.0"

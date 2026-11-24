@@ -1,0 +1,12 @@
+[package]
+name = "ot-perf"
+version = "0.1.0"
+edition = "2021"
+description = "Microbenchmarks for the OT protocol decoders."
+license = "MIT"
+publish = false
+
+[dependencies]
+dnp3-dpi = { path = "../dnp3-dpi" }
+opcua-dpi = { path = "../opcua-dpi" }
+s7comm-dpi = { path = "../s7comm-dpi" }

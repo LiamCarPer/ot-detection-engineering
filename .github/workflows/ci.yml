@@ -85,6 +85,9 @@ jobs:
       - name: Check the stateful evidence is current
         run: git diff --exit-code deploy/evidence/stateful/summary.json
 
+      - name: Validate the performance evidence
+        run: python tools/perf_check.py --check
+
 
       - name: Convert to Loki
         run: python pipelines/convert.py --backend loki --check

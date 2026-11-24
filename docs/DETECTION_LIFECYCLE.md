@@ -372,6 +372,15 @@ false-positive rate against the benign baseline, and emulation detection rate
 and MTTD. The held-out set is never used to tune a rule; see
 `metrics/heldout/README.md`.
 
+Performance is measured separately:
+
+```bash
+make perf        # decoder throughput/p99 and offline replay
+make perf-check  # validate the committed evidence structure
+```
+
+The numbers are hardware-specific; see `docs/PERFORMANCE.md`.
+
 ## 7. Operate
 
 Every rule has an entry in `metadata/detection-catalog.yaml` with an owner,

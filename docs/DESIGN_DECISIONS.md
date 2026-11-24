@@ -178,6 +178,15 @@ evaluator supports exactly three types and raises on anything else, and every
 rule has labeled windows. The cost is that these rules do not convert to the
 four SIEM backends; the benefit is that they are honest about what they need.
 
+## Why a microbenchmark instead of a load test
+
+A production load test needs a sensor at sustained rate, a live SIEM and a
+consumer that can apply backpressure. Those are not available here. Instead,
+two narrow measurements isolate the parts that can be measured honestly: the
+Rust decoders over committed frames, and the Python matcher over the benign
+corpus. Both record hardware and method, and neither is presented as a
+production throughput claim.
+
 ## Known limitations
 
 - **Coverage is prioritized, not maximized.** The raw ATT&CK for ICS number is

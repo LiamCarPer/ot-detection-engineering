@@ -1,0 +1,81 @@
+{
+  "hardware": {
+    "cpu_count": 8,
+    "cpu_model": "AMD Ryzen 5 3400G with Radeon Vega Graphics",
+    "machine": "x86_64",
+    "memory_total_kb": 30740876,
+    "platform": "Linux-6.18.7-76061807-generic-x86_64-with-glibc2.39",
+    "processor": "x86_64"
+  },
+  "method": {
+    "decoder_iterations": 10000,
+    "decoder_unit": "one iteration decodes every committed example frame",
+    "decoder_warmup": 100,
+    "replay_repetitions": 10,
+    "replay_unit": "one event through every single-event Sigma rule"
+  },
+  "pipeline": {
+    "elapsed_seconds": 2.934192,
+    "events": 10000,
+    "events_per_second": 3408.09,
+    "matches": 0,
+    "p50_us": 246.652,
+    "p99_us": 963.477,
+    "repetitions": 10,
+    "rules": 24
+  },
+  "protocols": {
+    "dnp3": {
+      "elapsed_seconds": 0.002668,
+      "frames_per_iteration": 3,
+      "frames_per_second": 11245722.41,
+      "iterations": 10000,
+      "p50_ns": 260,
+      "p50_ns_per_frame": 86,
+      "p99_ns": 360,
+      "p99_ns_per_frame": 120,
+      "peak_rss_kb": 2056,
+      "protocol": "dnp3",
+      "total_frames": 30000
+    },
+    "opcua": {
+      "elapsed_seconds": 0.003865,
+      "frames_per_iteration": 5,
+      "frames_per_second": 12937648.3,
+      "iterations": 10000,
+      "p50_ns": 340,
+      "p50_ns_per_frame": 68,
+      "p99_ns": 1090,
+      "p99_ns_per_frame": 218,
+      "peak_rss_kb": 2100,
+      "protocol": "opcua",
+      "total_frames": 50000
+    },
+    "s7comm": {
+      "elapsed_seconds": 0.001754,
+      "frames_per_iteration": 4,
+      "frames_per_second": 22804965.1,
+      "iterations": 10000,
+      "p50_ns": 170,
+      "p50_ns_per_frame": 42,
+      "p99_ns": 180,
+      "p99_ns_per_frame": 45,
+      "peak_rss_kb": 2100,
+      "protocol": "s7comm",
+      "total_frames": 40000
+    }
+  },
+  "schema_version": 1,
+  "slo": {
+    "decoder_p99_ns_per_frame_max": 10000,
+    "decoder_p99_within_slo": true,
+    "pipeline_events_per_second_min": 1000,
+    "pipeline_matches_allowed": 0,
+    "pipeline_matches_within_slo": true,
+    "pipeline_within_slo": true
+  },
+  "toolchain": {
+    "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+    "python": "3.12.3"
+  }
+}

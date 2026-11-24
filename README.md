@@ -23,6 +23,7 @@ not prove.
 | 10 min | [`docs/PURPLE_TEAM.md`](docs/PURPLE_TEAM.md) | 14 expectations across 8 steps, 0 unexpected alerts, benign window passed. |
 | 10 min | [`deploy/report.md`](deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
 | 8 min | [`docs/STATE_DETECTIONS.md`](docs/STATE_DETECTIONS.md) | Drift, change-window and per-asset behaviour: what needs context, and why. |
+| 8 min | [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md) | Decoder p99, replay throughput, SLOs and what they do not measure. |
 | 8 min | [`deploy/evidence/health/report.md`](deploy/evidence/health/report.md) | The detection catalogue: owners, runbooks, observed volume, stable vs experimental. |
 | 20 min | [`docs/CLAIMS.md`](docs/CLAIMS.md) | Every claim → evidence → the command that proves it. |
 | 30 min | [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md) | Tradeoffs, failures, and the rule that was withdrawn. |
@@ -103,6 +104,7 @@ this table is checked against it by `tests/test_claims.py`.
 | Emulation detection rate (MTTD run) | 100% (4 / 4 expectations) | 2026-09-13 run, two steps; the lab's `mitre_id` is cross-checked against the plan. |
 | Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, 2026-09-13 run (`n=4`, one run). |
 | Purple-team coverage | 14 / 14 expectations (8 steps) | 2026-11-24 replay; 0 unexpected alerts; benign window passed; MTTD not measured. |
+| Performance | 11–23M decoder frames/s; ~3,400 replay events/s | Release build on the recorded host; small example frames; see `docs/PERFORMANCE.md`. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule matches against its own committed fixtures. A regression check, not field precision. |
 | Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every protocol and stream the rules consume. |
 | Held-out single-event recall | 48 / 48 (95% CI 0.926–1.0) | Labeled positives authored separately from the rule fixtures. |

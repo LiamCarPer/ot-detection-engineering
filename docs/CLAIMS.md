@@ -31,7 +31,8 @@ or “52 benign events” are stale and must not be used.
 | Purple team (coverage run) | **14 / 14** expectations, 8 steps, 0 unexpected, benign passed |
 | Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
 | Detection catalogue | **66 rules, 6 stable, 12 with observed lab volume, 0 gaps** |
-| Test suite | 497 tests at the time of this audit; the count is not a quality claim |
+| Performance | **11–23M decoder frames/s; ~3,400 replay events/s** on the recorded host |
+| Test suite | 502 tests at the time of this audit; the count is not a quality claim |
 | Live lab | **11 of the 13 rules the lab exercises** fire on live traffic |
 
 ## Claims
@@ -70,6 +71,8 @@ or “52 benign events” are stale and must not be used.
 | Three stateful detections fire on their positive windows and stay silent on their negatives | Verified | `rules/stateful/`, `deploy/evidence/stateful/summary.json` | `make stateful-check`, `tests/test_stateful.py` |
 | The process-value and per-asset baselines are reproducible from committed benign data | Verified | `baseline/process-values.json`, `baseline/asset-behaviour.json` | `tests/test_stateful.py` |
 | The change calendar is schema-valid and reviewed as code | Verified | `metadata/change-calendar.yaml` | `tests/test_stateful.py` |
+| The decoder microbenchmark records throughput and p99 per frame and passes its SLO | Verified (hardware-specific) | `deploy/evidence/perf/summary.json` | `make perf-check`, `tests/test_perf.py` |
+| The offline replay processes 10,000 benign events through 24 rules with 0 matches | Verified | `deploy/evidence/perf/summary.json` | `make perf-check` |
 | The catalogue's observed volume matches the Phase 1 lab analysis | Verified | `analysis/out/rule_health.json` | `tests/test_detection_health.py` |
 | The recorded purple-team MTTD run detected 4 / 4 expectations at a mean MTTD of 2.45 s | Implemented (`n=4`, one run) | `purple/emulation/lab-observations-2026-09-13.json`, `purple/results/` | `make metrics` (replay) |
 | The 2026-11-24 purple-team run detected 14 / 14 expectations across 8 steps | Verified | `deploy/evidence/purple/emulation_results.json` | `make purple-check`, `tests/test_emulation.py` |
@@ -97,6 +100,7 @@ These are deliberately not claimed. They are also listed in
 | MTTD on the coverage run | The 2026-11-24 snapshot has alert timestamps but not action start timestamps; MTTD comes only from the 2026-09-13 run. |
 | HMI-login, C2-beacon and OT-port-scan coverage | The lab emits those alerts, but the repository has no matching rule; they are not scored in the purple plan. |
 | Operational maturity of most rules | 60 of 66 rules are `experimental`; only 6 have runbooks and 12 have observed lab volume. |
+| Production-scale performance | The benchmark is a desktop, small example frames, no pcap replay, no sustained load, no backpressure. |
 
 ## How to audit this file
 

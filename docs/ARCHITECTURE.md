@@ -85,6 +85,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `tools/otde/` | Shared library: rule discovery, technique extraction, Suricata reader, and the pySigma-based validation matcher. |
 | `tools/detection_health.py` | Validates the detection catalogue against the rules and generates the health report. |
 | `tools/otde/stateful.py` | Evaluates drift, change-window and per-asset protocol stateful rules. |
+| `tools/perf/` | Dependency-free Rust microbenchmark for the three decoders. |
 | `collector/` | Produces the telemetry contract from real sensor output (Suricata `eve.json`, Zeek OT logs), with schema validation and routing. |
 | `tools/dnp3-dpi/`, `tools/s7comm-dpi/`, `tools/opcua-dpi/` | Dependency-free Rust decoders (Cargo workspace) that emit normalized `ot_ndr` events for the DNP3, S7comm and OPC UA Sigma rules. |
 | `pipelines/` | Sigma-to-backend conversion and the deployment bundle builder. |
