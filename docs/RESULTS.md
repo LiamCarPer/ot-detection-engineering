@@ -48,6 +48,7 @@ per-tactic rationale for the gaps is in the README.
 | Conduit rules flag cross-zone traffic with no declared conduit or an undeclared service, and report the declared conduits never observed | `deploy/evidence/conduit/summary.json` | `make conduit-check` |
 | YARA rules flag an embedded executable in a project/firmware artifact and a dropper script, stay silent on benign and near-miss artifacts, and scan a payload blob | `deploy/evidence/yara/summary.json` | `make yara-check` |
 | Every single-event rule converts to Loki, Splunk, Sentinel and OpenSearch, with provenance | `deploy/manifest.json` | `make convert-all` |
+| Every single-event rule's Splunk SPL, OpenSearch PPL and Kusto KQL executes and returns exactly the repository matcher's event set (30 / 30 each) | `deploy/evidence/engine-parity/` | `make engine-parity` (containers) |
 | Every correlation rule converts to Loki, Splunk, OpenSearch and Sentinel | `deploy/manifest.json` | `make convert-all` |
 | Every correlation rule fires on its labeled windows offline; the original correlation also fires in a live Loki stack | `deploy/evidence/loki/`, fixtures | `make loki-check`, `make test` (Docker) |
 | The 2026-11-24 lab alert-signal replay matches 14 / 14 expected signals across 8 steps, with 0 unexpected alerts and a passing benign window | `deploy/evidence/purple/` | `make purple-check` |

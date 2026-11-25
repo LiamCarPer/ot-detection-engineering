@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -29,7 +30,9 @@ from sigma.backends.loki import LogQLBackend
 from sigma.backends.opensearch import OpenSearchPPLBackend
 from sigma.backends.splunk import SplunkBackend
 from sigma.collection import SigmaCollection
+from sigma.conversion.state import ConversionState
 from sigma.correlations import SigmaCorrelationRule, SigmaCorrelationType
+from sigma.rule import SigmaRule
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(Path(__file__).resolve().parent) not in sys.path:
@@ -66,6 +69,31 @@ _QUERY_OPERATORS = {
 }
 
 
+_PPL_LITERAL_RE = re.compile(r"LIKE\([^)]*\)|'[^']*'")
+
+
+def unescape_ppl_equality(query: str) -> str:
+    """Undo wildcard escaping where PPL compares literal values.
+
+    pySigma escapes ``_`` because it is PPL's single-character wildcard. That is
+    right inside ``LIKE()`` and wrong in ``field = "login_failure"`` and
+    ``IN (...)``, where the value is literal: the escape turns a correct match
+    into a search for a backslash. The generated artifact was executable but
+    never matched its own test event until this ran.
+    """
+    literals: list[str] = []
+
+    def keep(match: re.Match[str]) -> str:
+        literals.append(match.group(0))
+        return f"\x00{len(literals) - 1}\x00"
+
+    masked = _PPL_LITERAL_RE.sub(keep, query)
+    masked = masked.replace("\\_", "_")
+    return re.sub(
+        r"\x00(\d+)\x00", lambda match: literals[int(match.group(1))], masked
+    )
+
+
 class OpenSearchPPLWindowBackend(OpenSearchPPLBackend):
     """OpenSearch PPL backend that keeps a correlation's time window.
 
@@ -76,6 +104,16 @@ class OpenSearchPPLWindowBackend(OpenSearchPPLBackend):
     adding it to the aggregation preserves the window and still leaves the
     group-by fields in place.
     """
+
+    def finalize_query_default(
+        self, rule: SigmaRule, query: str, index: int, state: ConversionState
+    ) -> str:
+        # Every PPL query, including a correlation's cached subqueries, passes
+        # through here; correcting the escaping before caching keeps the emitted
+        # artifact and the subqueries consistent.
+        return unescape_ppl_equality(
+            super().finalize_query_default(rule, query, index, state)
+        )
 
     event_count_aggregation_expression = {
         "default": "count() as event_count by span({time_field}, {timespan}){groupby}"

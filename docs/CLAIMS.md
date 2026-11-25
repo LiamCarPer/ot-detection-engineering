@@ -36,6 +36,7 @@ not current and must not be used.
 | Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
 | Detection catalogue | **73 rules, 6 stable, 67 experimental, 12 with observed lab volume, 0 blocking gaps** |
 | Performance | **7.8–11.0M decoder frames/s; ~2,800 replay events/s; 4,000 events/s sustained, 0 drops** on the recorded host |
+| Engine parity | **30 / 30 single-event rules** execute in Splunk Free, OpenSearch PPL and Kusto and return exactly the matcher's event set |
 | Test suite | The count is not a quality claim; see the CI run |
 | Live lab | **11 of the 13 rules the lab exercises** fire on live traffic (snapshot 2026-09-15; predates the P1 rule changes) |
 
@@ -56,6 +57,7 @@ not current and must not be used.
 | The behaviour baseline is reproducible and its rules fire on deviations and stay silent on benign telemetry | Verified | `deploy/evidence/baseline/summary.json` | `make baseline-check` |
 | Conduit rules flag an undeclared cross-zone path and an undeclared service; the evidence records declared conduits never observed | Verified | `deploy/evidence/conduit/summary.json` | `make conduit-check` |
 | Every single-event rule converts to Loki, OpenSearch, Splunk and Sentinel with SHA-256 provenance | Verified | `deploy/manifest.json` | `make convert-all` |
+| The converted SPL, PPL and KQL select exactly the same events as the repository matcher over the held-out corpus | Verified | `deploy/evidence/engine-parity/summary.json` | `make engine-parity` (containers) |
 | Every correlation rule converts to Loki, Splunk, OpenSearch and Sentinel | Verified | `deploy/manifest.json` | `make convert-all` |
 | The committed deployment bundle cannot drift from the rules | Verified | `deploy/`, `pipelines/deploy.py --check` | `make deploy-check` |
 | Coverage, fixture metrics and held-out metrics are derived from rule content | Verified | `coverage/`, `metrics/` | `make coverage`, `make metrics`, `tests/test_coverage.py`, `tests/test_metrics.py` |

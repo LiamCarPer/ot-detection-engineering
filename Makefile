@@ -237,6 +237,12 @@ health: setup
 health-check: setup
 	$(PY) tools/detection_health.py --check
 
+parity-up: setup
+	services/parity/setup.sh
+
+engine-parity: setup
+	$(PY) tools/engine_parity.py
+
 # Replays the recorded lab run so metrics are reproducible without a lab.
 metrics: setup
 	$(PY) coverage/generate_coverage.py

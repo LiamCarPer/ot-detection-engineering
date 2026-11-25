@@ -1,0 +1,41 @@
+# Real engines for the parity harness. See README.md in this directory.
+services:
+  splunk:
+    image: splunk/splunk:latest
+    container_name: ot_splunk
+    environment:
+      SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_LICENSE_URI: Free
+      SPLUNK_PASSWORD: ${SPLUNK_PASSWORD:-otde-parity-2026}
+      SPLUNK_HEC_TOKEN: ${SPLUNK_HEC_TOKEN:-otde-parity-hec}
+    ports:
+      - "127.0.0.1:18000:8000"
+      - "127.0.0.1:18088:8088"
+      - "127.0.0.1:18089:8089"
+    volumes:
+      - splunk-var:/opt/splunk/var
+      - splunk-etc:/opt/splunk/etc
+    restart: unless-stopped
+
+  opensearch:
+    image: opensearchproject/opensearch:latest
+    container_name: otde-opensearch
+    environment:
+      discovery.type: single-node
+      DISABLE_SECURITY_PLUGIN: "true"
+      OPENSEARCH_JAVA_OPTS: -Xms1g -Xmx1g
+    ports:
+      - "127.0.0.1:19200:9200"
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    restart: unless-stopped
+
+volumes:
+  splunk-var:
+  splunk-etc:
+  opensearch-data:

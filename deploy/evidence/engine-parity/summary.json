@@ -1,0 +1,1011 @@
+{
+  "corpus": {
+    "events": 1078,
+    "near_misses": 24,
+    "negatives": 1000,
+    "positives": 54
+  },
+  "engines": {
+    "kusto": "KQL at http://127.0.0.1:18080 table OTTelemetry",
+    "loki": "measured live by make lab-loki-check",
+    "opensearch": "PPL at http://127.0.0.1:19200",
+    "splunk": "Splunk Free, index ot_parity"
+  },
+  "rules": {
+    "rules/sigma/ot/ot_detection_service_down.yml": {
+      "expected": [
+        "e00053"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00053"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00053"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00053"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml": {
+      "expected": [
+        "e00044",
+        "e00045"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00044",
+          "e00045"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00044",
+          "e00045"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00044",
+          "e00045"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_dnp3_restart_command.yml": {
+      "expected": [
+        "e00000",
+        "e00001"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00000",
+          "e00001"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00000",
+          "e00001"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00000",
+          "e00001"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_dnp3_unauthorized_control.yml": {
+      "expected": [
+        "e00002",
+        "e00003"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00002",
+          "e00003"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00002",
+          "e00003"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00002",
+          "e00003"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml": {
+      "expected": [
+        "e00004",
+        "e00005"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00004",
+          "e00005"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00004",
+          "e00005"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00004",
+          "e00005"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_firewall_control_zone_egress.yml": {
+      "expected": [
+        "e00006",
+        "e00007"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00006",
+          "e00007"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00006",
+          "e00007"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00006",
+          "e00007"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_firewall_cross_zone_violation.yml": {
+      "expected": [
+        "e00008",
+        "e00009"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00008",
+          "e00009"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00008",
+          "e00009"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00008",
+          "e00009"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_firewall_enterprise_control_service.yml": {
+      "expected": [
+        "e00010",
+        "e00011"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00010",
+          "e00011"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00010",
+          "e00011"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00010",
+          "e00011"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_flow_industrial_service_refused.yml": {
+      "expected": [
+        "e00040",
+        "e00041"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00040",
+          "e00041"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00040",
+          "e00041"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00040",
+          "e00041"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_flow_large_transfer.yml": {
+      "expected": [
+        "e00042",
+        "e00043"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00042",
+          "e00043"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00042",
+          "e00043"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00042",
+          "e00043"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_hmi_login_failure.yml": {
+      "expected": [
+        "e00051"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00051"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00051"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00051"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_host_suspicious_modbus_client.yml": {
+      "expected": [
+        "e00050"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00050"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00050"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00050"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_modbus_block_read.yml": {
+      "expected": [
+        "e00049"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00049"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00049"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00049"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_modbus_coil_write.yml": {
+      "expected": [
+        "e00048"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00048"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00048"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00048"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_modbus_device_identification_scan.yml": {
+      "expected": [
+        "e00012",
+        "e00013"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00012",
+          "e00013"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00012",
+          "e00013"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00012",
+          "e00013"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_modbus_exception_response.yml": {
+      "expected": [
+        "e00046",
+        "e00047"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00046",
+          "e00047"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00046",
+          "e00047"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00046",
+          "e00047"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_modbus_parameter_write.yml": {
+      "expected": [
+        "e00014",
+        "e00015"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00014",
+          "e00015"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00014",
+          "e00015"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00014",
+          "e00015"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_modbus_process_state_read.yml": {
+      "expected": [
+        "e00016",
+        "e00017",
+        "e00049"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00016",
+          "e00017",
+          "e00049"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00016",
+          "e00017",
+          "e00049"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00016",
+          "e00017",
+          "e00049"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_modbus_unauthorized_write.yml": {
+      "expected": [
+        "e00014",
+        "e00018",
+        "e00019"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00014",
+          "e00018",
+          "e00019"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00014",
+          "e00018",
+          "e00019"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00014",
+          "e00018",
+          "e00019"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_opcua_browse_request.yml": {
+      "expected": [
+        "e00020",
+        "e00021"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00020",
+          "e00021"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00020",
+          "e00021"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00020",
+          "e00021"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_opcua_method_call.yml": {
+      "expected": [
+        "e00022",
+        "e00023"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00022",
+          "e00023"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00022",
+          "e00023"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00022",
+          "e00023"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_opcua_write_request.yml": {
+      "expected": [
+        "e00024",
+        "e00025"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00024",
+          "e00025"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00024",
+          "e00025"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00024",
+          "e00025"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_plc_logic_tampered.yml": {
+      "expected": [
+        "e00052"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00052"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00052"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00052"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_process_safety_violation.yml": {
+      "expected": [
+        "e00026",
+        "e00027"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00026",
+          "e00027"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00026",
+          "e00027"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00026",
+          "e00027"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_s7comm_change_operating_mode.yml": {
+      "expected": [
+        "e00028",
+        "e00029"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00028",
+          "e00029"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00028",
+          "e00029"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00028",
+          "e00029"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_s7comm_program_download.yml": {
+      "expected": [
+        "e00030",
+        "e00031"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00030",
+          "e00031"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00030",
+          "e00031"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00030",
+          "e00031"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_s7comm_program_upload.yml": {
+      "expected": [
+        "e00032",
+        "e00033"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00032",
+          "e00033"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00032",
+          "e00033"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00032",
+          "e00033"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_snmp_config_change.yml": {
+      "expected": [
+        "e00034",
+        "e00035"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00034",
+          "e00035"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00034",
+          "e00035"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00034",
+          "e00035"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_snmp_device_restart.yml": {
+      "expected": [
+        "e00036",
+        "e00037"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00036",
+          "e00037"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00036",
+          "e00037"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00036",
+          "e00037"
+        ],
+        "status": "pass"
+      }
+    },
+    "rules/sigma/ot/ot_snmp_interface_down.yml": {
+      "expected": [
+        "e00038",
+        "e00039"
+      ],
+      "kusto": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00038",
+          "e00039"
+        ],
+        "status": "pass"
+      },
+      "opensearch": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00038",
+          "e00039"
+        ],
+        "status": "pass"
+      },
+      "splunk": {
+        "extra": [],
+        "missing": [],
+        "observed": [
+          "e00038",
+          "e00039"
+        ],
+        "status": "pass"
+      }
+    }
+  },
+  "schema_version": 1,
+  "totals": {
+    "kusto": {
+      "fail": 0,
+      "not_converted": 0,
+      "pass": 30,
+      "skipped": 0
+    },
+    "opensearch": {
+      "fail": 0,
+      "not_converted": 0,
+      "pass": 30,
+      "skipped": 0
+    },
+    "splunk": {
+      "fail": 0,
+      "not_converted": 0,
+      "pass": 30,
+      "skipped": 0
+    }
+  }
+}
