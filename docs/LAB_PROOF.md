@@ -16,8 +16,9 @@ and what was skipped.
 
 A 24-hour benign capture must not see emulation traffic. `tools/lab_proof.py`
 checks whether `benign_capture.py` is running, or whether the PCAP was written
-in the last five minutes, and **skips the attack steps** when it is. The saved
-capture is still analysed, because that reads a file rather than the network.
+in the last five minutes, and **skips the attack steps and the capture analysis**
+when it is. Analysing a growing PCAP would report a partial window as if it were
+the full run.
 
 `make lab-proof-dry-run` prints the plan and the skip decision without running
 anything.

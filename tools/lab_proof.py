@@ -134,6 +134,10 @@ def run(include_attacks: bool, dry_run: bool) -> dict[str, Any]:
             step.status = "skipped"
             step.detail = f"benign capture in progress: {reason}"
             continue
+        if step.name == "benign-capture" and active:
+            step.status = "skipped"
+            step.detail = f"capture is still being written: {reason}"
+            continue
         if dry_run:
             step.status = "planned"
             step.detail = " ".join(step.command)
