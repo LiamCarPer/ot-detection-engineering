@@ -14,7 +14,7 @@ controls:
     title: Fuzzing campaign for the decoders
     threats: [T-001, T-002]
     status: planned
-    verify: make security-fuzz
+    verify: n/a (planned)
     evidence: security/run/fuzz.sh
   - id: C-003
     title: Threat and control coverage governance
@@ -29,7 +29,7 @@ controls:
     verify: make check
     evidence: requirements.txt
   - id: C-005
-    title: Software composition analysis (pip-audit, cargo-deny)
+    title: Software composition analysis (pip-audit)
     threats: [T-003]
     status: implemented
     verify: make security-sca
@@ -140,7 +140,7 @@ controls:
     title: Detection evasion testing
     threats: [T-012]
     status: planned
-    verify: make evasion-check
+    verify: n/a (planned)
     evidence: tools/evasion_check.py
   - id: C-024
     title: Structured audit log for API and triage decisions
@@ -152,13 +152,13 @@ controls:
     title: Non-root, read-only service container
     threats: [T-014]
     status: planned
-    verify: make security-container
+    verify: n/a (planned)
     evidence: services/ingest/Dockerfile
   - id: C-026
     title: Container image scanning
     threats: [T-014]
     status: planned
-    verify: make security-container
+    verify: n/a (planned)
     evidence: security/run/container.sh
   - id: C-027
     title: Security requirements mapped to NIST SSDF and OWASP ASVS

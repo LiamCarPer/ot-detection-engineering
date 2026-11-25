@@ -5,6 +5,10 @@
       "control"
     ],
     [
+      "supervisory",
+      "field"
+    ],
+    [
       "ops",
       "control"
     ],
@@ -161,6 +165,10 @@
     [
       "supervisory",
       "control"
+    ],
+    [
+      "supervisory",
+      "field"
     ],
     [
       "ops",

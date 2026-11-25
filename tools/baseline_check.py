@@ -15,6 +15,7 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -23,7 +24,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from baseline.build import BASELINE_PATH, build, collect  # noqa: E402
+from baseline.build import build, collect_jsonl  # noqa: E402
 from tools.collector_check import ADAPTERS, SAMPLES  # noqa: E402
 from tools.otde.baseline import load_baseline, load_baseline_rule, match_baseline  # noqa: E402
 from tools.otde.evidence import EXPECTED_BASELINE_RULES  # noqa: E402
@@ -33,12 +34,10 @@ BASELINE_RULES_DIR = REPO_ROOT / "rules" / "baseline"
 EVIDENCE_DIR = REPO_ROOT / "deploy" / "evidence" / "baseline"
 EVIDENCE_PATH = EVIDENCE_DIR / "summary.json"
 
-# The baseline is learned from the benign Suricata samples only: a baseline that
-# has seen an attack would not flag it.
-BENIGN_INPUTS = [
-    "collector/samples/suricata/modbus_benign.eve.json",
-    "collector/samples/suricata/dnp3_benign.eve.json",
-]
+# The baseline is learned from the held-out benign corpus, a different seed than
+# the tuning corpus the false-positive rate is measured on. A baseline that has
+# seen an attack, or the corpus it is measured against, would not be a test.
+BENIGN_INPUTS = ["metrics/heldout/negatives.jsonl"]
 
 
 def _rules() -> list[dict]:
@@ -50,7 +49,7 @@ def _rules() -> list[dict]:
 
 
 def evaluate() -> dict:
-    benign_events, inputs = collect("suricata", BENIGN_INPUTS)
+    benign_events, inputs = collect_jsonl(REPO_ROOT / BENIGN_INPUTS[0])
     learned = build(benign_events, inputs)
     committed = load_baseline()
     rules = _rules()
@@ -82,16 +81,26 @@ def evaluate() -> dict:
     }
 
 
-def main() -> int:
-    evidence = evaluate()
-    EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
-    EVIDENCE_PATH.write_text(
-        json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--check", action="store_true", help="Fail if the committed evidence has drifted"
     )
+    args = parser.parse_args(argv)
+
+    evidence = evaluate()
+    payload = json.dumps(evidence, indent=2, sort_keys=True) + "\n"
 
     failures: list[str] = []
+    if args.check:
+        if not EVIDENCE_PATH.exists() or EVIDENCE_PATH.read_text(encoding="utf-8") != payload:
+            failures.append(f"{EVIDENCE_PATH.relative_to(REPO_ROOT)} is stale; run make baseline")
+    else:
+        EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+        EVIDENCE_PATH.write_text(payload, encoding="utf-8")
+
     if not evidence["baseline_current"]:
-        failures.append(f"committed baseline is stale: regenerate with {BASELINE_PATH.name}")
+        failures.append("committed baseline is stale; regenerate with baseline/build.py")
     for key, entry in evidence["samples"].items():
         if entry["observed"] != entry["expected"]:
             failures.append(f"{key}: expected {entry['expected']}, observed {entry['observed']}")

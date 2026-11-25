@@ -27,7 +27,7 @@ if str(REPO_ROOT) not in sys.path:
 import yaml  # noqa: E402
 from jsonschema import Draft202012Validator  # noqa: E402
 
-from baseline.build import collect  # noqa: E402
+from baseline.build import collect_jsonl  # noqa: E402
 from baseline.build_asset_behaviour import BENIGN_INPUTS  # noqa: E402
 from baseline.build_asset_behaviour import build as build_asset  # noqa: E402
 from baseline.build_process_values import DEFAULT_INPUT as PROCESS_INPUT  # noqa: E402
@@ -61,7 +61,7 @@ def _process_baseline_current() -> bool:
 
 
 def _asset_baseline_current() -> bool:
-    events, _ = collect("suricata", BENIGN_INPUTS)
+    events, _ = collect_jsonl(REPO_ROOT / BENIGN_INPUTS[0])
     committed = json.loads(ASSET_BASELINE.read_text(encoding="utf-8"))
     return build_asset(events) == committed
 

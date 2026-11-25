@@ -6,6 +6,15 @@ evaluated against ``metadata/ot-conduit-policy.yaml``. The policy is the
 intended Purdue zones and the conduits between them; a rule names the kind of
 deviation, and this module decides it per event.
 
+Two properties matter for false positives:
+
+- **Conduits are bidirectional.** A stateful firewall allows the return traffic
+  on an allowed path. A policy that only checks the request direction flags
+  every response on a legitimate conduit.
+- **The policy models TCP/UDP services, not ICMP.** An ICMP health check or
+  unreachable message carries no service port and is not a segmentation
+  violation. ICMP is ignored rather than treated as an undeclared path.
+
 Only the deviation types the repository uses are implemented; anything else
 raises ``UnsupportedConduitError`` — the fail-loud principle the matcher, the
 correlation evaluator and the behaviour evaluator already follow.
@@ -23,6 +32,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[2]
 POLICY_PATH = REPO_ROOT / "metadata" / "ot-conduit-policy.yaml"
 CONDUIT_KEY = "conduit"
+ICMP_PROTOCOLS = {"icmp", "icmpv6", "ipv6-icmp", "1", "58"}
 
 
 class UnsupportedConduitError(RuntimeError):
@@ -56,11 +66,28 @@ def zone_for(address: Any, policy: Mapping[str, Any]) -> str | None:
     return None
 
 
-def _conduit(policy: Mapping[str, Any], src: str, dst: str) -> Mapping[str, Any] | None:
+def _conduit(
+    policy: Mapping[str, Any], src: str, dst: str
+) -> tuple[Mapping[str, Any] | None, bool]:
+    """Return the conduit between two zones and whether the flow is the reverse leg.
+
+    The policy declares one direction per conduit. A stateful firewall permits
+    the response on the same path, so the reverse direction resolves to the same
+    conduit and the caller checks the service port on the correct side.
+    """
     for conduit in policy["conduits"]:
         if conduit["from"] == src and conduit["to"] == dst:
-            return conduit
-    return None
+            return conduit, False
+        if conduit["from"] == dst and conduit["to"] == src:
+            return conduit, True
+    return None, False
+
+
+def _is_icmp(event: Mapping[str, Any]) -> bool:
+    proto = event.get("proto")
+    if proto is None:
+        return False
+    return str(proto).strip().lower() in ICMP_PROTOCOLS
 
 
 def match_conduit(
@@ -71,6 +98,11 @@ def match_conduit(
     if not isinstance(config, Mapping):
         raise UnsupportedConduitError(f"rule '{rule.get('title')}' has no conduit block")
 
+    # The policy models TCP/UDP services between zones. ICMP carries no service
+    # and a health check is not a segmentation event.
+    if _is_icmp(event):
+        return False
+
     src = zone_for(event.get("src_ip"), policy)
     dst = zone_for(event.get("dst_ip"), policy)
     # Intra-zone traffic and traffic with an unzoned endpoint are out of scope:
@@ -78,7 +110,7 @@ def match_conduit(
     if src is None or dst is None or src == dst:
         return False
 
-    conduit = _conduit(policy, src, dst)
+    conduit, reverse = _conduit(policy, src, dst)
     kind = config.get("type")
     if kind == "undeclared_path":
         return conduit is None
@@ -86,12 +118,16 @@ def match_conduit(
         if conduit is None:
             return False
         ports = conduit.get("ports")
-        try:
-            port = int(event.get("dst_port"))
-        except (TypeError, ValueError):
-            # A flow without a numeric port cannot be judged against the conduit.
-            return False
         if not ports:
+            return False
+        # On the forward leg the service is the destination port. On the return
+        # leg the service port is the source port; the destination is ephemeral.
+        field = "src_port" if reverse else "dst_port"
+        try:
+            port = int(event.get(field))
+        except (TypeError, ValueError):
+            # A flow without a numeric service port cannot be judged against
+            # the conduit.
             return False
         return port not in ports
     raise UnsupportedConduitError(f"unsupported conduit type: {kind!r}")
@@ -100,7 +136,7 @@ def match_conduit(
 def observed_conduits(
     policy: Mapping[str, Any], events: Iterable[Mapping[str, Any]]
 ) -> set[tuple[str, str]]:
-    """Zone-to-zone pairs actually observed in ``events``."""
+    """Zone-to-zone pairs actually observed in ``events`` (either direction)."""
     observed: set[tuple[str, str]] = set()
     for event in events:
         src = zone_for(event.get("src_ip"), policy)
@@ -115,8 +151,14 @@ def unused_conduits(
 ) -> list[list[str]]:
     """Declared conduits never observed — segmentation that is documented but unused."""
     observed = observed_conduits(policy, events)
+    used = {
+        (conduit["from"], conduit["to"])
+        for conduit in policy["conduits"]
+        if (conduit["from"], conduit["to"]) in observed
+        or (conduit["to"], conduit["from"]) in observed
+    }
     return [
         [conduit["from"], conduit["to"]]
         for conduit in policy["conduits"]
-        if (conduit["from"], conduit["to"]) not in observed
+        if (conduit["from"], conduit["to"]) not in used
     ]

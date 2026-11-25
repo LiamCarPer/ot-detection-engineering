@@ -194,12 +194,14 @@ production throughput claim.
   host/auth telemetry, and several Impact techniques need process context. The
   point is the engineering process, which scales unchanged to a larger ruleset.
 - **Fixture precision and recall measure rule/fixture agreement**, not field
-  performance, and the benign baseline is 1,000 generated events covering normal
-  traffic for every protocol and stream the rules consume. A zero result is
-  reported as `0/1,000` with a 95% Wilson upper bound of 0.38%, not as a zero
-  false-positive rate. The held-out set in `metrics/heldout/` is an independent
-  second sample — two authored positives per rule, a second-seed negative corpus
-  and one near miss per rule — but it is still small and is not field data.
+  performance, and the benign corpus is 1,000 generated events (30 behavioural
+  shapes) covering normal traffic for every protocol and stream the rules
+  consume. The Sigma single-event result is reported as `0/1,000` with a 95%
+  Wilson upper bound of 0.38%; the all-family result, including baseline,
+  conduit, correlation and stateful rules, is in `deploy/evidence/fpr/report.md`. The
+  held-out set in `metrics/heldout/` is an independent second sample — two
+  authored positives per rule, a second-seed negative corpus and one near miss
+  per rule — but it is still small and is not field data.
 - **Detection is still mostly signature-based.** Six correlation rules add
   windowed behaviour — destination fan-out, port sweeps, register enumeration,
   browse bursts and exception floods — over both `value_count` and
@@ -220,19 +222,21 @@ production throughput claim.
   channels; `SignAndEncrypt` yields metadata but no service. The S7comm decoder
   handles classic S7comm only, not S7comm Plus.
 - **The emulation plans are small.** The MTTD run is two steps and four
-  expectations; the coverage run is eight steps and fourteen expectations.
+  expectations; the 2026-11-24 replay is eight steps and fourteen expected lab
+  signals.
   The figures are directional, not a benchmark.
 
 ## If I continued
 
 1. Add a broader tactic spread (Impact, Evasion, C2, Initial Access) rather than
    deepening the same columns.
-2. Add more stateful detections. The first one landed — control-asset
-   enumeration — along with the fixture format and evaluator it needed; the next
-   candidates are setpoint drift over time and an engineering-workstation change
-   window, both of which need a longer window than the current evaluator's
-   sliding count.
-3. Grow the benign baseline from real lab traffic so false-positive rate becomes
-   meaningful.
+2. Extend the stateful family. Three detections landed — process-value drift,
+   engineering change windows and per-asset protocol profiles — along with the
+   fixture format and evaluator they need. The next candidates are select/operate
+   pairing, command-versus-feedback and alarm-setting changes.
+3. Replace the generated benign corpus with real lab traffic. The current
+   baseline is learned from a disjoint generated seed and the all-family
+   false-positive report is clean, but both remain modelled rather than field
+   data.
 4. Run the emulation in CI against an ephemeral lab and publish live metrics.
 5. Add Wazuh as a conversion target.

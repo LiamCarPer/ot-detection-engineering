@@ -72,3 +72,48 @@ def test_observed_and_unused_conduits() -> None:
     assert observed_conduits(policy, events) == {("control", "field")}
     assert ["control", "field"] not in unused_conduits(policy, events)
     assert ["it", "ops"] in unused_conduits(policy, events)
+
+
+def _undeclared_path_rule() -> dict:
+    return load_conduit_rule(
+        REPO_ROOT / "rules" / "conduit" / "conduit_undeclared_path.yml"
+    )
+
+
+def _undeclared_service_rule() -> dict:
+    return load_conduit_rule(
+        REPO_ROOT / "rules" / "conduit" / "conduit_undeclared_service.yml"
+    )
+
+
+def test_reverse_flow_on_a_declared_conduit_is_allowed() -> None:
+    """A response on an allowed path is not an undeclared path."""
+    policy = load_policy()
+    event = {"src_ip": "172.21.0.20", "dst_ip": "172.22.0.10", "src_port": 502}
+    assert match_conduit(_undeclared_path_rule(), event, policy) is False
+
+
+def test_icmp_health_check_is_not_a_conduit_violation() -> None:
+    """The policy models TCP/UDP services; ICMP carries no service port."""
+    policy = load_policy()
+    event = {
+        "src_ip": "172.24.0.2",
+        "dst_ip": "172.21.0.10",
+        "proto": "ICMP",
+        "action": "DROP",
+    }
+    assert match_conduit(_undeclared_path_rule(), event, policy) is False
+
+
+def test_reverse_service_port_is_checked_on_the_source_side() -> None:
+    policy = load_policy()
+    rule = _undeclared_service_rule()
+    response = {
+        "src_ip": "172.21.0.20",
+        "dst_ip": "172.22.0.10",
+        "src_port": 502,
+        "dst_port": 41000,
+    }
+    assert match_conduit(rule, response, policy) is False
+    wrong_service = {**response, "src_port": 9999}
+    assert match_conduit(rule, wrong_service, policy) is True

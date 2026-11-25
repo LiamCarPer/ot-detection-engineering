@@ -1,7 +1,7 @@
 //! Decode-throughput microbenchmark for the OT protocol decoders.
 //!
 //! Each iteration decodes every committed example frame for one protocol. The
-//! harness records per-iteration latency, then reports p50, p99, throughput and
+//! harness records per-frame latency, then reports p50, p99, throughput and
 //! peak RSS as JSON lines. It is deliberately dependency-free so the benchmark
 //! does not change the build graph it is measuring.
 //!
@@ -42,14 +42,20 @@ fn peak_rss_kb() -> Option<u64> {
     None
 }
 
-fn report(protocol: &str, frames: usize, iterations: u32, mut durations: Vec<u64>) {
+fn report(
+    protocol: &str,
+    frames: usize,
+    iterations: u32,
+    elapsed_seconds: f64,
+    mut durations: Vec<u64>,
+) {
     durations.sort_unstable();
-    let total_frames = frames as u64 * iterations as u64;
-    let elapsed_seconds = durations.iter().sum::<u64>() as f64 / 1_000_000_000.0;
+    let total_frames = durations.len() as u64;
     let p50 = durations[durations.len() / 2];
     let p99 = durations[(durations.len() * 99) / 100];
-    let p50_per_frame = p50 / frames as u64;
-    let p99_per_frame = p99 / frames as u64;
+    // Durations are per frame, so p50/p99 are already per-frame percentiles.
+    let p50_per_frame = p50;
+    let p99_per_frame = p99;
     let rss = match peak_rss_kb() {
         Some(value) => value.to_string(),
         None => "null".to_string(),
@@ -76,15 +82,25 @@ where
         }
     }
 
-    let mut durations = Vec::with_capacity(iterations as usize);
+    // Record one sample per frame, not one per iteration. Dividing an
+    // iteration-level percentile by the frame count understates the tail.
+    let mut durations = Vec::with_capacity(iterations as usize * frames.len());
+    let started = Instant::now();
     for _ in 0..iterations {
-        let started = Instant::now();
         for frame in frames {
+            let frame_started = Instant::now();
             decode(black_box(frame));
+            durations.push(frame_started.elapsed().as_nanos() as u64);
         }
-        durations.push(started.elapsed().as_nanos() as u64);
     }
-    report(protocol, frames.len(), iterations, durations);
+    let elapsed_seconds = started.elapsed().as_secs_f64();
+    report(
+        protocol,
+        frames.len(),
+        iterations,
+        elapsed_seconds,
+        durations,
+    );
 }
 
 fn main() {

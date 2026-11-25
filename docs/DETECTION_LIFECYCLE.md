@@ -181,7 +181,7 @@ cases:
     event: { src_ip: 172.21.0.20, dst_ip: 172.21.0.10, service: modbus, function_code: 6 }
 ```
 
-`make baseline-check` rebuilds the baseline (proving the committed artifact is
+`make baseline` rebuilds the baseline (proving the committed artifact is
 current) and evaluates every behaviour rule against the committed telemetry
 samples, so a stale baseline or a rule that stops firing fails CI.
 

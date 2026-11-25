@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust security-preflight security-api-check yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder-check collector-check baseline-check conduit-check stateful-check perf perf-check lab-loki-check coverage emulate-validate purple purple-check case-study case-study-check health health-check metrics check clean
+.PHONY: help setup lint validate test rust security-preflight security-api-check security-sast security-sca security-actions security-secrets security-ai-check security-sbom yara yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder decoder-check collector collector-check baseline baseline-check conduit conduit-check stateful stateful-check perf perf-check fpr fpr-check lab-loki-check coverage emulate-validate purple purple-check case-study case-study-check health health-check metrics check clean
 
 help:
 	@echo "Targets:"
@@ -20,7 +20,14 @@ help:
 	@echo "  rust             Format-check, lint and test the Rust protocol decoders"
 	@echo "  security-preflight  Offline security governance and supply-chain checks"
 	@echo "  security-api-check  Ingest API and AI triage security tests"
-	@echo "  yara-check       Prove YARA rules against committed file and payload samples"
+	@echo "  security-sast    Bandit over the Python surface"
+	@echo "  security-sca     pip-audit dependency audit"
+	@echo "  security-actions zizmor workflow analysis"
+	@echo "  security-secrets gitleaks secret scan"
+	@echo "  security-ai-check Ingest API and AI triage security tests"
+	@echo "  security-sbom    CycloneDX SBOM (Docker)"
+	@echo "  yara             Regenerate YARA evidence"
+	@echo "  yara-check       Fail if the YARA evidence has drifted"
 	@echo "  demo             Offline decoder -> Sigma rule -> SIEM query walkthrough"
 	@echo "  convert          Convert Sigma rules to the BACKEND query language (default: loki)"
 	@echo "  convert-all      Convert to loki, opensearch, splunk and sentinel"
@@ -28,13 +35,20 @@ help:
 	@echo "  deploy-check     Fail if the committed bundle has drifted"
 	@echo "  suricata-check   Run Suricata over the captures and refresh evidence (Docker)"
 	@echo "  loki-check       Run the Loki ruler stack and refresh evidence (Docker)"
-	@echo "  decoder-check    Decode the example frames and refresh rule evidence"
-	@echo "  collector-check  Prove collector output fires the Sigma rules"
-	@echo "  baseline-check   Prove behaviour-baseline rules against committed telemetry"
-	@echo "  conduit-check    Prove conduit rules against the declared segmentation policy"
-	@echo "  stateful-check   Prove stateful detections and their baselines"
+	@echo "  decoder          Regenerate decoder evidence"
+	@echo "  decoder-check    Fail if the decoder evidence has drifted"
+	@echo "  collector        Regenerate collector evidence"
+	@echo "  collector-check  Fail if the collector evidence has drifted"
+	@echo "  baseline         Regenerate behaviour-baseline evidence"
+	@echo "  baseline-check   Fail if the behaviour-baseline evidence has drifted"
+	@echo "  conduit          Regenerate conduit evidence"
+	@echo "  conduit-check    Fail if the conduit evidence has drifted"
+	@echo "  stateful         Regenerate stateful evidence"
+	@echo "  stateful-check   Fail if the stateful evidence has drifted"
 	@echo "  perf             Run decoder and replay benchmarks"
 	@echo "  perf-check       Validate the committed performance evidence"
+	@echo "  fpr              Regenerate the all-family false-positive report"
+	@echo "  fpr-check        Fail if the all-family false-positive report has drifted"
 	@echo "  lab-loki-check   Refresh the OT-Security-Lab ruler evidence (lab required)"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate both adversary emulation plans"
@@ -66,14 +80,38 @@ validate: setup
 test: setup
 	$(PYTEST)
 
-yara-check: setup
+yara: setup
 	$(PY) tools/yara_check.py
+
+yara-check: setup
+	$(PY) tools/yara_check.py --check
 
 security-api-check: setup
 	$(PYTEST) tests/test_ingest_api.py tests/test_ingest_ai_security.py
 
+security-sast: setup
+	./security/run/sast.sh
+
+security-sca: setup
+	./security/run/sca.sh
+
+security-actions: setup
+	./security/run/actions.sh
+
+security-secrets: setup
+	./security/run/secrets.sh
+
+security-ai-check: setup
+	$(PYTEST) tests/test_ingest_api.py tests/test_ingest_ai_security.py
+
+security-sbom: setup
+	./security/run/sbom.sh
+
 security-preflight: setup
 	$(PY) tools/check_action_pins.py
+	$(PY) coverage/security_coverage.py --check
+
+security-coverage: setup
 	$(PY) coverage/security_coverage.py
 
 rust:
@@ -106,17 +144,32 @@ suricata-check: setup deploy
 loki-check: setup deploy
 	$(PY) tools/loki_check.py
 
-decoder-check: setup
+decoder: setup
 	$(PY) tools/decoder_check.py
 
-collector-check: setup
+decoder-check: setup
+	$(PY) tools/decoder_check.py --check
+
+collector: setup
 	$(PY) tools/collector_check.py
 
-baseline-check: setup
+collector-check: setup
+	$(PY) tools/collector_check.py --check
+
+baseline: setup
 	$(PY) tools/baseline_check.py
 
-conduit-check: setup
+baseline-check: setup
+	$(PY) tools/baseline_check.py --check
+
+conduit: setup
 	$(PY) tools/conduit_check.py
+
+conduit-check: setup
+	$(PY) tools/conduit_check.py --check
+
+stateful: setup
+	$(PY) tools/stateful_check.py
 
 stateful-check: setup
 	$(PY) tools/stateful_check.py --check
@@ -126,6 +179,12 @@ perf: setup
 
 perf-check: setup
 	$(PY) tools/perf_check.py --check
+
+fpr: setup
+	$(PY) metrics/fpr.py
+
+fpr-check: setup
+	$(PY) metrics/fpr.py --check
 
 lab-loki-check: setup
 	$(PY) tools/lab_loki_check.py
@@ -168,7 +227,7 @@ metrics: setup
 		--out deploy/evidence/purple
 	$(PY) metrics/compute.py
 
-check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check stateful-check perf-check deploy-check purple-check case-study-check health-check
+check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check stateful-check perf-check fpr-check deploy-check purple-check case-study-check health-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target

@@ -50,43 +50,61 @@ jobs:
         run: pytest
 
       - name: Prove decoder output fires the Sigma rules
-        run: python tools/decoder_check.py
+        run: python tools/decoder_check.py --check
 
       - name: Check the decoder evidence is current
         run: git diff --exit-code deploy/evidence/decoders/summary.json
 
       - name: Prove collector output fires the Sigma rules
-        run: python tools/collector_check.py
+        run: python tools/collector_check.py --check
 
       - name: Check the collector evidence is current
         run: git diff --exit-code deploy/evidence/collector/summary.json
 
       - name: Prove behaviour-baseline rules against committed telemetry
-        run: python tools/baseline_check.py
+        run: python tools/baseline_check.py --check
 
       - name: Check the baseline evidence is current
         run: git diff --exit-code deploy/evidence/baseline/summary.json
 
       - name: Prove conduit rules against the declared segmentation policy
-        run: python tools/conduit_check.py
+        run: python tools/conduit_check.py --check
 
       - name: Check the conduit evidence is current
         run: git diff --exit-code deploy/evidence/conduit/summary.json
 
       - name: Prove YARA rules against committed artifacts
-        run: python tools/yara_check.py
+        run: python tools/yara_check.py --check
 
       - name: Check the YARA evidence is current
         run: git diff --exit-code deploy/evidence/yara/summary.json
 
       - name: Prove stateful detections and their baselines
-        run: python tools/stateful_check.py
+        run: python tools/stateful_check.py --check
 
       - name: Check the stateful evidence is current
         run: git diff --exit-code deploy/evidence/stateful/summary.json
 
       - name: Validate the performance evidence
         run: python tools/perf_check.py --check
+
+      - name: Recompute the all-family false-positive report
+        run: python metrics/fpr.py --check
+
+      - name: Check the detection catalogue
+        run: python tools/detection_health.py --check
+
+      - name: Age stable rules against the real date
+        run: python tools/detection_health.py --today
+
+      - name: Check the lab case study
+        run: python analysis/lab_case_study.py --input analysis/data/lab-2026-11-24 --out analysis/out --check
+
+      - name: Check the purple replay evidence
+        run: >-
+          python purple/runner/run_emulation.py
+          --observations purple/emulation/lab-observations.json
+          --out deploy/evidence/purple --check
 
 
       - name: Convert to Loki
@@ -119,10 +137,10 @@ jobs:
             --plan purple/emulation/emulation-plan-2026-09-13.yaml \
             --observations purple/emulation/lab-observations-2026-09-13.json \
             --out purple/results
-          python purple/runner/run_emulation.py \
-            --observations purple/emulation/lab-observations.json \
-            --out deploy/evidence/purple
           python metrics/compute.py
+
+      - name: Check generated metrics and coverage are current
+        run: git diff --exit-code coverage/out metrics/out purple/results
 
       - name: Upload coverage map and metrics
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4

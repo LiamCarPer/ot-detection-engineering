@@ -6,8 +6,9 @@
 # services it permits. Traffic inside a zone is not modelled here; traffic that
 # crosses zones without a declared conduit is what rules/conduit flags.
 #
-# This mirrors the conduits the lab firewall enforces, so the rules fire on the
-# committed telemetry samples rather than on a fictional topology.
+# This models the intended segmentation. The lab firewall is the enforcement
+# point, not this file; the two are reconciled in the reviewer guide, and a
+# difference is a review event rather than a silent second source of truth.
 version: 1
 zones:
   - { name: it, purdue: "4-5", cidr: 172.24.0.0/24 }
@@ -18,6 +19,7 @@ zones:
   - { name: field, purdue: "0", cidr: 172.31.0.0/24 }
 conduits:
   - { from: supervisory, to: control, ports: [102, 502, 4840, 20000] }
+  - { from: supervisory, to: field, ports: [20000] }
   - { from: ops, to: control, ports: [502, 8086] }
   - { from: control, to: field, ports: [20000] }
   - { from: supervisory, to: ops, ports: [8086] }

@@ -112,6 +112,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cargo", default="cargo")
     parser.add_argument("--no-build", action="store_true", help="Use the existing binaries")
+    parser.add_argument(
+        "--check", action="store_true", help="Fail if the committed evidence has drifted"
+    )
     args = parser.parse_args(argv)
 
     if not args.no_build:
@@ -121,12 +124,16 @@ def main(argv: list[str] | None = None) -> int:
         service: evaluate(service, expected)
         for service, expected in EXPECTED_DECODER_RULES.items()
     }
-    EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
-    EVIDENCE_PATH.write_text(
-        json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
+    payload = json.dumps(summary, indent=2, sort_keys=True) + "\n"
 
     failures = []
+    if args.check:
+        if not EVIDENCE_PATH.exists() or EVIDENCE_PATH.read_text(encoding="utf-8") != payload:
+            failures.append(f"{EVIDENCE_PATH.relative_to(REPO_ROOT)} is stale; run make decoder")
+    else:
+        EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+        EVIDENCE_PATH.write_text(payload, encoding="utf-8")
+
     for service, entry in summary.items():
         if set(entry["observed"]) != set(entry["expected"]):
             failures.append(

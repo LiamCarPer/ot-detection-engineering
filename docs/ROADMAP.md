@@ -8,9 +8,9 @@ next and what I deliberately did not do.
 1. **Capture real benign traffic.** Replace the generated benign corpus with a
    24-hour lab capture, reported separately from the generated set. The current
    1,000-event corpus is a statistical bound, not a field baseline.
-2. **Run the purple team in CI.** The 2026-11-24 coverage run is a replay. An
-   ephemeral lab in CI would make 8-step coverage and MTTD reproducible on every
-   commit.
+2. **Run the purple team in CI.** The 2026-11-24 evidence is a replay of the
+   lab's alert labels. An ephemeral lab in CI would make 8-step execution and
+   MTTD reproducible on every commit.
 3. **Add host/auth telemetry.** Privilege Escalation is 0/2 because there is no
    host or authentication source. A Sysmon/auth-log collector would close it
    honestly.
@@ -54,9 +54,10 @@ OPC UA browsing and exception floods, a stateful detection family, multi-platfor
 conversion (Loki, OpenSearch, Splunk SPL, Sentinel KQL), installable deployment
 bundles, Suricata validation over captures and in a Malcolm pipeline, ATT&CK for
 ICS coverage, adversary emulation, a detection catalogue and health report, and
-performance evidence. The pipeline, conversion, tests, coverage, catalogue,
-stateful and performance evidence run in CI; the container, Malcolm and live-lab
-validations run locally and their committed evidence is guarded by tests.
+performance evidence. The pipeline, conversion, tests, coverage, all-family
+false positives, catalogue, case study and performance evidence run in CI in
+read-only mode; the container, Malcolm and live-lab validations run locally and
+their committed evidence is guarded by tests.
 
 ## Integration status
 

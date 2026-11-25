@@ -21,13 +21,33 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
 from jsonschema import Draft202012Validator
 
-from services.ingest.ai import StubProvider, TriageProvider, build_prompt, validate_triage
+from services.ingest.ai import (
+    StubProvider,
+    TriageProvider,
+    build_request,
+    validate_triage,
+)
 from services.ingest.auth import RateLimiter, key_matches
 from services.ingest.settings import Settings
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TELEMETRY_SCHEMA = REPO_ROOT / "metadata" / "telemetry.schema.json"
 AUDIT = logging.getLogger("ingest.audit")
+
+
+def _configure_audit() -> None:
+    """Make the audit log emit accepted and decided events by default.
+
+    A logger with no handler inherits ``lastResort``, which drops everything
+    below WARNING. An audit trail that silently omits accepted events and triage
+    decisions is not an audit trail.
+    """
+    if not logging.getLogger().handlers:
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s %(levelname)s %(name)s %(message)s",
+        )
+    AUDIT.setLevel(logging.INFO)
 
 
 def _errors(validator: Draft202012Validator, payload: Any) -> list[str]:
@@ -46,6 +66,7 @@ def create_app(
 ) -> FastAPI:
     settings = settings or Settings()
     provider = provider or StubProvider()
+    _configure_audit()
     telemetry = Draft202012Validator(json.loads(TELEMETRY_SCHEMA.read_text(encoding="utf-8")))
 
     app = FastAPI(title="OT ingest", docs_url=None, redoc_url=None, openapi_url=None)
@@ -71,6 +92,16 @@ def create_app(
                 return JSONResponse({"detail": "invalid content-length"}, status_code=400)
             if size > settings.max_body_bytes:
                 return JSONResponse({"detail": "request body too large"}, status_code=413)
+        # Content-Length is optional. A chunked request carries no length
+        # header, so the cap has to be enforced while the body is received.
+        # Reading here bounds memory and lets the downstream parser reuse the
+        # cached body.
+        body = bytearray()
+        async for chunk in request.stream():
+            body.extend(chunk)
+            if len(body) > settings.max_body_bytes:
+                return JSONResponse({"detail": "request body too large"}, status_code=413)
+        request._body = bytes(body)
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
@@ -117,8 +148,8 @@ def create_app(
         if errors:
             raise HTTPException(status_code=422, detail={"errors": errors})
 
-        build_prompt(event)  # the data boundary is constructed, not concatenated
-        output: dict[str, Any] = request.app.state.provider.triage(event)
+        triage_request = build_request(event)  # the data boundary is constructed, not concatenated
+        output: dict[str, Any] = request.app.state.provider.triage(triage_request)
         problems = validate_triage(output)
         if problems:
             AUDIT.warning("triage_rejected client=%s", _client(request))

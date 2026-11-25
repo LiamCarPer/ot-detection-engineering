@@ -8,6 +8,7 @@ commands the register names.
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -101,3 +102,51 @@ def test_claims_and_reviewer_guide_are_linked_from_the_readme() -> None:
     text = README.read_text(encoding="utf-8")
     assert "docs/CLAIMS.md" in text
     assert "docs/REVIEWER_GUIDE.md" in text
+
+
+def test_readme_performance_numbers_match_the_evidence() -> None:
+    perf = json.loads(
+        (REPO_ROOT / "deploy" / "evidence" / "perf" / "summary.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    rates = [row["frames_per_second"] / 1_000_000 for row in perf["protocols"].values()]
+    low = min(rates)
+    high = max(rates)
+    replay = perf["pipeline"]["events_per_second"]
+    text = README.read_text(encoding="utf-8")
+    assert f"{low:.1f}–{high:.1f}M decoder frames/s" in text
+    assert f"~{round(replay, -2):,.0f} replay events/s" in text
+
+
+def test_all_family_fpr_is_clean_and_reported() -> None:
+    report = json.loads(
+        (REPO_ROOT / "deploy" / "evidence" / "fpr" / "summary.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    families = report["families"]
+    assert families["sigma_single_event"]["false_positive_events"] == 0
+    assert families["baseline"]["false_positive_events"] == 0
+    assert families["conduit"]["false_positive_events"] == 0
+    assert families["sigma_correlation"]["fired"] == []
+    assert families["stateful"]["fired"] == []
+    assert families["native"]["false_positive_alerts"] == 0
+    assert families["yara"]["false_positive_files"] == 0
+    assert "deploy/evidence/fpr/report.md" in README.read_text(encoding="utf-8")
+
+
+def test_readme_catalogue_numbers_match_the_health_report() -> None:
+    health = json.loads(
+        (REPO_ROOT / "deploy" / "evidence" / "health" / "summary.json").read_text(
+            encoding="utf-8"
+        )
+    )["totals"]
+    text = README.read_text(encoding="utf-8")
+    assert f"{health['rules']} rules" in text
+    assert f"{health['stable']} stable" in text
+    assert f"{health['rules'] - health['stable']} experimental" in text
+
+
+def test_stale_57_is_gone() -> None:
+    assert "other 57" not in REVIEWER_GUIDE.read_text(encoding="utf-8")

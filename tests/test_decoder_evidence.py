@@ -3,7 +3,7 @@
 CI builds and tests the Rust decoders in a separate step, so the decoder-to-rule
 run is captured once (tools/decoder_check.py) and committed; these tests assert
 the committed evidence against the expectations in tools/otde/evidence.py.
-Regenerate with `make decoder-check`.
+Regenerate with `make decoder`.
 """
 
 from __future__ import annotations

@@ -3,9 +3,11 @@
 Two measurements are recorded:
 
 - the Rust decoder microbenchmark, one iteration per set of committed example
-  frames, reporting p50/p99 per frame and frames/sec;
+  frames, reporting per-frame p50/p99 and frames/sec;
 - an offline replay of the benign corpus through every single-event Sigma rule,
-  reporting events/sec, p50/p99 and the number of matches.
+  reporting events/sec, p50/p99 and the number of matches. The replay runs
+  1,000 distinct events ten times; "events" is evaluation passes, not distinct
+  inputs.
 
 The second is a validation-pipeline benchmark, not a production sensor
 benchmark. The committed summary records the hardware and method so the numbers
@@ -163,8 +165,11 @@ def summarize(
             "decoder_iterations": iterations,
             "decoder_warmup": 100,
             "decoder_unit": "one iteration decodes every committed example frame",
+            "decoder_latency_unit": "one latency sample per decoded frame",
             "replay_repetitions": pipeline["repetitions"],
             "replay_unit": "one event through every single-event Sigma rule",
+            "replay_events_total": pipeline["events"],
+            "replay_distinct_events": pipeline["events"] // max(pipeline["repetitions"], 1),
         },
         "protocols": protocols,
         "pipeline": pipeline,
@@ -201,6 +206,58 @@ def validate(summary: dict) -> list[str]:
             problems.append(f"pipeline: missing {key}")
     if pipeline.get("events", 0) <= 0:
         problems.append("pipeline: events must be positive")
+
+    # The SLO flags are derived from the recorded numbers, never trusted as
+    # stored booleans. A stale or edited summary must not pass by saying "true".
+    slo = summary.get("slo", {})
+    max_p99 = slo.get("decoder_p99_ns_per_frame_max")
+    min_eps = slo.get("pipeline_events_per_second_min")
+    allowed_matches = slo.get("pipeline_matches_allowed")
+    if not isinstance(max_p99, int) or max_p99 <= 0:
+        problems.append("slo: decoder_p99_ns_per_frame_max must be a positive integer")
+    if not isinstance(min_eps, int) or min_eps <= 0:
+        problems.append("slo: pipeline_events_per_second_min must be a positive integer")
+    if not isinstance(allowed_matches, int) or allowed_matches < 0:
+        problems.append("slo: pipeline_matches_allowed must be a non-negative integer")
+
+    if isinstance(max_p99, int) and max_p99 > 0:
+        try:
+            decoder_ok = all(
+                summary["protocols"][protocol]["p99_ns_per_frame"] <= max_p99
+                for protocol in PROTOCOLS
+            )
+        except (KeyError, TypeError):
+            decoder_ok = False
+        if slo.get("decoder_p99_within_slo") is not decoder_ok:
+            problems.append(
+                "slo: decoder_p99_within_slo does not match the recorded p99 values"
+            )
+        if not decoder_ok:
+            problems.append(
+                f"slo: a decoder p99 exceeds {max_p99} ns/frame"
+            )
+
+    if isinstance(min_eps, int) and min_eps > 0:
+        pipeline_ok = pipeline.get("events_per_second", 0) >= min_eps
+        if slo.get("pipeline_within_slo") is not pipeline_ok:
+            problems.append(
+                "slo: pipeline_within_slo does not match the recorded throughput"
+            )
+        if not pipeline_ok:
+            problems.append(
+                f"slo: replay throughput is below {min_eps} events/s"
+            )
+
+    if isinstance(allowed_matches, int) and allowed_matches >= 0:
+        matches_ok = pipeline.get("matches", 0) <= allowed_matches
+        if slo.get("pipeline_matches_within_slo") is not matches_ok:
+            problems.append(
+                "slo: pipeline_matches_within_slo does not match the recorded matches"
+            )
+        if not matches_ok:
+            problems.append(
+                f"slo: replay produced {pipeline.get('matches')} matches, allowed {allowed_matches}"
+            )
     return problems
 
 

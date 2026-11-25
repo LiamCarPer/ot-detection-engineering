@@ -354,7 +354,7 @@ def render_markdown(summary: dict) -> str:
         f"| Stable with observed lab volume | {totals['stable_with_observed_volume']} |",
         f"| Rules with observed lab volume | {totals['with_observed_volume']} |",
         f"| Stable rules with stale validation | {totals['stable_stale']} |",
-        f"| Gaps that must be fixed | {totals['gaps']} |",
+        f"| Blocking gaps that must be fixed | {totals['gaps']} |",
         f"| Warnings on experimental rules | {totals['warnings']} |",
         "",
         "By kind: " + ", ".join(f"`{k}` {v}" for k, v in summary["by_kind"].items()),
@@ -442,7 +442,30 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--catalog", default=str(CATALOG_PATH))
     parser.add_argument("--check", action="store_true")
+    parser.add_argument(
+        "--today",
+        action="store_true",
+        help="Age stable rules against the real date instead of the frozen audit date",
+    )
     args = parser.parse_args(argv)
+
+    if args.today:
+        # The committed report is frozen for determinism. This operational check
+        # is not: a rule that was current when committed must still be re-reviewed
+        # after MAX_AGE_DAYS.
+        summary = build_health(Path(args.catalog), as_of=date.today())
+        stale = [
+            row
+            for row in summary["per_rule"]
+            if row["status"] == "stable" and (row["age_days"] or 0) > MAX_AGE_DAYS
+        ]
+        if stale:
+            print(f"{len(stale)} stable rule(s) are older than {MAX_AGE_DAYS} days:")
+            for row in stale:
+                print(f"  - {row['title']}: {row['age_days']} days")
+            return 1
+        print(f"stable rules are within the {MAX_AGE_DAYS}-day age gate as of {date.today()}")
+        return 0
 
     summary = build_health(Path(args.catalog))
     report = render_markdown(summary)

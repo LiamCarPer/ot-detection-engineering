@@ -8,7 +8,9 @@ description: |
 
   This is not a signature on the write itself; an approved engineering change is
   a normal event. The condition is the absence of a matching window in
-  `metadata/change-calendar.yaml`.
+  `metadata/change-calendar.yaml`. Routine operator setpoint changes from an HMI
+  are not engineering changes and are out of scope; they are covered by the
+  unauthorized-writer and operating-envelope rules.
 references:
   - https://attack.mitre.org/techniques/T0843/
 author: Liam Carvajal
@@ -18,6 +20,11 @@ stateful:
   calendar: metadata/change-calendar.yaml
   products:
     - ot_ndr
+  services:
+    - modbus
+    - s7comm
+  engineering_sources:
+    - 172.23.0.4
   write_function_codes:
     - 6
     - 16

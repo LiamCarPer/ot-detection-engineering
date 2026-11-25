@@ -1,10 +1,12 @@
 {
   "baseline": {
-    "assets": 3,
-    "pairs": 2,
+    "assets": 8,
+    "pairs": 21,
     "services": [
       "dnp3",
-      "modbus"
+      "modbus",
+      "opcua",
+      "s7comm"
     ]
   },
   "baseline_current": true,
@@ -88,14 +90,8 @@
     },
     "zeek/flow_dnp3_attack": {
       "events": 1,
-      "expected": [
-        "New OT Communication Pair",
-        "New OT Source Asset Not In The Behaviour Baseline"
-      ],
-      "observed": [
-        "New OT Communication Pair",
-        "New OT Source Asset Not In The Behaviour Baseline"
-      ]
+      "expected": [],
+      "observed": []
     },
     "zeek/flow_dnp3_benign": {
       "events": 1,
@@ -104,14 +100,8 @@
     },
     "zeek/flow_modbus_attack": {
       "events": 3,
-      "expected": [
-        "New OT Communication Pair",
-        "New OT Source Asset Not In The Behaviour Baseline"
-      ],
-      "observed": [
-        "New OT Communication Pair",
-        "New OT Source Asset Not In The Behaviour Baseline"
-      ]
+      "expected": [],
+      "observed": []
     },
     "zeek/flow_modbus_benign": {
       "events": 3,

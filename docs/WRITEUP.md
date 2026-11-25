@@ -53,10 +53,12 @@ The first honest measurements were uncomfortable:
   enterprise pivot, one compromised EWS, one operator-workstation write, one
   credential attack and one sensor-health event. Dedupe is a detection-engineering
   problem, not an analyst failure.
-- **14/14 purple-team expectations across 8 steps**, 0 unexpected alerts and a
-  passing benign window. The MTTD run is separate: 4/4 at 2.45 s, `n=4`, one run.
-- **66 catalogued rules, 6 stable, 12 with observed lab volume, 0 gaps.** The
-  other 60 are explicitly experimental.
+- **14/14 lab alert signals replayed across 8 steps**, 0 unexpected alerts and a
+  passing benign window. The replay matches the lab's labels, not this
+  repository's rules. The MTTD run is separate: 4/4 at 2.45 s, `n=4`, one run.
+- **66 catalogued rules, 6 stable, 12 with observed lab volume.** The other 60
+  are experimental and carry at least one operating gap; the health gate has 0
+  blocking gaps.
 - **29/97 ATT&CK for ICS coverage**, deliberately. Privilege Escalation is 0/2
   because there is no host/auth telemetry; padding it with network rules would be
   dishonest.

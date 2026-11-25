@@ -10,11 +10,11 @@ windows:
   - id: CHG-2026-12-01-001
     starts: "2026-12-01T10:00:00Z"
     ends: "2026-12-01T12:00:00Z"
-    src_ip: 172.21.0.20
+    src_ip: 172.23.0.4
     dst_ip: 172.21.0.10
     service: modbus
     approved_by: OT Change Board
-    reason: Quarterly setpoint update
+    reason: Engineering workstation setpoint and configuration change
   - id: CHG-2026-12-02-002
     starts: "2026-12-02T01:00:00Z"
     ends: "2026-12-02T02:00:00Z"

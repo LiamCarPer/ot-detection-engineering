@@ -21,7 +21,7 @@ prove.
 | 3 min | [`docs/DEMO.md`](docs/DEMO.md) | The offline demo: decoders → case study → purple team → catalogue → performance. |
 | 5 min | [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md) | A deeper path from summary to code, including where to be skeptical. |
 | 6 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](docs/CASE_STUDY_ALERT_FLOOD.md) | 151 lab alerts → 24 episodes → 5 operational events, and what to suppress. |
-| 8 min | [`docs/PURPLE_TEAM.md`](docs/PURPLE_TEAM.md) | 14 expectations across 8 steps, 0 unexpected alerts, benign window passed. |
+| 8 min | [`docs/PURPLE_TEAM.md`](docs/PURPLE_TEAM.md) | 14 / 14 lab alert signals replayed across 8 steps; what that proves and what it does not. |
 | 10 min | [`docs/CLAIMS.md`](docs/CLAIMS.md) | Every claim → evidence → the command that proves it. |
 | 15 min | [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md) | Tradeoffs, failures, and the rule that was withdrawn. |
 
@@ -31,16 +31,18 @@ prove.
   rules, 6 correlation rules, 4 YARA rules, 24 native Suricata signatures, 3
   stateful detections and 5 baseline/conduit rules, chosen for a segmented
   water-treatment plant and mapped to a committed threat model.
-- **What it proves.** Every rule is fixture-tested; the Sigma rules are
-  held-out-tested; the native rules run in Suricata over real captures; the
-  Sigma rules run in a live Loki stack and in a Malcolm pipeline; the Rust
-  decoders are proven against the rules they feed.
+- **What it proves.** Every rule has a committed proof: Sigma fixtures, native
+  capture tests, YARA fixtures, baseline/conduit fixtures and stateful windows.
+  The Sigmas are held-out-tested; the native rules run in Suricata over the
+  committed PCAP captures; 18 of 30 Sigma rules run in a live Loki stack, and
+  the native Suricata ruleset runs in a Malcolm pipeline; the Rust decoders are
+  proven against the rules they feed.
 - **What it tunes.** The repo records the failures its checks found: a Modbus
   response rule that could not attribute the responder and was withdrawn, a DNP3
   allowlist that missed the benign master, and a Suricata exception rule that
   used invalid syntax. The point is the loop, not a perfect first draft.
 - **What it is not.** The benign corpus is generated, the lab is a Dockerised
-  plant, and the purple-team evidence is one 8-step coverage replay plus a
+  plant, and the purple-team evidence is one 8-step alert-signal replay plus a
   separate 2-step MTTD run. Those are limitations, not footnotes.
 
 ## Case study: 151 alerts in 160 seconds
@@ -62,7 +64,10 @@ severity, data source, expected volume, runbook and lifecycle status. `make
 health` refuses a rule without an entry, an entry without a rule, a technique
 mismatch, or a `stable` rule without a runbook or observed volume.
 
-Current: **66 rules, 6 stable, 0 gaps, 12 with observed lab volume**.
+Current: **66 rules, 6 stable, 60 experimental with at least one operating gap,
+12 with observed lab volume**. The word “gap” is overloaded: the health gate has
+0 blocking gaps, while 60 experimental rules still need a runbook or volume
+history before promotion.
 [Health report](deploy/evidence/health/report.md) ·
 [Runbooks](docs/runbooks/)
 
@@ -98,10 +103,11 @@ by `tests/test_claims.py`.
 | Detection content | 66 catalogued rules: 24 Sigma + 6 correlation + 4 YARA + 24 native + 3 stateful + 3 baseline + 2 conduit | Every rule is in the detection catalogue. |
 | Emulation detection rate (MTTD run) | 100% (4 / 4 expectations) | 2026-09-13 run, two steps; the lab's `mitre_id` is cross-checked against the plan. |
 | Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, 2026-09-13 run (`n=4`, one run). |
-| Purple-team coverage | 14 / 14 expectations (8 steps) | 2026-11-24 replay; 0 unexpected alerts; benign window passed; MTTD not measured. |
-| Performance | 11–23M decoder frames/s; ~3,400 replay events/s | Release build on the recorded host; small example frames; see `docs/PERFORMANCE.md`. |
+| Purple-team replay | 14 / 14 expectations (8 steps) | 2026-11-24 replay of the lab's `alert_type` snapshot; 0 unexpected; benign window passed; a lab alert-signal mapping test, not rule execution and not MTTD. |
+| Performance | 6.9–11.5M decoder frames/s; ~4,800 replay events/s | Release build on the recorded host; small example frames; per-frame p99, see `docs/PERFORMANCE.md`. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule matches against its own committed fixtures. A regression check, not field precision. |
-| Baseline false-positive rate | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every protocol and stream the rules consume. |
+| Sigma single-event FPR | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every stream the Sigma rules consume. The corpus has 30 behavioural shapes, so the binomial bound overstates effective N. |
+| All-family FPR | baseline, conduit, stateful, correlation, native and YARA all 0 | Same corpus plus the committed benign captures and fixtures; see [`deploy/evidence/fpr/report.md`](deploy/evidence/fpr/report.md). |
 | Held-out single-event recall | 48 / 48 (95% CI 0.926–1.0) | Labeled positives authored separately from the rule fixtures. |
 | Held-out single-event precision | 48 / 48 (95% CI 0.926–1.0) | Same positives against 1,024 held-out negatives per rule. |
 | Held-out correlation recall | 12 / 12 positive windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
@@ -208,9 +214,12 @@ through the same matcher as the rule tests. The results are in
   regenerated and checked for drift.
 - **The lab is a Dockerised plant.** There is no physical PLC, sensor or
   actuator.
-- **The benign corpus is generated.** The honest claim is `0/1,000` with a 95%
-  Wilson upper bound of **0.38%**, not "0.0 FPR". It cannot estimate field
-  false-positive volume.
+- **The benign corpus is generated.** The Sigma single-event claim is `0/1,000`
+  with a 95% Wilson upper bound of **0.38%**, not "0.0 FPR". The corpus cycles
+  30 behavioural shapes, so the interval overstates the effective sample size.
+  Behaviour-baseline, conduit, correlation and stateful rules are measured on
+  the same corpus in [`deploy/evidence/fpr/report.md`](deploy/evidence/fpr/report.md); they are not
+  included in the Sigma-only bound.
 - **Held-out labels are authored.** They are independent of the rule fixtures,
   but the set is small and the per-rule intervals are wide.
 - **No production telemetry or 24/7 SOC.** There is no on-call rota, shift

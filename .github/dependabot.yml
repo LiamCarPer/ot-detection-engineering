@@ -6,6 +6,10 @@ updates:
       interval: weekly
     open-pull-requests-limit: 5
     labels: [dependencies, security]
+    ignore:
+      # 3.3.3 breaks pySigma 1.5.0's condition parser; see requirements.txt.
+      - dependency-name: "pyparsing"
+        versions: ["3.3.3"]
   - package-ecosystem: cargo
     directory: "/tools"
     schedule:

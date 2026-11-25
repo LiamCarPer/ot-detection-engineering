@@ -116,8 +116,22 @@ def _change_window(config: Mapping[str, Any], events: Sequence[Mapping[str, Any]
     windows = calendar.get("windows", [])
     write_codes = {int(code) for code in config.get("write_function_codes", [6, 16, 26, 27, 28])}
     products = set(config.get("products", ["ot_ndr"]))
+    services = set(config["services"]) if config.get("services") else None
+    engineering_sources = (
+        set(str(source) for source in config["engineering_sources"])
+        if config.get("engineering_sources")
+        else None
+    )
     for event in events:
         if event.get("product") not in products:
+            continue
+        if services is not None and event.get("service") not in services:
+            continue
+        # An operator setpoint change is not an engineering change. The rule is
+        # scoped to the engineering workstations that are allowed to change
+        # logic or configuration; writes from other hosts are covered by the
+        # unauthorized-writer rules.
+        if engineering_sources is not None and event.get("src_ip") not in engineering_sources:
             continue
         if event.get("direction") != "request":
             continue
@@ -142,7 +156,13 @@ def _asset_protocol_baseline(
     config: Mapping[str, Any], events: Sequence[Mapping[str, Any]]
 ) -> bool:
     baseline = _load_json(REPO_ROOT / str(config["baseline"]))
+    products = set(config.get("products", ["ot_ndr"]))
     for event in events:
+        # The per-asset profile is learned from protocol telemetry. A flow or
+        # firewall event has a service name but no protocol profile, so it must
+        # not be judged against a protocol baseline.
+        if event.get("product") not in products:
+            continue
         if event.get("direction", "request") != "request":
             continue
         asset = event.get("dst_ip")

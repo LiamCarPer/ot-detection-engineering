@@ -167,3 +167,101 @@ def test_events_without_a_timestamp_fail_loudly() -> None:
                 }
             ],
         )
+
+
+def test_negative_operator_fails_loudly() -> None:
+    """`lt` on a one-event window would always be true, so it is rejected."""
+    from sigma.correlations import SigmaCorrelationConditionOperator
+
+    rule = _enumeration_rule()
+    rule.condition.op = SigmaCorrelationConditionOperator.LT
+    event = {
+        "timestamp": "2026-05-01T10:00:00Z",
+        "product": "ot_ndr",
+        "service": "modbus",
+        "direction": "request",
+        "function_code": 3,
+        "src_ip": "172.24.0.10",
+        "dst_ip": "172.21.0.10",
+        "register": 1,
+    }
+    with pytest.raises(UnsupportedCorrelationError, match="operator"):
+        match_correlation(rule, [event])
+
+
+def test_missing_counted_field_fails_loudly() -> None:
+    rule = _enumeration_rule()
+    event = {
+        "timestamp": "2026-05-01T10:00:00Z",
+        "product": "ot_ndr",
+        "service": "modbus",
+        "direction": "request",
+        "function_code": 3,
+        "src_ip": "172.24.0.10",
+    }
+    with pytest.raises(UnsupportedCorrelationError, match="dst_ip"):
+        match_correlation(rule, [event])
+
+
+def test_missing_group_field_fails_loudly() -> None:
+    rule = _enumeration_rule()
+    event = {
+        "timestamp": "2026-05-01T10:00:00Z",
+        "product": "ot_ndr",
+        "service": "modbus",
+        "direction": "request",
+        "function_code": 3,
+        "dst_ip": "172.21.0.10",
+        "register": 1,
+    }
+    with pytest.raises(UnsupportedCorrelationError, match="src_ip"):
+        match_correlation(rule, [event])
+
+
+def test_mixed_naive_and_aware_timestamps_are_normalized() -> None:
+    rule = _enumeration_rule()
+    events = []
+    for index in range(20):
+        events.append(
+            {
+                "timestamp": (
+                    f"2026-05-01T10:00:{index:02d}Z"
+                    if index == 0
+                    else f"2026-05-01T10:00:{index:02d}"
+                ),
+                "product": "ot_ndr",
+                "service": "modbus",
+                "direction": "request",
+                "function_code": 3,
+                "src_ip": "172.24.0.10",
+                "dst_ip": f"172.21.0.{index + 1}",
+                "register": index,
+            }
+        )
+    assert match_correlation(rule, events) is True
+
+
+def _exception_rule():
+    return next(
+        rule
+        for rule in resolved_correlation_rules()
+        if str(rule.id) == "f0d5c3a8-7b29-4e61-8a34-5c9f1d6b2e47"
+    )
+
+
+def test_duplicate_events_are_counted_once() -> None:
+    rule = _exception_rule()
+    event = {
+        "timestamp": "2026-05-01T10:00:00Z",
+        "product": "ot_ndr",
+        "service": "modbus",
+        "direction": "response",
+        "src_ip": "172.21.0.10",
+        "dst_ip": "172.24.0.10",
+        "exception_code": 2,
+    }
+    assert match_correlation(rule, [event] * 10) is False
+    distinct = [
+        {**event, "timestamp": f"2026-05-01T10:00:{index:02d}Z"} for index in range(10)
+    ]
+    assert match_correlation(rule, distinct) is True

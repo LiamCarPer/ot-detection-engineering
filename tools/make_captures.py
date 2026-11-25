@@ -167,6 +167,18 @@ def modbus_sessions(attacker: bool) -> list[Packet]:
                 [modbus_request(200, 1, 6, b"\xc3\x50\x00\x01")],
             )
         )
+        # Read Device Identification (FC43/MEI 14): the discovery step an
+        # attacker uses to fingerprint the PLC before choosing a target.
+        sessions.append(
+            tcp_session(
+                source,
+                41011,
+                MODBUS_PLC,
+                502,
+                [modbus_request(201, 1, 0x2B, b"\x0e\x01\x00")],
+                [modbus_request(201, 1, 0x2B, b"\x0e\x01\x00")],
+            )
+        )
     return [packet for session in sessions for packet in session]
 
 

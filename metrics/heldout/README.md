@@ -23,6 +23,11 @@ per rule in total). The generator draws approved hosts, registers,
 volumes and session ids from a seeded RNG and shifts the clock by the seed, so
 the two corpora share no event. `tests/test_heldout.py` enforces that.
 
+The behaviour and per-asset baselines are learned from `negatives.jsonl` and
+measured on the tuning corpus, so the learner and the measurement sample are
+disjoint. The negatives remain held out for the Sigma rules: they are never used
+to write or tune a rule.
+
 The near misses are the part that makes precision meaningful: a rule that has
 gone too broad usually still passes the generated corpus, but fires on the event
 that is one field away from its condition.

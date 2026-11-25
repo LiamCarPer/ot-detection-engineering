@@ -31,7 +31,7 @@ like any other untrusted component:
 | LLM02 Insecure output handling | C-020 strict schema, never executed | met |
 | LLM03 Training data poisoning | Not applicable — no training; provider supply chain covered by C-004/C-005 | n/a |
 | LLM04 Model denial of service | C-013 input caps, request limits | met |
-| LLM05 Supply chain | C-004 pinned deps, C-005 SCA (planned), C-007 hashes (planned) | partial |
+| LLM05 Supply chain | C-004 pinned deps, C-005 SCA in CI, C-007 hashes (planned) | partial |
 | LLM06 Sensitive information disclosure | C-019 allowlisted prompt, C-024 audit without secrets | met |
 | LLM07 Insecure plugin design | C-021 no tools or plugins | met |
 | LLM08 Excessive agency | C-021 no tools, human review | met |

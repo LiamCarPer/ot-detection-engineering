@@ -29,14 +29,15 @@ One template per recurring benign behaviour consumed by the rules:
 - **Modbus** — reads from the supervisory HMI and approved engineering
   workstation; writes from the two approved writers, always below the
   safety-critical register band; normal responses.
-- **DNP3** — authorised link addresses `1` and `2`, polls, reads, a control
-  operation and a normal response with `IIN = 0`.
+- **DNP3** — authorised link addresses `1` and `2` from the approved masters to
+  the field outstations, polls, reads, a control operation and a normal response
+  with `IIN = 0`.
 - **S7comm** — reads and setup-communication from the approved engineering
   workstation; no download, upload or operating-mode change.
 - **OPC UA** — session establishment and read requests/responses; no browse,
   write or method call.
-- **Firewall** — the declared conduits and allowed flows, plus a DROP that the
-  cross-zone rules do not match.
+- **Firewall** — the declared conduits and allowed flows, plus an ICMP DROP that
+  the conduit rules ignore.
 - **Process** — routine `process_update` events and a safety violation that was
   auto-mitigated.
 - **Flow** — normal asset pairs and ordinary byte/packet volumes.
@@ -48,8 +49,15 @@ This is generated telemetry, not traffic captured from a plant. It checks that n
 rule fires on **modelled normal operation** and gives a sample size for a
 statistical bound; it does not estimate field false-positive volume. A real plant
 has vendor quirks, clock skew, partial sessions and long-tail traffic that a
-template generator cannot invent.
+template generator cannot invent. The corpus cycles **30 behavioural shapes**, so
+a binomial interval over 1,000 rows overstates the effective sample size.
+
+`metrics/out/fpr.md` measures every family separately. The Sigma single-event
+result is the `0/1,000` figure; the behaviour baseline, conduit, correlation and
+stateful families are measured on the same corpus and reported there.
 
 The held-out negatives under `metrics/heldout/` are generated with a **different
 seed**, so the corpus used to tune detections is not the corpus used to measure
-them.
+them. The behaviour and per-asset baselines are learned from that held-out seed
+(`20260202`) and measured on the tuning corpus (`20260101`), so the learner and
+the measurement sample are disjoint.

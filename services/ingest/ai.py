@@ -3,14 +3,23 @@
 The provider is an interface. The default is a deterministic stub, so CI needs no
 API key and no network; a real provider would implement the same protocol. In
 every case the model's output is schema-validated, never executed, and always
-marked for human review, and the prompt only contains an allowlisted, bounded,
-sanitised view of the event.
+marked for human review.
+
+The data boundary is enforced on the provider path, not only in a helper:
+
+- the raw event never reaches the provider;
+- the provider receives a :class:`TriageRequest` whose ``fields`` contain only
+  allowlisted, bounded, control-character-stripped values;
+- the prompt wraps those values in a per-request nonce delimiter, so a value
+  that contains a literal closing tag cannot escape the data block.
 """
 
 from __future__ import annotations
 
 import json
 import re
+import secrets
+from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Protocol
 
@@ -59,29 +68,62 @@ def sanitise(value: Any) -> Any:
     return _CONTROL_CHARS.sub(" ", str(value))[:MAX_FIELD_CHARS]
 
 
-def build_prompt(event: dict[str, Any]) -> tuple[str, str]:
-    """Build a prompt whose data boundary is explicit and whose data is minimal."""
-    data = {name: sanitise(event[name]) for name in ALLOWED_FIELDS if name in event}
-    return SYSTEM_PROMPT, "<telemetry>" + json.dumps(data, sort_keys=True) + "</telemetry>"
+def safe_fields(event: Mapping[str, Any]) -> dict[str, Any]:
+    """The only part of an event a provider is allowed to see."""
+    return {name: sanitise(event[name]) for name in ALLOWED_FIELDS if name in event}
+
+
+@dataclass(frozen=True)
+class TriageRequest:
+    """A sanitised triage input. The provider never receives the raw event."""
+
+    system: str
+    user: str
+    fields: Mapping[str, Any]
+
+
+def build_prompt(event: Mapping[str, Any]) -> tuple[str, str]:
+    """Build a prompt whose data boundary is explicit, nonce-delimited and minimal."""
+    return _prompt_for(safe_fields(event))
+
+
+def _prompt_for(fields: Mapping[str, Any]) -> tuple[str, str]:
+    # A per-request nonce makes the closing delimiter unpredictable. A field
+    # value cannot contain the tag unless it guesses 128 bits of randomness.
+    nonce = secrets.token_hex(16)
+    user = (
+        f'<telemetry nonce="{nonce}">'
+        + json.dumps(dict(fields), sort_keys=True)
+        + f'</telemetry nonce="{nonce}">'
+    )
+    return SYSTEM_PROMPT, user
+
+
+def build_request(event: Mapping[str, Any]) -> TriageRequest:
+    """Build the sanitised request that is passed to the provider."""
+    fields = safe_fields(event)
+    system, user = _prompt_for(fields)
+    return TriageRequest(system=system, user=user, fields=fields)
 
 
 class TriageProvider(Protocol):
     """A triage backend. Implementations must return the TRIAGE_SCHEMA shape."""
 
-    def triage(self, event: dict[str, Any]) -> dict[str, Any]: ...
+    def triage(self, request: TriageRequest) -> dict[str, Any]: ...
 
 
 @dataclass(frozen=True)
 class StubProvider:
     """Deterministic, offline triage used by tests and CI.
 
-    It classifies from structured fields only. Text in the event is never
-    interpreted, so an injected instruction cannot change the verdict.
+    It classifies from structured, sanitised fields only. Text in the event is
+    never interpreted, so an injected instruction cannot change the verdict.
     """
 
     model: str = "stub-deterministic-v1"
 
-    def triage(self, event: dict[str, Any]) -> dict[str, Any]:
+    def triage(self, request: TriageRequest) -> dict[str, Any]:
+        event = request.fields
         code = event.get("function_code")
         suspicious = event.get("event_type") in SUSPICIOUS_EVENTS or (
             isinstance(code, int) and not isinstance(code, bool) and code in SUSPICIOUS_FUNCTIONS

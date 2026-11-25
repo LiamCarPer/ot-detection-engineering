@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import json
+import logging
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -76,6 +79,33 @@ def test_oversized_bodies_are_rejected() -> None:
     huge = _event(src_ip="x" * 4_096)
     response = _client().post("/events", json=huge, headers=HEADERS)
     assert response.status_code == 413
+
+
+def test_chunked_oversized_bodies_are_rejected() -> None:
+    # A chunked request has no Content-Length header, so the cap must be
+    # enforced while the body is received.
+    huge = json.dumps(_event(src_ip="x" * 4_096)).encode("utf-8")
+
+    def chunks():
+        for index in range(0, len(huge), 128):
+            yield huge[index : index + 128]
+
+    response = _client().post(
+        "/events",
+        content=chunks(),
+        headers={**HEADERS, "content-type": "application/json"},
+    )
+    assert response.status_code == 413
+
+
+def test_audit_log_records_accepted_and_decided_events(caplog) -> None:
+    with caplog.at_level(logging.INFO, logger="ingest.audit"):
+        accepted = _client().post("/events", json=_event(), headers=HEADERS)
+        decided = _client().post("/triage", json={"event": _event()}, headers=HEADERS)
+    assert accepted.status_code == 200
+    assert decided.status_code == 200
+    assert "event_accepted" in caplog.text
+    assert "triage_decided" in caplog.text
 
 
 def test_requests_are_rate_limited() -> None:

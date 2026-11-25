@@ -30,7 +30,11 @@ detection:
     link_source:
       - 1
       - 2
-  condition: selection_direction and selection_control and not filter_authorized_master
+  filter_identified_master:
+    link_source|exists: true
+  condition: >-
+    selection_direction and selection_control and filter_identified_master
+    and not filter_authorized_master
 fields:
   - link_source
   - link_destination

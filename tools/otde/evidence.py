@@ -15,7 +15,7 @@ from pathlib import Path
 
 EXPECTED_SIDS: dict[str, set[int]] = {
     "modbus_benign": set(),
-    "modbus_attack": {9000001, 9000002, 9000004},
+    "modbus_attack": {9000001, 9000002, 9000003, 9000004},
     "dnp3_benign": set(),
     "dnp3_attack": {
         9000005,
@@ -138,7 +138,6 @@ EXPECTED_COLLECTOR_RULES: dict[str, set[str]] = {
     "zeek/modbus_attack": {"Modbus Write From Unauthorized Control Writer"},
     "zeek/modbus_benign": set(),
     "zeek/dnp3_attack": {
-        "DNP3 Control Operation From Unauthorized Master",
         "DNP3 Request From An Unapproved Master Address",
     },
     "zeek/dnp3_benign": set(),
@@ -183,17 +182,12 @@ EXPECTED_BASELINE_RULES: dict[str, set[str]] = {
         "New Protocol Function Code From An OT Asset",
     },
     "zeek/dnp3_benign": set(),
-    # Flow records feed the baseline deviation rules: an attacker that appears
-    # only as a flow still shows up as a new source and a new pair.
-    "zeek/flow_modbus_attack": {
-        "New OT Source Asset Not In The Behaviour Baseline",
-        "New OT Communication Pair",
-    },
+    # Flow records are not protocol telemetry, so the protocol baseline rules do
+    # not judge them. A flow-native baseline (pairs per zone, not per host) is a
+    # separate model and is not implemented yet.
+    "zeek/flow_modbus_attack": set(),
     "zeek/flow_modbus_benign": set(),
-    "zeek/flow_dnp3_attack": {
-        "New OT Source Asset Not In The Behaviour Baseline",
-        "New OT Communication Pair",
-    },
+    "zeek/flow_dnp3_attack": set(),
     "zeek/flow_dnp3_benign": set(),
     "netflow/flows": set(),
     "netflow/flows_violation": set(),

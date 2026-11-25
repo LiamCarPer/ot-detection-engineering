@@ -160,8 +160,8 @@ Modbus as JSON alert events (`ot_alerts`), not normalized `ot_ndr` telemetry, so
 the generated Modbus queries have no input there. They are covered by the offline
 decoder proof and the Loki stack smoke test instead (above). The lab deploys a
 snapshot of the bundle — 13 generated groups when the capture was taken, since
-grown to 18 — plus its own `ot_security_alerts` and `ot_siem_health`, 15 groups
-in total.
+grown to 30 — plus its own `ot_security_alerts` and `ot_siem_health`, the lab's
+own groups alongside the generated set.
 
 Findings:
 

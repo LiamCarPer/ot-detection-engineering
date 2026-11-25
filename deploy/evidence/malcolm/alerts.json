@@ -9,6 +9,13 @@
   {
     "capture": "modbus_attack",
     "dest_ip": "172.21.0.10",
+    "sid": 9000002,
+    "signature": "OT Modbus Write Multiple Registers From Unauthorized Control Writer",
+    "src_ip": "172.24.0.10"
+  },
+  {
+    "capture": "modbus_attack",
+    "dest_ip": "172.21.0.10",
     "sid": 9000001,
     "signature": "OT Modbus Write Single Register From Unauthorized Control Writer",
     "src_ip": "172.24.0.10"
@@ -23,8 +30,8 @@
   {
     "capture": "modbus_attack",
     "dest_ip": "172.21.0.10",
-    "sid": 9000002,
-    "signature": "OT Modbus Write Multiple Registers From Unauthorized Control Writer",
+    "sid": 9000003,
+    "signature": "OT Modbus Device Identification Scan",
     "src_ip": "172.24.0.10"
   },
   {

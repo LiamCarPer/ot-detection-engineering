@@ -86,6 +86,22 @@ def collect(sensor: str, patterns: Sequence[str]) -> tuple[list[dict], list[str]
     return events, [_relative(path) for path in files]
 
 
+def collect_jsonl(path: Path) -> tuple[list[dict], list[str]]:
+    """Read normalized contract events from a JSONL file.
+
+    The behaviour baseline is learned from benign contract telemetry. Building it
+    from a committed normalized corpus keeps the learner independent of any one
+    sensor and makes the held-out seed an explicit input rather than a property
+    of a collector sample.
+    """
+    events = [
+        json.loads(line)
+        for line in Path(path).read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    return events, [_relative(Path(path))]
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", choices=sorted(SOURCES), required=True)

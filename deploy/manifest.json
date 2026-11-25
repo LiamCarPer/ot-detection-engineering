@@ -14,7 +14,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
-      "source_sha256": "b72ab020c89985d8be2bbbc1675afaa2fc170702b850a0705c8e856f7ffe7a77",
+      "source_sha256": "29e1950d9ccf6c124c696e6d11814a36e54aca7660e77865f8615763d34a53b7",
       "target": "loki/rules/ot_dnp3_unauthorized_control.yaml",
       "backend": "loki"
     },
@@ -194,7 +194,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
-      "source_sha256": "b72ab020c89985d8be2bbbc1675afaa2fc170702b850a0705c8e856f7ffe7a77",
+      "source_sha256": "29e1950d9ccf6c124c696e6d11814a36e54aca7660e77865f8615763d34a53b7",
       "target": "opensearch/ot_dnp3_unauthorized_control.ppl",
       "backend": "opensearch"
     },
@@ -374,7 +374,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
-      "source_sha256": "b72ab020c89985d8be2bbbc1675afaa2fc170702b850a0705c8e856f7ffe7a77",
+      "source_sha256": "29e1950d9ccf6c124c696e6d11814a36e54aca7660e77865f8615763d34a53b7",
       "target": "sentinel/ot_dnp3_unauthorized_control.kql",
       "backend": "sentinel"
     },
@@ -518,7 +518,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
-      "source_sha256": "b72ab020c89985d8be2bbbc1675afaa2fc170702b850a0705c8e856f7ffe7a77",
+      "source_sha256": "29e1950d9ccf6c124c696e6d11814a36e54aca7660e77865f8615763d34a53b7",
       "target": "splunk/ot_dnp3_unauthorized_control.conf",
       "backend": "splunk"
     },

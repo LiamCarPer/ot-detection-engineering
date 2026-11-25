@@ -50,20 +50,26 @@
       "windows": [
         {
           "expected": "match",
-          "name": "a write outside every approved change window",
-          "observed": "match",
-          "passed": true
-        },
-        {
-          "expected": "match",
-          "name": "a write inside a window but from the wrong source",
+          "name": "an engineering write outside every approved change window",
           "observed": "match",
           "passed": true
         },
         {
           "expected": "no_match",
-          "name": "a write inside its approved window",
+          "name": "a routine HMI setpoint write outside every window is not an engineering change",
           "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "an engineering write inside its approved window",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "match",
+          "name": "an engineering write inside the window for a different controller",
+          "observed": "match",
           "passed": true
         },
         {
@@ -74,7 +80,7 @@
         },
         {
           "expected": "no_match",
-          "name": "an S7 write inside its approved window",
+          "name": "an S7 engineering write inside its approved window",
           "observed": "no_match",
           "passed": true
         }
@@ -120,7 +126,7 @@
   ],
   "summary": {
     "rules": 3,
-    "windows": 15,
-    "windows_passed": 15
+    "windows": 16,
+    "windows_passed": 16
   }
 }

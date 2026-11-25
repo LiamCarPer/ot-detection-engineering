@@ -6,6 +6,7 @@ control, is security theatre. These tests make the register fail loudly instead.
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -71,6 +72,20 @@ def test_implemented_controls_have_existing_evidence() -> None:
         evidence = control.get("evidence")
         assert evidence, f"{control['id']} has no evidence"
         assert (REPO_ROOT / evidence).exists(), f"{control['id']} evidence missing: {evidence}"
+
+
+def test_verification_commands_resolve() -> None:
+    """A control that says `make X` must point at a target that exists."""
+    makefile = (REPO_ROOT / "Makefile").read_text(encoding="utf-8")
+    targets = set(re.findall(r"^([A-Za-z0-9_-]+):", makefile, re.MULTILINE))
+    for control in CONTROLS.values():
+        verify = control.get("verify", "")
+        if verify.startswith("make "):
+            target = verify.split()[1]
+            assert target in targets, f"{control['id']} verifies with missing make target {target}"
+        elif verify.startswith("./"):
+            script = REPO_ROOT / verify[2:]
+            assert script.exists(), f"{control['id']} verifies with missing script {verify}"
 
 
 def test_coverage_report_is_consistent() -> None:

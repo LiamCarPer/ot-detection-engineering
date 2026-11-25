@@ -179,10 +179,12 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
   is measured over 1,024 negatives per rule (1,000 at a second seed plus one
   near miss per rule); YARA is measured over 2 files per rule and 8 shared
   negatives. Every rate carries a 95% Wilson interval.
-- **Baseline false-positive rate** — benign events matched by any rule divided by
-  all benign events, reported with a 95% Wilson score interval. The committed
-  baseline holds 1,000 generated events (seed `20260101`), so a zero result is
-  reported as `0/1,000` with an upper bound of 0.38%, not as certainty. It
+- **False-positive rate by family** — each family is measured against the same
+  benign corpus: single-event Sigma, correlation, behaviour baseline, conduit,
+  stateful, native captures and YARA fixtures. The Sigma single-event result is
+  reported as `0/1,000` with a 95% Wilson upper bound of 0.38%; the all-family
+  report is `deploy/evidence/fpr/report.md`. The corpus holds 1,000 generated events (30
+  behavioural shapes), so the binomial interval overstates effective N. It
   catches a rule that fires on modelled normal operation; it does not estimate
   field false-positive volume.
 - **Detection rate** — emulation expectations that fired divided by all
@@ -241,7 +243,8 @@ detection content:
 - **A telemetry collector** (`collector/`) that normalizes Suricata `eve.json`,
   Zeek OT logs, NetFlow/IPFIX exports and SNMP traps into the contract, validates
   each event against `metadata/telemetry.schema.json`, and is proven to fire the
-  rules.
+  rules. The NetFlow and SNMP samples are authored in the exporter's shape; see
+  `collector/samples/*/PROVENANCE.md`.
 - **A learned OT behaviour baseline** (`baseline/`) and a per-asset protocol
   profile, with deviation and stateful rules that consume them.
 - **YARA-X file detection** (`rules/yara/`) for PLC project files, firmware

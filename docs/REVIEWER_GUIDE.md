@@ -70,18 +70,21 @@ If you only read code, read these in order:
 This section exists because a reviewer should not have to discover the weak
 points alone. These are the questions I would ask.
 
-- **The benign corpus is generated.** `0/1,000` with a 95% Wilson upper bound of
-  0.38% is a bound on modelled normal operation, not a field FPR. The generator
-  is in `tools/make_benign.py`; the provenance and limits are in
-  `metrics/baseline/README.md`.
+- **The benign corpus is generated.** The Sigma single-event claim is `0/1,000`
+  with a 95% Wilson upper bound of 0.38%; it is a bound on modelled normal
+  operation, not a field FPR, and the corpus has only 30 behavioural shapes. The
+  all-family result (baseline, conduit, correlation, stateful, native, YARA) is
+  in `deploy/evidence/fpr/report.md`. The generator is in `tools/make_benign.py`; the
+  provenance and limits are in `metrics/baseline/README.md`.
 - **The held-out labels are authored, not captured.** They are separate from the
   rule fixtures and use a different seed, but they are not independent field
   data. Per-rule intervals are wide because there are two positives per rule.
-- **The purple-team evidence is small.** The coverage run is 8 steps / 14
-  expectations and is one replay; the MTTD run is 2 steps / 4 expectations and
-  is `n=4`, not a benchmark. The runner checks the lab's `mitre_id` against the
-  plan, because several lab labels differ from the repository's rule mapping;
-  the difference is declared, not hidden.
+- **The purple-team evidence is small.** The 2026-11-24 replay is 8 steps / 14
+  expected lab signals and matches lab alert labels, not this repository's rules;
+  the MTTD run is 2 steps / 4 expectations and is `n=4`, not a benchmark. The
+  runner checks the lab's `mitre_id` against the plan, because several lab labels
+  differ from the repository's rule mapping; the difference is declared, not
+  hidden.
 - **The live-lab proof is a subset.** Eleven of the thirteen rules the lab
   exercises fire on live traffic. The newer breadth rules are fixture-proven and
   included in the bundle, but they are not all live-executed.
@@ -98,14 +101,15 @@ points alone. These are the questions I would ask.
   the decoder frames are small, there is no pcap replay or backpressure test,
   and the replay benchmark measures the Python validation matcher.
 - **The stateful baselines are not field baselines.** The process envelope is
-  built from the generated benign corpus and the per-asset profile from the
-  small committed benign samples. They are reviewable, not production-trained.
-- **Purple-team coverage and MTTD come from different runs.** The 2026-11-24 run
-  proves 14/14 signals across 8 steps with 0 unexpected alerts; the 2026-09-13
-  run is the only one with action start timestamps and provides the 2.45 s MTTD.
+  built from the generated benign corpus and the per-asset profile from a
+  disjoint generated seed. They are reviewable, not production-trained.
+- **Purple-team replay and MTTD come from different runs.** The 2026-11-24 run
+  replays 14/14 lab alert signals across 8 steps with 0 unexpected alerts; it
+  matches lab labels, not this repository's rules. The 2026-09-13 run is the only
+  one with action start timestamps and provides the 2.45 s MTTD.
 - **HMI-login, C2-beacon and OT-port-scan are lab-only.** They are not scored
   because the repository has no matching rule.
-- **Only six rules are `stable`.** The other 57 are `experimental` and most
+- **Only six rules are `stable`.** The other 60 are `experimental` and most
   have no runbook or observed volume. That is the honest state of the
   catalogue, not a claim that every rule is operationally ready.
 - **The security/AI workstream is supporting evidence.** The threat model,

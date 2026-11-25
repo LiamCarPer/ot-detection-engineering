@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 from support.loader import REPO_ROOT, native_rule_paths, technique_ids
 
+from tools.otde.evidence import EXPECTED_SIDS
 from tools.otde.suricata import read_rules
 
 RULE_PATHS = native_rule_paths()
@@ -74,3 +75,13 @@ def test_sids_are_unique_and_in_reserved_range() -> None:
             failures.append(f"{location}: sid {rule.sid} already used by {seen[rule.sid]}")
         seen[rule.sid] = location
     assert not failures, "\n".join(failures)
+
+
+def test_every_native_sid_is_exercised_by_a_capture() -> None:
+    """A native rule that no capture exercises is structurally tested, not proven."""
+    all_sids = {rule.sid for rule in _all_rules() if rule.sid is not None}
+    exercised = set().union(*EXPECTED_SIDS.values())
+    assert all_sids == exercised, (
+        f"unexercised SIDs: {sorted(all_sids - exercised)}; "
+        f"expected SIDs with no rule: {sorted(exercised - all_sids)}"
+    )

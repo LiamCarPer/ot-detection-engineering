@@ -208,8 +208,9 @@ def render_markdown(metrics: dict) -> str:
         f"| Rule fixture agreement (precision) | {fixture['precision']} |",
         f"| Rule fixture agreement (recall) | {fixture['recall']} |",
         f"| Fixture false-positive rate | {fixture['false_positive_rate']} |",
-        f"| Baseline false-positive rate | {baseline['false_positive_rate']} "
+        f"| Sigma single-event false-positive rate | {baseline['false_positive_rate']} "
         f"({baseline_scope}) |",
+        "| All-family false-positive report | `metrics/out/fpr.md` |",
     ]
     if single_event:
         single_event_fpr = _rate(
@@ -248,15 +249,18 @@ def render_markdown(metrics: dict) -> str:
     if purple:
         benign = purple.get("benign_passed")
         lines += [
-            "| Purple-team coverage | "
+            "| Purple-team replay | "
             f"{purple['expectations_detected']} / {purple['expectations_total']} "
-            f"({purple['detection_rate_pct']}%) |",
+            f"lab alert signals ({purple['detection_rate_pct']}%) |",
             f"| Purple-team unexpected alerts | {purple['unexpected_alerts']} |",
             "| Purple-team benign window | "
             f"{'passed' if benign else 'failed' if benign is False else 'not measured'} |",
         ]
 
     lines += [
+        "",
+        "The purple-team row is a replay of the lab's alert labels, not an "
+        "execution of this repository's rules; see `docs/PURPLE_TEAM.md`.",
         "",
         "## Rule validation",
         "",

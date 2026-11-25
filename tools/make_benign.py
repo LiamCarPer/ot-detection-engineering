@@ -99,6 +99,8 @@ def _templates() -> list[dict[str, Any]]:
             **dnp3,
             "direction": "request",
             "function_code": 1,
+            "src_ip": "172.21.0.20",
+            "dst_ip": "172.31.0.10",
             "link_source": 1,
             "link_destination": 10,
             "object_group": 1,
@@ -107,6 +109,8 @@ def _templates() -> list[dict[str, Any]]:
             **dnp3,
             "direction": "request",
             "function_code": 20,
+            "src_ip": "172.21.0.20",
+            "dst_ip": "172.31.0.10",
             "link_source": 2,
             "link_destination": 10,
         },
@@ -114,6 +118,8 @@ def _templates() -> list[dict[str, Any]]:
             **dnp3,
             "direction": "request",
             "function_code": 5,
+            "src_ip": "172.21.0.20",
+            "dst_ip": "172.31.0.10",
             "link_source": 1,
             "link_destination": 10,
             "object_group": 12,
@@ -123,6 +129,8 @@ def _templates() -> list[dict[str, Any]]:
             **dnp3,
             "direction": "response",
             "function_code": 129,
+            "src_ip": "172.31.0.10",
+            "dst_ip": "172.21.0.20",
             "link_source": 10,
             "link_destination": 1,
             "iin": 0,
@@ -357,6 +365,8 @@ def _vary(event: dict[str, Any], rng: random.Random) -> dict[str, Any]:
         if direction == "request":
             varied["link_source"] = rng.choice([1, 2])
             varied["link_destination"] = rng.choice([10, 11, 12])
+            varied["src_ip"] = rng.choice(["172.21.0.20", "172.22.0.10"])
+            varied["dst_ip"] = rng.choice(["172.31.0.10", "172.31.0.11", "172.31.0.12"])
             if "object_group" in varied:
                 varied["object_group"] = rng.randint(1, 30)
             if "control_code" in varied:
@@ -364,6 +374,8 @@ def _vary(event: dict[str, Any], rng: random.Random) -> dict[str, Any]:
         else:
             varied["link_source"] = rng.choice([10, 11, 12])
             varied["link_destination"] = rng.choice([1, 2])
+            varied["src_ip"] = rng.choice(["172.31.0.10", "172.31.0.11", "172.31.0.12"])
+            varied["dst_ip"] = rng.choice(["172.21.0.20", "172.22.0.10"])
     elif service == "s7comm":
         if direction == "request":
             varied["src_ip"] = rng.choice(["172.21.0.20", "172.22.0.10"])

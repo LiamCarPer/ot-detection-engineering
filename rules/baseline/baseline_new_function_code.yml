@@ -17,6 +17,7 @@ author: Liam Carvajal
 date: 2026-09-22
 baseline:
   type: new_function_code
+  product: ot_ndr
 fields:
   - src_ip
   - dst_ip

@@ -17,13 +17,13 @@ generated coverage is in `coverage/out/security_coverage.md`.
 | PS.1 | Protect code from unauthorized access | C-008, C-011 | met |
 | PS.2 | Verify release integrity | C-012, C-014 | partial — digest manifest exists, signing planned |
 | PS.3 | Archive and provenance | C-012, C-014 | partial — provenance manifest, SBOM planned |
-| PW.4 | Reuse well-secured software | C-005, C-006 | partial — updates automated, continuous SCA planned |
+| PW.4 | Reuse well-secured software | C-005, C-006 | met — Dependabot updates and pip-audit SCA in CI |
 | PW.5 | Follow secure coding practices | C-001, C-013, C-028 | met |
 | PW.6 | Configure build for security | C-001, C-016 | met — `forbid(unsafe_code)`, overflow checks, robustness tests |
-| PW.7 | Review and analyze code for vulnerabilities | C-009, C-028 | partial — review checklist met, SAST planned |
+| PW.7 | Review and analyze code for vulnerabilities | C-009, C-028 | met — review checklist and bandit SAST in CI |
 | PW.8 | Test executable code | C-001, C-015, C-016 | met — robustness + property-based tests |
 | PW.9 | Secure defaults | C-013, C-025 | partial — decoder limits, service hardening planned |
-| RV.1 | Identify vulnerabilities continuously | C-005, C-010, C-023 | partial — evasion testing planned, SCA/secrets planned |
+| RV.1 | Identify vulnerabilities continuously | C-005, C-010, C-023 | partial — SCA and secret scanning in CI, evasion testing planned |
 | RV.2 | Assess, prioritize and remediate | C-029 | met — severity and SLA table |
 | RV.3 | Root-cause analysis | C-029 | partial — process defined, no advisory yet |
 

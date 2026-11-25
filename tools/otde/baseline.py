@@ -51,6 +51,12 @@ def match_baseline(
     config = rule.get(BASELINE_KEY)
     if not isinstance(config, Mapping):
         raise UnsupportedBaselineError(f"rule '{rule.get('title')}' has no baseline block")
+    # A behaviour baseline is learned for one telemetry product. Without this
+    # guard, a flow/firewall event with the same service name is judged against
+    # a protocol baseline it was never part of.
+    product = config.get("product")
+    if product is not None and event.get("product") != product:
+        return False
     service = config.get("service")
     if service is not None and event.get("service") != service:
         return False

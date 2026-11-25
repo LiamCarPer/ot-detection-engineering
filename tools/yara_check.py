@@ -15,6 +15,7 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
@@ -107,14 +108,24 @@ def evaluate() -> dict:
     }
 
 
-def main() -> int:
-    evidence = evaluate()
-    EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
-    EVIDENCE_PATH.write_text(
-        json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--check", action="store_true", help="Fail if the committed evidence has drifted"
     )
+    args = parser.parse_args(argv)
+
+    evidence = evaluate()
+    payload = json.dumps(evidence, indent=2, sort_keys=True) + "\n"
 
     failures: list[str] = []
+    if args.check:
+        if not EVIDENCE_PATH.exists() or EVIDENCE_PATH.read_text(encoding="utf-8") != payload:
+            failures.append(f"{EVIDENCE_PATH.relative_to(REPO_ROOT)} is stale; run make yara")
+    else:
+        EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+        EVIDENCE_PATH.write_text(payload, encoding="utf-8")
+
     for row in evidence["rules"]:
         for case in row["cases"]:
             if not case["passed"]:

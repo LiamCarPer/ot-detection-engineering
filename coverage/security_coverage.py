@@ -122,15 +122,36 @@ def render_markdown(report: dict) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", default=str(DEFAULT_OUT))
+    parser.add_argument(
+        "--check", action="store_true", help="Fail if the committed report has drifted"
+    )
     args = parser.parse_args(argv)
 
     report = build_report()
     out_dir = Path(args.out)
+    json_payload = json.dumps(report, indent=2) + "\n"
+    markdown_payload = render_markdown(report)
+
+    if args.check:
+        problems = []
+        for name, payload in (
+            ("security_coverage.json", json_payload),
+            ("security_coverage.md", markdown_payload),
+        ):
+            path = out_dir / name
+            if not path.exists() or path.read_text(encoding="utf-8") != payload:
+                problems.append(str(path))
+        if problems:
+            print("security coverage report is stale; run coverage/security_coverage.py:")
+            for problem in problems:
+                print(f"  - {problem}")
+            return 1
+        print("security coverage report is current")
+        return 0
+
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "security_coverage.json").write_text(
-        json.dumps(report, indent=2) + "\n", encoding="utf-8"
-    )
-    (out_dir / "security_coverage.md").write_text(render_markdown(report), encoding="utf-8")
+    (out_dir / "security_coverage.json").write_text(json_payload, encoding="utf-8")
+    (out_dir / "security_coverage.md").write_text(markdown_payload, encoding="utf-8")
 
     summary = report["summary"]
     print(

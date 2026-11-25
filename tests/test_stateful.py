@@ -13,7 +13,7 @@ from jsonschema import Draft202012Validator
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
-from baseline.build import collect  # noqa: E402
+from baseline.build import collect_jsonl  # noqa: E402
 from baseline.build_asset_behaviour import BENIGN_INPUTS  # noqa: E402
 from baseline.build_asset_behaviour import build as build_asset  # noqa: E402
 from baseline.build_process_values import DEFAULT_INPUT  # noqa: E402
@@ -69,9 +69,43 @@ def test_process_baseline_is_reproducible() -> None:
 
 
 def test_asset_baseline_is_reproducible() -> None:
-    events, _ = collect("suricata", BENIGN_INPUTS)
+    events, _ = collect_jsonl(REPO_ROOT / BENIGN_INPUTS[0])
     committed = json.loads(ASSET_BASELINE.read_text(encoding="utf-8"))
     assert build_asset(events) == committed
+
+
+def test_asset_baseline_ignores_flow_telemetry() -> None:
+    """A flow event has a service name but no protocol profile."""
+    rule = load_stateful_rule(
+        REPO_ROOT / "rules" / "stateful" / "stateful_asset_protocol_baseline.yml"
+    )
+    event = {
+        "timestamp": "2026-12-01T08:00:00Z",
+        "product": "ot_flow",
+        "service": "flow",
+        "direction": "request",
+        "src_ip": "172.21.0.20",
+        "dst_ip": "172.21.0.10",
+    }
+    assert match_stateful(rule, [event]) is False
+
+
+def test_change_window_ignores_operator_setpoint_writes() -> None:
+    """Routine HMI writes are operations, not engineering changes."""
+    rule = load_stateful_rule(
+        REPO_ROOT / "rules" / "stateful" / "stateful_engineering_change_window.yml"
+    )
+    event = {
+        "timestamp": "2026-12-01T13:00:00Z",
+        "product": "ot_ndr",
+        "service": "modbus",
+        "direction": "request",
+        "src_ip": "172.21.0.20",
+        "dst_ip": "172.21.0.10",
+        "function_code": 6,
+        "register": 1024,
+    }
+    assert match_stateful(rule, [event]) is False
 
 
 def test_change_calendar_is_schema_valid_and_ordered() -> None:
@@ -97,7 +131,7 @@ def test_change_window_write_without_timestamp_fails_loudly() -> None:
             "product": "ot_ndr",
             "service": "modbus",
             "direction": "request",
-            "src_ip": "172.21.0.20",
+            "src_ip": "172.23.0.4",
             "dst_ip": "172.21.0.10",
             "function_code": 6,
         }

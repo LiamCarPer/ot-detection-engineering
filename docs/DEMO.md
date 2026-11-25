@@ -32,7 +32,7 @@ Point at:
 - `analysis/out/report.md` — generated tables and timeline.
 - `docs/CASE_STUDY_ALERT_FLOOD.md` — what to suppress and what not to.
 
-## 1:15 — Purple-team coverage
+## 1:15 — Purple-team replay
 
 ```bash
 make purple-check
@@ -40,9 +40,10 @@ make purple-check
 
 What to say: the 2026-11-24 plan covers **8 steps and 14 expectations**:
 enterprise pivot, process safety, DNP3, OPC UA, S7comm, and a PowerShell operator
-write. **14/14 detected, 0 unexpected alerts, benign window passed.** The MTTD
-run is separate: **4/4, mean 2.45 s (`n=4`, one run)**, because the coverage
-snapshot has alert timestamps but not action start timestamps.
+write. **14/14 lab alert signals replayed, 0 unexpected alerts, benign window
+passed.** The replay matches the lab's alert labels, not the repository's rules.
+The MTTD run is separate: **4/4, mean 2.45 s (`n=4`, one run)**, because the
+replay snapshot has alert timestamps but not action start timestamps.
 
 Point at `docs/PURPLE_TEAM.md` and `deploy/evidence/purple/`.
 
@@ -53,7 +54,9 @@ make health-check
 sed -n '1,40p' deploy/evidence/health/report.md
 ```
 
-What to say: **66 rules, 6 stable, 0 gaps, 12 with observed lab volume.** Every
+What to say: **66 rules, 6 stable, 12 with observed lab volume.** The other 60
+are experimental and carry at least one operating gap; the health gate has 0
+blocking gaps. Every
 stable rule has a runbook and a validation date; the 60 experimental rules are
 explicitly flagged, not hidden. The catalogue joins to the lab analysis so an
 expected volume cannot silently drift.
@@ -67,8 +70,9 @@ make perf-check
 sed -n '1,35p' docs/PERFORMANCE.md
 ```
 
-What to say: on the recorded host, the decoders process **11–23M frames/s** with
-**p99 45–218 ns per frame**; the offline matcher replays **~3,400 events/s**
+What to say: on the recorded host, the decoders process **6.9–11.5M frames/s**
+with **p99 60–150 ns per frame**; the offline matcher replays **~4,800 events/s**
+over 1,000 distinct benign events ten times.
 through 24 rules at p99 ~963 µs, with **0 matches on benign events**. The numbers
 are hardware- and frame-size-specific; there is no pcap replay or backpressure
 test.

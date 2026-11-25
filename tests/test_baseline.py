@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
-from baseline.build import build, collect
+from baseline.build import build, collect_jsonl
 from tools.otde.baseline import is_baseline_rule, load_baseline, load_baseline_rule, match_baseline
 from tools.otde.rules import baseline_rule_paths, load_cases, technique_ids
 
@@ -53,11 +53,20 @@ def test_committed_baseline_matches_the_schema() -> None:
 
 
 def test_committed_baseline_is_reproducible() -> None:
-    events, inputs = collect(
-        "suricata",
-        [
-            "collector/samples/suricata/modbus_benign.eve.json",
-            "collector/samples/suricata/dnp3_benign.eve.json",
-        ],
-    )
+    events, inputs = collect_jsonl(REPO_ROOT / "metrics" / "heldout" / "negatives.jsonl")
     assert build(events, inputs) == load_baseline()
+
+
+def test_baseline_rules_are_scoped_to_protocol_telemetry() -> None:
+    """A flow event must not be judged against a protocol behaviour baseline."""
+    rule = load_baseline_rule(
+        REPO_ROOT / "rules" / "baseline" / "baseline_new_pair.yml"
+    )
+    event = {
+        "timestamp": "2026-01-01T00:00:00Z",
+        "product": "ot_flow",
+        "service": "flow",
+        "src_ip": "172.24.0.99",
+        "dst_ip": "172.21.0.99",
+    }
+    assert match_baseline(rule, event, load_baseline()) is False

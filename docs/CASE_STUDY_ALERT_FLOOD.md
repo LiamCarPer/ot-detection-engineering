@@ -21,7 +21,7 @@ analysis does not prove.
 | Alert types | 17 |
 | Sources | 4 |
 | Window | 160.3 s |
-| Alerts per source | 109, 34, 4, 3 |
+| Alerts per source | 109, 34, 4, 3 (plus 1 source-less health alert) |
 | Alerts per alert type | 74 max (`CROSS_ZONE_VIOLATION`) |
 
 The top of the queue is dominated by one source:

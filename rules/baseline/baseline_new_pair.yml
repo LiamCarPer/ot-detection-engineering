@@ -15,6 +15,7 @@ author: Liam Carvajal
 date: 2026-09-22
 baseline:
   type: new_pair
+  product: ot_ndr
 fields:
   - src_ip
   - dst_ip

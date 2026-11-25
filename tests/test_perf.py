@@ -48,3 +48,30 @@ def test_slo_flags_are_recorded() -> None:
     assert slo["decoder_p99_within_slo"] is True
     assert slo["pipeline_within_slo"] is True
     assert slo["pipeline_matches_within_slo"] is True
+
+
+def test_slo_flags_are_recomputed_from_the_numbers() -> None:
+    summary = copy.deepcopy(_summary())
+    summary["protocols"]["dnp3"]["p99_ns_per_frame"] = 10_000_000
+    assert any("p99" in problem for problem in validate(summary))
+
+
+def test_stored_slo_flag_cannot_hide_a_bad_number() -> None:
+    summary = copy.deepcopy(_summary())
+    summary["pipeline"]["events_per_second"] = 1
+    assert any("throughput" in problem for problem in validate(summary))
+
+
+def test_stored_matches_flag_cannot_hide_a_match() -> None:
+    summary = copy.deepcopy(_summary())
+    summary["pipeline"]["matches"] = 1
+    assert any("matches" in problem for problem in validate(summary))
+
+
+def test_replay_method_reports_distinct_events_and_passes() -> None:
+    method = _summary()["method"]
+    assert (
+        method["replay_events_total"]
+        == method["replay_distinct_events"] * method["replay_repetitions"]
+    )
+    assert method["replay_distinct_events"] == 1_000
