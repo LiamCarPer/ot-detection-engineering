@@ -210,6 +210,17 @@ def render(report: dict[str, Any]) -> str:
     lines.extend(f"- {signature}" for signature in signatures) if signatures else lines.append(
         "- none"
     )
+    fired = [
+        (rule, count)
+        for family in ("sigma_single_event", "baseline", "conduit")
+        for rule, count in f[family]["per_rule"].items()
+        if count
+    ]
+    lines += ["", "## Rules with any match", ""]
+    if fired:
+        lines.extend(f"- `{rule}`: {count}" for rule, count in fired)
+    else:
+        lines.append("- none")
     lines += [
         "",
         "This is real lab background traffic, not a plant. Host, auth, PLC and",

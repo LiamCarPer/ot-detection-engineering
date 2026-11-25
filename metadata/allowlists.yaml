@@ -7,7 +7,9 @@
 #
 # Roles are an assertion about the inventory, not a copy of it. The inventory's
 # `services` field records protocol capability; an allowlist records
-# authorization. The HMI can speak OPC UA without being authorized to write.
+# authorization. The HMI is an approved OPC UA writer even though its `services`
+# list does not mention OPC UA, because the two fields answer different
+# questions.
 version: 1
 allowlists:
   - name: modbus_approved_writers

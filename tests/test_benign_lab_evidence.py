@@ -40,6 +40,17 @@ def test_every_network_family_is_measured() -> None:
         assert name in families
 
 
+def test_every_rule_is_silent_on_the_pilot() -> None:
+    families = _summary()["families"]
+    fired = [
+        (rule, count)
+        for family in ("sigma_single_event", "baseline", "conduit")
+        for rule, count in families[family]["per_rule"].items()
+        if count
+    ]
+    assert fired == []
+
+
 def test_the_pilot_has_no_network_false_positives() -> None:
     families = _summary()["families"]
     assert families["sigma_single_event"]["false_positive_events"] == 0

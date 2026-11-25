@@ -1,7 +1,7 @@
 {
   "capture": {
     "bytes": 7366183,
-    "captured_at": "2026-11-25T05:03:14.030501+00:00",
+    "captured_at": "2026-11-25T05:09:13.681943+00:00",
     "path": "/media/liamcarvajal/Storage/code/ot-security-lab/detection/logs/benign-pilot-10m.pcap",
     "sha256": "5eeedf309d35714925a9b49c2d6999880649b918c4600a1afd7103cf2c111f17"
   },
