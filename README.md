@@ -27,14 +27,14 @@ prove.
 
 ## The 90-second version
 
-- **What it detects.** 29 ATT&CK for ICS techniques across 26 single-event Sigma
-  rules, 6 correlation rules, 4 YARA rules, 21 native Suricata signatures, 5
+- **What it detects.** 32 ATT&CK for ICS techniques across 30 single-event Sigma
+  rules, 7 correlation rules, 4 YARA rules, 21 native Suricata signatures, 5
   stateful detections and 6 baseline/conduit rules, chosen for a segmented
   water-treatment plant and mapped to a committed threat model.
 - **What it proves.** Every rule has a committed proof: Sigma fixtures, native
   capture tests, YARA fixtures, baseline/conduit fixtures and stateful windows.
   The Sigmas are held-out-tested; the native rules run in Suricata over the
-  committed PCAP captures; 18 of 30 Sigma rules run in a live Loki stack, and
+  committed PCAP captures; 18 rules run in the live Loki smoke test, and
   the native Suricata ruleset runs in a Malcolm pipeline; the Rust decoders are
   proven against the rules they feed.
 - **What it tunes.** The repo records the failures its checks found: a Modbus
@@ -51,7 +51,8 @@ A fresh lab run produced **151 alerts across 17 types from four sources in 160
 seconds**. The analysis collapses them into **24 one-minute episodes** and
 **five operational events** — four adversary campaigns and one sensor-health
 event — and explains what to suppress, what to keep, and what the reduction
-does not prove.
+does not prove. The implemented grouping policy turns 151 alerts into 21
+notifications and preserves the four campaigns and the sensor-health event.
 
 [Read the case study](docs/CASE_STUDY_ALERT_FLOOD.md) ·
 [generated report](analysis/out/report.md)
@@ -64,16 +65,16 @@ severity, data source, expected volume, runbook and lifecycle status. `make
 health` refuses a rule without an entry, an entry without a rule, a technique
 mismatch, or a `stable` rule without a runbook or observed volume.
 
-Current: **68 rules, 6 stable, 62 experimental with at least one operating gap,
+Current: **73 rules, 6 stable, 67 experimental with at least one operating gap,
 12 with observed lab volume**. The word “gap” is overloaded: the health gate has
-0 blocking gaps, while 62 experimental rules still need a runbook or volume
+0 blocking gaps, while 67 experimental rules still need a runbook or volume
 history before promotion.
 [Health report](deploy/evidence/health/report.md) ·
 [Runbooks](docs/runbooks/)
 
 ## Coverage: prioritized, not padded
 
-Raw ATT&CK for ICS coverage is **29 / 97 techniques (29.9%)**. That number is
+Raw ATT&CK for ICS coverage is **32 / 97 techniques (33.0%)**. That number is
 deliberately not the headline: the catalogue includes techniques that are not
 observable from the telemetry this repository has, and padding it with untested
 tags would make the repo worse, not better.
@@ -82,14 +83,14 @@ tags would make the repo worse, not better.
 | :-- | --: | :-- |
 | Initial Access | 4 / 12 | Remote services, rogue-master and file-delivered phishing are covered; wireless, transient assets and supply chain need other telemetry. |
 | Execution | 3 / 10 | Protocol-level execution is covered; host execution needs EDR telemetry the lab does not have. |
-| Persistence | 2 / 10 | Project-file and firmware tampering are covered; PLC program download is counted under Lateral Movement; host persistence needs EDR. |
+| Persistence | 4 / 10 | Project-file and firmware tampering are covered; PLC program download is counted under Lateral Movement; host persistence needs EDR. |
 | Privilege Escalation | 0 / 2 | Deliberately uncovered: it requires host/auth telemetry, and tagging a network rule would be dishonest. |
 | Evasion | 2 / 9 | Protocol-visible evasion is covered; host evasion needs EDR. |
 | Discovery | 3 / 8 | Network-connection, remote-system and device-identification discovery are covered. |
-| Lateral Movement | 3 / 11 | PLC program download, remote-service exploitation and cross-zone remote services are covered; the large outbound transfer is counted under Impact. |
+| Lateral Movement | 4 / 11 | PLC program download, remote-service exploitation and cross-zone remote services are covered; the large outbound transfer is counted under Impact. |
 | Collection | 4 / 11 | Register and address-space enumeration are covered. |
 | Command and Control | 2 / 3 | Control-zone egress and proxy fan-out are covered; a live C2 channel is not built. |
-| Inhibit Response Function | 4 / 20 | Device restart, denial of service, alarm suppression and firmware tampering are covered; detection-service health (T0881) is a planned gap. |
+| Inhibit Response Function | 5 / 20 | Device restart, denial of service, alarm suppression and firmware tampering are covered; detection-service health (T0881) is a planned gap. |
 | Impair Process Control | 4 / 8 | I/O brute force, parameter modification, unauthorized command messages and firmware tampering are covered; the process-safety envelope is counted under Impact. |
 | Impact | 4 / 12 | View/control denial, safety impact and operational-information theft are covered; physical damage needs process context. |
 
@@ -100,17 +101,18 @@ by `tests/test_claims.py`.
 
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
-| Detection content | 68 catalogued rules: 26 Sigma + 6 correlation + 4 YARA + 21 native + 5 stateful + 3 baseline + 3 conduit | Every rule is in the detection catalogue. |
+| Detection content | 73 catalogued rules: 30 Sigma + 7 correlation + 4 YARA + 21 native + 5 stateful + 3 baseline + 3 conduit | Every rule is in the detection catalogue. |
 | Emulation detection rate (MTTD run) | 100% (4 / 4 expectations) | 2026-09-13 run, two steps; the lab's `mitre_id` is cross-checked against the plan. |
 | Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, 2026-09-13 run (`n=4`, one run). |
+| Purple-team live | 11 / 12 Sigma expectations (7 steps, 3 runs) | 2026-11-25; 0 unexpected; benign windows clean; process-safety miss is the lab counter model. |
 | Purple-team replay | 14 / 14 expectations (8 steps) | 2026-11-24 replay of the lab's `alert_type` snapshot; 0 unexpected; benign window passed; a lab alert-signal mapping test, not rule execution and not MTTD. |
-| Performance | 6.2–10.9M decoder frames/s; ~3,300 replay events/s | Release build on the recorded host; small example frames; per-frame p99, see `docs/PERFORMANCE.md`. |
+| Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s | Release build on the recorded host; small example frames; per-frame p99, see `docs/PERFORMANCE.md`. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule matches against its own committed fixtures. A regression check, not field precision. |
 | Sigma single-event FPR | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every stream the Sigma rules consume. The corpus has 30 behavioural shapes, so the binomial bound overstates effective N. |
 | All-family FPR | baseline, conduit, stateful, correlation, native and YARA all 0 | Same corpus plus the committed benign captures and fixtures; see [`deploy/evidence/fpr/report.md`](deploy/evidence/fpr/report.md). |
-| Held-out single-event recall | 50 / 50 (95% CI 0.9287–1.0) | Labeled positives authored separately from the rule fixtures. |
-| Held-out single-event precision | 50 / 50 (95% CI 0.9287–1.0) | Same positives against 1,024 held-out negatives per rule. |
-| Held-out correlation recall | 12 / 12 positive windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
+| Held-out single-event recall | 54 / 54 (95% CI 0.9336–1.0) | Labeled positives authored separately from the rule fixtures. |
+| Held-out single-event precision | 54 / 54 (95% CI 0.9336–1.0) | Same positives against 1,024 held-out negatives per rule. |
+| Held-out correlation recall | 13 / 13 positive windows (95% CI 0.7719–1.0) | Window-level across six correlation rules. |
 | Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
 
 ## Architecture

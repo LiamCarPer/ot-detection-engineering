@@ -16,6 +16,16 @@
     "New Protocol Function Code From An OT Asset"
   ],
   "samples": {
+    "lab_health/detection_service_down": {
+      "events": 1,
+      "expected": [],
+      "observed": []
+    },
+    "lab_plc/logic_tampered": {
+      "events": 1,
+      "expected": [],
+      "observed": []
+    },
     "netflow/flows": {
       "events": 2,
       "expected": [],
@@ -23,6 +33,11 @@
     },
     "netflow/flows_violation": {
       "events": 1,
+      "expected": [],
+      "observed": []
+    },
+    "nginx_access/auth": {
+      "events": 4,
       "expected": [],
       "observed": []
     },
@@ -69,6 +84,11 @@
     },
     "suricata/modbus_benign": {
       "events": 6,
+      "expected": [],
+      "observed": []
+    },
+    "sysmon/edr": {
+      "events": 1,
       "expected": [],
       "observed": []
     },

@@ -85,3 +85,18 @@ cases:
       dst_ip: 172.24.0.10
       unit_id: 1
       quantity: 32
+
+  - name: the historian collector reads a large block
+    expect: no_match
+    event:
+      timestamp: "2026-11-25T11:00:06Z"
+      product: ot_ndr
+      service: modbus
+      direction: request
+      function_code: 3
+      src_ip: 172.22.0.20
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 0
+      register_end: 31
+      quantity: 32

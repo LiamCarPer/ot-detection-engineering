@@ -1,6 +1,6 @@
 {
   "corpus": {
-    "distinct_event_shapes": 33,
+    "distinct_event_shapes": 37,
     "events": 1000,
     "note": "The corpus cycles a fixed template set. A binomial interval over 1,000 rows overstates the effective sample size; the shape count is the honest diversity measure.",
     "path": "metrics/baseline/benign-events.jsonl"
@@ -43,12 +43,13 @@
       "per_rule": {
         "Control Zone Host Reaching Multiple Enterprise Destinations": false,
         "Enterprise Host Probing Multiple Control Zone Ports": false,
+        "HMI Login Failure Burst From One Source": false,
         "Modbus Control Asset Enumeration": false,
         "Modbus Exception Flood Toward An Operator Interface": false,
         "Modbus Register Enumeration From One Host": false,
         "OPC UA Address Space Enumeration": false
       },
-      "rules": 6
+      "rules": 7
     },
     "sigma_single_event": {
       "event_indexes": [],
@@ -59,6 +60,7 @@
         0.0038
       ],
       "per_rule": {
+        "rules/sigma/ot/ot_detection_service_down.yml": 0,
         "rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml": 0,
         "rules/sigma/ot/ot_dnp3_restart_command.yml": 0,
         "rules/sigma/ot/ot_dnp3_unauthorized_control.yml": 0,
@@ -68,6 +70,8 @@
         "rules/sigma/ot/ot_firewall_enterprise_control_service.yml": 0,
         "rules/sigma/ot/ot_flow_industrial_service_refused.yml": 0,
         "rules/sigma/ot/ot_flow_large_transfer.yml": 0,
+        "rules/sigma/ot/ot_hmi_login_failure.yml": 0,
+        "rules/sigma/ot/ot_host_suspicious_modbus_client.yml": 0,
         "rules/sigma/ot/ot_modbus_block_read.yml": 0,
         "rules/sigma/ot/ot_modbus_coil_write.yml": 0,
         "rules/sigma/ot/ot_modbus_device_identification_scan.yml": 0,
@@ -78,6 +82,7 @@
         "rules/sigma/ot/ot_opcua_browse_request.yml": 0,
         "rules/sigma/ot/ot_opcua_method_call.yml": 0,
         "rules/sigma/ot/ot_opcua_write_request.yml": 0,
+        "rules/sigma/ot/ot_plc_logic_tampered.yml": 0,
         "rules/sigma/ot/ot_process_safety_violation.yml": 0,
         "rules/sigma/ot/ot_s7comm_change_operating_mode.yml": 0,
         "rules/sigma/ot/ot_s7comm_program_download.yml": 0,
@@ -86,7 +91,7 @@
         "rules/sigma/ot/ot_snmp_device_restart.yml": 0,
         "rules/sigma/ot/ot_snmp_interface_down.yml": 0
       },
-      "rules": 26
+      "rules": 30
     },
     "stateful": {
       "fired": [],

@@ -1,0 +1,20 @@
+# source: rules/sigma/ot/ot_hmi_login_failure.yml
+groups:
+- name: ot_hmi_login_failure
+  rules:
+  - alert: HMI_Login_Failure
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a failed HMI login at the DMZ reverse proxy. A single
+        failure is
+
+        routine; the constituent event exists so a burst can be correlated by source
+
+        without relying on the proxy''s own threshold.
+
+        '
+      summary: HMI Login Failure
+    expr: sum(count_over_time({job=~".+", service="hmi"} | logfmt | event_type=~`(?i)^login_failure$`
+      | line_format "{{.src_ip}} {{.request}} {{.status}}" [1m])) or vector(0) > 0
+    labels:
+      severity: low

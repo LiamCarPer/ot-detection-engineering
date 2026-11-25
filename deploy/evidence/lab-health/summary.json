@@ -1,0 +1,18 @@
+{
+  "captured_at": "2026-11-25T03:42:00.290088+00:00",
+  "events": [
+    {
+      "line": "event_type=detection_service_down producer=dnp3_anomaly.py severity=critical description=\"Detection producer dnp3_anomaly.py is not running: the sensor has been stopped or crashed (Inhibit Response Function).\"",
+      "timestamp": "1795578084681536512"
+    }
+  ],
+  "events_total": 1,
+  "lab_revision": null,
+  "loki_url": "http://localhost:3100",
+  "rule": {
+    "group": "ot_detection_service_down",
+    "health": "ok",
+    "name": "Detection_Service_Stopped",
+    "state": "firing"
+  }
+}

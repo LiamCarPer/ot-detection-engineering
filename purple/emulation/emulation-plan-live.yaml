@@ -1,0 +1,158 @@
+name: Water treatment OT emulation — live repository rules
+version: 3
+description: |
+  The live counterpart to the eight-step replay plan. Each step is a real
+  adversary action in OT-Security-Lab, paired with the repository Sigma rule
+  that must fire. The live runner polls the lab's Loki ruler, records action
+  start/stop times, and evaluates per-step allowed rule sets.
+
+  The native Modbus brute-force rule is capture-proven, not Loki-backed, and is
+  deliberately absent here. Secondary rules are legitimate consequences of the
+  action (for example, an IT-to-control read also matches the process-read rule)
+  and are recorded without being required.
+benign:
+  duration_seconds: 30
+steps:
+  - id: cross-zone-read
+    name: Enterprise host reads a control-zone PLC
+    technique: T0886
+    description: |
+      An enterprise-zone host sends a Modbus read to a control-zone PLC. The
+      gateway drops the flow, the cross-zone rule fires, and the unauthorized
+      process-read rule also matches the read.
+    execute:
+      command: docker exec ot_attacker python3 /attacker/simulate_attack.py --step cross-zone
+    expectations:
+      - signal: CROSS_ZONE_VIOLATION
+        technique: T0886
+        lab_technique: T0886
+        rule: rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+    secondary:
+      - rule: rules/sigma/ot/ot_modbus_process_state_read.yml
+        reason: The read is from an unapproved source, so the process-read rule also fires.
+
+  - id: modbus-write
+    name: Enterprise host writes a Modbus register
+    technique: T1692.001
+    description: |
+      The same enterprise host issues a Modbus write. The unauthorized-writer
+      rule fires; the cross-zone rule also matches the dropped packet.
+    execute:
+      command: docker exec ot_attacker python3 /attacker/simulate_attack.py --step modbus-write
+    expectations:
+      - signal: UNAUTHORIZED_MODBUS_WRITE
+        technique: T1692.001
+        lab_technique: T0831
+        rule: rules/sigma/ot/ot_modbus_unauthorized_write.yml
+    secondary:
+      - rule: rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+        reason: The write is an IT-to-control flow that the gateway drops.
+
+  - id: process-safety-violation
+    name: Unsafe command while the tank is in a danger state
+    technique: T0831
+    description: |
+      The process is driven to a high level, then a protocol-valid write opens
+      the inlet valve. The physics-aware monitor emits a safety violation, and
+      the write itself is also an unauthorized control command.
+    execute:
+      command: docker exec ot_attacker python3 /attacker/simulate_process_violation.py
+    expectations:
+      - signal: PROCESS_SAFETY_VIOLATION
+        technique: T0831
+        lab_technique: T0836
+        rule: rules/sigma/ot/ot_process_safety_violation.yml
+    secondary:
+      - rule: rules/sigma/ot/ot_modbus_unauthorized_write.yml
+        reason: The stimulus is a Modbus write from an unapproved source.
+      - rule: rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+        reason: The write originates in the enterprise zone and is dropped.
+
+  - id: dnp3-control-campaign
+    name: DNP3 control, restart and unsolicited-response changes
+    technique: T1692.001
+    description: |
+      A compromised insider issues DNP3 control operations, requests a restart
+      and disables unsolicited responses. One action, three expected detections.
+    execute:
+      command: docker exec ot_insider python3 /attacker/simulate_dnp3_attack.py
+    expectations:
+      - signal: DNP3_UNAUTHORIZED_CONTROL
+        technique: T1692.001
+        lab_technique: T1692.001
+        rule: rules/sigma/ot/ot_dnp3_unauthorized_control.yml
+      - signal: DNP3_RESTART_COMMAND
+        technique: T0816
+        lab_technique: T0816
+        rule: rules/sigma/ot/ot_dnp3_restart_command.yml
+      - signal: DNP3_UNSOLICITED_DISABLED
+        technique: T0878
+        lab_technique: T0878
+        rule: rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml
+
+  - id: opcua-discovery-campaign
+    name: OPC UA browse, write and method call
+    technique: T0888
+    description: |
+      The insider browses, writes a node and invokes a method on the OPC UA
+      server. The three first-order rules fire; a large browse burst may also
+      drive the enumeration correlation.
+    execute:
+      command: docker exec ot_insider python3 /attacker/simulate_opcua_attack.py
+    expectations:
+      - signal: OPCUA_BROWSE_REQUEST
+        technique: T0888
+        lab_technique: T0888
+        rule: rules/sigma/ot/ot_opcua_browse_request.yml
+      - signal: OPCUA_WRITE_REQUEST
+        technique: T1692.001
+        lab_technique: T1692.001
+        rule: rules/sigma/ot/ot_opcua_write_request.yml
+      - signal: OPCUA_METHOD_CALL
+        technique: T0871
+        lab_technique: T0871
+        rule: rules/sigma/ot/ot_opcua_method_call.yml
+    secondary:
+      - rule: rules/sigma/ot/ot_opcua_node_enumeration.yml
+        reason: A browse burst can cross the twenty-request correlation threshold.
+
+  - id: s7-program-campaign
+    name: S7comm program download, upload and mode change
+    technique: T0843
+    description: |
+      The insider downloads a program block, reads blocks back and changes the
+      controller's operating mode.
+    execute:
+      command: docker exec ot_insider python3 /attacker/simulate_s7comm_attack.py
+    expectations:
+      - signal: S7COMM_PROGRAM_DOWNLOAD
+        technique: T0843
+        lab_technique: T0843
+        rule: rules/sigma/ot/ot_s7comm_program_download.yml
+      - signal: S7COMM_PROGRAM_UPLOAD
+        technique: T0845
+        lab_technique: T0845
+        rule: rules/sigma/ot/ot_s7comm_program_upload.yml
+      - signal: S7COMM_CHANGE_OPERATING_MODE
+        technique: T0858
+        lab_technique: T0858
+        rule: rules/sigma/ot/ot_s7comm_change_operating_mode.yml
+
+  - id: operator-workstation-write
+    name: PowerShell Modbus write from the operator workstation
+    technique: T1692.001
+    description: |
+      The operator workstation writes a register with a PowerShell Modbus
+      client. The source differs from the enterprise host, so the rule cannot
+      be suppressing by alert type alone.
+    execute:
+      command: >-
+        docker exec ot_powershell pwsh -NoProfile
+        -File /opt/otsec/Invoke-OTAdversaryEmulation.ps1
+        -Scenario UnauthorizedWrite -Target 172.21.0.60 -Register 1
+        -TestValue 42 -AllowLab
+    expectations:
+      - signal: UNAUTHORIZED_MODBUS_WRITE
+        technique: T1692.001
+        lab_technique: T0831
+        rule: rules/sigma/ot/ot_modbus_unauthorized_write.yml

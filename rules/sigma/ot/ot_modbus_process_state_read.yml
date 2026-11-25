@@ -27,6 +27,7 @@ detection:
   filter_authorized_reader:
     src_ip:
       - 172.22.0.10
+      - 172.22.0.20
   filter_identified_reader:
     src_ip|exists: true
   condition: >-

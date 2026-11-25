@@ -1,0 +1,6 @@
+[
+  {
+    "line": "event_type=detection_service_down producer=dnp3_anomaly.py severity=critical description=\"Detection producer dnp3_anomaly.py is not running: the sensor has been stopped or crashed (Inhibit Response Function).\"",
+    "timestamp": "1795578084681536512"
+  }
+]

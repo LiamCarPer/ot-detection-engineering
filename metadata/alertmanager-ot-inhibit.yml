@@ -1,0 +1,45 @@
+# Alertmanager policy for the OT queue.
+#
+# The generated Loki rules are intentionally fine-grained. This policy is the
+# queue layer: group repeats by the entity that matters, notify immediately for
+# critical safety/health events, and do not let a noisy rule hide a distinct
+# signal. Install as the lab's `siem/configs/alertmanager-config.yaml`.
+route:
+  receiver: ot-webhook
+  group_by: [alertname, severity, src_ip, dst_ip, dst_zone]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - matchers:
+        - severity="critical"
+      group_by: [alertname, severity]
+      group_wait: 0s
+      group_interval: 1m
+      repeat_interval: 1h
+      receiver: ot-webhook
+
+inhibit_rules:
+  # A repeated cross-zone alert from the same source/destination is one
+  # decision, not 74. A new destination or a new source is a new group. The
+  # regex covers the lab's hand-written alert name and the generated rule name.
+  - source_matchers:
+      - alertname=~"CROSS_ZONE_VIOLATION|Industrial_Protocol_Traffic.*"
+    target_matchers:
+      - alertname=~"CROSS_ZONE_VIOLATION|Industrial_Protocol_Traffic.*"
+    equal: [src_ip, dst_ip]
+  # Repeated unauthorized writes from one source are one decision. A write from
+  # a different source (the case study's C4) is a different group.
+  - source_matchers:
+      - alertname=~"UNAUTHORIZED_MODBUS_WRITE|Modbus_Write_From_Unauthorized.*"
+    target_matchers:
+      - alertname=~"UNAUTHORIZED_MODBUS_WRITE|Modbus_Write_From_Unauthorized.*"
+    equal: [src_ip]
+  # Never inhibit the sensor-health or safety events. They are deliberately
+  # absent from the inhibit rules; a rule that does not match is not suppressed.
+
+receivers:
+  - name: ot-webhook
+    webhook_configs:
+      - url: http://ot_webhook:9095/alert
+        send_resolved: true

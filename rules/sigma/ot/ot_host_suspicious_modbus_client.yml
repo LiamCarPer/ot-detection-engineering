@@ -1,0 +1,40 @@
+title: Suspicious Modbus Client Initiated From An Endpoint
+id: 4f8a1c2e-6b93-4d17-8e52-9a3c7f1d5b08
+status: experimental
+description: |
+  Detects an endpoint process initiating an outbound Modbus/TCP connection with
+  a tool name associated with arbitrary register access. A legitimate HMI or
+  historian process has a stable image name and a known install path; a
+  download-directory binary opening 502 is a compromised workstation or an
+  unauthorized tool.
+references:
+  - https://attack.mitre.org/techniques/T0846/
+author: Liam Carvajal
+date: 2026-11-25
+logsource:
+  product: ot_host
+  service: sysmon
+detection:
+  selection_event:
+    event_id: 3
+    initiated: "true"
+  selection_service:
+    dst_port: 502
+  selection_image:
+    image|endswith:
+      - '\poll_plc.exe'
+      - '\modbus_scan.exe'
+      - '\memdump.exe'
+  condition: selection_event and selection_service and selection_image
+fields:
+  - hostname
+  - user
+  - image
+  - dst_ip
+  - dst_port
+falsepositives:
+  - A legitimate OT engineering tool deployed by IT under one of these names
+  - A penetration test using a known tool name
+level: high
+tags:
+  - attack.t0846

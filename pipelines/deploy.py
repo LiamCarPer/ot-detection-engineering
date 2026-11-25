@@ -140,6 +140,20 @@ def build_bundle() -> dict[str, str]:
     bundle.update(native_bundle)
     manifest.extend(native_manifest)
 
+    # The queue policy is not a Sigma rule, but it is part of the installable
+    # bundle. Keep it in metadata/ as the source and render it under deploy/.
+    policy_path = REPO_ROOT / "metadata" / "alertmanager-ot-inhibit.yml"
+    policy_text = policy_path.read_text(encoding="utf-8")
+    bundle["alertmanager/ot-inhibit.yml"] = policy_text
+    manifest.append(
+        {
+            "source": "metadata/alertmanager-ot-inhibit.yml",
+            "source_sha256": sha256(policy_text),
+            "target": "alertmanager/ot-inhibit.yml",
+            "backend": "alertmanager",
+        }
+    )
+
     bundle["manifest.json"] = json.dumps(
         {
             "artifacts": sorted(manifest, key=lambda item: (item["target"], item["source"])),

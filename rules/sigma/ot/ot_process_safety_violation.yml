@@ -23,7 +23,7 @@ detection:
   selection_event:
     event_type: process_safety_violation
   selection_high_level:
-    tank_level_pct|gte: 95
+    tank_level_pct|gte: 90
   selection_low_level:
     tank_level_pct|lte: 5
   selection_unmitigated:

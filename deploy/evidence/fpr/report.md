@@ -1,13 +1,13 @@
 # False-positive measurement by family
 
-Corpus: `metrics/baseline/benign-events.jsonl` — **1000** events, **33** distinct behavioural shapes.
+Corpus: `metrics/baseline/benign-events.jsonl` — **1000** events, **37** distinct behavioural shapes.
 
 The corpus cycles a fixed template set, so the binomial interval over 1,000 rows overstates the effective sample size. The shape count is the honest diversity measure.
 
 | Family | Rules | Benign matches | Rate |
 | :--- | ---: | ---: | ---: |
-| Sigma single-event | 26 | 0 / 1000 events | 0.0000 |
-| Sigma correlation | 6 | 0 fired on the corpus | — |
+| Sigma single-event | 30 | 0 / 1000 events | 0.0000 |
+| Sigma correlation | 7 | 0 fired on the corpus | — |
 | Behaviour baseline | 3 | 0 / 1000 events | 0.0000 |
 | Conduit | 3 | 0 / 1000 events | 0.0000 |
 | Stateful | 5 | 0 fired on the corpus | — |

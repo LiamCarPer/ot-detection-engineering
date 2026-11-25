@@ -158,6 +158,10 @@ EXPECTED_COLLECTOR_RULES: dict[str, set[str]] = {
         "OT Device Configuration Change",
     },
     "snmp/benign": set(),
+    "lab_health/detection_service_down": {"Detection Service Stopped"},
+    "sysmon/edr": {"Suspicious Modbus Client Initiated From An Endpoint"},
+    "nginx_access/auth": {"HMI Login Failure"},
+    "lab_plc/logic_tampered": {"PLC Logic Integrity Verification Failed"},
 }
 
 
@@ -197,6 +201,10 @@ EXPECTED_BASELINE_RULES: dict[str, set[str]] = {
     "netflow/flows_violation": set(),
     "snmp/attack": set(),
     "snmp/benign": set(),
+    "lab_health/detection_service_down": set(),
+    "sysmon/edr": set(),
+    "nginx_access/auth": set(),
+    "lab_plc/logic_tampered": set(),
 }
 
 
@@ -220,6 +228,10 @@ EXPECTED_CONDUIT_RULES: dict[str, set[str]] = {
     "netflow/flows_violation": {"Flow From An Unauthorized Source On A Declared Conduit"},
     "snmp/attack": set(),
     "snmp/benign": set(),
+    "lab_health/detection_service_down": set(),
+    "sysmon/edr": set(),
+    "nginx_access/auth": set(),
+    "lab_plc/logic_tampered": set(),
 }
 
 

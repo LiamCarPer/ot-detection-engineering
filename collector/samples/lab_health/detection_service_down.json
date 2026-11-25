@@ -1,0 +1,1 @@
+{"timestamp": "2026-11-25T10:00:00Z", "product": "ot_detection_health", "service": "watchdog", "event_type": "detection_service_down", "producer": "dnp3_anomaly.py", "severity": "critical", "description": "Detection producer dnp3_anomaly.py is not running."}

@@ -73,10 +73,13 @@ distinct signals. C3 is smaller in raw volume but carries **ten techniques in 64
 seconds** — a multi-protocol campaign that a source-level or alert-type-level
 rollup would flatten into a single "protocol alert."
 
-## What I would suppress
+## What the policy suppresses
 
-These are proposals, not implemented suppression rules. The analysis shows the
-repetition; the case study is the judgment layer.
+The grouping policy is implemented in
+[`deploy/alertmanager/ot-inhibit.yml`](../deploy/alertmanager/ot-inhibit.yml) and
+measured in [`docs/SUPPRESSION.md`](SUPPRESSION.md). On this snapshot it produces
+**21 notifications from 151 alerts (86.09% reduction)** and preserves C2, C3, C4
+and C5. The table below is the judgment behind that policy.
 
 | Proposal | Why | What I would keep |
 | :-- | :-- | :-- |

@@ -93,7 +93,7 @@ points alone. These are the questions I would ask.
   required to re-confirm the changed rules. The newer breadth rules are
   fixture-proven and included in the bundle, but they are not all
   live-executed.
-- **Coverage is prioritized, not maximized.** `29 / 97` is raw ATT&CK for ICS
+- **Coverage is prioritized, not maximized.** `32 / 97` is raw ATT&CK for ICS
   coverage. Privilege Escalation is deliberately `0/2` because the repo has no
   host/auth telemetry. Padding that number with network rules would be
   tag-gaming.
@@ -114,7 +114,7 @@ points alone. These are the questions I would ask.
   one with action start timestamps and provides the 2.45 s MTTD.
 - **HMI-login, C2-beacon and OT-port-scan are lab-only.** They are not scored
   because the repository has no matching rule.
-- **Only six rules are `stable`.** The other 62 are `experimental` and most
+- **Only six rules are `stable`.** The other 67 are `experimental` and most
   have no runbook or observed volume. That is the honest state of the
   catalogue, not a claim that every rule is operationally ready.
 - **The security/AI workstream is supporting evidence.** The threat model,

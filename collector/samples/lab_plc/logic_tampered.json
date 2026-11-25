@@ -1,0 +1,1 @@
+{"timestamp": "2026-11-25T10:00:00Z", "product": "ot_plc", "service": "diagnostics", "event_type": "logic_tampered", "plc": "intake", "status": "TAMPERED", "severity": "critical", "description": "PLC logic integrity verification failed."}

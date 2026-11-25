@@ -1,0 +1,30 @@
+cases:
+  - name: the DNP3 producer stopped
+    expect: match
+    event:
+      timestamp: "2026-11-25T10:00:00Z"
+      product: ot_detection_health
+      service: watchdog
+      event_type: detection_service_down
+      producer: dnp3_anomaly.py
+      severity: critical
+
+  - name: the producer is healthy
+    expect: no_match
+    event:
+      timestamp: "2026-11-25T10:00:05Z"
+      product: ot_detection_health
+      service: watchdog
+      event_type: detection_service_up
+      producer: dnp3_anomaly.py
+      severity: info
+
+  - name: an unrelated health event is not a stopped producer
+    expect: no_match
+    event:
+      timestamp: "2026-11-25T10:00:10Z"
+      product: ot_detection_health
+      service: watchdog
+      event_type: clock_skew
+      producer: dnp3_anomaly.py
+      severity: warning

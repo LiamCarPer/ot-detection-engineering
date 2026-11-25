@@ -1,0 +1,3 @@
+// source: rules/sigma/ot/ot_hmi_login_failure.yml
+OTTelemetry
+| where event_type =~ "login_failure"

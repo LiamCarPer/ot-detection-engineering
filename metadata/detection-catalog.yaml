@@ -1279,3 +1279,93 @@ rules:
   runbook: null
   last_validated: '2026-11-25'
   version: 1
+- id: 9b3d5e7f-2a41-4c86-9d10-6f8a2c4e7b19
+  rule: rules/sigma/ot/ot_detection_service_down.yml
+  title: Detection Service Stopped
+  kind: sigma
+  techniques:
+  - T0881
+  severity: critical
+  data_source: ot_detection_health/watchdog
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A deliberate sensor restart during maintenance
+  - A producer that exits after a configuration change and is restarted by the supervisor
+  runbook: docs/runbooks/detection-service-down.md
+  last_validated: '2026-11-25'
+  version: 1
+- id: 4f8a1c2e-6b93-4d17-8e52-9a3c7f1d5b08
+  rule: rules/sigma/ot/ot_host_suspicious_modbus_client.yml
+  title: Suspicious Modbus Client Initiated From An Endpoint
+  kind: sigma
+  techniques:
+  - T0846
+  severity: high
+  data_source: ot_host/sysmon
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A legitimate OT engineering tool deployed by IT under one of these names
+  - A penetration test using a known tool name
+  runbook: null
+  last_validated: '2026-11-25'
+  version: 1
+- id: 1c6e9a4b-7d52-4f83-9b10-5e2a8c7f4d61
+  rule: rules/sigma/ot/ot_hmi_login_failure.yml
+  title: HMI Login Failure
+  kind: sigma
+  techniques:
+  - T0859
+  severity: low
+  data_source: ot_auth/hmi
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A user mistyping a password
+  - A browser retrying an expired session
+  runbook: null
+  last_validated: '2026-11-25'
+  version: 1
+- id: 2d7f0b5c-8e63-4a94-8c21-6f3b9d1e5a72
+  rule: rules/sigma/ot/ot_hmi_login_failure_burst.yml
+  title: HMI Login Failure Burst From One Source
+  kind: correlation
+  techniques:
+  - T0859
+  severity: medium
+  data_source: ot_auth/hmi
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A user repeatedly mistyping a password
+  - A password manager or SSO retry loop
+  runbook: null
+  last_validated: '2026-11-25'
+  version: 1
+- id: 3e8b2d6f-9c14-4a75-8d30-7b5f1e9a2c84
+  rule: rules/sigma/ot/ot_plc_logic_tampered.yml
+  title: PLC Logic Integrity Verification Failed
+  kind: sigma
+  techniques:
+  - T0889
+  severity: critical
+  data_source: ot_plc/diagnostics
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A planned program deployment before the manifest is updated
+  - A vendor firmware or program update outside the change window
+  runbook: null
+  last_validated: '2026-11-25'
+  version: 1

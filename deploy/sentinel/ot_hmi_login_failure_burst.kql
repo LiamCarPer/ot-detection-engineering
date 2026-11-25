@@ -1,0 +1,5 @@
+// source: rules/sigma/ot/ot_hmi_login_failure_burst.yml
+OTTelemetry
+| where event_type =~ "login_failure"
+| summarize event_count = count() by bin(TimeGenerated, 5m), src_ip
+| where event_count >= 3

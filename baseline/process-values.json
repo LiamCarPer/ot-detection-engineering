@@ -6,14 +6,14 @@
   "field": "tank_level_pct",
   "assets": {
     "plc_intake": {
-      "mean": 52.76,
-      "std": 10.886,
-      "samples": 25
+      "mean": 53.182,
+      "std": 11.436,
+      "samples": 22
     },
     "plc_treatment": {
-      "mean": 59.44,
-      "std": 12.481,
-      "samples": 25
+      "mean": 59.455,
+      "std": 12.616,
+      "samples": 22
     }
   }
 }

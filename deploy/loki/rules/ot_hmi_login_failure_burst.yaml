@@ -1,0 +1,20 @@
+# source: rules/sigma/ot/ot_hmi_login_failure_burst.yml
+groups:
+- name: ot_hmi_login_failure_burst
+  rules:
+  - alert: HMI_Login_Failure_Burst_From_One_Source
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects three or more failed HMI logins from one source inside
+        five minutes.
+
+        The first-order rule records each failure; this correlation is the credential
+
+        attack, and grouping by source keeps unrelated users apart.
+
+        '
+      summary: HMI Login Failure Burst From One Source
+    expr: sum by (src_ip) (count_over_time({job=~".+", service="hmi"} | logfmt | event_type=~`(?i)^login_failure$`
+      | line_format "{{.src_ip}} {{.request}} {{.status}}" [5m])) >= 3
+    labels:
+      severity: medium

@@ -1,0 +1,20 @@
+cases:
+  - name: a deployed program no longer matches the manifest
+    expect: match
+    event:
+      timestamp: "2026-11-25T10:00:00Z"
+      product: ot_plc
+      service: diagnostics
+      event_type: logic_tampered
+      plc: intake
+      status: TAMPERED
+
+  - name: the integrity check passed
+    expect: no_match
+    event:
+      timestamp: "2026-11-25T10:00:05Z"
+      product: ot_plc
+      service: diagnostics
+      event_type: integrity_ok
+      plc: intake
+      status: OK

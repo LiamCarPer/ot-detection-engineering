@@ -1,0 +1,3 @@
+// source: rules/sigma/ot/ot_host_suspicious_modbus_client.yml
+OTTelemetry
+| where (event_id == 3 and initiated =~ "true") and dst_port == 502 and (image endswith "\\poll_plc.exe" or image endswith "\\modbus_scan.exe" or image endswith "\\memdump.exe")

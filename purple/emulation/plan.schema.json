@@ -60,6 +60,19 @@
                 "rule": { "type": "string", "minLength": 1 }
               }
             }
+          },
+          "secondary": {
+            "type": "array",
+            "description": "Rules that may legitimately fire as a consequence of this step but are not required detections.",
+            "items": {
+              "type": "object",
+              "required": ["rule"],
+              "additionalProperties": false,
+              "properties": {
+                "rule": { "type": "string", "minLength": 1 },
+                "reason": { "type": "string", "minLength": 1 }
+              }
+            }
           }
         }
       }

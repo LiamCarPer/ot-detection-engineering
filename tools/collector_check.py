@@ -30,7 +30,16 @@ if str(REPO_ROOT) not in sys.path:
 from sigma.rule import SigmaRule  # noqa: E402
 
 from collector import contract  # noqa: E402
-from collector.sources import netflow, snmp, suricata, zeek  # noqa: E402
+from collector.sources import (  # noqa: E402
+    lab_health,
+    lab_plc,
+    netflow,
+    nginx_access,
+    snmp,
+    suricata,
+    sysmon,
+    zeek,
+)
 from tools.otde.evidence import EXPECTED_COLLECTOR_RULES  # noqa: E402
 from tools.otde.matcher import match  # noqa: E402
 from tools.otde.rules import single_event_rule_paths  # noqa: E402
@@ -39,7 +48,16 @@ SAMPLES_DIR = REPO_ROOT / "collector" / "samples"
 EVIDENCE_DIR = REPO_ROOT / "deploy" / "evidence" / "collector"
 EVIDENCE_PATH = EVIDENCE_DIR / "summary.json"
 
-ADAPTERS = {"suricata": suricata, "zeek": zeek, "netflow": netflow, "snmp": snmp}
+ADAPTERS = {
+    "suricata": suricata,
+    "zeek": zeek,
+    "netflow": netflow,
+    "snmp": snmp,
+    "lab_health": lab_health,
+    "sysmon": sysmon,
+    "nginx_access": nginx_access,
+    "lab_plc": lab_plc,
+}
 
 # Sample key -> (sensor, input files relative to collector/samples).
 SAMPLES: dict[str, tuple[str, list[str]]] = {
@@ -59,6 +77,13 @@ SAMPLES: dict[str, tuple[str, list[str]]] = {
     "netflow/flows_violation": ("netflow", ["netflow/flows_violation.json"]),
     "snmp/attack": ("snmp", ["snmp/attack.json"]),
     "snmp/benign": ("snmp", ["snmp/benign.json"]),
+    "lab_health/detection_service_down": (
+        "lab_health",
+        ["lab_health/detection_service_down.json"],
+    ),
+    "sysmon/edr": ("sysmon", ["sysmon/edr.json"]),
+    "nginx_access/auth": ("nginx_access", ["nginx_access/access.json"]),
+    "lab_plc/logic_tampered": ("lab_plc", ["lab_plc/logic_tampered.json"]),
 }
 
 

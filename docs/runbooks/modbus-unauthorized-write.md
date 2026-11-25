@@ -47,6 +47,23 @@ pump; a write to a holding register may change a setpoint or a safety parameter.
 4. If the write changed a safety parameter, follow the process-safety escalation.
 5. Preserve the transaction, the register value and the operator's screen.
 
+### Automated containment in the lab
+
+The lab responder watches `UNAUTHORIZED_MODBUS_WRITE` and applies a gateway
+`FORWARD` drop for a source after three offences in five minutes when
+`OT_RESPONDER_ENFORCE=1`. It is dry-run by default.
+
+```bash
+# Verify the block
+docker exec ot_gateway iptables -C FORWARD -s <source> -j DROP
+# Roll back
+docker exec ot_gateway iptables -D FORWARD -s <source> -j DROP
+```
+
+The incident on 2026-11-25 used this path; the timeline is in
+[`docs/INCIDENT_2026-11-25.md`](../INCIDENT_2026-11-25.md). The gateway block is
+a lab control, not a plant change-management action.
+
 ## False positives and tuning
 
 - A newly commissioned workstation that is not yet in the writer allowlist.
@@ -59,7 +76,9 @@ pump; a write to a holding register may change a setpoint or a safety parameter.
 ## Close out
 
 - Record the source, register, old value, new value and authorization.
-- If unauthorized, rotate the source's credentials and review the EWS/HMI.
+- Modbus itself has no authentication. If the write was unauthorized, rotate the
+  **host** credentials for the source and review the EWS/HMI; do not describe a
+  Modbus credential rotation that does not exist.
 - If authorized, add the change reference to the ticket and update the allowlist
   only if the source is a permanent writer.
 

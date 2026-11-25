@@ -1,0 +1,39 @@
+cases:
+  - name: a downloaded poller opens Modbus
+    expect: match
+    event:
+      timestamp: "2026-04-22T10:15:30Z"
+      product: ot_host
+      service: sysmon
+      hostname: ENG-WORKSTATION-01
+      event_id: 3
+      initiated: "true"
+      image: 'C:\Users\Operator\Downloads\poll_plc.exe'
+      user: OT_DOMAIN\Operator
+      dst_ip: 172.21.0.10
+      dst_port: 502
+
+  - name: a browser opens HTTPS
+    expect: no_match
+    event:
+      timestamp: "2026-04-22T10:16:00Z"
+      product: ot_host
+      service: sysmon
+      hostname: ENG-WORKSTATION-01
+      event_id: 3
+      initiated: "true"
+      image: 'C:\Program Files\Browser\browser.exe'
+      dst_ip: 203.0.113.10
+      dst_port: 443
+
+  - name: an inbound Modbus connection is not an initiated client
+    expect: no_match
+    event:
+      timestamp: "2026-04-22T10:16:05Z"
+      product: ot_host
+      service: sysmon
+      hostname: PLC-HOST
+      event_id: 3
+      initiated: "false"
+      image: 'C:\Tools\poll_plc.exe'
+      dst_port: 502

@@ -1,0 +1,161 @@
+{
+  "by_alert_type": {
+    "C2_BEACON": 1,
+    "CROSS_ZONE_VIOLATION": 74,
+    "DETECTION_SERVICE_DOWN": 1,
+    "DNP3_RESTART_COMMAND": 2,
+    "DNP3_UNAUTHORIZED_CONTROL": 6,
+    "DNP3_UNSOLICITED_DISABLED": 2,
+    "HMI_LOGIN_FAILURE": 3,
+    "OPCUA_BROWSE_REQUEST": 2,
+    "OPCUA_METHOD_CALL": 2,
+    "OPCUA_WRITE_REQUEST": 2,
+    "OT_BRUTE_FORCE_SCAN": 4,
+    "OT_PORT_SCAN": 2,
+    "PROCESS_SAFETY_VIOLATION": 7,
+    "S7COMM_CHANGE_OPERATING_MODE": 4,
+    "S7COMM_PROGRAM_DOWNLOAD": 6,
+    "S7COMM_PROGRAM_UPLOAD": 6,
+    "UNAUTHORIZED_MODBUS_WRITE": 27
+  },
+  "groups": [
+    {
+      "alert_type": "C2_BEACON",
+      "alerts": 1,
+      "dest_ip": "172.24.0.10",
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "CROSS_ZONE_VIOLATION",
+      "alerts": 56,
+      "dest_ip": "172.21.0.10",
+      "source_ip": "172.24.0.10"
+    },
+    {
+      "alert_type": "CROSS_ZONE_VIOLATION",
+      "alerts": 9,
+      "dest_ip": "172.21.0.11",
+      "source_ip": "172.24.0.10"
+    },
+    {
+      "alert_type": "CROSS_ZONE_VIOLATION",
+      "alerts": 9,
+      "dest_ip": "172.21.0.12",
+      "source_ip": "172.24.0.10"
+    },
+    {
+      "alert_type": "DETECTION_SERVICE_DOWN",
+      "alerts": 1,
+      "dest_ip": null,
+      "source_ip": null
+    },
+    {
+      "alert_type": "DNP3_RESTART_COMMAND",
+      "alerts": 2,
+      "dest_ip": "172.21.0.50",
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "DNP3_UNAUTHORIZED_CONTROL",
+      "alerts": 6,
+      "dest_ip": "172.21.0.50",
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "DNP3_UNSOLICITED_DISABLED",
+      "alerts": 2,
+      "dest_ip": "172.21.0.50",
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "HMI_LOGIN_FAILURE",
+      "alerts": 3,
+      "dest_ip": null,
+      "source_ip": "172.24.0.30"
+    },
+    {
+      "alert_type": "OPCUA_BROWSE_REQUEST",
+      "alerts": 2,
+      "dest_ip": "172.21.0.51",
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "OPCUA_METHOD_CALL",
+      "alerts": 2,
+      "dest_ip": "172.21.0.51",
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "OPCUA_WRITE_REQUEST",
+      "alerts": 2,
+      "dest_ip": "172.21.0.51",
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "OT_BRUTE_FORCE_SCAN",
+      "alerts": 4,
+      "dest_ip": null,
+      "source_ip": "172.24.0.10"
+    },
+    {
+      "alert_type": "OT_PORT_SCAN",
+      "alerts": 1,
+      "dest_ip": null,
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "OT_PORT_SCAN",
+      "alerts": 1,
+      "dest_ip": null,
+      "source_ip": "172.24.0.10"
+    },
+    {
+      "alert_type": "PROCESS_SAFETY_VIOLATION",
+      "alerts": 7,
+      "dest_ip": null,
+      "source_ip": "172.24.0.10"
+    },
+    {
+      "alert_type": "S7COMM_CHANGE_OPERATING_MODE",
+      "alerts": 4,
+      "dest_ip": "172.21.0.52",
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "S7COMM_PROGRAM_DOWNLOAD",
+      "alerts": 6,
+      "dest_ip": "172.21.0.52",
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "S7COMM_PROGRAM_UPLOAD",
+      "alerts": 6,
+      "dest_ip": "172.21.0.52",
+      "source_ip": "172.23.0.20"
+    },
+    {
+      "alert_type": "UNAUTHORIZED_MODBUS_WRITE",
+      "alerts": 4,
+      "dest_ip": null,
+      "source_ip": "172.22.0.30"
+    },
+    {
+      "alert_type": "UNAUTHORIZED_MODBUS_WRITE",
+      "alerts": 23,
+      "dest_ip": null,
+      "source_ip": "172.24.0.10"
+    }
+  ],
+  "notifications": 21,
+  "policy": "deploy/alertmanager/ot-inhibit.yml",
+  "preserved": {
+    "C2_hmi_login": 3,
+    "C3_protocol_chain": 34,
+    "C4_operator_write": 4,
+    "C5_sensor_health": 1
+  },
+  "raw_alerts": 151,
+  "reduction_pct": 86.09,
+  "schema_version": 1,
+  "source": "analysis/data/lab-2026-11-24/alerts.jsonl"
+}

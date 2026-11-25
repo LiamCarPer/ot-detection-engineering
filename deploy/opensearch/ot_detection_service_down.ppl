@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_detection_service_down.yml
+source=ot_detection_health-watchdog-* | where event_type="detection\_service\_down"

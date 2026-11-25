@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_hmi_login_failure.yml
+source=ot_auth-hmi-* | where event_type="login\_failure"

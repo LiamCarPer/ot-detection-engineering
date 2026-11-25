@@ -20,7 +20,11 @@
         "ot_firewall",
         "ot_process",
         "ot_flow",
-        "ot_snmp"
+        "ot_snmp",
+        "ot_detection_health",
+        "ot_host",
+        "ot_auth",
+        "ot_plc"
       ]
     },
     "service": {
@@ -32,7 +36,11 @@
         "iptables",
         "safety_monitor",
         "flow",
-        "snmp"
+        "snmp",
+        "watchdog",
+        "sysmon",
+        "hmi",
+        "diagnostics"
       ]
     },
     "direction": {
@@ -293,6 +301,44 @@
     "responder_ip": {
       "type": "string",
       "pattern": "^\\d{1,3}(?:\\.\\d{1,3}){3}$"
+    },
+    "producer": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "hostname": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "integer"
+    },
+    "image": {
+      "type": "string"
+    },
+    "user": {
+      "type": "string"
+    },
+    "initiated": {
+      "type": "string",
+      "enum": ["true", "false"]
+    },
+    "request": {
+      "type": "string"
+    },
+    "status": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "location": {
+      "type": "string"
+    },
+    "plc": {
+      "type": "string"
     }
   },
   "additionalProperties": false

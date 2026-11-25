@@ -50,6 +50,9 @@ help:
 	@echo "  fpr              Regenerate the all-family false-positive report"
 	@echo "  fpr-check        Fail if the all-family false-positive report has drifted"
 	@echo "  lab-loki-check   Refresh the OT-Security-Lab ruler evidence (lab required)"
+	@echo "  lab-benign-check Measure the network families on a lab PCAP (Docker required)"
+	@echo "  lab-health-check Capture the live sensor-health rule proof"
+	@echo "  lab-rules        Copy the generated Loki rules into the lab and reload"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
 	@echo "  emulate-validate Validate both adversary emulation plans"
 	@echo "  purple           Regenerate the purple-team coverage evidence"
@@ -188,6 +191,19 @@ fpr-check: setup
 
 lab-loki-check: setup
 	$(PY) tools/lab_loki_check.py
+
+LAB_DIR ?= /media/liamcarvajal/Storage/code/ot-security-lab
+LAB_PCAP ?= $(LAB_DIR)/detection/logs/benign-24h.pcap
+
+lab-benign-check: setup
+	$(PY) tools/benign_lab_check.py --pcap "$(LAB_PCAP)"
+
+lab-health-check: setup
+	$(PY) tools/lab_health_check.py
+
+lab-rules: deploy
+	cp deploy/loki/rules/*.yaml "$(LAB_DIR)/siem/rules/"
+	docker restart ot_loki
 
 coverage: setup
 	$(PY) coverage/generate_coverage.py

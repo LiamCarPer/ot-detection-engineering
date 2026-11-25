@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_hmi_login_failure_burst.yml
+| search source=ot_auth-hmi-* | where event_type="login\_failure" | stats count() as event_count by span(@timestamp, 5m), src_ip | where event_count >= 3

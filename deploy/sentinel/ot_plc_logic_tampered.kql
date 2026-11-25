@@ -1,0 +1,3 @@
+// source: rules/sigma/ot/ot_plc_logic_tampered.yml
+OTTelemetry
+| where event_type =~ "logic_tampered"

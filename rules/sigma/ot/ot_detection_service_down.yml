@@ -1,0 +1,33 @@
+title: Detection Service Stopped
+id: 9b3d5e7f-2a41-4c86-9d10-6f8a2c4e7b19
+status: experimental
+description: |
+  Detects a detection producer that has stopped running. A sensor that dies,
+  from a crash or from an adversary stopping it, leaves the plant blind without
+  any event on the wire. The watchdog checks every producer process and emits
+  this event so the loss of visibility is itself detected (Inhibit Response
+  Function).
+
+  This is the counterpart to "monitor the monitors": the absence of an expected
+  heartbeat is the signal. The producer name is carried in `producer`.
+references:
+  - https://attack.mitre.org/techniques/T0881/
+author: Liam Carvajal
+date: 2026-11-25
+logsource:
+  product: ot_detection_health
+  service: watchdog
+detection:
+  selection:
+    event_type: detection_service_down
+  condition: selection
+fields:
+  - producer
+  - severity
+  - description
+falsepositives:
+  - A deliberate sensor restart during maintenance
+  - A producer that exits after a configuration change and is restarted by the supervisor
+level: critical
+tags:
+  - attack.t0881

@@ -45,6 +45,10 @@ def _templates() -> list[dict[str, Any]]:
     proc = {"product": "ot_process", "service": "safety_monitor"}
     flow = {"product": "ot_flow", "service": "flow"}
     snmp = {"product": "ot_snmp", "service": "snmp"}
+    host = {"product": "ot_host", "service": "sysmon"}
+    auth = {"product": "ot_auth", "service": "hmi"}
+    plc = {"product": "ot_plc", "service": "diagnostics"}
+    health = {"product": "ot_detection_health", "service": "watchdog"}
 
     return [
         {
@@ -424,6 +428,38 @@ def _templates() -> list[dict[str, Any]]:
             "event_type": "heartbeat",
             "oid": "1.3.6.1.2.1.1.3.0",
             "snmp_value": "123456",
+            "severity": "info",
+        },
+        {
+            **host,
+            "hostname": "ENG-WORKSTATION-01",
+            "event_id": 3,
+            "image": "C:\\Program Files\\Browser\\browser.exe",
+            "user": "OT_DOMAIN\\Operator",
+            "initiated": "true",
+            "dst_ip": "203.0.113.10",
+            "dst_port": 443,
+            "proto": "tcp",
+        },
+        {
+            **auth,
+            "event_type": "login_success",
+            "src_ip": "172.24.0.30",
+            "request": "POST /Scada-LTS/login.htm HTTP/1.1",
+            "status": 302,
+            "location": "/Scada-LTS/dashboard",
+        },
+        {
+            **plc,
+            "event_type": "integrity_ok",
+            "plc": "intake",
+            "status": "OK",
+            "severity": "info",
+        },
+        {
+            **health,
+            "event_type": "detection_service_up",
+            "producer": "dnp3_anomaly.py",
             "severity": "info",
         },
     ]

@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_plc_logic_tampered.yml
+source=ot_plc-diagnostics-* | where event_type="logic\_tampered"

@@ -26,7 +26,7 @@ next and what I deliberately did not do.
 
 ## Deliberately not done
 
-- **Coverage padding.** Tagging untested rules to raise 29/97 would destroy the
+- **Coverage padding.** Tagging untested rules to raise 32/97 would destroy the
   repo's only real claim: every rule is validated.
 - **Real malware.** The YARA family uses inert synthetic artifacts and the
   EICAR test string. Public-sample analysis in an isolated lab is the credible

@@ -1,0 +1,28 @@
+title: HMI Login Failure
+id: 1c6e9a4b-7d52-4f83-9b10-5e2a8c7f4d61
+status: experimental
+description: |
+  Detects a failed HMI login at the DMZ reverse proxy. A single failure is
+  routine; the constituent event exists so a burst can be correlated by source
+  without relying on the proxy's own threshold.
+references:
+  - https://attack.mitre.org/techniques/T0859/
+author: Liam Carvajal
+date: 2026-11-25
+logsource:
+  product: ot_auth
+  service: hmi
+detection:
+  selection:
+    event_type: login_failure
+  condition: selection
+fields:
+  - src_ip
+  - request
+  - status
+falsepositives:
+  - A user mistyping a password
+  - A browser retrying an expired session
+level: low
+tags:
+  - attack.t0859

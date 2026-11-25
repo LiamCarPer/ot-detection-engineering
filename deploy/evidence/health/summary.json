@@ -3,20 +3,20 @@
   "by_kind": {
     "baseline": 3,
     "conduit": 3,
-    "correlation": 6,
+    "correlation": 7,
     "native": 21,
-    "sigma": 26,
+    "sigma": 30,
     "stateful": 5,
     "yara": 4
   },
   "by_severity": {
-    "critical": 3,
-    "high": 44,
-    "low": 2,
-    "medium": 19
+    "critical": 5,
+    "high": 45,
+    "low": 3,
+    "medium": 20
   },
   "by_status": {
-    "experimental": 62,
+    "experimental": 67,
     "stable": 6
   },
   "catalog_version": 1,
@@ -1109,18 +1109,98 @@
       "severity": "high",
       "status": "experimental",
       "title": "Flow From An Unauthorized Source On A Declared Conduit"
+    },
+    {
+      "age_days": -1,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": true,
+      "health": "warn",
+      "id": "9b3d5e7f-2a41-4c86-9d10-6f8a2c4e7b19",
+      "kind": "sigma",
+      "last_validated": "2026-11-25",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": "docs/runbooks/detection-service-down.md",
+      "severity": "critical",
+      "status": "experimental",
+      "title": "Detection Service Stopped"
+    },
+    {
+      "age_days": -1,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "4f8a1c2e-6b93-4d17-8e52-9a3c7f1d5b08",
+      "kind": "sigma",
+      "last_validated": "2026-11-25",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "high",
+      "status": "experimental",
+      "title": "Suspicious Modbus Client Initiated From An Endpoint"
+    },
+    {
+      "age_days": -1,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "1c6e9a4b-7d52-4f83-9b10-5e2a8c7f4d61",
+      "kind": "sigma",
+      "last_validated": "2026-11-25",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "low",
+      "status": "experimental",
+      "title": "HMI Login Failure"
+    },
+    {
+      "age_days": -1,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "2d7f0b5c-8e63-4a94-8c21-6f3b9d1e5a72",
+      "kind": "correlation",
+      "last_validated": "2026-11-25",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "medium",
+      "status": "experimental",
+      "title": "HMI Login Failure Burst From One Source"
+    },
+    {
+      "age_days": -1,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "3e8b2d6f-9c14-4a75-8d30-7b5f1e9a2c84",
+      "kind": "sigma",
+      "last_validated": "2026-11-25",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "critical",
+      "status": "experimental",
+      "title": "PLC Logic Integrity Verification Failed"
     }
   ],
   "schema_errors": [],
   "totals": {
-    "discovered_rules": 68,
+    "discovered_rules": 73,
     "gaps": 0,
-    "rules": 68,
+    "rules": 73,
     "stable": 6,
     "stable_stale": 0,
     "stable_with_observed_volume": 6,
     "stable_with_runbook": 6,
-    "warnings": 62,
+    "warnings": 67,
     "with_observed_volume": 12
   },
   "warnings": [
@@ -1433,6 +1513,31 @@
       "id": "a8c4e6b2-3d71-4f90-8a25-6b1c9e7d4f38",
       "issue": "no runbook; no observed volume",
       "title": "Flow From An Unauthorized Source On A Declared Conduit"
+    },
+    {
+      "id": "9b3d5e7f-2a41-4c86-9d10-6f8a2c4e7b19",
+      "issue": "no observed volume",
+      "title": "Detection Service Stopped"
+    },
+    {
+      "id": "4f8a1c2e-6b93-4d17-8e52-9a3c7f1d5b08",
+      "issue": "no runbook; no observed volume",
+      "title": "Suspicious Modbus Client Initiated From An Endpoint"
+    },
+    {
+      "id": "1c6e9a4b-7d52-4f83-9b10-5e2a8c7f4d61",
+      "issue": "no runbook; no observed volume",
+      "title": "HMI Login Failure"
+    },
+    {
+      "id": "2d7f0b5c-8e63-4a94-8c21-6f3b9d1e5a72",
+      "issue": "no runbook; no observed volume",
+      "title": "HMI Login Failure Burst From One Source"
+    },
+    {
+      "id": "3e8b2d6f-9c14-4a75-8d30-7b5f1e9a2c84",
+      "issue": "no runbook; no observed volume",
+      "title": "PLC Logic Integrity Verification Failed"
     }
   ]
 }

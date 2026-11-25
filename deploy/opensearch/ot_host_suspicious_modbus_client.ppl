@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_host_suspicious_modbus_client.yml
+source=ot_host-sysmon-* | where event_id=3 AND initiated="true" AND dst_port=502 AND (LIKE(image, "%poll\_plc.exe") OR LIKE(image, "%modbus\_scan.exe") OR LIKE(image, "%memdump.exe"))

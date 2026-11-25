@@ -1,0 +1,132 @@
+{
+  "benign_after": [
+    {
+      "expected": [],
+      "id": "benign-after",
+      "lab_alerts": [],
+      "observed": [],
+      "started_at": "2026-11-25T03:31:57.989324+00:00",
+      "unexpected": []
+    },
+    {
+      "expected": [],
+      "id": "benign-after",
+      "lab_alerts": [],
+      "observed": [],
+      "started_at": "2026-11-25T03:35:29.051225+00:00",
+      "unexpected": []
+    },
+    {
+      "expected": [],
+      "id": "benign-after",
+      "lab_alerts": [],
+      "observed": [],
+      "started_at": "2026-11-25T03:39:00.095752+00:00",
+      "unexpected": []
+    }
+  ],
+  "benign_before": [],
+  "mttd_seconds": {
+    "max": 3.52,
+    "mean": 2.433,
+    "samples": 36
+  },
+  "runs": 3,
+  "steps": {
+    "cross-zone-read": {
+      "detected": 3,
+      "detection_rate": 1.0,
+      "expected": [
+        "ot_firewall_cross_zone_violation"
+      ],
+      "misses": [],
+      "runs": 3,
+      "unexpected": []
+    },
+    "dnp3-control-campaign": {
+      "detected": 3,
+      "detection_rate": 1.0,
+      "expected": [
+        "ot_dnp3_restart_command",
+        "ot_dnp3_unauthorized_control",
+        "ot_dnp3_unsolicited_disabled"
+      ],
+      "misses": [],
+      "runs": 3,
+      "unexpected": []
+    },
+    "modbus-write": {
+      "detected": 3,
+      "detection_rate": 1.0,
+      "expected": [
+        "ot_modbus_unauthorized_write"
+      ],
+      "misses": [],
+      "runs": 3,
+      "unexpected": []
+    },
+    "opcua-discovery-campaign": {
+      "detected": 3,
+      "detection_rate": 1.0,
+      "expected": [
+        "ot_opcua_browse_request",
+        "ot_opcua_method_call",
+        "ot_opcua_write_request"
+      ],
+      "misses": [],
+      "runs": 3,
+      "unexpected": []
+    },
+    "operator-workstation-write": {
+      "detected": 3,
+      "detection_rate": 1.0,
+      "expected": [
+        "ot_modbus_unauthorized_write"
+      ],
+      "misses": [],
+      "runs": 3,
+      "unexpected": []
+    },
+    "process-safety-violation": {
+      "detected": 0,
+      "detection_rate": 0.0,
+      "expected": [
+        "ot_process_safety_violation"
+      ],
+      "misses": [
+        {
+          "rules": [
+            "ot_process_safety_violation"
+          ],
+          "run": 1
+        },
+        {
+          "rules": [
+            "ot_process_safety_violation"
+          ],
+          "run": 2
+        },
+        {
+          "rules": [
+            "ot_process_safety_violation"
+          ],
+          "run": 3
+        }
+      ],
+      "runs": 3,
+      "unexpected": []
+    },
+    "s7-program-campaign": {
+      "detected": 3,
+      "detection_rate": 1.0,
+      "expected": [
+        "ot_s7comm_change_operating_mode",
+        "ot_s7comm_program_download",
+        "ot_s7comm_program_upload"
+      ],
+      "misses": [],
+      "runs": 3,
+      "unexpected": []
+    }
+  }
+}

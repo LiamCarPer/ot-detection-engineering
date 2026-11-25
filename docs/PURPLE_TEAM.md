@@ -1,18 +1,49 @@
 # Purple team
 
-The repository runs two complementary purple-team exercises:
+The repository runs three complementary exercises:
 
 | Run | Purpose | Result |
 | :-- | :-- | :-- |
+| 2026-11-25 | **Live repository rules** | **11 / 12 Sigma expectations across 7 steps, 3 runs**; 0 unexpected; benign windows clean; mean MTTD 2.43 s |
 | 2026-11-24 | Lab alert-signal replay | **14 / 14 expected signals across 8 steps**; 0 unexpected alerts; benign window passed |
 | 2026-09-13 | MTTD measurement | **4 / 4 expectations**; mean MTTD 2.45 s, max 4.761 s |
 
-They are separate because the 2026-11-24 snapshot has alert timestamps but not
-action start timestamps, and the 2026-09-13 run has both. The full method and
-per-step tables are in
-[`purple/emulation/lab-run.md`](../purple/emulation/lab-run.md).
+The live run is the strongest evidence: the lab's Loki ruler evaluates the
+repository's generated rules, and the runner records action start/stop times.
+The replay is retained as a regression fixture and is explicitly not a
+rule-coverage result. The 2026-09-13 run is the historical MTTD run.
 
-## What the 2026-11-24 run actually proves
+## What the 2026-11-25 live run proves
+
+The runner is [`purple/runner/live_lab.py`](../purple/runner/live_lab.py). It
+syncs the generated Loki rules into the lab, clears the ruler lookback state,
+runs each step, polls the ruler, and records the first firing time of the
+repository's rules.
+
+| Step | Expectations | Detected (3 runs) |
+| :-- | --: | --: |
+| Enterprise cross-zone read | 1 | 3 / 3 |
+| Enterprise Modbus write | 1 | 3 / 3 |
+| Process safety violation | 1 | **0 / 3** |
+| DNP3 control campaign | 3 | 3 / 3 |
+| OPC UA discovery campaign | 3 | 3 / 3 |
+| S7comm program campaign | 3 | 3 / 3 |
+| Operator-workstation write | 1 | 3 / 3 |
+
+- **No unexpected repository rules** fired in any step.
+- The benign-after window was empty in all three runs. The runner restarts Loki
+  and clears its data before each run so the five-minute lookback cannot leak
+  the previous attack into the benign window.
+- Mean MTTD was **2.43 s** (max 3.52 s) at a 1-second ruler evaluation interval.
+- **The process-safety miss is real and visible.** The lab's process model is a
+  counter with an in-PLC interlock; the simulated attack is dropped at the
+  firewall, and the tank level did not reach the repository rule's 90% envelope
+  in these runs. P2-08 replaces that model with a mass balance and an
+  independent SIS. The step is reported as a miss, not removed from the plan.
+- The native Modbus brute-force rule is capture-proven, not Loki-backed, and is
+  absent from the live Sigma plan. It remains in the capture evidence.
+
+## What the 2026-11-24 replay actually proves
 
 It is a **replay of the lab's recorded alert snapshot**. The runner matches the
 lab's `alert_type` labels against the plan and checks the lab's `mitre_id`

@@ -1,0 +1,52 @@
+windows:
+  - name: three failed logins from one source in two minutes
+    expect: match
+    events:
+      - timestamp: "2026-09-15T16:24:35Z"
+        product: ot_auth
+        service: hmi
+        event_type: login_failure
+        src_ip: 172.24.0.30
+      - timestamp: "2026-09-15T16:25:05Z"
+        product: ot_auth
+        service: hmi
+        event_type: login_failure
+        src_ip: 172.24.0.30
+      - timestamp: "2026-09-15T16:25:35Z"
+        product: ot_auth
+        service: hmi
+        event_type: login_failure
+        src_ip: 172.24.0.30
+
+  - name: two failed logins from one source
+    expect: no_match
+    events:
+      - timestamp: "2026-09-15T16:30:00Z"
+        product: ot_auth
+        service: hmi
+        event_type: login_failure
+        src_ip: 172.24.0.30
+      - timestamp: "2026-09-15T16:30:30Z"
+        product: ot_auth
+        service: hmi
+        event_type: login_failure
+        src_ip: 172.24.0.30
+
+  - name: one failure each from three sources
+    expect: no_match
+    events:
+      - timestamp: "2026-09-15T16:31:00Z"
+        product: ot_auth
+        service: hmi
+        event_type: login_failure
+        src_ip: 172.24.0.30
+      - timestamp: "2026-09-15T16:31:05Z"
+        product: ot_auth
+        service: hmi
+        event_type: login_failure
+        src_ip: 172.24.0.31
+      - timestamp: "2026-09-15T16:31:10Z"
+        product: ot_auth
+        service: hmi
+        event_type: login_failure
+        src_ip: 172.24.0.32

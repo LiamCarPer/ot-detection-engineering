@@ -1,0 +1,28 @@
+title: PLC Logic Integrity Verification Failed
+id: 3e8b2d6f-9c14-4a75-8d30-7b5f1e9a2c84
+status: experimental
+description: |
+  Detects a deployed PLC program whose hash no longer matches the golden
+  manifest. A logic change can survive a reboot, bypass an interlock and leave
+  no network event at the next poll; the program hash is the integrity signal.
+references:
+  - https://attack.mitre.org/techniques/T0889/
+author: Liam Carvajal
+date: 2026-11-25
+logsource:
+  product: ot_plc
+  service: diagnostics
+detection:
+  selection:
+    event_type: logic_tampered
+  condition: selection
+fields:
+  - plc
+  - status
+  - description
+falsepositives:
+  - A planned program deployment before the manifest is updated
+  - A vendor firmware or program update outside the change window
+level: critical
+tags:
+  - attack.t0889

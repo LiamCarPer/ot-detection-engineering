@@ -1,5 +1,5 @@
 // source: rules/sigma/ot/ot_modbus_register_enumeration.yml
 OTTelemetry
-| where direction =~ "request" and (function_code in~ ("3", "4")) and isnotempty(src_ip) and (not(src_ip =~ "172.22.0.10"))
+| where direction =~ "request" and (function_code in~ ("3", "4")) and isnotempty(src_ip) and (not((src_ip in~ ("172.22.0.10", "172.22.0.20"))))
 | summarize value_count = dcount(register) by bin(TimeGenerated, 5m), src_ip
 | where value_count >= 20

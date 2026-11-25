@@ -1,0 +1,21 @@
+# source: rules/sigma/ot/ot_plc_logic_tampered.yml
+groups:
+- name: ot_plc_logic_tampered
+  rules:
+  - alert: PLC_Logic_Integrity_Verification_Failed
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a deployed PLC program whose hash no longer matches the
+        golden
+
+        manifest. A logic change can survive a reboot, bypass an interlock and leave
+
+        no network event at the next poll; the program hash is the integrity signal.
+
+        '
+      summary: PLC Logic Integrity Verification Failed
+    expr: sum(count_over_time({job=~".+", service="diagnostics"} | logfmt | event_type=~`(?i)^logic_tampered$`
+      | line_format "{{.plc}} {{.status}} {{.description}}" [1m])) or vector(0) >
+      0
+    labels:
+      severity: critical

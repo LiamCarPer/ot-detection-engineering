@@ -1,4 +1,32 @@
 {
+  "lab_health/detection_service_down": {
+    "events": 1,
+    "expected": [
+      "Detection Service Stopped"
+    ],
+    "inputs": [
+      "lab_health/detection_service_down.json"
+    ],
+    "observed": [
+      "Detection Service Stopped"
+    ],
+    "schema_errors": [],
+    "sensor": "lab_health"
+  },
+  "lab_plc/logic_tampered": {
+    "events": 1,
+    "expected": [
+      "PLC Logic Integrity Verification Failed"
+    ],
+    "inputs": [
+      "lab_plc/logic_tampered.json"
+    ],
+    "observed": [
+      "PLC Logic Integrity Verification Failed"
+    ],
+    "schema_errors": [],
+    "sensor": "lab_plc"
+  },
   "netflow/flows": {
     "events": 2,
     "expected": [],
@@ -18,6 +46,20 @@
     "observed": [],
     "schema_errors": [],
     "sensor": "netflow"
+  },
+  "nginx_access/auth": {
+    "events": 4,
+    "expected": [
+      "HMI Login Failure"
+    ],
+    "inputs": [
+      "nginx_access/access.json"
+    ],
+    "observed": [
+      "HMI Login Failure"
+    ],
+    "schema_errors": [],
+    "sensor": "nginx_access"
   },
   "snmp/attack": {
     "events": 3,
@@ -104,6 +146,20 @@
     "observed": [],
     "schema_errors": [],
     "sensor": "suricata"
+  },
+  "sysmon/edr": {
+    "events": 1,
+    "expected": [
+      "Suspicious Modbus Client Initiated From An Endpoint"
+    ],
+    "inputs": [
+      "sysmon/edr.json"
+    ],
+    "observed": [
+      "Suspicious Modbus Client Initiated From An Endpoint"
+    ],
+    "schema_errors": [],
+    "sensor": "sysmon"
   },
   "zeek/dnp3_attack": {
     "events": 1,

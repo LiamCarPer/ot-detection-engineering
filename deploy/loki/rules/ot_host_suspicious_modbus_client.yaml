@@ -1,0 +1,27 @@
+# source: rules/sigma/ot/ot_host_suspicious_modbus_client.yml
+groups:
+- name: ot_host_suspicious_modbus_client
+  rules:
+  - alert: Suspicious_Modbus_Client_Initiated_From_An_Endpoint
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects an endpoint process initiating an outbound Modbus/TCP
+        connection with
+
+        a tool name associated with arbitrary register access. A legitimate HMI or
+
+        historian process has a stable image name and a known install path; a
+
+        download-directory binary opening 502 is a compromised workstation or an
+
+        unauthorized tool.
+
+        '
+      summary: Suspicious Modbus Client Initiated From An Endpoint
+    expr: sum(count_over_time({job=~".+", service="sysmon"} | logfmt | event_id=3
+      and initiated=~`(?i)^true$` and dst_port=502 and (image=~`(?i).*\\poll_plc\.exe$`
+      or image=~`(?i).*\\modbus_scan\.exe$` or image=~`(?i).*\\memdump\.exe$`) | line_format
+      "{{.hostname}} {{.user}} {{.image}} {{.dst_ip}} {{.dst_port}}" [1m])) or vector(0)
+      > 0
+    labels:
+      severity: high

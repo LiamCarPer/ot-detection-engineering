@@ -1,0 +1,175 @@
+{
+  "steps": [
+    {
+      "expected": [
+        "ot_firewall_cross_zone_violation"
+      ],
+      "finished_at": "2026-11-25T03:36:18.656799+00:00",
+      "first_fire": {
+        "ot_firewall_cross_zone_violation": "2026-11-25T03:35:58.503748+00:00"
+      },
+      "id": "cross-zone-read",
+      "lab_alerts": [
+        "CROSS_ZONE_VIOLATION"
+      ],
+      "native_not_evaluated": [],
+      "observed": [
+        "ot_firewall_cross_zone_violation"
+      ],
+      "returncode": 0,
+      "started_at": "2026-11-25T03:35:56.626991+00:00",
+      "unexpected": []
+    },
+    {
+      "expected": [
+        "ot_modbus_unauthorized_write"
+      ],
+      "finished_at": "2026-11-25T03:36:40.612762+00:00",
+      "first_fire": {
+        "ot_modbus_unauthorized_write": "2026-11-25T03:36:20.475172+00:00"
+      },
+      "id": "modbus-write",
+      "lab_alerts": [
+        "CROSS_ZONE_VIOLATION",
+        "UNAUTHORIZED_MODBUS_WRITE"
+      ],
+      "native_not_evaluated": [],
+      "observed": [
+        "ot_modbus_unauthorized_write"
+      ],
+      "returncode": 0,
+      "started_at": "2026-11-25T03:36:18.663969+00:00",
+      "unexpected": []
+    },
+    {
+      "expected": [
+        "ot_process_safety_violation"
+      ],
+      "finished_at": "2026-11-25T03:37:11.902233+00:00",
+      "first_fire": {},
+      "id": "process-safety-violation",
+      "lab_alerts": [
+        "CROSS_ZONE_VIOLATION",
+        "UNAUTHORIZED_MODBUS_WRITE"
+      ],
+      "native_not_evaluated": [],
+      "observed": [],
+      "returncode": 0,
+      "started_at": "2026-11-25T03:36:40.620169+00:00",
+      "unexpected": []
+    },
+    {
+      "expected": [
+        "ot_dnp3_restart_command",
+        "ot_dnp3_unauthorized_control",
+        "ot_dnp3_unsolicited_disabled"
+      ],
+      "finished_at": "2026-11-25T03:37:35.571538+00:00",
+      "first_fire": {
+        "ot_dnp3_restart_command": "2026-11-25T03:37:15.429469+00:00",
+        "ot_dnp3_unauthorized_control": "2026-11-25T03:37:15.429483+00:00",
+        "ot_dnp3_unsolicited_disabled": "2026-11-25T03:37:15.429486+00:00"
+      },
+      "id": "dnp3-control-campaign",
+      "lab_alerts": [
+        "DNP3_RESTART_COMMAND",
+        "DNP3_UNAUTHORIZED_CONTROL",
+        "DNP3_UNSOLICITED_DISABLED"
+      ],
+      "native_not_evaluated": [],
+      "observed": [
+        "ot_dnp3_restart_command",
+        "ot_dnp3_unauthorized_control",
+        "ot_dnp3_unsolicited_disabled"
+      ],
+      "returncode": 0,
+      "started_at": "2026-11-25T03:37:11.909460+00:00",
+      "unexpected": []
+    },
+    {
+      "expected": [
+        "ot_opcua_browse_request",
+        "ot_opcua_method_call",
+        "ot_opcua_write_request"
+      ],
+      "finished_at": "2026-11-25T03:37:56.359402+00:00",
+      "first_fire": {
+        "ot_opcua_browse_request": "2026-11-25T03:37:36.199904+00:00",
+        "ot_opcua_method_call": "2026-11-25T03:37:36.703716+00:00",
+        "ot_opcua_write_request": "2026-11-25T03:37:37.207336+00:00"
+      },
+      "id": "opcua-discovery-campaign",
+      "lab_alerts": [
+        "OPCUA_BROWSE_REQUEST",
+        "OPCUA_METHOD_CALL",
+        "OPCUA_WRITE_REQUEST"
+      ],
+      "native_not_evaluated": [],
+      "observed": [
+        "ot_opcua_browse_request",
+        "ot_opcua_method_call",
+        "ot_opcua_write_request"
+      ],
+      "returncode": 0,
+      "started_at": "2026-11-25T03:37:35.580036+00:00",
+      "unexpected": []
+    },
+    {
+      "expected": [
+        "ot_s7comm_change_operating_mode",
+        "ot_s7comm_program_download",
+        "ot_s7comm_program_upload"
+      ],
+      "finished_at": "2026-11-25T03:38:19.747922+00:00",
+      "first_fire": {
+        "ot_s7comm_change_operating_mode": "2026-11-25T03:37:59.602479+00:00",
+        "ot_s7comm_program_download": "2026-11-25T03:37:59.602496+00:00",
+        "ot_s7comm_program_upload": "2026-11-25T03:37:59.602501+00:00"
+      },
+      "id": "s7-program-campaign",
+      "lab_alerts": [
+        "OT_PORT_SCAN",
+        "S7COMM_CHANGE_OPERATING_MODE",
+        "S7COMM_PROGRAM_DOWNLOAD",
+        "S7COMM_PROGRAM_UPLOAD"
+      ],
+      "native_not_evaluated": [],
+      "observed": [
+        "ot_s7comm_change_operating_mode",
+        "ot_s7comm_program_download",
+        "ot_s7comm_program_upload"
+      ],
+      "returncode": 0,
+      "started_at": "2026-11-25T03:37:56.367921+00:00",
+      "unexpected": []
+    },
+    {
+      "expected": [
+        "ot_modbus_unauthorized_write"
+      ],
+      "finished_at": "2026-11-25T03:38:40.690086+00:00",
+      "first_fire": {
+        "ot_modbus_unauthorized_write": "2026-11-25T03:38:21.050941+00:00"
+      },
+      "id": "operator-workstation-write",
+      "lab_alerts": [
+        "UNAUTHORIZED_MODBUS_WRITE"
+      ],
+      "native_not_evaluated": [],
+      "observed": [
+        "ot_modbus_unauthorized_write"
+      ],
+      "returncode": 0,
+      "started_at": "2026-11-25T03:38:19.759454+00:00",
+      "unexpected": []
+    },
+    {
+      "expected": [],
+      "id": "benign-after",
+      "lab_alerts": [],
+      "observed": [],
+      "started_at": "2026-11-25T03:39:00.095752+00:00",
+      "unexpected": []
+    }
+  ]
+}

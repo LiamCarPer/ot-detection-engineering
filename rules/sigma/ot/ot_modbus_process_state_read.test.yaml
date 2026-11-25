@@ -64,3 +64,14 @@ cases:
       dst_ip: 172.24.0.10
       unit_id: 1
       register: 0
+
+  - name: the historian collector reads process data
+    expect: no_match
+    event:
+      timestamp: "2026-09-15T08:15:00.000Z"
+      direction: request
+      function_code: 3
+      src_ip: 172.22.0.20
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 10

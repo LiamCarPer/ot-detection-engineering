@@ -1,0 +1,115 @@
+{
+  "capture": {
+    "bytes": 7366183,
+    "captured_at": "2026-11-25T03:55:41.284046+00:00",
+    "path": "/media/liamcarvajal/Storage/code/ot-security-lab/detection/logs/benign-pilot-70m.pcap",
+    "sha256": "5eeedf309d35714925a9b49c2d6999880649b918c4600a1afd7103cf2c111f17"
+  },
+  "events": 13949,
+  "families": {
+    "baseline": {
+      "event_indexes": [],
+      "false_positive_events": 0,
+      "false_positive_rate": 0.0,
+      "per_rule": {
+        "New OT Communication Pair": 0,
+        "New OT Source Asset Not In The Behaviour Baseline": 0,
+        "New Protocol Function Code From An OT Asset": 0
+      },
+      "rules": 3
+    },
+    "conduit": {
+      "event_indexes": [],
+      "false_positive_events": 0,
+      "false_positive_rate": 0.0,
+      "per_rule": {
+        "Flow From An Unauthorized Source On A Declared Conduit": 0,
+        "Flow On A Port Outside The Declared Conduit": 0,
+        "Flow Through An Undeclared Zone Conduit": 0
+      },
+      "rules": 3
+    },
+    "native": {
+      "false_positive_alerts": 0,
+      "measured_from": "Suricata over the lab capture",
+      "signatures": []
+    },
+    "not_observed": {
+      "families": [
+        "host/sysmon",
+        "auth/hmi",
+        "plc/diagnostics",
+        "detection_health"
+      ],
+      "reason": "not present in a network capture"
+    },
+    "sigma_correlation": {
+      "fired": [],
+      "per_rule": {
+        "Control Zone Host Reaching Multiple Enterprise Destinations": false,
+        "Enterprise Host Probing Multiple Control Zone Ports": false,
+        "HMI Login Failure Burst From One Source": false,
+        "Modbus Control Asset Enumeration": false,
+        "Modbus Exception Flood Toward An Operator Interface": false,
+        "Modbus Register Enumeration From One Host": false,
+        "OPC UA Address Space Enumeration": false
+      },
+      "rules": 7
+    },
+    "sigma_single_event": {
+      "event_indexes": [],
+      "false_positive_events": 0,
+      "false_positive_rate": 0.0,
+      "false_positive_rate_ci95": [
+        0.0,
+        0.0003
+      ],
+      "per_rule": {
+        "rules/sigma/ot/ot_detection_service_down.yml": 0,
+        "rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml": 0,
+        "rules/sigma/ot/ot_dnp3_restart_command.yml": 0,
+        "rules/sigma/ot/ot_dnp3_unauthorized_control.yml": 0,
+        "rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml": 0,
+        "rules/sigma/ot/ot_firewall_control_zone_egress.yml": 0,
+        "rules/sigma/ot/ot_firewall_cross_zone_violation.yml": 0,
+        "rules/sigma/ot/ot_firewall_enterprise_control_service.yml": 0,
+        "rules/sigma/ot/ot_flow_industrial_service_refused.yml": 0,
+        "rules/sigma/ot/ot_flow_large_transfer.yml": 0,
+        "rules/sigma/ot/ot_hmi_login_failure.yml": 0,
+        "rules/sigma/ot/ot_host_suspicious_modbus_client.yml": 0,
+        "rules/sigma/ot/ot_modbus_block_read.yml": 0,
+        "rules/sigma/ot/ot_modbus_coil_write.yml": 0,
+        "rules/sigma/ot/ot_modbus_device_identification_scan.yml": 0,
+        "rules/sigma/ot/ot_modbus_exception_response.yml": 0,
+        "rules/sigma/ot/ot_modbus_parameter_write.yml": 0,
+        "rules/sigma/ot/ot_modbus_process_state_read.yml": 0,
+        "rules/sigma/ot/ot_modbus_unauthorized_write.yml": 0,
+        "rules/sigma/ot/ot_opcua_browse_request.yml": 0,
+        "rules/sigma/ot/ot_opcua_method_call.yml": 0,
+        "rules/sigma/ot/ot_opcua_write_request.yml": 0,
+        "rules/sigma/ot/ot_plc_logic_tampered.yml": 0,
+        "rules/sigma/ot/ot_process_safety_violation.yml": 0,
+        "rules/sigma/ot/ot_s7comm_change_operating_mode.yml": 0,
+        "rules/sigma/ot/ot_s7comm_program_download.yml": 0,
+        "rules/sigma/ot/ot_s7comm_program_upload.yml": 0,
+        "rules/sigma/ot/ot_snmp_config_change.yml": 0,
+        "rules/sigma/ot/ot_snmp_device_restart.yml": 0,
+        "rules/sigma/ot/ot_snmp_interface_down.yml": 0
+      },
+      "rules": 30
+    },
+    "stateful": {
+      "fired": [],
+      "per_rule": {
+        "DNP3 Operate Without A Matching Select": false,
+        "Engineering Change Outside Approved Window": false,
+        "New Protocol Service Or Function On A Known Asset": false,
+        "Process Value Drift From Learned Baseline": false,
+        "Process Value Outside The Safety Envelope": false
+      },
+      "rules": 5
+    }
+  },
+  "schema_version": 1,
+  "suricata_alerts": 0
+}

@@ -7,30 +7,32 @@ from a real run; nothing is hand-counted. The full claim-to-evidence map is in
 [`docs/REVIEWER_GUIDE.md`](REVIEWER_GUIDE.md).
 
 Coverage is not a score. The raw ATT&CK for ICS number is
-**29 / 97 techniques (29.9%)**; it is deliberately not the headline, and the
+**32 / 97 techniques (33.0%)**; it is deliberately not the headline, and the
 per-tactic rationale for the gaps is in the README.
 
 ## Headline
 
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
-| ATT&CK for ICS coverage | 29 prioritized techniques (raw 29 / 97, 29.9%) | Chosen against the plant threat model; gaps are listed, not padded. |
-| Detection content | 26 Sigma + 6 correlation + 4 YARA + 21 native + 5 stateful (plus 3 baseline + 3 conduit) | 68 catalogued rules across all families. |
+| ATT&CK for ICS coverage | 32 prioritized techniques (raw 32 / 97, 33.0%) | Chosen against the plant threat model; gaps are listed, not padded. |
+| Detection content | 30 Sigma + 7 correlation + 4 YARA + 21 native + 5 stateful (plus 3 baseline + 3 conduit) | 73 catalogued rules across all families. |
 | Emulation detection rate (MTTD run) | 100% (4 / 4 expectations) | 2026-09-13 run, two steps; the lab's `mitre_id` is cross-checked against the plan. |
 | Mean MTTD | 2.45 s | Time from action to first matching alert, 2026-09-13 run (`n=4`, one run). |
+| Purple-team live | 11 / 12 Sigma expectations (7 steps, 3 runs) | 2026-11-25; 0 unexpected; benign windows clean; mean MTTD 2.43 s. |
 | Purple-team replay | 14 / 14 expectations (8 steps) | 2026-11-24 replay of the lab's `alert_type` snapshot; 0 unexpected, benign window passed; not rule execution and not MTTD. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule vs. its own committed fixtures — a regression check. |
 | Sigma single-event FPR | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events; 30 behavioural shapes. |
 | All-family FPR | baseline, conduit, stateful, correlation, native, YARA all 0 | Same corpus plus benign captures and fixtures; `deploy/evidence/fpr/report.md`. |
-| Held-out single-event recall | 50 / 50 (95% CI 0.9287–1.0) | 2 labeled positives per rule, authored separately from the fixtures. |
-| Held-out single-event precision | 50 / 50 (95% CI 0.9287–1.0) | The same positives against 1,024 held-out negatives per rule. |
+| Held-out single-event recall | 54 / 54 (95% CI 0.9336–1.0) | 2 labeled positives per rule, authored separately from the fixtures. |
+| Held-out single-event precision | 54 / 54 (95% CI 0.9336–1.0) | The same positives against 1,024 held-out negatives per rule. |
 | Held-out single-event false-positive rate | 0 / 1,024 per rule (95% CI 0.0–0.0037) | 1,000 generated at a different seed plus one near miss per rule. |
-| Held-out correlation recall | 12 / 12 windows (95% CI 0.757–1.0) | Window-level across six correlation rules. |
+| Held-out correlation recall | 13 / 13 windows (95% CI 0.7719–1.0) | Window-level across six correlation rules. |
 | Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
 | Alert-flood case study | 151 alerts → 24 episodes → 5 operational events | One 160-second lab burst; no analyst action timestamps. |
-| Detection catalogue | 68 rules, 6 stable, 62 experimental | 12 rules have observed lab volume; the health gate has 0 blocking gaps. |
+| Suppression | 151 alerts → 21 notifications (86.09%) | Grouping policy; C2/C3/C4/C5 preserved. |
+| Detection catalogue | 73 rules, 6 stable, 67 experimental | 12 rules have observed lab volume; the health gate has 0 blocking gaps. |
 | Stateful detections | 3 rules, 16 windows, baselines current | Drift, approved change window, per-asset protocol profile. |
-| Performance | 6.9–11.5M decoder frames/s; ~4,800 replay events/s | Release build; per-frame p99; small example frames; hardware in `docs/PERFORMANCE.md`. |
+| Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s | Release build; per-frame p99; small example frames; hardware in `docs/PERFORMANCE.md`. |
 
 ## What is functionally validated
 
