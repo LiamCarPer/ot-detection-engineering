@@ -1,0 +1,49 @@
+{
+  "events": 13949,
+  "runs": [
+    {
+      "achieved_eps": 3999.98,
+      "attempts": 20000,
+      "drop_rate": 0.0,
+      "dropped": 0,
+      "duration_seconds": 5.0,
+      "hardware": {
+        "machine": "x86_64",
+        "platform": "Linux-6.18.7-76061807-generic-x86_64-with-glibc2.39",
+        "processor": "x86_64",
+        "python": "3.12.3"
+      },
+      "matches": 0,
+      "max_queue": 72,
+      "p50_us": 164.221,
+      "p99_us": 10736.522,
+      "processed": 20000,
+      "queue_size": 10000,
+      "rules": 30,
+      "target_eps": 4000
+    },
+    {
+      "achieved_eps": 5004.56,
+      "attempts": 100000,
+      "drop_rate": 0.64897,
+      "dropped": 64897,
+      "duration_seconds": 5.0,
+      "hardware": {
+        "machine": "x86_64",
+        "platform": "Linux-6.18.7-76061807-generic-x86_64-with-glibc2.39",
+        "processor": "x86_64",
+        "python": "3.12.3"
+      },
+      "matches": 0,
+      "max_queue": 10000,
+      "p50_us": 2035339.258,
+      "p99_us": 2252786.429,
+      "processed": 35103,
+      "queue_size": 10000,
+      "rules": 30,
+      "target_eps": 20000
+    }
+  ],
+  "schema_version": 1,
+  "source": "/tmp/opencode/benign-pilot-events.jsonl"
+}

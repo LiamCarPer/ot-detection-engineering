@@ -44,3 +44,12 @@ def test_renderers_produce_output() -> None:
     report = build_report()
     assert "MITRE ATT&CK for ICS Coverage" in render_markdown(report)
     assert "<html" in render_html(report)
+
+
+def test_every_tagged_technique_is_validated() -> None:
+    from generate_coverage import build_report
+
+    summary = build_report()["summary"]
+    assert summary["techniques_validated"] == summary["techniques_covered"], (
+        "a tagged technique lacks a fixture, an independent measurement or a clean benign result"
+    )

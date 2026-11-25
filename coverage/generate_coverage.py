@@ -25,6 +25,104 @@ if str(REPO_ROOT) not in sys.path:
 
 from tools.otde.rules import detected_techniques, load_catalog  # noqa: E402
 
+HELDOUT = REPO_ROOT / "metrics" / "heldout"
+FPR = REPO_ROOT / "deploy" / "evidence" / "fpr" / "summary.json"
+LIVE_PURPLE = REPO_ROOT / "deploy" / "evidence" / "purple-live" / "summary.json"
+LIVE_LAB = REPO_ROOT / "deploy" / "evidence" / "lab-loki" / "summary.json"
+NATIVE = REPO_ROOT / "rules" / "native"
+
+
+def _jsonl(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def _evidence() -> dict[str, dict[str, bool]]:
+    """Per-technique evidence: fixture, held-out/capture, live and benign.
+
+    Tagged coverage is cheap; this separates a technique that has a rule from
+    one whose rule has a fixture, an independent measurement and a benign
+    false-positive result.
+    """
+    heldout_positives = {row["rule"] for row in _jsonl(HELDOUT / "positives.jsonl")}
+    heldout_windows = {row["rule"] for row in _jsonl(HELDOUT / "windows.jsonl")}
+    heldout_yara = {row["rule"] for row in _jsonl(HELDOUT / "yara.jsonl")}
+
+    live_groups: set[str] = set()
+    if LIVE_PURPLE.exists():
+        summary = json.loads(LIVE_PURPLE.read_text(encoding="utf-8"))
+        for step in summary.get("steps", {}).values():
+            live_groups.update(step.get("expected", []))
+            live_groups.update(step.get("unexpected", []))
+    if LIVE_LAB.exists():
+        lab = json.loads(LIVE_LAB.read_text(encoding="utf-8"))
+        live_groups.update(lab.get("expected", {}).values())
+
+    benign_ok = True
+    if FPR.exists():
+        report = json.loads(FPR.read_text(encoding="utf-8"))
+        families = report.get("families", {})
+        for family in families.values():
+            if family.get("false_positive_alerts", 0):
+                benign_ok = False
+            if family.get("false_positive_files", 0):
+                benign_ok = False
+            if family.get("false_positive_events", 0):
+                benign_ok = False
+            if family.get("fired"):
+                benign_ok = False
+
+    from tools.otde.evidence import EXPECTED_SIDS  # noqa: E402
+    from tools.otde.suricata import read_rules  # noqa: E402
+
+    exercised_sids = set().union(*EXPECTED_SIDS.values()) if EXPECTED_SIDS else set()
+    native_by_technique: dict[str, set[int]] = {}
+    for path in sorted(NATIVE.rglob("*.rules")):
+        for rule in read_rules(path):
+            for technique in rule.attack_ics:
+                native_by_technique.setdefault(technique.upper(), set()).add(rule.sid)
+
+    evidence: dict[str, dict[str, bool]] = {}
+    for technique, sources in detected_techniques().items():
+        fixture = False
+        held_out = False
+        capture = False
+        live = False
+        family_proof = False
+        for source in sources:
+            path = Path(source)
+            if path.suffix == ".rules":
+                native_capture = bool(
+                    native_by_technique.get(technique.upper(), set()) & exercised_sids
+                )
+                capture = capture or native_capture
+                # A native rule's fixture is the committed capture that
+                # exercises its SID; there is no Sigma-style sidecar.
+                fixture = fixture or native_capture
+                continue
+            fixture = fixture or path.with_suffix(".test.yaml").exists()
+            if "rules/sigma" in path.as_posix():
+                held_out = held_out or source in heldout_positives or source in heldout_windows
+            if path.parent.name == "yara":
+                held_out = held_out or source in heldout_yara
+            if path.parent.name in {"baseline", "conduit", "stateful"}:
+                family_proof = True
+            live = live or path.stem in live_groups
+        measured = held_out or capture or family_proof
+        evidence[technique] = {
+            "fixture": fixture,
+            "held_out_or_capture": measured,
+            "live": live,
+            "benign": benign_ok,
+            "validated": fixture and measured and benign_ok,
+        }
+    return evidence
+
 # Left-to-right order of the ATT&CK for ICS matrix.
 TACTIC_ORDER = [
     "initial-access",
@@ -54,6 +152,7 @@ def build_report() -> dict:
         else len(TACTIC_ORDER),
     )
 
+    evidence = _evidence()
     technique_rows = []
     for technique in catalog["techniques"]:
         sources = detected.get(technique["id"], [])
@@ -65,6 +164,7 @@ def build_report() -> dict:
                 "covered": technique["id"] in detected,
                 "rule_count": len(sources),
                 "sources": sources,
+                "evidence": evidence.get(technique["id"], {}),
             }
         )
 
@@ -92,6 +192,12 @@ def build_report() -> dict:
             "techniques_covered": len(covered_ids),
             "coverage_pct": round(100 * len(covered_ids) / len(technique_rows), 1),
             "rules_total": sum(len(v) for v in detected.values()),
+            "techniques_validated": sum(
+                1 for row in technique_rows if row.get("evidence", {}).get("validated")
+            ),
+            "techniques_live": sum(
+                1 for row in technique_rows if row.get("evidence", {}).get("live")
+            ),
         },
         "tactics": tactic_rows,
         "techniques": technique_rows,
@@ -105,7 +211,9 @@ def render_markdown(report: dict) -> str:
         "",
         f"ATT&CK for ICS v{report['attack_version']} — "
         f"**{summary['techniques_covered']} / {summary['techniques_total']}** techniques "
-        f"covered ({summary['coverage_pct']}%).",
+        f"tagged ({summary['coverage_pct']}%); "
+        f"**{summary['techniques_validated']}** validated; "
+        f"**{summary['techniques_live']}** live-lab proven.",
         "",
         "Generated from rule technique tags by `coverage/generate_coverage.py`.",
         "",
@@ -126,14 +234,15 @@ def render_markdown(report: dict) -> str:
         lines.append("_No techniques are currently covered._")
     else:
         lines += [
-            "| Technique | Name | Rules |",
-            "| :--- | :--- | ---: |",
+            "| Technique | Name | Rules | Validated |",
+            "| :--- | :--- | ---: | :---: |",
         ]
         for technique in detected:
             lines.append(
                 f"| [{technique['id']}]"
                 f"(https://attack.mitre.org/techniques/{technique['id'].replace('.', '/')}/) "
-                f"| {technique['name']} | {technique['rule_count']} |"
+                f"| {technique['name']} | {technique['rule_count']} | "
+                f"{'yes' if technique.get('evidence', {}).get('validated') else 'tagged only'} |"
             )
     return "\n".join(lines) + "\n"
 

@@ -87,3 +87,26 @@ recomputing the SLOs from the recorded numbers.
   measured here.
 - **Numbers vary.** The committed run is one sample; the hardware and method are
   recorded so a different host can be compared honestly.
+
+## Sustained matcher load
+
+The decoder microbenchmark is not a load test. This run replays the normalized
+events from the 70-minute lab-benign capture at a fixed arrival rate through
+every single-event Sigma rule, with a bounded queue.
+
+| Target | Achieved | Drops | p99 | Max queue |
+| ---: | ---: | ---: | ---: | ---: |
+| 4,000 events/s | ~4,000 events/s | 0 | ~10.7 ms | 72 |
+| 20,000 events/s | ~5,000 events/s | ~64,897 (64.9%) | ~2.25 s | 10,000 |
+
+At 4,000 EPS the matcher keeps up with no drops; the p99 includes queue wait.
+At 20,000 EPS the consumer saturates, the queue fills, and the producer drops
+64.9% rather than growing without bound. This is a single-process Python
+matcher, not a production sensor or a pcap replay.
+
+The event file is produced from a capture:
+
+```bash
+python tools/benign_lab_check.py --pcap <lab.pcap> --events-out /tmp/benign-events.jsonl
+make load-check LOAD_EVENTS=/tmp/benign-events.jsonl
+```

@@ -47,6 +47,7 @@ help:
 	@echo "  stateful-check   Fail if the stateful evidence has drifted"
 	@echo "  perf             Run decoder and replay benchmarks"
 	@echo "  perf-check       Validate the committed performance evidence"
+	@echo "  load-check       Sustained matcher load and bounded-queue drop test"
 	@echo "  fpr              Regenerate the all-family false-positive report"
 	@echo "  fpr-check        Fail if the all-family false-positive report has drifted"
 	@echo "  lab-loki-check   Refresh the OT-Security-Lab ruler evidence (lab required)"
@@ -182,6 +183,11 @@ perf: setup
 
 perf-check: setup
 	$(PY) tools/perf_check.py --check
+
+LOAD_EVENTS ?= /tmp/benign-events.jsonl
+
+load-check: setup
+	$(PY) tools/load_check.py --events "$(LOAD_EVENTS)" --target-eps 4000 --duration 5
 
 fpr: setup
 	$(PY) metrics/fpr.py

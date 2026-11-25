@@ -106,7 +106,7 @@ def _normalized_events(suricata_dir: Path, zeek_dir: Path) -> list[dict[str, Any
     return events
 
 
-def build(pcap: Path) -> dict[str, Any]:
+def build(pcap: Path, events_out: Path | None = None) -> dict[str, Any]:
     work = Path(tempfile.mkdtemp(prefix="otde-benign-lab-"))
     local = work / "capture.pcap"
     shutil.copyfile(pcap, local)
@@ -136,6 +136,11 @@ def build(pcap: Path) -> dict[str, Any]:
             "families": ["host/sysmon", "auth/hmi", "plc/diagnostics", "detection_health"],
         },
     }
+    if events_out:
+        events_out.write_text(
+            "".join(json.dumps(event, sort_keys=True) + "\n" for event in events),
+            encoding="utf-8",
+        )
     return {
         "schema_version": 1,
         "capture": {
@@ -191,8 +196,15 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pcap", required=True)
     parser.add_argument("--out", default=str(OUT_DIR))
+    parser.add_argument(
+        "--events-out",
+        default=None,
+        help="Optional JSONL path for the normalized events, for a load replay",
+    )
     args = parser.parse_args(argv)
-    report = build(Path(args.pcap))
+    report = build(
+        Path(args.pcap), Path(args.events_out) if args.events_out else None
+    )
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     (out / "summary.json").write_text(

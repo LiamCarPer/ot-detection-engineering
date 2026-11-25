@@ -14,7 +14,7 @@ per-tactic rationale for the gaps is in the README.
 
 | Metric | Value | Scope |
 | :--- | ---: | :--- |
-| ATT&CK for ICS coverage | 32 prioritized techniques (raw 32 / 97, 33.0%) | Chosen against the plant threat model; gaps are listed, not padded. |
+| ATT&CK for ICS coverage | 32 tagged, 32 validated, 10 live-lab proven (raw 32 / 97, 33.0%) | Chosen against the plant threat model; gaps are listed, not padded. |
 | Detection content | 30 Sigma + 7 correlation + 4 YARA + 21 native + 5 stateful (plus 3 baseline + 3 conduit) | 73 catalogued rules across all families. |
 | Emulation detection rate (MTTD run) | 100% (4 / 4 expectations) | 2026-09-13 run, two steps; the lab's `mitre_id` is cross-checked against the plan. |
 | Mean MTTD | 2.45 s | Time from action to first matching alert, 2026-09-13 run (`n=4`, one run). |
@@ -32,7 +32,7 @@ per-tactic rationale for the gaps is in the README.
 | Suppression | 151 alerts → 21 notifications (86.09%) | Grouping policy; C2/C3/C4/C5 preserved. |
 | Detection catalogue | 73 rules, 6 stable, 67 experimental | 12 rules have observed lab volume; the health gate has 0 blocking gaps. |
 | Stateful detections | 3 rules, 16 windows, baselines current | Drift, approved change window, per-asset protocol profile. |
-| Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s | Release build; per-frame p99; small example frames; hardware in `docs/PERFORMANCE.md`. |
+| Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s; 4,000 events/s sustained, 0 drops | Release build; per-frame p99; small example frames; hardware in `docs/PERFORMANCE.md`. |
 
 ## What is functionally validated
 

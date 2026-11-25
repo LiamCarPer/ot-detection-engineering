@@ -22,7 +22,7 @@ not current and must not be used.
 
 | Figure | Current value |
 | :-- | :-- |
-| ATT&CK for ICS coverage | **32 / 97 techniques (33.0%)**, prioritized, not padded |
+| ATT&CK for ICS coverage | **32 / 97 techniques (33.0%)** tagged, **32 validated**, **10 live-lab proven** |
 | Detection content | **30 Sigma + 7 correlation + 4 YARA + 21 native + 5 stateful**, plus 3 baseline + 3 conduit = 73 catalogued rules |
 | Benign baseline | **Sigma single-event: 0 / 1,000 generated events**, 95% Wilson upper bound **0.38%**; all-family report in `deploy/evidence/fpr/report.md` |
 | Held-out single-event | **54 / 54** positives, **0** false positives over 1,024 negatives per rule |
@@ -35,7 +35,7 @@ not current and must not be used.
 | Sensor health | **Detection Service Stopped firing live** in the lab ruler |
 | Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
 | Detection catalogue | **73 rules, 6 stable, 67 experimental, 12 with observed lab volume, 0 blocking gaps** |
-| Performance | **7.8–11.0M decoder frames/s; ~2,800 replay events/s** on the recorded host |
+| Performance | **7.8–11.0M decoder frames/s; ~2,800 replay events/s; 4,000 events/s sustained, 0 drops** on the recorded host |
 | Test suite | The count is not a quality claim; see the CI run |
 | Live lab | **11 of the 13 rules the lab exercises** fire on live traffic (snapshot 2026-09-15; predates the P1 rule changes) |
 

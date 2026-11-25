@@ -74,7 +74,9 @@ history before promotion.
 
 ## Coverage: prioritized, not padded
 
-Raw ATT&CK for ICS coverage is **32 / 97 techniques (33.0%)**. That number is
+Raw tagged ATT&CK for ICS coverage is **32 / 97 techniques (33.0%)**; all **32**
+tagged techniques are validated (fixture plus an independent measurement plus a
+clean benign result), and **10** are live-lab proven. The raw number is
 deliberately not the headline: the catalogue includes techniques that are not
 observable from the telemetry this repository has, and padding it with untested
 tags would make the repo worse, not better.
@@ -106,7 +108,7 @@ by `tests/test_claims.py`.
 | Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, 2026-09-13 run (`n=4`, one run). |
 | Purple-team live | 11 / 12 Sigma expectations (7 steps, 3 runs) | 2026-11-25; 0 unexpected; benign windows clean; process-safety miss is the lab counter model. |
 | Purple-team replay | 14 / 14 expectations (8 steps) | 2026-11-24 replay of the lab's `alert_type` snapshot; 0 unexpected; benign window passed; a lab alert-signal mapping test, not rule execution and not MTTD. |
-| Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s | Release build on the recorded host; small example frames; per-frame p99, see `docs/PERFORMANCE.md`. |
+| Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s; 4,000 events/s sustained with 0 drops, 20,000 saturates and drops | Release build on the recorded host; small example frames; per-frame p99, see `docs/PERFORMANCE.md`. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule matches against its own committed fixtures. A regression check, not field precision. |
 | Sigma single-event FPR | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every stream the Sigma rules consume. The corpus has 30 behavioural shapes, so the binomial bound overstates effective N. |
 | All-family FPR | baseline, conduit, stateful, correlation, native and YARA all 0 | Same corpus plus the committed benign captures and fixtures; see [`deploy/evidence/fpr/report.md`](deploy/evidence/fpr/report.md). |

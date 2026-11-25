@@ -6,6 +6,7 @@ exercised, and what it does not prove. If a claim is not in this table and in
 
 | Run | Date | Exercised | Result | Does not prove |
 | :-- | :-- | :-- | :-- | :-- |
+| Coverage efficacy | Every commit | 32 tagged techniques | 32 validated (fixture + independent measurement + clean benign); 10 live-lab proven (`coverage/out/`) | The 97-technique denominator still includes host/auth/process techniques this telemetry cannot see |
 | Rule fixtures | Every commit | 30 single-event Sigma rules, 7 correlation rules, 4 YARA rules, 3 baseline, 3 conduit, 5 stateful | `make test` green; precision/recall 1.0 against the rule's own fixtures | Field precision or recall |
 | Held-out single-event | Every commit | 54 positives against 1,024 generated negatives per rule plus one near miss | 54 / 54, 0 false positives (`95% CI 0.9336–1.0`) | Independence from the generator; two positives per rule leaves a wide interval |
 | Held-out correlation | Every commit | 13 positive and 15 negative windows across seven rules | 13 / 13, 0 false positives | Timing realism; windows are authored |
@@ -25,6 +26,7 @@ exercised, and what it does not prove. If a claim is not in this table and in
 | Incident | 2026-11-25 | Three unauthorized Modbus writes, armed responder | Detected, gateway block verified, block removed, responder returned to dry-run (`docs/INCIDENT_2026-11-25.md`) | Lab containment, not a plant change-management or host eradication action |
 | Sensor health | 2026-11-25 | Watchdog event for a stopped DNP3 producer | The repository rule fired in the lab ruler (`deploy/evidence/lab-health/`) | One producer, one event; not a full sensor-health baseline |
 | Alert-flood case study | 2026-11-24 | 151 lab alerts, 17 types, 4 sources | 24 one-minute episodes, 5 operational events (`analysis/out/`) | Analyst MTTA or production queue behaviour |
+| Sustained load | 2026-11-25 | 4,000 and 20,000 EPS through 30 rules with a 10,000 queue | 4,000 EPS: 0 drops; 20,000: 64.9% drops and a full queue (`deploy/evidence/load/`) | Single-process Python matcher, not a pcap sensor or production backpressure |
 | Performance | 2026-11-25 | DNP3, S7comm and OPC UA decoder microbenchmark; 1,000 benign events × 10 through 30 rules | 7.8–11.0M frames/s; ~2,800 replay events/s; per-frame p99 60–190 ns (`deploy/evidence/perf/`) | Production throughput, pcap replay, backpressure, SIEM cost |
 
 ## Evidence hierarchy
