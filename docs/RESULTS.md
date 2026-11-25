@@ -31,7 +31,7 @@ per-tactic rationale for the gaps is in the README.
 | Alert-flood case study | 151 alerts → 24 episodes → 5 operational events | One 160-second lab burst; no analyst action timestamps. |
 | Suppression | 151 alerts → 21 notifications (86.09%) | Grouping policy; C2/C3/C4/C5 preserved. |
 | Detection catalogue | 73 rules, 6 stable, 67 experimental | 12 rules have observed lab volume; the health gate has 0 blocking gaps. |
-| Stateful detections | 3 rules, 16 windows, baselines current | Drift, approved change window, per-asset protocol profile. |
+| Stateful detections | 5 rules, 31 windows, 2 change windows, baselines current | DNP3 select/operate, drift, approved change window, per-asset protocol profile, process envelope. |
 | Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s; 4,000 events/s sustained, 0 drops | Release build; per-frame p99; small example frames; hardware in `docs/PERFORMANCE.md`. |
 
 ## What is functionally validated
