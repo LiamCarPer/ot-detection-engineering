@@ -45,8 +45,12 @@ OUT_DIR = REPO_ROOT / "deploy" / "evidence" / "benign-lab"
 SUMMARY = OUT_DIR / "summary.json"
 REPORT = OUT_DIR / "report.md"
 RULES = REPO_ROOT / "deploy" / "suricata" / "ot-detection.rules"
-SURICATA_IMAGE = "jasonish/suricata:latest"
-ZEEK_IMAGE = "zeek/zeek:latest"
+SURICATA_IMAGE = (
+    "jasonish/suricata@sha256:3656d09b39e85b3a438b13fe32883ae04743ef86b72e594f45b52c6154edf5c9"
+)
+ZEEK_IMAGE = (
+    "zeek/zeek@sha256:70733f4e540ba1608e37e00c6a93d009f79734262c9ec2ba09d90aa9abc16de5"
+)
 
 
 def _sha256(path: Path) -> str:

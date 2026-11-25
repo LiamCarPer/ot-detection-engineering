@@ -1,7 +1,7 @@
 # Real engines for the parity harness. See README.md in this directory.
 services:
   splunk:
-    image: splunk/splunk:latest
+    image: splunk/splunk@sha256:e26840dfe69ec9ff305c10681664900168849c3ff346a9cf49322b5351841f3f
     container_name: ot_splunk
     environment:
       SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
 
   opensearch:
-    image: opensearchproject/opensearch:latest
+    image: opensearchproject/opensearch@sha256:02358b2be62b268a404a54581184d027ac0dfa8f875be15fe4c4fa3f8884f464
     container_name: otde-opensearch
     environment:
       discovery.type: single-node

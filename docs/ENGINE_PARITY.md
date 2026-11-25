@@ -62,5 +62,5 @@ not see:
   aggregations are syntax-checked but not executed here.
 - Splunk Free is a single-user 500 MB/day instance, bound to `127.0.0.1`. It is
   a parity fixture, not a sizing or throughput result.
-- The engines are pinned by container image tag, not digest. The evidence
-  records what ran; a future image can change behaviour.
+- The engines are pinned by image digest and the observed versions are recorded
+  in the evidence; a future image cannot change the result silently.

@@ -6,10 +6,10 @@
     "positives": 54
   },
   "engines": {
-    "kusto": "KQL at http://127.0.0.1:18080 table OTTelemetry",
+    "kusto": "Kusto 2026.11.22.1236-2647-5eeef1d-master at http://127.0.0.1:18080 table OTTelemetry",
     "loki": "measured live by make lab-loki-check",
-    "opensearch": "PPL at http://127.0.0.1:19200",
-    "splunk": "Splunk Free, index ot_parity"
+    "opensearch": "OpenSearch 3.10.1 PPL at http://127.0.0.1:19200",
+    "splunk": "Splunk 10.6.2.5 Free, index ot_parity"
   },
   "rules": {
     "rules/sigma/ot/ot_detection_service_down.yml": {

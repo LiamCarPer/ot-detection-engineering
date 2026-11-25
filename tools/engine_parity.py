@@ -484,6 +484,32 @@ def _kusto_query_path(source: str, rule: SigmaRule) -> str | None:
     )
 
 
+def _engine_versions() -> dict[str, str]:
+    versions: dict[str, str] = {}
+    try:
+        info = _http(f"{SPLUNK_REST}/services/server/info?output_mode=json")
+        versions["splunk"] = str(info["entry"][0]["content"]["version"])
+    except (KeyError, IndexError, urllib.error.URLError):
+        versions["splunk"] = "unknown"
+    try:
+        info = _http(f"{OPEN_SEARCH}/")
+        versions["opensearch"] = str(info["version"]["number"])
+    except (KeyError, urllib.error.URLError):
+        versions["opensearch"] = "unknown"
+    try:
+        payload = _kusto_query(".show version")
+        for table in payload.get("Tables", []):
+            columns = [column["ColumnName"] for column in table.get("Columns", [])]
+            if "ProductVersion" in columns and table.get("Rows"):
+                versions["kusto"] = str(table["Rows"][0][columns.index("ProductVersion")])
+                break
+        else:
+            versions["kusto"] = "unknown"
+    except urllib.error.URLError:
+        versions["kusto"] = "unknown"
+    return versions
+
+
 def _kusto_rows(csl: str) -> set[str]:
     payload = _kusto_query(csl)
     for table in payload.get("Tables", []):
@@ -571,6 +597,7 @@ def build(
             if row.get(engine, {}).get("status") == status
         )
 
+    versions = _engine_versions()
     summary = {
         "schema_version": 1,
         "corpus": {
@@ -580,9 +607,15 @@ def build(
             "negatives": len(_jsonl(BENIGN)),
         },
         "engines": {
-            "splunk": "Splunk Free, index ot_parity" if splunk_ready else "not run",
-            "opensearch": f"PPL at {OPEN_SEARCH}",
-            "kusto": f"KQL at {KUSTO} table {KUSTO_TABLE}",
+            "splunk": (
+                f"Splunk {versions['splunk']} Free, index ot_parity"
+                if splunk_ready
+                else "not run"
+            ),
+            "opensearch": f"OpenSearch {versions['opensearch']} PPL at {OPEN_SEARCH}",
+            "kusto": (
+                f"Kusto {versions['kusto']} at {KUSTO} table {KUSTO_TABLE}"
+            ),
             "loki": "measured live by make lab-loki-check",
         },
         "rules": results,
@@ -612,6 +645,9 @@ def render(summary: dict[str, Any]) -> str:
         f"({summary['corpus']['positives']} positives, "
         f"{summary['corpus']['near_misses']} near-misses, "
         f"{summary['corpus']['negatives']:,} benign).",
+        "",
+        f"Engines: {summary['engines']['splunk']}; "
+        f"{summary['engines']['opensearch']}; {summary['engines']['kusto']}.",
         "",
         "| Engine | Pass | Fail | Not converted | Skipped |",
         "| :-- | --: | --: | --: | --: |",
@@ -645,8 +681,8 @@ def render(summary: dict[str, Any]) -> str:
         "  compared. The selection logic is unchanged.",
         "- OpenSearch and Kusto receive one extra projection/limit clause to return",
         "  the id column; the selection logic is unchanged.",
-        "- One lab corpus, not a production feed. The engine versions are pinned in",
-        "  the evidence, not in this file.",
+        "- One lab corpus, not a production feed. The engine images are pinned by",
+        "  digest in the compose file; the observed versions are recorded above.",
         "",
     ]
     return "\n".join(lines)

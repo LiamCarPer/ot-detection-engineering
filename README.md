@@ -177,6 +177,7 @@ make purple-check      # validate the purple-team evidence
 make health-check      # validate the detection catalogue
 make perf-check        # validate the performance evidence
 make convert-all       # Loki, OpenSearch, Splunk and Sentinel
+make parity-up         # start Splunk Free and OpenSearch (containers)
 make engine-parity     # execute SPL, PPL and KQL; compare with the matcher
 make deploy            # build the installable bundle under deploy/
 ```
