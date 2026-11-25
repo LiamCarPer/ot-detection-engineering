@@ -24,12 +24,19 @@ repository's rules.
 | :-- | --: | --: |
 | Enterprise cross-zone read | 1 | 3 / 3 |
 | Enterprise Modbus write | 1 | 3 / 3 |
-| Process safety violation | 1 | **0 / 3** |
+| Process safety violation | 1 | **0 / 3** (untimed stimulus; fixed below) |
 | DNP3 control campaign | 3 | 3 / 3 |
 | OPC UA discovery campaign | 3 | 3 / 3 |
 | S7comm program campaign | 3 | 3 / 3 |
 | Operator-workstation write | 1 | 3 / 3 |
 
+- The process-safety miss was timing, not a process-model limitation: the write
+  was sent at an arbitrary point in the fill/drain cycle, so the tank was often
+  below the envelope. The live stimulus now reads the level and waits for the
+  danger band before writing
+  (`powershell/Simulate-UnsafeOverflow.ps1` in the lab). It was validated against
+  a mock Modbus server, with no lab write; the re-run waits for the 24-hour
+  benign capture to avoid contaminating it.
 - **No unexpected repository rules** fired in any step.
 - The benign-after window was empty in all three runs. The runner restarts Loki
   and clears its data before each run so the five-minute lookback cannot leak
@@ -119,8 +126,9 @@ separately; see the mapping table in the lab-run notes.
   signals were present in the snapshot; they do not prove the MTTD.
 - **The lab is a Dockerised plant.** There is no physical PLC, sensor or
   actuator.
-- **The repository rules are not in the loop.** A live run that executes the
-  generated rules and measures their detection rate is the next step.
+- **One lab, three runs.** The live run executes the generated rules, but one
+  Dockerised plant and three repetitions are not a field trial. Wire, wireless
+  and vendor-specific protocol variants are not present.
 
 ## Reproduce
 
