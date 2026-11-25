@@ -103,6 +103,11 @@ EXPECTED_DECODER_RULES: dict[str, set[str]] = {
         "DNP3 Control Operation From Unauthorized Master",
         "DNP3 Unsolicited Responses Disabled",
     },
+    "modbus": {
+        "Modbus Device Identification Scan",
+        "Modbus Exception Response",
+        "Modbus Write To Safety Critical Parameter Register",
+    },
     "s7comm": {
         "S7comm PLC Control Or Stop",
         "S7comm Program Download",

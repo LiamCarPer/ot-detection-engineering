@@ -15,9 +15,9 @@ selects it.
   ISO 8601 UTC timestamp, and validates every event against
   `metadata/telemetry.schema.json`. `make collector-check` proves the output
   fires the rules.
-- **`tools/dnp3-dpi`, `tools/s7comm-dpi`, `tools/opcua-dpi`** emit the raw
-  application-layer events; the collector or the pipeline attaches the routing
-  fields.
+- **`tools/dnp3-dpi`, `tools/modbus-dpi`, `tools/s7comm-dpi`, `tools/opcua-dpi`**
+  emit the raw application-layer events; the collector or the pipeline attaches
+  the routing fields.
 
 Sensors differ in what they can see, so which fields are present depends on the
 source. A field the source cannot see is **omitted, never guessed**, so a rule
@@ -26,23 +26,33 @@ The per-sensor field matrix is in `collector/README.md`.
 
 ## `ot_ndr` / `modbus`
 
-Decoded Modbus/TCP transactions. One record per request or response.
+Decoded Modbus/TCP transactions. One record per request or response, produced by
+[`tools/modbus-dpi`](../tools/modbus-dpi) from MBAP frames, or by the collector
+from Suricata `eve.json` and Zeek `modbus.log`.
 
 | Field | Type | Description |
 | :--- | :--- | :--- |
 | `timestamp` | string | ISO 8601 UTC. |
-| `direction` | string | `request` or `response`. |
-| `function_code` | integer | Modbus function code (for example `6`, `16`, `43`). |
-| `src_ip` | string | Source address. |
-| `dst_ip` | string | Destination address. |
+| `direction` | string | `request` or `response`. The decoder infers it from PDU shape; FC5/FC6/FC22 default to `request` because request and response are byte-identical. |
+| `function_code` | integer | Modbus function code (`1`–`6`, `15`, `16`, `22`, `23`, `43`). |
+| `function_name` | string | Function name. |
+| `transaction_id` | integer | MBAP transaction identifier. |
+| `src_ip` | string | Source address, when the collector can see the transport endpoints. |
+| `dst_ip` | string | Destination address, when the collector can see the transport endpoints. |
 | `unit_id` | integer | Modbus unit identifier. |
-| `register` | integer | Starting register address for data operations. |
-| `value` | integer | Written value for write operations. |
-| `exception_code` | integer | Exception code for exception responses. |
+| `register` | integer | Starting register for FC3/4/6/16/22/23, or coil address for FC1/2/5/15. |
+| `quantity` | integer | Register or coil quantity. |
+| `value` | integer | Written value for FC5/6/16/23 where derivable. |
+| `values` | array | Register values for multi-register reads/writes. |
+| `coils` | array | Coil values for FC1/2/5/15. |
+| `exception_code` | integer | Exception code for exception responses (raw function code has `0x80` set). |
+| `decode_error` | string | Structured reason a PDU could not be decoded; the event is still emitted. |
 
-Typical producers: Zeek `modbus.log`, Suricata `eve.json` Modbus events, or a
-commercial NDR platform. The `direction` field replaces the ambiguity of
-inferring request/response from the TCP port.
+`register` is the raw 0-based protocol address. A 4xxxx display address is a
+convention on top of the wire value; the decoder does not invent it.
+
+Typical producers: Zeek `modbus.log`, Suricata `eve.json` Modbus events, the Rust
+decoder, or a commercial NDR platform.
 
 ## `ot_firewall` / `iptables`
 
@@ -89,15 +99,18 @@ by [`tools/dnp3-dpi`](../tools/dnp3-dpi) from link frames or a network capture.
 | Field | Type | Description |
 | :--- | :--- | :--- |
 | `timestamp` | string | ISO 8601 UTC, added by the collector. |
-| `direction` | string | `request` or `response`. |
+| `direction` | string | `request` or `response`, from the link DIR bit (`DIR=0` request, `DIR=1` response). |
 | `function_code` | integer | DNP3 application function code (for example `3`, `5`, `21`). |
 | `function_name` | string | Function name (for example `Direct Operate`). |
 | `link_source` | integer | DNP3 link source address (the master). |
 | `link_destination` | integer | DNP3 link destination address (the outstation). |
 | `link_function` | integer | Link layer function code. |
+| `link_function_name` | string | IEEE 1815 link function name (for example `CONFIRMED_USER_DATA`). |
 | `object_group` | integer | First object group (for example `12` binary output control). |
 | `object_variation` | integer | First object variation. |
+| `object_qualifier` | integer | First object qualifier. |
 | `object_count` | integer | Object count from the first header. |
+| `object_index` | integer | First object index/point, when the qualifier carries one. |
 | `control_code` | integer | Control code for a binary-output control object. |
 | `iin` | integer | Internal indications, present on responses. |
 | `transport_sequence` | integer | Transport sequence number. |
@@ -124,8 +137,8 @@ Decoded classic S7comm jobs and responses, produced by
 | `data_length` | integer | Data block length. |
 | `cotp_type` | integer | COTP PDU type (`240` for data transfer). |
 
-S7comm carries no source identity, so the "unauthorized write" detection is
-expressed at the network layer against the client IP, while the
+S7comm carries no application-layer user identity, so the "unauthorized write"
+detection is expressed at the network layer against the client IP, while the
 protocol-intrinsic detections (program download/upload, mode change) run over
 these events.
 

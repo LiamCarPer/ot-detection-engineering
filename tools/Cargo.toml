@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["dnp3-dpi", "opcua-dpi", "s7comm-dpi", "perf"]
+members = ["dnp3-dpi", "modbus-dpi", "opcua-dpi", "s7comm-dpi", "perf"]
 
 [profile.release]
 lto = true

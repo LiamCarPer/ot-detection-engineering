@@ -1,14 +1,26 @@
 # Example DNP3 link frames for the dnp3-dpi decoder.
 #
 # Each line is one hex-encoded link frame with valid CRC-16/DNP header and
-# data-block checksums.
+# data-block checksums. User data longer than 16 octets is split into blocks,
+# each followed by its own CRC.
 
-# Direct Operate (function 5) on a binary-output control object (group 12,
-# variation 1), control code 3 (LATCH_ON), from link address 3 to address 1.
-05641044010003001e25c0c0050c01170000000003f19c
+# Confirmed user data (link function 3, control 0x53): Direct Operate
+# (application function 5) on binary-output control group 12, variation 1,
+# qualifier 0x17 (8-bit count with 8-bit index prefixes), point 7, control code
+# 3 (LATCH_ON). The 18-octet user data spans two CRC-protected blocks, from
+# link address 3 to address 1.
+0564175301000300a0b8c0c0050c01170107030100000000000069d80000ffff
 
-# Disable Unsolicited (function 21) from link address 3 to address 1.
+# Unconfirmed user data (link function 4, control 0x44): Disable Unsolicited
+# (application function 21) from link address 3 to address 1.
 056408440100030003c7c0c0157ecb
 
-# Cold Restart (function 13) from link address 3 to address 1.
+# Unconfirmed user data (link function 4, control 0x44): Cold Restart
+# (application function 13) from link address 3 to address 1. The application
+# PDU has no object header, so the decoder must not invent one.
 056408440100030003c7c0c00d9c86
+
+# Secondary LINK_STATUS (link function 11, control 0x8B) from link address 1
+# to address 3. It has no transport or application layer, so it produces no
+# JSON event but exercises the corrected link-function name.
+0564058b030001008f9b

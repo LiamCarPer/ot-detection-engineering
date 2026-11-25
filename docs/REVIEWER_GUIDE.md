@@ -28,8 +28,10 @@ If you only read code, read these in order:
    and a fixture suite that can lie.
 2. [`tools/otde/correlation.py`](../tools/otde/correlation.py) — the windowed
    evaluator for `value_count` and `event_count`.
-3. [`tools/dnp3-dpi/src/lib.rs`](../tools/dnp3-dpi/src/lib.rs) — a
-   dependency-free decoder with CRC-16/DNP validation and robustness tests.
+3. [`tools/dnp3-dpi/src/lib.rs`](../tools/dnp3-dpi/src/lib.rs) and
+   [`tools/modbus-dpi/src/lib.rs`](../tools/modbus-dpi/src/lib.rs) —
+   dependency-free decoders with CRC-16/DNP validation, bounds checks and
+   robustness tests.
 4. [`pipelines/convert.py`](../pipelines/convert.py) — one Sigma source to four
    backends, with SHA-256 provenance and an explicit unsupported list.
 5. [`purple/runner/run_emulation.py`](../purple/runner/run_emulation.py) — the

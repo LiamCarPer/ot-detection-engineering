@@ -126,7 +126,7 @@ Sigma rule ──▶ pipelines/convert.py ──▶ Loki / OpenSearch / Splunk /
 rules/** ──▶ pipelines/deploy.py ──▶ deploy/ bundle + provenance manifest
 native rules ──▶ tests/captures ──▶ Suricata (container) ──▶ deploy/evidence
 
-DNP3/S7comm/OPC UA frames ──▶ tools/*-dpi (Rust) ──▶ ot_ndr events ──▶ Sigma rules
+DNP3/Modbus/S7comm/OPC UA frames ──▶ tools/*-dpi (Rust) ──▶ ot_ndr events ──▶ Sigma rules
 Suricata / Zeek / NetFlow / SNMP ──▶ collector/ ──▶ contract events ──▶ Sigma rules
 
 emulation plan ──▶ purple/runner ──▶ coverage + MTTD ──▶ metrics
@@ -148,7 +148,7 @@ rules/native/         Suricata rules for protocol DPI
 baseline/             Committed behaviour and process baselines and their builders
 metadata/             ATT&CK catalog, detection catalogue, policies and JSON Schemas
 tools/otde/           Shared library: discovery, technique extraction, matcher
-tools/*-dpi/          Rust DNP3, S7comm and OPC UA decoders
+tools/*-dpi/          Rust DNP3, Modbus, S7comm and OPC UA decoders
 tools/perf/           Rust decoder microbenchmark
 collector/            Normalizes sensor output into the telemetry contract
 pipelines/            Sigma-to-backend conversion and deployment bundle builder

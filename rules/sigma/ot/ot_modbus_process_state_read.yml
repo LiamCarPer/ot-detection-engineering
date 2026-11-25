@@ -28,7 +28,11 @@ detection:
     src_ip:
       - 172.21.0.20
       - 172.22.0.10
-  condition: selection_direction and selection_function and not filter_authorized_reader
+  filter_identified_reader:
+    src_ip|exists: true
+  condition: >-
+    selection_direction and selection_function and filter_identified_reader
+    and not filter_authorized_reader
 fields:
   - src_ip
   - dst_ip

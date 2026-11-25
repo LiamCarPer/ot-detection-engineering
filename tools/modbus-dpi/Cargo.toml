@@ -1,0 +1,15 @@
+[package]
+name = "modbus-dpi"
+version = "0.1.0"
+edition = "2021"
+description = "Modbus/TCP deep packet inspection: decode MBAP headers and PDUs and emit normalized OT detection events."
+license = "MIT"
+repository = "https://github.com/LiamCarPer/ot-detection-engineering"
+
+[lib]
+name = "modbus_dpi"
+path = "src/lib.rs"
+
+[[bin]]
+name = "modbus-dpi"
+path = "src/main.rs"

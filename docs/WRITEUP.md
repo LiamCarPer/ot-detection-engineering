@@ -28,7 +28,7 @@ The first honest measurements were uncomfortable:
 1. **Threat model and coverage.** Every rule carries an ATT&CK for ICS
    technique. Coverage is reported by tactic, with the gaps explained rather than
    padded.
-2. **Telemetry.** Rust decoders for DNP3, S7comm and OPC UA; a collector for
+2. **Telemetry.** Rust decoders for DNP3, Modbus, S7comm and OPC UA; a collector for
    Suricata, Zeek, NetFlow and SNMP; a normalized contract.
 3. **Detection content.** Sigma for log events, correlation for windows, native
    Suricata for protocol DPI, YARA for file/firmware content, behaviour-baseline

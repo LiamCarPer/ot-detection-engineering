@@ -4,6 +4,11 @@
 //! followed by user data split into blocks of up to 16 octets, each with its
 //! own CRC. `length` counts the octets from `control` through the end of the
 //! user data, excluding the start octets and every CRC.
+//!
+//! The link function codes are IEEE 1815 link functions, not application
+//! function codes. In particular function 4 is UNCONFIRMED_USER_DATA, never
+//! "Operate". The DIR bit of the control octet is the authority for direction:
+//! `DIR=0` is master-to-outstation, `DIR=1` is outstation-to-master.
 
 use crate::crc::crc16;
 
@@ -15,6 +20,21 @@ pub const HEADER_LEN: usize = 8;
 pub const MAX_BLOCK: usize = 16;
 /// Smallest valid value of the length field (control + dest + src).
 pub const MIN_LENGTH: usize = 5;
+
+/// Primary link function: reset the link states.
+pub const FUNCTION_RESET_LINK_STATES: u8 = 0;
+/// Primary link function: reset the user process.
+pub const FUNCTION_RESET_USER_PROCESS: u8 = 1;
+/// Primary link function: test the link states.
+pub const FUNCTION_TEST_LINK_STATES: u8 = 2;
+/// Primary link function: confirmed user data.
+pub const FUNCTION_CONFIRMED_USER_DATA: u8 = 3;
+/// Primary link function: unconfirmed user data.
+pub const FUNCTION_UNCONFIRMED_USER_DATA: u8 = 4;
+/// Primary link function: request link status.
+pub const FUNCTION_REQUEST_LINK_STATUS: u8 = 9;
+/// Secondary link function: link status.
+pub const FUNCTION_LINK_STATUS: u8 = 11;
 
 /// Reasons a byte stream could not be decoded as a DNP3 link frame.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -71,21 +91,38 @@ impl Control {
         }
     }
 
-    /// Human-readable link function name.
+    /// Human-readable link function name for this control octet.
     pub fn function_name(&self) -> &'static str {
-        match self.function {
-            0 => "Confirm",
-            1 => "Read",
-            2 => "Write",
-            3 => "Select",
-            4 => "Operate",
-            5 => "Direct Operate",
-            6 => "Direct Operate No Ack",
-            9 => "Request Link Status",
-            11 => "Unsolicited Response",
-            15 => "Not Supported",
-            _ => "Reserved",
-        }
+        link_function_name(self.function, self.primary)
+    }
+
+    /// Whether this is a confirmed or unconfirmed user-data frame.
+    pub fn is_user_data(&self) -> bool {
+        self.primary
+            && matches!(
+                self.function,
+                FUNCTION_CONFIRMED_USER_DATA | FUNCTION_UNCONFIRMED_USER_DATA
+            )
+    }
+}
+
+/// Human-readable IEEE 1815 link function name.
+///
+/// Primary and secondary frames reuse several function numbers, so `primary`
+/// selects the correct name. Codes 5 and 6 are reserved.
+pub fn link_function_name(function: u8, primary: bool) -> &'static str {
+    match function {
+        0 if primary => "RESET_LINK_STATES",
+        0 => "ACK",
+        1 if primary => "RESET_USER_PROCESS",
+        1 => "NACK",
+        2 if primary => "TEST_LINK_STATES",
+        3 if primary => "CONFIRMED_USER_DATA",
+        4 if primary => "UNCONFIRMED_USER_DATA",
+        9 if primary => "REQUEST_LINK_STATUS",
+        11 => "LINK_STATUS",
+        15 if !primary => "NOT_SUPPORTED",
+        _ => "Reserved",
     }
 }
 
@@ -98,7 +135,8 @@ pub struct LinkFrame {
     pub destination: u16,
     /// DNP3 source address.
     pub source: u16,
-    /// Reassembled user data (transport + application layers).
+    /// Reassembled user data (transport + application layers). Per-block CRCs
+    /// have been validated and stripped.
     pub user_data: Vec<u8>,
 }
 

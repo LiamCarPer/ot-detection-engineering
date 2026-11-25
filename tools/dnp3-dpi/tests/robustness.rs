@@ -48,13 +48,13 @@ fn truncations_and_mutations_never_panic() {
 
 #[test]
 fn a_32_bit_object_range_does_not_overflow() {
-    // Control, Direct Operate, group 12 variation 1, qualifier 0x20 (32-bit
-    // start/stop) with start 0 and stop 0xFFFFFFFF: the count must saturate
-    // instead of overflowing.
+    // Control, Direct Operate, group 12 variation 1, qualifier 0x02 (4-octet
+    // start/stop, no prefix) with start 0 and stop 0xFFFFFFFF: the count must
+    // saturate instead of overflowing.
     let application = [
         0x00, 0x05, // application control, Direct Operate
         0x0C, 0x01, // group 12, variation 1
-        0x20, // qualifier: 32-bit start/stop
+        0x02, // qualifier: 4-octet start/stop
         0x00, 0x00, 0x00, 0x00, // start
         0xFF, 0xFF, 0xFF, 0xFF, // stop
     ];

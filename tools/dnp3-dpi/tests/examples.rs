@@ -31,10 +31,8 @@ fn example_events() -> Vec<dnp3_dpi::Event> {
 
 #[test]
 fn example_frames_cover_the_detection_rules() {
-    let functions: Vec<u8> = example_events()
-        .iter()
-        .map(|event| event.function_code)
-        .collect();
+    let events = example_events();
+    let functions: Vec<u8> = events.iter().map(|event| event.function_code).collect();
     // Direct Operate, Disable Unsolicited and Cold Restart: one frame per rule.
     for expected in [5u8, 21, 13] {
         assert!(
@@ -42,4 +40,33 @@ fn example_frames_cover_the_detection_rules() {
             "examples/frames.hex no longer decodes function {expected}: {functions:?}"
         );
     }
+}
+
+#[test]
+fn example_frames_exercise_the_corrected_paths() {
+    let events = example_events();
+    assert!(events
+        .iter()
+        .all(|event| event.direction == dnp3_dpi::Direction::Request));
+
+    // The Direct Operate example is confirmed user data, spans two blocks and
+    // carries a CROB on point 7.
+    let direct_operate = events
+        .iter()
+        .find(|event| event.function_code == 5)
+        .expect("Direct Operate example");
+    assert_eq!(direct_operate.link_function, 3);
+    assert_eq!(direct_operate.link_function_name, "CONFIRMED_USER_DATA");
+    assert_eq!(direct_operate.object_group, Some(12));
+    assert_eq!(direct_operate.object_qualifier, Some(0x17));
+    assert_eq!(direct_operate.object_index, Some(7));
+    assert_eq!(direct_operate.control_code, Some(3));
+
+    // Cold Restart has no object header: no phantom group from CRC octets.
+    let cold_restart = events
+        .iter()
+        .find(|event| event.function_code == 13)
+        .expect("Cold Restart example");
+    assert_eq!(cold_restart.object_group, None);
+    assert_eq!(cold_restart.link_function_name, "UNCONFIRMED_USER_DATA");
 }

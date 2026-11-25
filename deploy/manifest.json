@@ -98,7 +98,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
-      "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
+      "source_sha256": "0bdf80afd30e9b1aac1330ff921726ba1e17abf7f748ba6ee852e42ac95880eb",
       "target": "loki/rules/ot_modbus_process_state_read.yaml",
       "backend": "loki"
     },
@@ -110,7 +110,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
-      "source_sha256": "59a70fa633ff61e11bd240a498c321557e5f0580d0e7304fdf0f27b39e742ea5",
+      "source_sha256": "3f79884a8b2550984b4924ce3ef3efb8d354963d8188d2906dfa0d60c367e24c",
       "target": "loki/rules/ot_modbus_unauthorized_write.yaml",
       "backend": "loki"
     },
@@ -278,7 +278,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
-      "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
+      "source_sha256": "0bdf80afd30e9b1aac1330ff921726ba1e17abf7f748ba6ee852e42ac95880eb",
       "target": "opensearch/ot_modbus_process_state_read.ppl",
       "backend": "opensearch"
     },
@@ -290,7 +290,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
-      "source_sha256": "59a70fa633ff61e11bd240a498c321557e5f0580d0e7304fdf0f27b39e742ea5",
+      "source_sha256": "3f79884a8b2550984b4924ce3ef3efb8d354963d8188d2906dfa0d60c367e24c",
       "target": "opensearch/ot_modbus_unauthorized_write.ppl",
       "backend": "opensearch"
     },
@@ -434,13 +434,13 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
-      "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
+      "source_sha256": "0bdf80afd30e9b1aac1330ff921726ba1e17abf7f748ba6ee852e42ac95880eb",
       "target": "sentinel/ot_modbus_process_state_read.kql",
       "backend": "sentinel"
     },
     {
       "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
-      "source_sha256": "59a70fa633ff61e11bd240a498c321557e5f0580d0e7304fdf0f27b39e742ea5",
+      "source_sha256": "3f79884a8b2550984b4924ce3ef3efb8d354963d8188d2906dfa0d60c367e24c",
       "target": "sentinel/ot_modbus_unauthorized_write.kql",
       "backend": "sentinel"
     },
@@ -602,7 +602,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
-      "source_sha256": "ffe28aa6ae7a1c35c524c588239db86eb05ad21a4711c029c069206dc3100a61",
+      "source_sha256": "0bdf80afd30e9b1aac1330ff921726ba1e17abf7f748ba6ee852e42ac95880eb",
       "target": "splunk/ot_modbus_process_state_read.conf",
       "backend": "splunk"
     },
@@ -614,7 +614,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
-      "source_sha256": "59a70fa633ff61e11bd240a498c321557e5f0580d0e7304fdf0f27b39e742ea5",
+      "source_sha256": "3f79884a8b2550984b4924ce3ef3efb8d354963d8188d2906dfa0d60c367e24c",
       "target": "splunk/ot_modbus_unauthorized_write.conf",
       "backend": "splunk"
     },

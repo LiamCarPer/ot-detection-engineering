@@ -3,7 +3,9 @@
 This page records two measurements and the limits of both:
 
 1. **Decoder microbenchmark** — how fast the Rust DNP3, S7comm and OPC UA
-   decoders process the committed example frames.
+   decoders process the committed example frames. The Modbus decoder is covered
+   by its own tests and the decoder-to-rule proof, but is not in this
+   microbenchmark yet.
 2. **Offline replay** — how fast the validation matcher processes benign events
    through every single-event Sigma rule.
 

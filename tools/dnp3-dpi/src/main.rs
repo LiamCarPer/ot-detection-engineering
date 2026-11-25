@@ -77,12 +77,17 @@ fn main() {
         };
         for result in parse_stream(&bytes) {
             match result {
-                Ok(frame) => {
-                    if let Some(event) = frame.event() {
+                Ok(frame) => match frame.try_event() {
+                    Ok(Some(event)) => {
                         writeln!(out, "{}", event.to_json()).ok();
                         decoded += 1;
                     }
-                }
+                    Ok(None) => {}
+                    Err(error) => {
+                        eprintln!("line {}: {error}", index + 1);
+                        errors += 1;
+                    }
+                },
                 Err(error) => {
                     eprintln!("line {}: {error}", index + 1);
                     errors += 1;

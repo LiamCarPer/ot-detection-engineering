@@ -10,7 +10,7 @@ make setup
 make demo
 ```
 
-What to say: a DNP3, S7comm and OPC UA frame is decoded by the Rust decoders,
+What to say: a DNP3, Modbus, S7comm and OPC UA frame is decoded by the Rust decoders,
 matched against the Sigma rules, and converted into Loki, Splunk, Sentinel and
 OpenSearch queries. This is the smallest end-to-end slice: bytes → event → rule
 → query.

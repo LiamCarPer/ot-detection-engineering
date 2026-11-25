@@ -29,7 +29,11 @@ detection:
     src_ip:
       - 172.21.0.20
       - 172.22.0.10
-  condition: selection_direction and selection_function and not filter_authorized_writer
+  filter_identified_writer:
+    src_ip|exists: true
+  condition: >-
+    selection_direction and selection_function and filter_identified_writer
+    and not filter_authorized_writer
 fields:
   - src_ip
   - dst_ip

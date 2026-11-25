@@ -24,16 +24,16 @@ pub mod crc;
 pub mod link;
 pub mod transport;
 
-pub use application::ApplicationHeader;
+pub use application::{ApplicationError, ApplicationHeader};
 pub use link::{parse_frame, LinkError, LinkFrame};
 pub use transport::TransportHeader;
 
-/// Direction of an application message.
+/// Direction of a link frame, derived from the link control DIR bit.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Direction {
-    /// A request from a master to an outstation.
+    /// A frame sent from a master to an outstation (DIR=0).
     Request,
-    /// A response or unsolicited response from an outstation.
+    /// A frame sent from an outstation to a master (DIR=1).
     Response,
 }
 
@@ -48,6 +48,18 @@ impl Direction {
 }
 
 impl LinkFrame {
+    /// Direction from the link control DIR bit.
+    ///
+    /// The application function code never overrides this: an application
+    /// Confirm (function 0) sent by a master is still a request.
+    pub fn direction(&self) -> Direction {
+        if self.control.from_outstation {
+            Direction::Response
+        } else {
+            Direction::Request
+        }
+    }
+
     /// Decode the transport header from the start of the user data.
     pub fn transport(&self) -> Option<TransportHeader> {
         self.user_data
@@ -57,28 +69,32 @@ impl LinkFrame {
 
     /// Decode the application header. Returns `None` for a non-first transport
     /// fragment, because the application header is only present on the first.
-    pub fn application(&self) -> Option<ApplicationHeader> {
-        let transport = self.transport()?;
+    pub fn try_application(&self) -> Result<Option<ApplicationHeader>, ApplicationError> {
+        let Some(transport) = self.transport() else {
+            return Ok(None);
+        };
         if !transport.fir {
-            return None;
+            return Ok(None);
         }
-        application::parse(&self.user_data[1..])
+        application::parse(&self.user_data[1..]).map(Some)
+    }
+
+    /// Decode the application header, discarding malformed PDUs.
+    pub fn application(&self) -> Option<ApplicationHeader> {
+        self.try_application().ok().flatten()
     }
 
     /// Build the normalized detection event for this frame.
-    pub fn event(&self) -> Option<Event> {
-        let transport = self.transport()?;
-        let application = self.application()?;
-        let direction = if application.function == application::FUNCTION_RESPONSE
-            || application.function == application::FUNCTION_UNSOLICITED_RESPONSE
-        {
-            Direction::Response
-        } else {
-            Direction::Request
+    pub fn try_event(&self) -> Result<Option<Event>, ApplicationError> {
+        let Some(transport) = self.transport() else {
+            return Ok(None);
+        };
+        let Some(application) = self.try_application()? else {
+            return Ok(None);
         };
         let object = application.objects.first();
-        Some(Event {
-            direction,
+        Ok(Some(Event {
+            direction: self.direction(),
             function_code: application.function,
             function_name: application::function_name(application.function).to_string(),
             link_source: self.source,
@@ -87,19 +103,27 @@ impl LinkFrame {
             link_function_name: self.control.function_name().to_string(),
             object_group: object.map(|o| o.group),
             object_variation: object.map(|o| o.variation),
+            object_qualifier: object.map(|o| o.qualifier),
             object_count: object.and_then(|o| o.count),
+            object_index: object.and_then(|o| o.index),
             control_code: application.control_code,
             iin: application.iin,
             transport_sequence: transport.sequence,
             application_sequence: application.sequence,
-        })
+        }))
+    }
+
+    /// Build the normalized detection event, or `None` when the frame is not a
+    /// decodable first application fragment.
+    pub fn event(&self) -> Option<Event> {
+        self.try_event().ok().flatten()
     }
 }
 
 /// Normalized DNP3 event emitted for each decoded application message.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Event {
-    /// Request or response.
+    /// Request or response, from the link DIR bit.
     pub direction: Direction,
     /// Application function code.
     pub function_code: u8,
@@ -111,14 +135,18 @@ pub struct Event {
     pub link_destination: u16,
     /// Link function code.
     pub link_function: u8,
-    /// Link function name.
+    /// IEEE 1815 link function name.
     pub link_function_name: String,
     /// First object group.
     pub object_group: Option<u8>,
     /// First object variation.
     pub object_variation: Option<u8>,
+    /// First object qualifier.
+    pub object_qualifier: Option<u8>,
     /// Object count from the first header.
     pub object_count: Option<u32>,
+    /// First object index/point, when present.
+    pub object_index: Option<u32>,
     /// Control code for a binary-output control object.
     pub control_code: Option<u8>,
     /// Internal indications for responses.
@@ -149,8 +177,14 @@ impl Event {
         if let Some(variation) = self.object_variation {
             fields.push(format!("\"object_variation\":{variation}"));
         }
+        if let Some(qualifier) = self.object_qualifier {
+            fields.push(format!("\"object_qualifier\":{qualifier}"));
+        }
         if let Some(count) = self.object_count {
             fields.push(format!("\"object_count\":{count}"));
+        }
+        if let Some(index) = self.object_index {
+            fields.push(format!("\"object_index\":{index}"));
         }
         if let Some(code) = self.control_code {
             fields.push(format!("\"control_code\":{code}"));
@@ -203,31 +237,50 @@ mod tests {
         frame
     }
 
+    /// Confirmed user data carrying one Direct Operate CROB on point 7.
+    fn direct_operate_user_data() -> Vec<u8> {
+        vec![
+            0xC0, // transport FIR+FIN, sequence 0
+            0xC0, // application FIR+FIN, sequence 0
+            0x05, // Direct Operate
+            0x0C, 0x01, // group 12 (CROB), variation 1
+            0x17, // 8-bit count with 8-bit index prefixes
+            0x01, // one object
+            0x07, // point index 7
+            0x03, // LATCH_ON
+            0x01, // operation count
+            0x00, 0x00, 0x00, 0x00, // on time
+            0x00, 0x00, 0x00, 0x00, // off time
+        ]
+    }
+
     #[test]
     fn parses_a_direct_operate_control_request() {
-        // transport FIR+FIN seq 0, app FIR+FIN seq 0, function 5 (Direct Operate),
-        // object group 12 variation 1, qualifier 0x17 (2-octet start/stop range),
-        // one CROB whose control code is 0x03 (LATCH_ON).
-        let user_data = [
-            0xC0, 0xC0, 0x05, 0x0C, 0x01, 0x17, 0x00, 0x00, 0x00, 0x00, 0x03,
-        ];
-        let bytes = build_frame(0x44, 1, 3, &user_data);
+        let user_data = direct_operate_user_data();
+        let bytes = build_frame(0x53, 1, 3, &user_data);
         let (frame, consumed) = link::parse_frame(&bytes).expect("frame parses");
         assert_eq!(consumed, bytes.len());
         assert_eq!(frame.source, 3);
         assert_eq!(frame.destination, 1);
-        assert_eq!(frame.control.function, 4);
+        assert_eq!(frame.control.function, 3);
         assert!(frame.control.primary);
+        assert_eq!(frame.control.function_name(), "CONFIRMED_USER_DATA");
+        assert_eq!(frame.user_data.len(), 18);
 
         let event = frame.event().expect("event");
         assert_eq!(event.direction, Direction::Request);
         assert_eq!(event.function_code, 5);
         assert_eq!(event.function_name, "Direct Operate");
+        assert_eq!(event.link_function, 3);
+        assert_eq!(event.link_function_name, "CONFIRMED_USER_DATA");
         assert_eq!(event.object_group, Some(12));
         assert_eq!(event.object_variation, Some(1));
+        assert_eq!(event.object_qualifier, Some(0x17));
         assert_eq!(event.object_count, Some(1));
+        assert_eq!(event.object_index, Some(7));
         assert_eq!(event.control_code, Some(3));
         assert!(event.to_json().contains("\"function_code\":5"));
+        assert!(event.to_json().contains("\"object_index\":7"));
     }
 
     #[test]
@@ -241,6 +294,7 @@ mod tests {
         assert_eq!(event.direction, Direction::Response);
         assert_eq!(event.function_code, 129);
         assert_eq!(event.iin, Some(0));
+        assert_eq!(event.link_function_name, "UNCONFIRMED_USER_DATA");
     }
 
     #[test]
@@ -262,12 +316,7 @@ mod tests {
 
     #[test]
     fn parses_multiple_frames_from_a_stream() {
-        let first = build_frame(
-            0x44,
-            1,
-            3,
-            &[0xC0, 0xC0, 0x05, 0x0C, 0x01, 0x17, 0, 0, 0, 0, 3],
-        );
+        let first = build_frame(0x53, 1, 3, &direct_operate_user_data());
         let second = build_frame(0xC4, 3, 1, &[0xC1, 0xC1, 0x81, 0x00, 0x00]);
         let mut stream = first.clone();
         stream.extend_from_slice(&second);

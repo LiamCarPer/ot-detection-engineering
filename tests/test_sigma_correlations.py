@@ -204,17 +204,15 @@ def test_missing_counted_field_fails_loudly() -> None:
 
 
 def test_missing_group_field_fails_loudly() -> None:
-    rule = _enumeration_rule()
+    rule = _exception_rule()
     event = {
         "timestamp": "2026-05-01T10:00:00Z",
         "product": "ot_ndr",
         "service": "modbus",
-        "direction": "request",
-        "function_code": 3,
-        "dst_ip": "172.21.0.10",
-        "register": 1,
+        "direction": "response",
+        "exception_code": 2,
     }
-    with pytest.raises(UnsupportedCorrelationError, match="src_ip"):
+    with pytest.raises(UnsupportedCorrelationError, match="dst_ip"):
         match_correlation(rule, [event])
 
 

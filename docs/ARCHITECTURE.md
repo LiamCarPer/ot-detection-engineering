@@ -52,7 +52,7 @@ Sigma rule ──▶ pipelines/convert.py ──▶ Loki LogQL / OpenSearch PPL 
 rules/** ──▶ pipelines/deploy.py ──▶ deploy/ bundle + provenance manifest
 native rules ──▶ tests/captures ──▶ Suricata (container) ──▶ deploy/evidence
 
-DNP3/S7comm/OPC UA ──▶ tools/*-dpi (Rust) ──▶ ot_ndr events ──▶ Sigma rules
+DNP3/Modbus/S7comm/OPC UA ──▶ tools/*-dpi (Rust) ──▶ ot_ndr events ──▶ Sigma rules
 
 decoder examples ──▶ tools/decoder_check.py ──▶ ot_ndr events ──▶ Sigma rules
                                                               └─▶ deploy/evidence
@@ -87,7 +87,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 | `tools/otde/stateful.py` | Evaluates drift, change-window and per-asset protocol stateful rules. |
 | `tools/perf/` | Dependency-free Rust microbenchmark for the three decoders. |
 | `collector/` | Produces the telemetry contract from real sensor output (Suricata `eve.json`, Zeek OT logs), with schema validation and routing. |
-| `tools/dnp3-dpi/`, `tools/s7comm-dpi/`, `tools/opcua-dpi/` | Dependency-free Rust decoders (Cargo workspace) that emit normalized `ot_ndr` events for the DNP3, S7comm and OPC UA Sigma rules. |
+| `tools/dnp3-dpi/`, `tools/modbus-dpi/`, `tools/s7comm-dpi/`, `tools/opcua-dpi/` | Dependency-free Rust decoders (Cargo workspace) that emit normalized `ot_ndr` events for the DNP3, Modbus, S7comm and OPC UA Sigma rules. |
 | `pipelines/` | Sigma-to-backend conversion and the deployment bundle builder. |
 | `deploy/` | Committed, installable bundle (Loki ruler, Suricata, Splunk, Sentinel), provenance manifest, runbook and Suricata evidence. |
 | `coverage/` | Derived ATT&CK for ICS coverage map. |
@@ -132,7 +132,7 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
   rather than configuring it — the detection-engineering half of network
   security, not a firewall manager.
 - **Protocols are decoded natively in Rust** when no app-layer parser exists.
-  DNP3, S7comm and OPC UA have dependency-free decoders (`#![forbid(unsafe_code)]`)
+  DNP3, Modbus, S7comm and OPC UA have dependency-free decoders (`#![forbid(unsafe_code)]`)
   that emit the normalized events the corresponding Sigma rules run on. S7comm
   carries no source identity, so its unauthorized-write detection lives in the
   native Suricata rules where the client IP is available; OPC UA service bodies
@@ -230,7 +230,8 @@ detection content:
 - **A pySigma-based validation matcher** that interprets pySigma's parsed rule
   model and raises on unsupported features instead of passing silently.
 - **Dependency-free Rust protocol decoders** (`tools/dnp3-dpi`,
-  `tools/s7comm-dpi`, `tools/opcua-dpi`, `#![forbid(unsafe_code)]`) that
+  `tools/modbus-dpi`, `tools/s7comm-dpi`, `tools/opcua-dpi`,
+  `#![forbid(unsafe_code)]`) that
   validate framing (CRC-16/DNP for DNP3) and emit the normalized events the
   Sigma rules consume.
 - **A dependency-free Rust microbenchmark** (`tools/perf`) for the three

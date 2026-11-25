@@ -1,0 +1,73 @@
+# Example Modbus/TCP frames for the modbus-dpi decoder.
+#
+# MBAP  <transaction 2> <protocol 2 = 0000> <length 2> <unit 1> | PDU
+# The length field counts the unit identifier plus the PDU.
+
+# FC1 Read Coils request: start 19, quantity 10.
+00010000000601010013000A
+
+# FC1 Read Coils response: 2 data bytes (16 coil bits).
+000100000005010102CD01
+
+# FC2 Read Discrete Inputs request: start 0, quantity 8.
+000200000006010200000008
+
+# FC2 Read Discrete Inputs response: 1 data byte.
+00020000000401020105
+
+# FC3 Read Holding Registers request: start 0, quantity 10.
+00030000000601030000000A
+
+# FC3 Read Holding Registers response: ten registers 0..9.
+0003000000170103140000000100020003000400050006000700080009
+
+# FC4 Read Input Registers request: start 0, quantity 1.
+000400000006010400000001
+
+# FC4 Read Input Registers response: one register, value 123.
+000400000005010402007B
+
+# FC5 Write Single Coil request: coil 172 ON (0xFF00).
+000500000006010500ACFF00
+
+# FC6 Write Single Register request: register 1024, value 1.
+000600000006010604000001
+
+# FC6 Write Single Register response: echo of register 1024, value 1.
+000600000006010604000001
+
+# FC15 Write Multiple Coils request: start 19, quantity 10, coils 0,2,3,6,7,9.
+000700000009010F0013000A02CD01
+
+# FC15 Write Multiple Coils response: echo of start 19, quantity 10.
+000700000006010F0013000A
+
+# FC16 Write Multiple Registers request: start 3999, quantity 10 (range check boundary).
+00080000001B01100F9F000A140000000100020003000400050006000700080009
+
+# FC16 Write Multiple Registers response: echo of start 3999, quantity 10.
+00080000000601100F9F000A
+
+# FC16 Write Multiple Registers request above the parameter band: start 4000, quantity 2.
+00090000000B01100FA000020400010002
+
+# FC16 Write Multiple Registers response: echo of start 4000, quantity 2.
+00090000000601100FA00002
+
+# FC22 Mask Write Register request: register 4, AND 0x00FF, OR 0x0010.
+000A000000080116000400FF0010
+
+# FC23 Read/Write Multiple Registers request: read 2 at 0, write 2 at 16, values 10 and 11.
+000B0000000F0117000000020010000204000A000B
+
+# FC23 Read/Write Multiple Registers response: two registers, values 1 and 2.
+000B0000000701170400010002
+
+# FC43/MEI 14 Read Device Identification request: basic, object 0.
+000C00000005012B0E0100
+
+# FC43/MEI 14 Read Device Identification response: vendor, product and revision objects.
+000C0000001B012B0E0101000003000441636D6501044D3232310205312E322E33
+
+# Exception response for FC3 Read Holding Registers: illegal data address (2).
+000D00000003018302

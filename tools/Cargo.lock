@@ -7,6 +7,10 @@ name = "dnp3-dpi"
 version = "0.1.0"
 
 [[package]]
+name = "modbus-dpi"
+version = "0.1.0"
+
+[[package]]
 name = "opcua-dpi"
 version = "0.1.0"
 

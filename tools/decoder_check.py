@@ -42,6 +42,7 @@ EVIDENCE_PATH = EVIDENCE_DIR / "summary.json"
 # logsource service, which is how the matcher routes an event to its rules.
 DECODERS: dict[str, str] = {
     "dnp3": "dnp3-dpi",
+    "modbus": "modbus-dpi",
     "s7comm": "s7comm-dpi",
     "opcua": "opcua-dpi",
 }

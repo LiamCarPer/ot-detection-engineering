@@ -14,6 +14,21 @@
     ],
     "unmatched_events": 0
   },
+  "modbus": {
+    "events": 23,
+    "examples": "tools/modbus-dpi/examples/frames.hex",
+    "expected": [
+      "Modbus Device Identification Scan",
+      "Modbus Exception Response",
+      "Modbus Write To Safety Critical Parameter Register"
+    ],
+    "observed": [
+      "Modbus Device Identification Scan",
+      "Modbus Exception Response",
+      "Modbus Write To Safety Critical Parameter Register"
+    ],
+    "unmatched_events": 20
+  },
   "opcua": {
     "events": 5,
     "examples": "tools/opcua-dpi/examples/frames.hex",
