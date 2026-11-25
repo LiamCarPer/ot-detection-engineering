@@ -1,0 +1,120 @@
+windows:
+  - name: a select and operate for the same point inside the window
+    expect: no_match
+    events:
+      - timestamp: "2026-11-25T09:00:00Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 3
+        link_source: 1
+        object_index: 7
+        control_code: 3
+      - timestamp: "2026-11-25T09:00:02Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 4
+        link_source: 1
+        object_index: 7
+        control_code: 3
+
+  - name: an operate with no select
+    expect: match
+    events:
+      - timestamp: "2026-11-25T09:01:00Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 4
+        link_source: 1
+        object_index: 8
+        control_code: 3
+
+  - name: a select for one point and an operate for another
+    expect: match
+    events:
+      - timestamp: "2026-11-25T09:02:00Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 3
+        link_source: 1
+        object_index: 7
+        control_code: 3
+      - timestamp: "2026-11-25T09:02:02Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 4
+        link_source: 1
+        object_index: 8
+        control_code: 3
+
+  - name: an operate after the pairing window
+    expect: match
+    events:
+      - timestamp: "2026-11-25T09:03:00Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 3
+        link_source: 1
+        object_index: 7
+        control_code: 3
+      - timestamp: "2026-11-25T09:03:30Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 4
+        link_source: 1
+        object_index: 7
+        control_code: 3
+
+  - name: a direct operate is not a select-before-operate pair
+    expect: no_match
+    events:
+      - timestamp: "2026-11-25T09:04:00Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 5
+        link_source: 1
+        object_index: 7
+        control_code: 3
+
+  - name: two interleaved select and operate pairs
+    expect: no_match
+    events:
+      - timestamp: "2026-11-25T09:05:00Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 3
+        link_source: 1
+        object_index: 7
+        control_code: 3
+      - timestamp: "2026-11-25T09:05:01Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 3
+        link_source: 1
+        object_index: 8
+        control_code: 3
+      - timestamp: "2026-11-25T09:05:02Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 4
+        link_source: 1
+        object_index: 8
+        control_code: 3
+      - timestamp: "2026-11-25T09:05:03Z"
+        product: ot_ndr
+        service: dnp3
+        direction: request
+        function_code: 4
+        link_source: 1
+        object_index: 7
+        control_code: 3

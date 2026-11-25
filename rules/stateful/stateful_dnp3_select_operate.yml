@@ -1,0 +1,37 @@
+title: DNP3 Operate Without A Matching Select
+id: d5f9b1c4-6e83-4a20-9c7f-4b9e3a8d1f65
+status: experimental
+description: |
+  Detects a DNP3 Operate that has no matching Select for the same link source,
+  object index and control code inside the pairing window. Normal DNP3 control
+  is select-before-operate: the master selects a point, the outstation reserves
+  it, and the master operates it. An Operate without the reservation is either a
+  broken master or an attempt to skip the interlock step.
+
+  Direct Operate (FC5/6) is a different command and is covered by the
+  unauthorized-master rule, not this pairing check. The decoder must expose the
+  object index and control code; if it cannot, the event is skipped rather than
+  guessed.
+references:
+  - https://attack.mitre.org/techniques/T1692/001/
+author: Liam Carvajal
+date: 2026-11-25
+stateful:
+  type: dnp3_select_operate
+  products:
+    - ot_ndr
+  services:
+    - dnp3
+  pair_window_seconds: 10
+fields:
+  - timestamp
+  - link_source
+  - object_index
+  - control_code
+  - function_code
+falsepositives:
+  - A master that legitimately retries an operate after the select window expired
+  - A decoder that does not expose the object index
+level: high
+tags:
+  - attack.t1692.001

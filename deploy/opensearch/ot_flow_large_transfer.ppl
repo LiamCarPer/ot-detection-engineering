@@ -1,2 +1,2 @@
 # source: rules/sigma/ot/ot_flow_large_transfer.yml
-source=ot_flow-flow-* | where bytes>=5000000
+source=ot_flow-flow-* | where bytes>=5000000 AND NOT (cidrmatch(dst_ip, "172.21.0.0/24") OR cidrmatch(dst_ip, "172.22.0.0/24") OR cidrmatch(dst_ip, "172.23.0.0/24") OR cidrmatch(dst_ip, "172.24.0.0/24") OR cidrmatch(dst_ip, "172.25.0.0/24"))

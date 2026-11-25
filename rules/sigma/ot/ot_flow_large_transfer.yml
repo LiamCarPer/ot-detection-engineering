@@ -1,26 +1,34 @@
-title: Large Transfer Between OT Assets
+title: Large Transfer From OT To An External Destination
 id: 2e6c9b14-7a58-4d03-8f21-9b4d6e1c3a80
 status: experimental
 description: |
-  Detects a flow carrying more data than normal OT polling or control traffic.
-  Moving tooling or collected data laterally inside the plant produces a volume
-  the control protocols do not generate, so a byte threshold is a usable
-  first-order signal even without payload inspection.
+  Detects a flow carrying more data than normal OT polling or control traffic
+  from an OT address to a destination outside the plant's OT address ranges.
+  A large internal flow is usually a backup or historian replication; a large
+  outbound flow is how collected process data leaves the plant, which is theft
+  of operational information rather than lateral tool transfer.
 
   The threshold is site-specific. It is expressed against a single flow, so a
   slow exfiltration spread over many small flows will not trip it; pair it with
   the flow-volume baseline for that case.
 references:
-  - https://attack.mitre.org/techniques/T0867/
+  - https://attack.mitre.org/techniques/T0882/
 author: Liam Carvajal
 date: 2026-11-04
 logsource:
   product: ot_flow
   service: flow
 detection:
-  selection:
+  selection_large:
     bytes|gte: 5000000
-  condition: selection
+  filter_internal:
+    dst_ip|cidr:
+      - 172.21.0.0/24
+      - 172.22.0.0/24
+      - 172.23.0.0/24
+      - 172.24.0.0/24
+      - 172.25.0.0/24
+  condition: selection_large and not filter_internal
 fields:
   - src_ip
   - dst_ip
@@ -28,9 +36,9 @@ fields:
   - packets
   - duration
 falsepositives:
-  - A scheduled backup or historian replication inside the plant
-  - An engineering workstation copying a project archive
-  - A firmware or patch distribution to many assets
+  - An approved offsite backup or cloud historian replication
+  - A vendor support upload of logs or a project archive
+  - A firmware or patch download that is large in the reverse direction
 level: medium
 tags:
-  - attack.t0867
+  - attack.t0882

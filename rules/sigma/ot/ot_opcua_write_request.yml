@@ -21,8 +21,17 @@ detection:
     direction: request
   selection_service:
     opcua_service: WriteRequest
-  condition: selection_direction and selection_service
+  filter_authorized_client:
+    src_ip:
+      - 172.22.0.10
+      - 172.23.0.4
+  filter_identified_client:
+    src_ip|exists: true
+  condition: >-
+    selection_direction and selection_service and filter_identified_client
+    and not filter_authorized_client
 fields:
+  - src_ip
   - secure_channel_id
   - request_id
   - service_id

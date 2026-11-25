@@ -26,13 +26,15 @@ DEFAULT_OUT = REPO_ROOT / "tests" / "captures"
 CLIENT_MAC = "02:00:00:00:00:01"
 SERVER_MAC = "02:00:00:00:00:02"
 
-# Lab addressing, aligned with the Suricata rule allowlists.
-HMI = "172.21.0.20"          # authorized control writer / master / client
-ATTACKER = "172.24.0.10"     # unauthorized
+# Lab addressing, aligned with the Suricata rule allowlists and the conduit policy.
+HMI = "172.22.0.10"          # authorized Modbus writer
+INSIDER = "172.23.0.20"      # authorized DNP3/OPC UA/S7 engineering client
+POWERSHELL = "172.22.0.30"   # unauthorized Modbus writer on the supervisory net
+ATTACKER = "172.24.0.10"     # unauthorized cross-zone source
 MODBUS_PLC = "172.21.0.10"
-DNP3_OUTSTATION = "172.31.0.10"
-OPCUA_SERVER = "172.31.0.10"
-S7_PLC = "172.21.0.10"
+DNP3_OUTSTATION = "172.21.0.50"
+OPCUA_SERVER = "172.21.0.51"
+S7_PLC = "172.21.0.52"
 
 
 def crc_dnp(data: bytes) -> int:
@@ -124,7 +126,7 @@ def tcp_session(
 
 
 def modbus_sessions(attacker: bool) -> list[Packet]:
-    source = ATTACKER if attacker else HMI
+    source = POWERSHELL if attacker else HMI
     sessions = [
         tcp_session(
             source,
@@ -183,7 +185,7 @@ def modbus_sessions(attacker: bool) -> list[Packet]:
 
 
 def dnp3_sessions(attacker: bool) -> list[Packet]:
-    source = ATTACKER if attacker else HMI
+    source = ATTACKER if attacker else INSIDER
     link_source = 7 if attacker else 1
     if attacker:
         functions = [
@@ -205,7 +207,7 @@ def dnp3_sessions(attacker: bool) -> list[Packet]:
 
 
 def opcua_sessions(attacker: bool) -> list[Packet]:
-    source = ATTACKER if attacker else HMI
+    source = ATTACKER if attacker else INSIDER
     # HEL and OPN message headers; Suricata matches on the 3-byte message type.
     hel = b"HEL" + b"F" + (28).to_bytes(4, "little") + b"\x00" * 20
     opn = b"OPN" + b"F" + (24).to_bytes(4, "little") + b"\x00" * 16
@@ -228,7 +230,7 @@ def s7comm_job(function: int, extra_params: bytes = b"", data: bytes = b"") -> b
 
 
 def s7comm_sessions(attacker: bool) -> list[Packet]:
-    source = ATTACKER if attacker else HMI
+    source = ATTACKER if attacker else INSIDER
     if attacker:
         # Download, upload, PLC control/stop and an unauthorized write.
         functions = [0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x28, 0x29, 0x05]

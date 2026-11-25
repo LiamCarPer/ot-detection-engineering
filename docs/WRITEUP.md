@@ -56,7 +56,7 @@ The first honest measurements were uncomfortable:
 - **14/14 lab alert signals replayed across 8 steps**, 0 unexpected alerts and a
   passing benign window. The replay matches the lab's labels, not this
   repository's rules. The MTTD run is separate: 4/4 at 2.45 s, `n=4`, one run.
-- **66 catalogued rules, 6 stable, 12 with observed lab volume.** The other 60
+- **68 catalogued rules, 6 stable, 12 with observed lab volume.** The other 62
   are experimental and carry at least one operating gap; the health gate has 0
   blocking gaps.
 - **29/97 ATT&CK for ICS coverage**, deliberately. Privilege Escalation is 0/2

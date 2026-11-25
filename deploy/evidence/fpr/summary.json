@@ -1,6 +1,6 @@
 {
   "corpus": {
-    "distinct_event_shapes": 30,
+    "distinct_event_shapes": 33,
     "events": 1000,
     "note": "The corpus cycles a fixed template set. A binomial interval over 1,000 rows overstates the effective sample size; the shape count is the honest diversity measure.",
     "path": "metrics/baseline/benign-events.jsonl"
@@ -22,10 +22,11 @@
       "false_positive_events": 0,
       "false_positive_rate": 0.0,
       "per_rule": {
+        "Flow From An Unauthorized Source On A Declared Conduit": 0,
         "Flow On A Port Outside The Declared Conduit": 0,
         "Flow Through An Undeclared Zone Conduit": 0
       },
-      "rules": 2
+      "rules": 3
     },
     "native": {
       "false_positive_alerts": 0,
@@ -67,6 +68,8 @@
         "rules/sigma/ot/ot_firewall_enterprise_control_service.yml": 0,
         "rules/sigma/ot/ot_flow_industrial_service_refused.yml": 0,
         "rules/sigma/ot/ot_flow_large_transfer.yml": 0,
+        "rules/sigma/ot/ot_modbus_block_read.yml": 0,
+        "rules/sigma/ot/ot_modbus_coil_write.yml": 0,
         "rules/sigma/ot/ot_modbus_device_identification_scan.yml": 0,
         "rules/sigma/ot/ot_modbus_exception_response.yml": 0,
         "rules/sigma/ot/ot_modbus_parameter_write.yml": 0,
@@ -83,21 +86,23 @@
         "rules/sigma/ot/ot_snmp_device_restart.yml": 0,
         "rules/sigma/ot/ot_snmp_interface_down.yml": 0
       },
-      "rules": 24
+      "rules": 26
     },
     "stateful": {
       "fired": [],
       "per_rule": {
+        "DNP3 Operate Without A Matching Select": false,
         "Engineering Change Outside Approved Window": false,
         "New Protocol Service Or Function On A Known Asset": false,
-        "Process Value Drift From Learned Baseline": false
+        "Process Value Drift From Learned Baseline": false,
+        "Process Value Outside The Safety Envelope": false
       },
-      "rules": 3
+      "rules": 5
     },
     "yara": {
       "false_positive_files": 0,
       "measured_from": "committed YARA benign and near-miss fixtures",
-      "negative_files": 7
+      "negative_files": 13
     }
   },
   "schema_version": 1

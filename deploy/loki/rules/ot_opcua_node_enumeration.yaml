@@ -16,20 +16,24 @@ groups:
         process before acting on it.
 
 
-        The correlation references the browse rule and groups by secure channel, which
+        The correlation references the browse rule and groups by source host. A client
 
-        is the session identity the decoder exposes. A client that reconnects for
-        every
+        that browses once on connect stays below the count; a host that walks a large
 
-        request would fall below the per-session count; pair the rule with the first-
+        node tree across reconnects still aggregates. The first-order browse rule
+        is
 
-        order browse alert for that case.
+        scoped to clients outside the approved OPC UA allowlist, so an authorized
+        HMI
+
+        browsing on connect does not contribute.
 
         '
       summary: OPC UA Address Space Enumeration
-    expr: sum by (secure_channel_id) (count_over_time({job=~".+", service="opcua"}
-      | logfmt | direction=~`(?i)^request$` and (opcua_service=~`(?i)^BrowseRequest$`
-      or opcua_service=~`(?i)^BrowseNextRequest$`) | line_format "{{.secure_channel_id}}
-      {{.request_id}}" [5m])) >= 20
+    expr: sum by (src_ip) (count_over_time({job=~".+", service="opcua"} | logfmt |
+      direction=~`(?i)^request$` and (opcua_service=~`(?i)^BrowseRequest$` or opcua_service=~`(?i)^BrowseNextRequest$`)
+      and src_ip!="" and src_ip!~`(?i)^172\.22\.0\.10$` and src_ip!~`(?i)^172\.23\.0\.4$`
+      | line_format "{{.src_ip}} {{.secure_channel_id}} {{.request_id}}" [5m])) >=
+      20
     labels:
       severity: medium

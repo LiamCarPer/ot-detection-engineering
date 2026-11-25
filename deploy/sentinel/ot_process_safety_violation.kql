@@ -1,2 +1,3 @@
 // source: rules/sigma/ot/ot_process_safety_violation.yml
-event_type =~ "process_safety_violation" and response =~ "none"
+OTTelemetry
+| where event_type =~ "process_safety_violation" and response =~ "none" and (tank_level_pct >= 95 or tank_level_pct <= 5)

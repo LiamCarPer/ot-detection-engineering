@@ -150,3 +150,11 @@ def test_readme_catalogue_numbers_match_the_health_report() -> None:
 
 def test_stale_57_is_gone() -> None:
     assert "other 57" not in REVIEWER_GUIDE.read_text(encoding="utf-8")
+
+
+def test_evidence_map_is_linked_and_documents_the_lab_snapshot() -> None:
+    evidence_map = (REPO_ROOT / "docs" / "EVIDENCE_MAP.md").read_text(encoding="utf-8")
+    assert "2026-09-15" in evidence_map
+    assert "predates the p1 rule changes" in evidence_map.lower()
+    assert "docs/EVIDENCE_MAP.md" in README.read_text(encoding="utf-8")
+    assert "EVIDENCE_MAP.md" in CLAIMS.read_text(encoding="utf-8")

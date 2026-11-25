@@ -1,2 +1,2 @@
 # source: rules/sigma/ot/ot_opcua_write_request.yml
-source=ot_ndr-opcua-* | where direction="request" AND opcua_service="WriteRequest"
+source=ot_ndr-opcua-* | where direction="request" AND opcua_service="WriteRequest" AND isnotnull(src_ip) AND NOT (src_ip in ("172.22.0.10", "172.23.0.4"))

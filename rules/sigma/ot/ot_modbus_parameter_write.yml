@@ -24,9 +24,13 @@ detection:
     function_code:
       - 6
       - 16
-  selection_band:
+  selection_start_band:
     register|gte: 4000
-  condition: selection_direction and selection_function and selection_band
+  selection_end_band:
+    register_end|gte: 4000
+  condition: >-
+    selection_direction and selection_function
+    and (selection_start_band or selection_end_band)
 fields:
   - src_ip
   - dst_ip

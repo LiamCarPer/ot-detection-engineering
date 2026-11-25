@@ -1,0 +1,87 @@
+cases:
+  - name: block read from an unapproved source
+    expect: match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T11:00:00Z"
+      direction: request
+      function_code: 3
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 0
+      register_end: 31
+      quantity: 32
+
+  - name: block read from the approved HMI is normal polling
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T11:00:01Z"
+      direction: request
+      function_code: 3
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 0
+      register_end: 31
+      quantity: 32
+
+  - name: a small read is polling, not a block harvest
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T11:00:02Z"
+      direction: request
+      function_code: 3
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 0
+      register_end: 3
+      quantity: 4
+
+  - name: a block read without a source identity is not attributed
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T11:00:03Z"
+      direction: request
+      function_code: 3
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 0
+      register_end: 31
+      quantity: 32
+
+  - name: a write is not a read
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T11:00:04Z"
+      direction: request
+      function_code: 16
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 0
+      register_end: 31
+      quantity: 32
+
+  - name: a read response is not a request
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T11:00:05Z"
+      direction: response
+      function_code: 3
+      src_ip: 172.21.0.10
+      dst_ip: 172.24.0.10
+      unit_id: 1
+      quantity: 32

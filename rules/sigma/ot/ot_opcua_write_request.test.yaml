@@ -1,5 +1,5 @@
 cases:
-  - name: write request
+  - name: write request from an unapproved client
     expect: match
     event:
       product: ot_ndr
@@ -7,8 +7,34 @@ cases:
       timestamp: "2026-09-14T09:00:00Z"
       message_type: MSG
       chunk_type: F
+      src_ip: 172.23.0.20
       secure_channel_id: 1
       request_id: 2
+      service_id: 673
+      opcua_service: WriteRequest
+      direction: request
+
+  - name: an authorized client setpoint write is normal
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:00:01Z"
+      message_type: MSG
+      src_ip: 172.22.0.10
+      secure_channel_id: 1
+      request_id: 3
+      service_id: 673
+      opcua_service: WriteRequest
+      direction: request
+
+  - name: a write without a source identity is not attributed
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:00:02Z"
+      message_type: MSG
       service_id: 673
       opcua_service: WriteRequest
       direction: request
@@ -18,8 +44,9 @@ cases:
     event:
       product: ot_ndr
       service: opcua
-      timestamp: "2026-09-14T09:00:01Z"
+      timestamp: "2026-09-14T09:00:03Z"
       message_type: MSG
+      src_ip: 172.23.0.20
       service_id: 631
       opcua_service: ReadRequest
       direction: request
@@ -29,8 +56,9 @@ cases:
     event:
       product: ot_ndr
       service: opcua
-      timestamp: "2026-09-14T09:00:02Z"
+      timestamp: "2026-09-14T09:00:04Z"
       message_type: MSG
+      src_ip: 172.23.0.20
       service_id: 676
       opcua_service: WriteResponse
       direction: response
@@ -40,6 +68,6 @@ cases:
     event:
       product: ot_ndr
       service: opcua
-      timestamp: "2026-09-14T09:00:03Z"
+      timestamp: "2026-09-14T09:00:05Z"
       message_type: HEL
       chunk_type: F

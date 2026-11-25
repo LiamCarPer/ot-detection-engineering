@@ -39,8 +39,8 @@ windows:
         product: ot_ndr
         service: dnp3
         direction: request
-        src_ip: 172.21.0.20
-        dst_ip: 172.31.0.10
+        src_ip: 172.22.0.10
+        dst_ip: 172.21.0.50
         function_code: 1
 
   - name: an unknown asset is the new-asset rule's job

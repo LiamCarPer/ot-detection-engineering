@@ -44,6 +44,49 @@
       ]
     },
     {
+      "rule": "rules/stateful/stateful_dnp3_select_operate.yml",
+      "schema_errors": [],
+      "title": "DNP3 Operate Without A Matching Select",
+      "windows": [
+        {
+          "expected": "no_match",
+          "name": "a select and operate for the same point inside the window",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "match",
+          "name": "an operate with no select",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "match",
+          "name": "a select for one point and an operate for another",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "match",
+          "name": "an operate after the pairing window",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "a direct operate is not a select-before-operate pair",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "two interleaved select and operate pairs",
+          "observed": "no_match",
+          "passed": true
+        }
+      ]
+    },
+    {
       "rule": "rules/stateful/stateful_engineering_change_window.yml",
       "schema_errors": [],
       "title": "Engineering Change Outside Approved Window",
@@ -62,14 +105,38 @@
         },
         {
           "expected": "no_match",
-          "name": "an engineering write inside its approved window",
+          "name": "an engineering write inside its approved window and scope",
           "observed": "no_match",
           "passed": true
         },
         {
           "expected": "match",
-          "name": "an engineering write inside the window for a different controller",
+          "name": "an engineering write inside the window but outside the approved register scope",
           "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "match",
+          "name": "a block write that starts in scope but ends outside it",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "match",
+          "name": "an S7 write inside the modbus window is a different service",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "match",
+          "name": "an event that carries a mismatched change ticket is not approved",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "an event that carries the matching change ticket is approved",
+          "observed": "no_match",
           "passed": true
         },
         {
@@ -81,6 +148,43 @@
         {
           "expected": "no_match",
           "name": "an S7 engineering write inside its approved window",
+          "observed": "no_match",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "rule": "rules/stateful/stateful_process_safety_envelope.yml",
+      "schema_errors": [],
+      "title": "Process Value Outside The Safety Envelope",
+      "windows": [
+        {
+          "expected": "match",
+          "name": "three consecutive tank-level samples above the safety envelope",
+          "observed": "match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "two high samples then a return to the envelope",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "a single high sample",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "a normal tank cycle",
+          "observed": "no_match",
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "name": "an external monitor violation label alone does not fire the envelope",
           "observed": "no_match",
           "passed": true
         }
@@ -125,8 +229,8 @@
     }
   ],
   "summary": {
-    "rules": 3,
-    "windows": 16,
-    "windows_passed": 16
+    "rules": 5,
+    "windows": 31,
+    "windows_passed": 31
   }
 }

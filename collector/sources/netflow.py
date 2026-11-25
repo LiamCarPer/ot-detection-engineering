@@ -10,6 +10,7 @@ the wire; the committed sample is a labelled export in the documented shape
 from __future__ import annotations
 
 import json
+import logging
 from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import Any
@@ -17,14 +18,22 @@ from typing import Any
 from collector.contract import event
 
 PRODUCT = "ot_flow"
+LOGGER = logging.getLogger("collector.netflow")
 
 
 def events(paths: Iterable[Path]) -> Iterator[dict[str, Any]]:
     for path in paths:
-        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        try:
+            data = json.loads(Path(path).read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            LOGGER.warning("%s: skipping malformed JSON: %s", Path(path).name, error)
+            continue
         records = data if isinstance(data, list) else [data]
         for record in records:
-            yield _record(record)
+            try:
+                yield _record(record)
+            except (KeyError, TypeError, ValueError) as error:
+                LOGGER.warning("%s: skipping malformed record: %s", Path(path).name, error)
 
 
 def _record(record: dict[str, Any]) -> dict[str, Any]:
@@ -37,6 +46,7 @@ def _record(record: dict[str, Any]) -> dict[str, Any]:
         src_port=_int(record.get("src_port") or record.get("srcport")),
         dst_port=_int(record.get("dst_port") or record.get("dstport")),
         proto=_string(record.get("proto") or record.get("protocol")),
+        app_protocol=_string(record.get("app_protocol") or record.get("application")),
         bytes=_int(record.get("bytes") or record.get("bytes_total")),
         packets=_int(record.get("packets") or record.get("pkts")),
         duration=_float(record.get("duration")),

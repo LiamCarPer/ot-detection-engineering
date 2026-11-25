@@ -3,6 +3,22 @@ cases:
     expect: match
     file: tests/yara/samples/malicious/ews_dropper.ps1
 
+  - name: a PowerShell script combining a remote loader with an in-memory assembly load
+    expect: match
+    file: tests/yara/samples/malicious/ews_memory_loader.ps1
+
   - name: a routine administrative PowerShell script
     expect: no_match
     file: tests/yara/samples/benign/ews_admin.ps1
+
+  - name: a browser launcher containing the IEX substring in iexplore.exe
+    expect: no_match
+    file: tests/yara/samples/benign/ews_iexplore_admin.ps1
+
+  - name: an admin script using the -Encoding UTF8 parameter
+    expect: no_match
+    file: tests/yara/samples/benign/ews_encoding_admin.ps1
+
+  - name: a download-only admin script with no execution or in-memory loader
+    expect: no_match
+    file: tests/yara/samples/benign/ews_download_only_admin.ps1

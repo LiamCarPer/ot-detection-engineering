@@ -12,7 +12,8 @@ depends on its claims being checkable; a claim without evidence is a liability.
 - **Partial** — only part of the claim is demonstrated.
 - **Known gap** — deliberately not claimed.
 
-Last audited: **2026-11-24**.
+Last audited: **2026-11-24**. The independent runs and their limits are in
+[`EVIDENCE_MAP.md`](EVIDENCE_MAP.md).
 
 ## Canonical numbers
 
@@ -22,18 +23,18 @@ not current and must not be used.
 | Figure | Current value |
 | :-- | :-- |
 | ATT&CK for ICS coverage | **29 / 97 techniques (29.9%)**, prioritized, not padded |
-| Detection content | **24 Sigma + 6 correlation + 4 YARA + 24 native + 3 stateful**, plus 3 baseline + 2 conduit = 66 catalogued rules |
+| Detection content | **26 Sigma + 6 correlation + 4 YARA + 21 native + 5 stateful**, plus 3 baseline + 3 conduit = 68 catalogued rules |
 | Benign baseline | **Sigma single-event: 0 / 1,000 generated events**, 95% Wilson upper bound **0.38%**; all-family report in `deploy/evidence/fpr/report.md` |
-| Held-out single-event | **48 / 48** positives, **0** false positives over 1,024 negatives per rule |
+| Held-out single-event | **50 / 50** positives, **0** false positives over 1,024 negatives per rule |
 | Held-out correlation | **12 / 12** positive windows, **0** false positives over 14 negative windows |
 | Held-out YARA | **8 / 8** artifacts, **0** false positives over 8 shared negatives |
 | Purple team (MTTD run) | **4 / 4** expectations, mean MTTD **2.45 s** (`n=4`, one run) |
 | Purple team (replay) | **14 / 14** lab alert signals, 8 steps, 0 unexpected, benign passed |
 | Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
-| Detection catalogue | **66 rules, 6 stable, 60 experimental, 12 with observed lab volume, 0 blocking gaps** |
-| Performance | **6.9–11.5M decoder frames/s; ~4,800 replay events/s** on the recorded host |
-| Test suite | 509 tests at the time of this audit; the count is not a quality claim |
-| Live lab | **11 of the 13 rules the lab exercises** fire on live traffic |
+| Detection catalogue | **68 rules, 6 stable, 62 experimental, 12 with observed lab volume, 0 blocking gaps** |
+| Performance | **6.2–10.9M decoder frames/s; ~3,300 replay events/s** on the recorded host |
+| Test suite | The count is not a quality claim; see the CI run |
+| Live lab | **11 of the 13 rules the lab exercises** fire on live traffic (snapshot 2026-09-15; predates the P1 rule changes) |
 
 ## Claims
 
@@ -46,19 +47,19 @@ not current and must not be used.
 | Native Suricata rules fire on the attack captures and stay silent on the benign captures | Implemented | `deploy/report.md`, `deploy/evidence/*/eve.json` | `make suricata-check` (Docker) |
 | The ruleset loads and fires inside a Malcolm pipeline alongside 59,188 default rules | Implemented | `deploy/evidence/malcolm/` | `tools/malcolm_check.py` |
 | The Loki ruler bundle fires the 18 rules in the live Loki proof in a full stack | Implemented | `deploy/evidence/loki/` | `make loki-check` (Docker) |
-| The generated rules fire on live traffic in a real-endpoint OT lab for 11 of the 13 rules the lab exercises | Implemented | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
+| The generated rules fire on live traffic in a real-endpoint OT lab for 11 of the 13 rules the lab exercises | Implemented (snapshot 2026-09-15; predates the P1 rule changes) | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
 | The Rust decoders decode the committed examples and the resulting events satisfy the Sigma rules | Verified | `deploy/evidence/decoders/summary.json` | `make decoder-check` |
 | Suricata and Zeek sensor output, plus authored NetFlow/IPFIX and SNMP exports in the exporter's shape, normalize to the contract and fire the expected rules | Verified | `deploy/evidence/collector/summary.json` | `make collector-check` |
 | The behaviour baseline is reproducible and its rules fire on deviations and stay silent on benign telemetry | Verified | `deploy/evidence/baseline/summary.json` | `make baseline-check` |
 | Conduit rules flag an undeclared cross-zone path and an undeclared service; the evidence records declared conduits never observed | Verified | `deploy/evidence/conduit/summary.json` | `make conduit-check` |
 | Every single-event rule converts to Loki, OpenSearch, Splunk and Sentinel with SHA-256 provenance | Verified | `deploy/manifest.json` | `make convert-all` |
-| Every correlation rule converts to Loki, Splunk and OpenSearch; Sentinel records them as unsupported | Verified | `deploy/manifest.json` (`unsupported`) | `make convert-all` |
+| Every correlation rule converts to Loki, Splunk, OpenSearch and Sentinel | Verified | `deploy/manifest.json` | `make convert-all` |
 | The committed deployment bundle cannot drift from the rules | Verified | `deploy/`, `pipelines/deploy.py --check` | `make deploy-check` |
 | Coverage, fixture metrics and held-out metrics are derived from rule content | Verified | `coverage/`, `metrics/` | `make coverage`, `make metrics`, `tests/test_coverage.py`, `tests/test_metrics.py` |
 | The benign baseline is deterministic and reproducible | Verified | `metrics/baseline/` | `tests/test_baseline_corpus.py` |
 | The benign baseline is 0 / 1,000 for the single-event Sigma family, with a 95% Wilson upper bound of 0.38% | Verified (modelled) | `metrics/baseline/README.md`, `deploy/evidence/fpr/report.md` | `make fpr` |
 | Every detection family is measured on the benign corpus: baseline, conduit, correlation, stateful, native and YARA are silent | Verified (modelled) | `deploy/evidence/fpr/report.md` | `make fpr-check` |
-| Held-out single-event precision and recall are 48 / 48 with 0 false positives over 1,024 negatives per rule | Verified (authored/generated set) | `metrics/heldout/README.md` | `make metrics`, `tests/test_heldout.py` |
+| Held-out single-event precision and recall are 50 / 50 with 0 false positives over 1,024 negatives per rule | Verified (authored/generated set) | `metrics/heldout/README.md` | `make metrics`, `tests/test_heldout.py` |
 | Held-out correlation recall is 12 / 12 positive windows with 0 false positives over 14 negatives | Verified (authored set) | `metrics/heldout/README.md` | `make metrics`, `tests/test_heldout.py` |
 | Held-out YARA recall is 8 / 8 artifacts with 0 false positives over 8 shared negatives | Verified (authored set) | `metrics/heldout/README.md` | `make metrics`, `tests/test_heldout.py` |
 | No held-out event duplicates a rule fixture | Verified | `tests/test_heldout.py` | `make test` |
@@ -73,7 +74,7 @@ not current and must not be used.
 | The process-value and per-asset baselines are reproducible from committed benign data | Verified | `baseline/process-values.json`, `baseline/asset-behaviour.json` | `tests/test_stateful.py` |
 | The change calendar is schema-valid and reviewed as code | Verified | `metadata/change-calendar.yaml` | `tests/test_stateful.py` |
 | The decoder microbenchmark records throughput and p99 per frame and passes its SLO | Verified (hardware-specific) | `deploy/evidence/perf/summary.json` | `make perf-check`, `tests/test_perf.py` |
-| The offline replay processes 1,000 distinct benign events ten times (10,000 evaluation passes) through 24 rules with 0 matches | Verified | `deploy/evidence/perf/summary.json` | `make perf-check` |
+| The offline replay processes 1,000 distinct benign events ten times (10,000 evaluation passes) through 26 rules with 0 matches | Verified | `deploy/evidence/perf/summary.json` | `make perf-check` |
 | The write-up, demo and operations walkthrough use the current evidence and state their scope | Verified | `docs/WRITEUP.md`, `docs/DEMO.md`, `docs/OPERATIONS.md` | `tests/test_communication.py` |
 | The catalogue's observed volume matches the Phase 1 lab analysis | Verified | `analysis/out/rule_health.json` | `tests/test_detection_health.py` |
 | The recorded purple-team MTTD run detected 4 / 4 expectations at a mean MTTD of 2.45 s | Implemented (`n=4`, one run) | `purple/emulation/lab-observations-2026-09-13.json`, `purple/results/` | `make metrics` (replay) |
@@ -101,7 +102,7 @@ These are deliberately not claimed. They are also listed in
 | Production triage / MTTA | The case study has no analyst acknowledgement or resolution timestamps; it measures queue reduction, not human performance. |
 | MTTD on the replay | The 2026-11-24 snapshot has alert timestamps but not action start timestamps; MTTD comes only from the 2026-09-13 run. |
 | HMI-login, C2-beacon and OT-port-scan coverage | The lab emits those alerts, but the repository has no matching rule; they are not scored in the purple plan. |
-| Operational maturity of most rules | 60 of 66 rules are `experimental`; only 6 have runbooks and 12 have observed lab volume. |
+| Operational maturity of most rules | 62 of 68 rules are `experimental`; only 6 have runbooks and 12 have observed lab volume. |
 | Production-scale performance | The benchmark is a desktop, small example frames, no pcap replay, no sustained load, no backpressure. |
 
 ## How to audit this file

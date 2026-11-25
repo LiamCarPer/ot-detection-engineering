@@ -1,2 +1,3 @@
 // source: rules/sigma/ot/ot_s7comm_change_operating_mode.yml
-direction =~ "request" and (function_code in~ ("40", "41"))
+OTTelemetry
+| where direction =~ "request" and (function_code in~ ("40", "41"))

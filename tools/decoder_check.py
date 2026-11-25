@@ -47,6 +47,13 @@ DECODERS: dict[str, str] = {
     "opcua": "opcua-dpi",
 }
 
+# The decoders parse application bytes and do not see IP endpoints. Rules that
+# require a source identity need the transport envelope the collector would add.
+# Attach the lab insider address for the OPC UA proof; DNP3 uses link addresses
+# and the Modbus/S7 proofs exercise protocol-intrinsic rules that do not need an
+# IP.
+SOURCE_IP: dict[str, str] = {"opcua": "172.23.0.20"}
+
 
 def build(cargo: str) -> None:
     subprocess.run(
@@ -84,8 +91,12 @@ def decode(crate: str, service: str) -> list[dict]:
         if line.strip():
             event = json.loads(line)
             # The collector that ships decoder output attaches the logsource
-            # routing fields; reproduce that here so the matcher can route.
-            events.append({"product": "ot_ndr", "service": service, **event})
+            # routing fields and, where the rule needs one, the transport
+            # source. Reproduce that here so the matcher can route.
+            envelope = {"product": "ot_ndr", "service": service}
+            if service in SOURCE_IP:
+                envelope["src_ip"] = SOURCE_IP[service]
+            events.append({**envelope, **event})
     return events
 
 

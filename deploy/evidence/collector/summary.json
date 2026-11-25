@@ -78,8 +78,9 @@
     "sensor": "suricata"
   },
   "suricata/modbus_attack": {
-    "events": 6,
+    "events": 8,
     "expected": [
+      "Modbus Device Identification Scan",
       "Modbus Write From Unauthorized Control Writer",
       "Modbus Write To Safety Critical Parameter Register"
     ],
@@ -87,6 +88,7 @@
       "suricata/modbus_attack.eve.json"
     ],
     "observed": [
+      "Modbus Device Identification Scan",
       "Modbus Write From Unauthorized Control Writer",
       "Modbus Write To Safety Critical Parameter Register"
     ],
@@ -148,7 +150,7 @@
     "sensor": "zeek"
   },
   "zeek/flow_modbus_attack": {
-    "events": 3,
+    "events": 4,
     "expected": [],
     "inputs": [
       "zeek/modbus_attack.conn.log"

@@ -1,0 +1,5 @@
+// source: rules/sigma/ot/ot_firewall_control_zone_proxy.yml
+OTTelemetry
+| where action =~ "ACCEPT" and (src_zone =~ "control" and dst_zone =~ "it") and (dst_port in~ ("53", "80", "443"))
+| summarize value_count = dcount(dst_ip) by bin(TimeGenerated, 10m), src_ip
+| where value_count >= 3

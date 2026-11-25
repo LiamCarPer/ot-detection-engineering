@@ -1,0 +1,5 @@
+// source: rules/sigma/ot/ot_firewall_control_port_scan.yml
+OTTelemetry
+| where action =~ "DROP" and (src_zone =~ "it" and dst_zone =~ "control") and (not(proto =~ "ICMP"))
+| summarize value_count = dcount(dst_port) by bin(TimeGenerated, 5m), src_ip
+| where value_count >= 6

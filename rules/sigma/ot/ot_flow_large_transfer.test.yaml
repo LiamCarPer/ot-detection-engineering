@@ -1,21 +1,21 @@
 cases:
-  - name: an engineering workstation copies a large archive
+  - name: a large outbound transfer from the historian host
     expect: match
     event:
       product: ot_flow
       service: flow
       timestamp: "2026-11-05T09:02:00Z"
-      src_ip: 172.22.0.10
-      dst_ip: 172.21.0.20
+      src_ip: 172.23.0.10
+      dst_ip: 203.0.113.10
       src_port: 41000
-      dst_port: 445
+      dst_port: 443
       proto: tcp
       bytes: 8000000
       packets: 6000
       flow_state: SF
 
-  - name: a historian replicates a large block
-    expect: match
+  - name: a large internal historian replication is not egress
+    expect: no_match
     event:
       product: ot_flow
       service: flow
@@ -29,16 +29,31 @@ cases:
       packets: 18000
       flow_state: SF
 
-  - name: a normal poll is below the threshold
+  - name: a large internal lateral transfer is a different rule
     expect: no_match
     event:
       product: ot_flow
       service: flow
       timestamp: "2026-11-05T09:02:10Z"
-      src_ip: 172.21.0.20
-      dst_ip: 172.31.0.10
+      src_ip: 172.22.0.10
+      dst_ip: 172.22.0.10
       src_port: 43000
-      dst_port: 20000
+      dst_port: 445
+      proto: tcp
+      bytes: 8000000
+      packets: 6000
+      flow_state: SF
+
+  - name: an outbound flow below the threshold is not a large transfer
+    expect: no_match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:02:15Z"
+      src_ip: 172.23.0.10
+      dst_ip: 203.0.113.10
+      src_port: 44000
+      dst_port: 443
       proto: tcp
       bytes: 4999999
       packets: 3000
@@ -49,10 +64,10 @@ cases:
     event:
       product: ot_flow
       service: flow
-      timestamp: "2026-11-05T09:02:15Z"
+      timestamp: "2026-11-05T09:02:20Z"
       src_ip: 172.22.0.10
       dst_ip: 172.21.0.10
-      src_port: 44000
+      src_port: 45000
       dst_port: 502
       proto: tcp
       bytes: 500

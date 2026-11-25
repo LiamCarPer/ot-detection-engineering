@@ -1,0 +1,84 @@
+cases:
+  - name: coil write from an unapproved source
+    expect: match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T10:00:00Z"
+      direction: request
+      function_code: 5
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 172
+      coils: [true]
+
+  - name: multiple coil write from an unapproved source
+    expect: match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T10:00:01Z"
+      direction: request
+      function_code: 15
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 19
+      quantity: 10
+      coils: [false, true, true, false, false, true, true, false, false, true]
+
+  - name: coil write from the approved HMI is normal
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T10:00:02Z"
+      direction: request
+      function_code: 5
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 172
+      coils: [true]
+
+  - name: a coil write without a source identity is not attributed
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T10:00:03Z"
+      direction: request
+      function_code: 5
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 172
+      coils: [true]
+
+  - name: a holding-register write is not a coil write
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T10:00:04Z"
+      direction: request
+      function_code: 6
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 1024
+      value: 1
+
+  - name: a coil write response is not a request
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: modbus
+      timestamp: "2026-11-25T10:00:05Z"
+      direction: response
+      function_code: 5
+      src_ip: 172.21.0.10
+      dst_ip: 172.24.0.10
+      unit_id: 1
+      register: 172
+      coils: [true]

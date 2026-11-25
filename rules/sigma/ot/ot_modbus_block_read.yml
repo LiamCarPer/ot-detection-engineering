@@ -1,0 +1,52 @@
+title: Modbus Block Read From Unauthorized Reader
+id: c4e8a0b3-5d72-4f19-8b6e-3a8d2f7c9e54
+status: experimental
+description: |
+  Detects a single Modbus read covering a large contiguous block of coils or
+  registers from a host that is not an approved operator interface. A polling
+  HMI reads a handful of tags per request; a block read of sixteen or more is
+  how a collector or an enumerator harvests a slice of the process image in one
+  request, and it is the pattern a starting-address count misses.
+
+  The threshold is site-specific. This is the block-read counterpart to the
+  register-enumeration correlation, not a replacement: one large request and
+  many small requests are different shapes.
+references:
+  - https://attack.mitre.org/techniques/T0802/
+author: Liam Carvajal
+date: 2026-11-25
+logsource:
+  product: ot_ndr
+  service: modbus
+detection:
+  selection_direction:
+    direction: request
+  selection_function:
+    function_code:
+      - 1
+      - 2
+      - 3
+      - 4
+  selection_quantity:
+    quantity|gte: 16
+  filter_authorized_reader:
+    src_ip:
+      - 172.22.0.10
+  filter_identified_reader:
+    src_ip|exists: true
+  condition: >-
+    selection_direction and selection_function and selection_quantity
+    and filter_identified_reader and not filter_authorized_reader
+fields:
+  - src_ip
+  - dst_ip
+  - function_code
+  - register
+  - register_end
+  - quantity
+falsepositives:
+  - A historian or asset-inventory collector not yet on the reader allowlist
+  - A commissioning tool reading a full block during a maintenance window
+level: medium
+tags:
+  - attack.t0802

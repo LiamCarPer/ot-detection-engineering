@@ -7,10 +7,11 @@ description: |
   browse is point-and-tag identification, walking the node tree to enumerate the
   process before acting on it.
 
-  The correlation references the browse rule and groups by secure channel, which
-  is the session identity the decoder exposes. A client that reconnects for every
-  request would fall below the per-session count; pair the rule with the first-
-  order browse alert for that case.
+  The correlation references the browse rule and groups by source host. A client
+  that browses once on connect stays below the count; a host that walks a large
+  node tree across reconnects still aggregates. The first-order browse rule is
+  scoped to clients outside the approved OPC UA allowlist, so an authorized HMI
+  browsing on connect does not contribute.
 references:
   - https://attack.mitre.org/techniques/T0861/
 author: Liam Carvajal
@@ -21,12 +22,12 @@ correlation:
   rules:
     - 71de3736-4142-435e-9f87-70e5c08bd872
   group-by:
-    - secure_channel_id
+    - src_ip
   timespan: 5m
   condition:
     gte: 20
 fields:
-  - secure_channel_id
+  - src_ip
 falsepositives:
   - An OPC UA client refreshing a large address space after a server restart
   - An asset inventory or commissioning tool walking every node once

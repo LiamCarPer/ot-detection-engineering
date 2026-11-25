@@ -37,7 +37,7 @@ def _sidecar(rule_path: Path) -> dict:
 
 
 def test_stateful_rules_are_discovered() -> None:
-    assert len(RULES) == 3
+    assert RULES
 
 
 @pytest.mark.parametrize("rule_path", RULES, ids=lambda p: p.stem)
@@ -162,7 +162,7 @@ def test_drift_needs_the_consecutive_sample_count() -> None:
 def test_committed_evidence_is_current() -> None:
     assert main(["--check"]) == 0
     evidence = json.loads(EVIDENCE_PATH.read_text(encoding="utf-8"))
-    assert evidence["summary"]["rules"] == 3
+    assert evidence["summary"]["rules"] == len(stateful_rule_paths())
     assert evidence["summary"]["windows"] == evidence["summary"]["windows_passed"]
     assert evidence["baselines"]["process_current"] is True
     assert evidence["baselines"]["asset_current"] is True

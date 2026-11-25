@@ -1,0 +1,5 @@
+// source: rules/sigma/ot/ot_opcua_node_enumeration.yml
+OTTelemetry
+| where direction =~ "request" and (opcua_service in~ ("BrowseRequest", "BrowseNextRequest")) and isnotempty(src_ip) and (not((src_ip in~ ("172.22.0.10", "172.23.0.4"))))
+| summarize event_count = count() by bin(TimeGenerated, 5m), src_ip
+| where event_count >= 20

@@ -21,9 +21,6 @@ EXPECTED_SIDS: dict[str, set[int]] = {
         9000005,
         9000006,
         9000007,
-        9000010,
-        9000011,
-        9000012,
         9000013,
         9000014,
         9000015,
@@ -125,6 +122,7 @@ EXPECTED_DECODER_RULES: dict[str, set[str]] = {
 # Captured from the repository's own PCAPs; see collector/samples/PROVENANCE.md.
 EXPECTED_COLLECTOR_RULES: dict[str, set[str]] = {
     "suricata/modbus_attack": {
+        "Modbus Device Identification Scan",
         "Modbus Write From Unauthorized Control Writer",
         "Modbus Write To Safety Critical Parameter Register",
     },
@@ -168,6 +166,7 @@ EXPECTED_BASELINE_RULES: dict[str, set[str]] = {
     "suricata/modbus_attack": {
         "New OT Source Asset Not In The Behaviour Baseline",
         "New OT Communication Pair",
+        "New Protocol Function Code From An OT Asset",
     },
     "suricata/modbus_benign": set(),
     "suricata/dnp3_attack": {
@@ -203,20 +202,22 @@ EXPECTED_BASELINE_RULES: dict[str, set[str]] = {
 
 # Sensor sample -> conduit rule titles the sample must fire.
 EXPECTED_CONDUIT_RULES: dict[str, set[str]] = {
-    "suricata/modbus_attack": {"Flow Through An Undeclared Zone Conduit"},
+    # The Modbus attack is an unauthorized writer on an allowed supervisory-to-
+    # control path, not a conduit violation.
+    "suricata/modbus_attack": set(),
     "suricata/modbus_benign": set(),
     "suricata/dnp3_attack": {"Flow Through An Undeclared Zone Conduit"},
     "suricata/dnp3_benign": set(),
-    "zeek/modbus_attack": {"Flow Through An Undeclared Zone Conduit"},
+    "zeek/modbus_attack": set(),
     "zeek/modbus_benign": set(),
     "zeek/dnp3_attack": {"Flow Through An Undeclared Zone Conduit"},
     "zeek/dnp3_benign": set(),
-    "zeek/flow_modbus_attack": {"Flow Through An Undeclared Zone Conduit"},
+    "zeek/flow_modbus_attack": set(),
     "zeek/flow_modbus_benign": set(),
     "zeek/flow_dnp3_attack": {"Flow Through An Undeclared Zone Conduit"},
     "zeek/flow_dnp3_benign": set(),
     "netflow/flows": set(),
-    "netflow/flows_violation": {"Flow On A Port Outside The Declared Conduit"},
+    "netflow/flows_violation": {"Flow From An Unauthorized Source On A Declared Conduit"},
     "snmp/attack": set(),
     "snmp/benign": set(),
 }

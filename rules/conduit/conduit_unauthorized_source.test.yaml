@@ -1,0 +1,50 @@
+cases:
+  - name: an unauthorized host uses the EWS deployment conduit
+    expect: match
+    event:
+      src_ip: 172.23.0.20
+      dst_ip: 172.21.0.10
+      dst_port: 8443
+      proto: tcp
+
+  - name: the named EWS uses its deployment conduit
+    expect: no_match
+    event:
+      src_ip: 172.23.0.4
+      dst_ip: 172.21.0.10
+      dst_port: 8443
+      proto: tcp
+
+  - name: a reverse response to the named EWS is allowed
+    expect: no_match
+    event:
+      src_ip: 172.21.0.10
+      dst_ip: 172.23.0.4
+      src_port: 8443
+      dst_port: 41000
+      proto: tcp
+
+  - name: a response to an unauthorized host on the restricted conduit is a violation
+    expect: match
+    event:
+      src_ip: 172.21.0.10
+      dst_ip: 172.23.0.20
+      src_port: 8443
+      dst_port: 41000
+      proto: tcp
+
+  - name: a conduit without a source scope accepts the whole zone
+    expect: no_match
+    event:
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.10
+      dst_port: 502
+      proto: tcp
+
+  - name: an undeclared path is a different rule
+    expect: no_match
+    event:
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      dst_port: 502
+      proto: tcp

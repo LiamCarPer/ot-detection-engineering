@@ -2,21 +2,21 @@
   "as_of": "2026-11-24",
   "by_kind": {
     "baseline": 3,
-    "conduit": 2,
+    "conduit": 3,
     "correlation": 6,
-    "native": 24,
-    "sigma": 24,
-    "stateful": 3,
+    "native": 21,
+    "sigma": 26,
+    "stateful": 5,
     "yara": 4
   },
   "by_severity": {
-    "critical": 2,
+    "critical": 3,
     "high": 44,
     "low": 2,
-    "medium": 18
+    "medium": 19
   },
   "by_status": {
-    "experimental": 60,
+    "experimental": 62,
     "stable": 6
   },
   "catalog_version": 1,
@@ -164,7 +164,7 @@
       "runbook": null,
       "severity": "medium",
       "status": "experimental",
-      "title": "Large Transfer Between OT Assets"
+      "title": "Large Transfer From OT To An External Destination"
     },
     {
       "age_days": 72,
@@ -620,54 +620,6 @@
       "expected_volume": null,
       "has_runbook": false,
       "health": "warn",
-      "id": "sid:9000010",
-      "kind": "native",
-      "last_validated": null,
-      "owner": "Liam Carvajal",
-      "raw_alerts": null,
-      "runbook": null,
-      "severity": "high",
-      "status": "experimental",
-      "title": "OT DNP3 Select Control Operation"
-    },
-    {
-      "age_days": null,
-      "episodes": null,
-      "expected_volume": null,
-      "has_runbook": false,
-      "health": "warn",
-      "id": "sid:9000011",
-      "kind": "native",
-      "last_validated": null,
-      "owner": "Liam Carvajal",
-      "raw_alerts": null,
-      "runbook": null,
-      "severity": "high",
-      "status": "experimental",
-      "title": "OT DNP3 Operate Control Operation"
-    },
-    {
-      "age_days": null,
-      "episodes": null,
-      "expected_volume": null,
-      "has_runbook": false,
-      "health": "warn",
-      "id": "sid:9000012",
-      "kind": "native",
-      "last_validated": null,
-      "owner": "Liam Carvajal",
-      "raw_alerts": null,
-      "runbook": null,
-      "severity": "high",
-      "status": "experimental",
-      "title": "OT DNP3 Direct Operate No Ack Control Operation"
-    },
-    {
-      "age_days": null,
-      "episodes": null,
-      "expected_volume": null,
-      "has_runbook": false,
-      "health": "warn",
       "id": "sid:9000013",
       "kind": "native",
       "last_validated": null,
@@ -1077,18 +1029,98 @@
       "severity": "high",
       "status": "experimental",
       "title": "Process Value Drift From Learned Baseline"
+    },
+    {
+      "age_days": -1,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "b3d7f9a2-4c61-4e08-9a5d-2f7c1e6b8d43",
+      "kind": "sigma",
+      "last_validated": "2026-11-25",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "high",
+      "status": "experimental",
+      "title": "Modbus Coil Write From Unauthorized Control Writer"
+    },
+    {
+      "age_days": -1,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "c4e8a0b3-5d72-4f19-8b6e-3a8d2f7c9e54",
+      "kind": "sigma",
+      "last_validated": "2026-11-25",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "medium",
+      "status": "experimental",
+      "title": "Modbus Block Read From Unauthorized Reader"
+    },
+    {
+      "age_days": -1,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "d5f9b1c4-6e83-4a20-9c7f-4b9e3a8d1f65",
+      "kind": "stateful",
+      "last_validated": "2026-11-25",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "high",
+      "status": "experimental",
+      "title": "DNP3 Operate Without A Matching Select"
+    },
+    {
+      "age_days": -1,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "e6a0c2d5-7f94-4b31-8d80-5c1f4b9e2a76",
+      "kind": "stateful",
+      "last_validated": "2026-11-25",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "critical",
+      "status": "experimental",
+      "title": "Process Value Outside The Safety Envelope"
+    },
+    {
+      "age_days": -1,
+      "episodes": null,
+      "expected_volume": null,
+      "has_runbook": false,
+      "health": "warn",
+      "id": "a8c4e6b2-3d71-4f90-8a25-6b1c9e7d4f38",
+      "kind": "conduit",
+      "last_validated": "2026-11-25",
+      "owner": "Liam Carvajal",
+      "raw_alerts": null,
+      "runbook": null,
+      "severity": "high",
+      "status": "experimental",
+      "title": "Flow From An Unauthorized Source On A Declared Conduit"
     }
   ],
   "schema_errors": [],
   "totals": {
-    "discovered_rules": 66,
+    "discovered_rules": 68,
     "gaps": 0,
-    "rules": 66,
+    "rules": 68,
     "stable": 6,
     "stable_stale": 0,
     "stable_with_observed_volume": 6,
     "stable_with_runbook": 6,
-    "warnings": 60,
+    "warnings": 62,
     "with_observed_volume": 12
   },
   "warnings": [
@@ -1125,7 +1157,7 @@
     {
       "id": "2e6c9b14-7a58-4d03-8f21-9b4d6e1c3a80",
       "issue": "no runbook; no observed volume",
-      "title": "Large Transfer Between OT Assets"
+      "title": "Large Transfer From OT To An External Destination"
     },
     {
       "id": "6cb1ea58-c9cb-4be9-ad51-0e536b56e4b9",
@@ -1248,21 +1280,6 @@
       "title": "OT DNP3 Device Attribute Scan (Object Group 0)"
     },
     {
-      "id": "sid:9000010",
-      "issue": "no runbook; no observed volume; no last_validated",
-      "title": "OT DNP3 Select Control Operation"
-    },
-    {
-      "id": "sid:9000011",
-      "issue": "no runbook; no observed volume; no last_validated",
-      "title": "OT DNP3 Operate Control Operation"
-    },
-    {
-      "id": "sid:9000012",
-      "issue": "no runbook; no observed volume; no last_validated",
-      "title": "OT DNP3 Direct Operate No Ack Control Operation"
-    },
-    {
       "id": "sid:9000013",
       "issue": "no runbook; no observed volume; no last_validated",
       "title": "OT DNP3 Unsolicited Responses Disabled"
@@ -1391,6 +1408,31 @@
       "id": "6a1f4c2d-9b3e-4d71-8a52-1c7e5f9b2d04",
       "issue": "no runbook; no observed volume",
       "title": "Process Value Drift From Learned Baseline"
+    },
+    {
+      "id": "b3d7f9a2-4c61-4e08-9a5d-2f7c1e6b8d43",
+      "issue": "no runbook; no observed volume",
+      "title": "Modbus Coil Write From Unauthorized Control Writer"
+    },
+    {
+      "id": "c4e8a0b3-5d72-4f19-8b6e-3a8d2f7c9e54",
+      "issue": "no runbook; no observed volume",
+      "title": "Modbus Block Read From Unauthorized Reader"
+    },
+    {
+      "id": "d5f9b1c4-6e83-4a20-9c7f-4b9e3a8d1f65",
+      "issue": "no runbook; no observed volume",
+      "title": "DNP3 Operate Without A Matching Select"
+    },
+    {
+      "id": "e6a0c2d5-7f94-4b31-8d80-5c1f4b9e2a76",
+      "issue": "no runbook; no observed volume",
+      "title": "Process Value Outside The Safety Envelope"
+    },
+    {
+      "id": "a8c4e6b2-3d71-4f90-8a25-6b1c9e7d4f38",
+      "issue": "no runbook; no observed volume",
+      "title": "Flow From An Unauthorized Source On A Declared Conduit"
     }
   ]
 }

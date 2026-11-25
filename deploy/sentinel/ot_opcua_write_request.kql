@@ -1,2 +1,3 @@
 // source: rules/sigma/ot/ot_opcua_write_request.yml
-direction =~ "request" and opcua_service =~ "WriteRequest"
+OTTelemetry
+| where direction =~ "request" and opcua_service =~ "WriteRequest" and isnotempty(src_ip) and (not((src_ip in~ ("172.22.0.10", "172.23.0.4"))))

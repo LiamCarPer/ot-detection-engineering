@@ -32,6 +32,13 @@
           "name": "a document with an embedded PE but no macro project",
           "observed": false,
           "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/ews_macro_bare_mz.docm",
+          "name": "a macro document with bare MZ and PE bytes but no valid PE header",
+          "observed": false,
+          "passed": true
         }
       ],
       "file": "rules/yara/ot_macro_document_with_pe.yar",
@@ -47,9 +54,37 @@
           "passed": true
         },
         {
+          "expected": "match",
+          "file": "tests/yara/samples/malicious/ews_memory_loader.ps1",
+          "name": "a PowerShell script combining a remote loader with an in-memory assembly load",
+          "observed": true,
+          "passed": true
+        },
+        {
           "expected": "no_match",
           "file": "tests/yara/samples/benign/ews_admin.ps1",
           "name": "a routine administrative PowerShell script",
+          "observed": false,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/ews_iexplore_admin.ps1",
+          "name": "a browser launcher containing the IEX substring in iexplore.exe",
+          "observed": false,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/ews_encoding_admin.ps1",
+          "name": "an admin script using the -Encoding UTF8 parameter",
+          "observed": false,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/ews_download_only_admin.ps1",
+          "name": "a download-only admin script with no execution or in-memory loader",
           "observed": false,
           "passed": true
         }
@@ -70,6 +105,13 @@
           "expected": "no_match",
           "file": "tests/yara/samples/benign/s7_firmware_clean.bin",
           "name": "an S7-1500 firmware image with no embedded binary",
+          "observed": false,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/s7_firmware_bare_mz.bin",
+          "name": "an S7-1500 firmware image with bare MZ and PE bytes but no valid PE header",
           "observed": false,
           "passed": true
         },
@@ -97,6 +139,13 @@
           "expected": "no_match",
           "file": "tests/yara/samples/benign/siemens_project_clean.bin",
           "name": "a Siemens project file with no embedded binary",
+          "observed": false,
+          "passed": true
+        },
+        {
+          "expected": "no_match",
+          "file": "tests/yara/samples/benign/siemens_project_bare_mz.bin",
+          "name": "a Siemens project file with bare MZ and PE bytes but no valid PE header",
           "observed": false,
           "passed": true
         },

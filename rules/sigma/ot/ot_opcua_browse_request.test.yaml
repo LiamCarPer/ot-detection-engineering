@@ -1,25 +1,50 @@
 cases:
-  - name: browse request
+  - name: browse request from an unapproved client
     expect: match
     event:
       product: ot_ndr
       service: opcua
       timestamp: "2026-09-14T09:20:00Z"
       message_type: MSG
+      src_ip: 172.23.0.20
       secure_channel_id: 1
       service_id: 527
       opcua_service: BrowseRequest
       direction: request
 
-  - name: browse next request
+  - name: browse next request from an unapproved client
     expect: match
     event:
       product: ot_ndr
       service: opcua
       timestamp: "2026-09-14T09:20:01Z"
       message_type: MSG
+      src_ip: 172.23.0.20
       service_id: 533
       opcua_service: BrowseNextRequest
+      direction: request
+
+  - name: an authorized HMI browsing on connect is normal
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:20:02Z"
+      message_type: MSG
+      src_ip: 172.22.0.10
+      service_id: 527
+      opcua_service: BrowseRequest
+      direction: request
+
+  - name: a browse without a source identity is not attributed
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:20:03Z"
+      message_type: MSG
+      service_id: 527
+      opcua_service: BrowseRequest
       direction: request
 
   - name: read request is not a browse
@@ -27,8 +52,9 @@ cases:
     event:
       product: ot_ndr
       service: opcua
-      timestamp: "2026-09-14T09:20:02Z"
+      timestamp: "2026-09-14T09:20:04Z"
       message_type: MSG
+      src_ip: 172.23.0.20
       service_id: 631
       opcua_service: ReadRequest
       direction: request
@@ -38,8 +64,9 @@ cases:
     event:
       product: ot_ndr
       service: opcua
-      timestamp: "2026-09-14T09:20:03Z"
+      timestamp: "2026-09-14T09:20:05Z"
       message_type: MSG
+      src_ip: 172.23.0.20
       service_id: 530
       opcua_service: BrowseResponse
       direction: response

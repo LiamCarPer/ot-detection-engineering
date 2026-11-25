@@ -30,7 +30,13 @@ STEP_SECONDS = 30
 
 
 def _templates() -> list[dict[str, Any]]:
-    """Normal operation, one template per recurring behaviour."""
+    """Normal operation, one template per recurring behaviour.
+
+    Addresses follow the lab: the HMI is 172.22.0.10, the insider engineering
+    client is 172.23.0.20, the EWS is 172.23.0.4, and the control-zone endpoints
+    are PLCs 172.21.0.10-12 plus DNP3 172.21.0.50, OPC UA 172.21.0.51 and
+    S7comm 172.21.0.52. Every pair is on a declared conduit.
+    """
     modbus = {"product": "ot_ndr", "service": "modbus"}
     dnp3 = {"product": "ot_ndr", "service": "dnp3"}
     s7 = {"product": "ot_ndr", "service": "s7comm"}
@@ -63,7 +69,7 @@ def _templates() -> list[dict[str, Any]]:
             **modbus,
             "direction": "request",
             "function_code": 6,
-            "src_ip": "172.21.0.20",
+            "src_ip": "172.22.0.10",
             "dst_ip": "172.21.0.10",
             "unit_id": 1,
             "register": 1024,
@@ -73,11 +79,21 @@ def _templates() -> list[dict[str, Any]]:
             **modbus,
             "direction": "request",
             "function_code": 16,
-            "src_ip": "172.21.0.20",
+            "src_ip": "172.22.0.10",
             "dst_ip": "172.21.0.12",
             "unit_id": 1,
             "register": 512,
             "value": 1,
+        },
+        {
+            **modbus,
+            "direction": "request",
+            "function_code": 5,
+            "src_ip": "172.22.0.10",
+            "dst_ip": "172.21.0.10",
+            "unit_id": 1,
+            "register": 172,
+            "coils": [True],
         },
         {
             **modbus,
@@ -92,15 +108,15 @@ def _templates() -> list[dict[str, Any]]:
             "direction": "response",
             "function_code": 6,
             "src_ip": "172.21.0.10",
-            "dst_ip": "172.21.0.20",
+            "dst_ip": "172.22.0.10",
             "unit_id": 1,
         },
         {
             **dnp3,
             "direction": "request",
             "function_code": 1,
-            "src_ip": "172.21.0.20",
-            "dst_ip": "172.31.0.10",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.50",
             "link_source": 1,
             "link_destination": 10,
             "object_group": 1,
@@ -109,8 +125,8 @@ def _templates() -> list[dict[str, Any]]:
             **dnp3,
             "direction": "request",
             "function_code": 20,
-            "src_ip": "172.21.0.20",
-            "dst_ip": "172.31.0.10",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.50",
             "link_source": 2,
             "link_destination": 10,
         },
@@ -118,8 +134,8 @@ def _templates() -> list[dict[str, Any]]:
             **dnp3,
             "direction": "request",
             "function_code": 5,
-            "src_ip": "172.21.0.20",
-            "dst_ip": "172.31.0.10",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.50",
             "link_source": 1,
             "link_destination": 10,
             "object_group": 12,
@@ -129,8 +145,8 @@ def _templates() -> list[dict[str, Any]]:
             **dnp3,
             "direction": "response",
             "function_code": 129,
-            "src_ip": "172.31.0.10",
-            "dst_ip": "172.21.0.20",
+            "src_ip": "172.21.0.50",
+            "dst_ip": "172.23.0.20",
             "link_source": 10,
             "link_destination": 1,
             "iin": 0,
@@ -139,30 +155,39 @@ def _templates() -> list[dict[str, Any]]:
             **s7,
             "direction": "request",
             "function_code": 4,
-            "src_ip": "172.21.0.20",
-            "dst_ip": "172.21.0.10",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.52",
         },
         {
             **s7,
             "direction": "request",
             "function_code": 240,
-            "src_ip": "172.21.0.20",
-            "dst_ip": "172.21.0.10",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.52",
         },
         {
             **s7,
             "direction": "request",
             "function_code": 5,
-            "src_ip": "172.21.0.20",
-            "dst_ip": "172.21.0.10",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.52",
         },
-        {**s7, "direction": "response", "function_code": 4, "rosctr": 3},
+        {
+            **s7,
+            "direction": "response",
+            "function_code": 4,
+            "rosctr": 3,
+            "src_ip": "172.21.0.52",
+            "dst_ip": "172.23.0.20",
+        },
         {
             **opcua,
             "message_type": "MSG",
             "opcua_service": "ReadRequest",
             "service_id": 631,
             "direction": "request",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.51",
         },
         {
             **opcua,
@@ -170,6 +195,8 @@ def _templates() -> list[dict[str, Any]]:
             "opcua_service": "ReadResponse",
             "service_id": 634,
             "direction": "response",
+            "src_ip": "172.21.0.51",
+            "dst_ip": "172.23.0.20",
         },
         {
             **opcua,
@@ -177,6 +204,8 @@ def _templates() -> list[dict[str, Any]]:
             "opcua_service": "ActivateSessionRequest",
             "service_id": 473,
             "direction": "request",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.51",
         },
         {
             **opcua,
@@ -184,8 +213,16 @@ def _templates() -> list[dict[str, Any]]:
             "opcua_service": "CreateSessionRequest",
             "service_id": 467,
             "direction": "request",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.51",
         },
-        {**opcua, "message_type": "CLO", "direction": "request"},
+        {
+            **opcua,
+            "message_type": "CLO",
+            "direction": "request",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.51",
+        },
         {
             **fw,
             "action": "ACCEPT",
@@ -195,26 +232,6 @@ def _templates() -> list[dict[str, Any]]:
             "src_ip": "172.22.0.10",
             "dst_ip": "172.21.0.10",
             "dst_port": 502,
-        },
-        {
-            **fw,
-            "action": "ACCEPT",
-            "proto": "TCP",
-            "src_zone": "ops",
-            "dst_zone": "control",
-            "src_ip": "172.23.0.50",
-            "dst_ip": "172.21.0.10",
-            "dst_port": 502,
-        },
-        {
-            **fw,
-            "action": "ACCEPT",
-            "proto": "TCP",
-            "src_zone": "control",
-            "dst_zone": "field",
-            "src_ip": "172.21.0.20",
-            "dst_ip": "172.31.0.10",
-            "dst_port": 20000,
         },
         {
             **fw,
@@ -222,7 +239,7 @@ def _templates() -> list[dict[str, Any]]:
             "proto": "TCP",
             "src_zone": "supervisory",
             "dst_zone": "ops",
-            "src_ip": "172.22.0.10",
+            "src_ip": "172.22.0.20",
             "dst_ip": "172.23.0.10",
             "dst_port": 8086,
         },
@@ -231,10 +248,90 @@ def _templates() -> list[dict[str, Any]]:
             "action": "ACCEPT",
             "proto": "TCP",
             "src_zone": "it",
+            "dst_zone": "ops",
+            "src_ip": "172.24.0.30",
+            "dst_ip": "172.23.0.10",
+            "dst_port": 8086,
+        },
+        {
+            **fw,
+            "action": "ACCEPT",
+            "proto": "TCP",
+            "src_zone": "ops",
+            "dst_zone": "control",
+            "src_ip": "172.23.0.4",
+            "dst_ip": "172.21.0.10",
+            "dst_port": 8443,
+        },
+        {
+            **fw,
+            "action": "ACCEPT",
+            "proto": "TCP",
+            "src_zone": "ops",
+            "dst_zone": "control",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.50",
+            "dst_port": 20000,
+        },
+        {
+            **fw,
+            "action": "ACCEPT",
+            "proto": "TCP",
+            "src_zone": "ops",
+            "dst_zone": "control",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.51",
+            "dst_port": 4840,
+        },
+        {
+            **fw,
+            "action": "ACCEPT",
+            "proto": "TCP",
+            "src_zone": "ops",
+            "dst_zone": "control",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.52",
+            "dst_port": 102,
+        },
+        {
+            **fw,
+            "action": "ACCEPT",
+            "proto": "TCP",
+            "src_zone": "it",
             "dst_zone": "dmz",
-            "src_ip": "172.24.0.10",
-            "dst_ip": "172.25.0.2",
-            "dst_port": 443,
+            "src_ip": "172.24.0.30",
+            "dst_ip": "172.25.0.10",
+            "dst_port": 80,
+        },
+        {
+            **fw,
+            "action": "ACCEPT",
+            "proto": "TCP",
+            "src_zone": "it",
+            "dst_zone": "dmz",
+            "src_ip": "172.24.0.30",
+            "dst_ip": "172.25.0.11",
+            "dst_port": 22,
+        },
+        {
+            **fw,
+            "action": "ACCEPT",
+            "proto": "TCP",
+            "src_zone": "dmz",
+            "dst_zone": "supervisory",
+            "src_ip": "172.25.0.10",
+            "dst_ip": "172.22.0.10",
+            "dst_port": 8080,
+        },
+        {
+            **fw,
+            "action": "ACCEPT",
+            "proto": "TCP",
+            "src_zone": "dmz",
+            "dst_zone": "ops",
+            "src_ip": "172.25.0.11",
+            "dst_ip": "172.23.0.4",
+            "dst_port": 22,
         },
         {
             **fw,
@@ -277,8 +374,8 @@ def _templates() -> list[dict[str, Any]]:
         },
         {
             **flow,
-            "src_ip": "172.21.0.20",
-            "dst_ip": "172.31.0.10",
+            "src_ip": "172.23.0.20",
+            "dst_ip": "172.21.0.50",
             "src_port": 42000,
             "dst_port": 20000,
             "proto": "tcp",
@@ -301,10 +398,10 @@ def _templates() -> list[dict[str, Any]]:
         },
         {
             **flow,
-            "src_ip": "172.24.0.10",
-            "dst_ip": "172.25.0.2",
+            "src_ip": "172.24.0.30",
+            "dst_ip": "172.25.0.10",
             "src_port": 51000,
-            "dst_port": 443,
+            "dst_port": 80,
             "proto": "tcp",
             "bytes": 200,
             "packets": 6,
@@ -355,18 +452,17 @@ def _vary(event: dict[str, Any], rng: random.Random) -> dict[str, Any]:
                     varied["value"] = rng.randint(0, 1)
             else:
                 varied["register"] = rng.randint(0, 999)
-        if "src_ip" in varied and direction == "request":
-            varied["src_ip"] = rng.choice(["172.21.0.20", "172.22.0.10"])
-        if "dst_ip" in varied:
-            varied["dst_ip"] = rng.choice(
-                ["172.21.0.10", "172.21.0.11", "172.21.0.12"]
-            )
+            varied["src_ip"] = "172.22.0.10"
+            if "dst_ip" in varied:
+                varied["dst_ip"] = rng.choice(
+                    ["172.21.0.10", "172.21.0.11", "172.21.0.12"]
+                )
     elif service == "dnp3":
         if direction == "request":
             varied["link_source"] = rng.choice([1, 2])
             varied["link_destination"] = rng.choice([10, 11, 12])
-            varied["src_ip"] = rng.choice(["172.21.0.20", "172.22.0.10"])
-            varied["dst_ip"] = rng.choice(["172.31.0.10", "172.31.0.11", "172.31.0.12"])
+            varied["src_ip"] = "172.23.0.20"
+            varied["dst_ip"] = "172.21.0.50"
             if "object_group" in varied:
                 varied["object_group"] = rng.randint(1, 30)
             if "control_code" in varied:
@@ -374,11 +470,11 @@ def _vary(event: dict[str, Any], rng: random.Random) -> dict[str, Any]:
         else:
             varied["link_source"] = rng.choice([10, 11, 12])
             varied["link_destination"] = rng.choice([1, 2])
-            varied["src_ip"] = rng.choice(["172.31.0.10", "172.31.0.11", "172.31.0.12"])
-            varied["dst_ip"] = rng.choice(["172.21.0.20", "172.22.0.10"])
+            varied["src_ip"] = "172.21.0.50"
+            varied["dst_ip"] = "172.23.0.20"
     elif service == "s7comm":
         if direction == "request":
-            varied["src_ip"] = rng.choice(["172.21.0.20", "172.22.0.10"])
+            varied["src_ip"] = "172.23.0.20"
         if "pdu_reference" in varied:
             varied["pdu_reference"] = rng.randint(1, 500)
     elif service == "opcua":
@@ -387,12 +483,9 @@ def _vary(event: dict[str, Any], rng: random.Random) -> dict[str, Any]:
         if "secure_channel_id" in varied:
             varied["secure_channel_id"] = rng.randint(1, 20)
     elif service == "iptables":
-        # Keep the zone and service pair from the template, so the conduit is
-        # unchanged; only the host and ephemeral port move.
-        if "dst_ip" in varied:
-            parts = varied["dst_ip"].split(".")
-            parts[-1] = str(rng.randint(2, 60))
-            varied["dst_ip"] = ".".join(parts)
+        # Keep the zone, endpoint and service pair from the template: a random
+        # destination would invent hosts outside the policy and turn a benign
+        # conduit into an undeclared path.
         varied["src_port"] = rng.randint(1024, 65_000)
     elif service == "safety_monitor":
         if varied.get("event_type") == "process_update":
@@ -406,7 +499,7 @@ def _vary(event: dict[str, Any], rng: random.Random) -> dict[str, Any]:
         varied["src_port"] = rng.randint(1024, 65_000)
     elif service == "snmp":
         varied["device"] = rng.choice(
-            ["172.21.0.40", "172.21.0.41", "172.21.0.50"]
+            ["172.21.0.10", "172.21.0.11", "172.21.0.50"]
         )
         if "src_ip" in varied:
             varied["src_ip"] = varied["device"]

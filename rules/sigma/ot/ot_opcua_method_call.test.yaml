@@ -1,13 +1,39 @@
 cases:
-  - name: method call request
+  - name: method call request from an unapproved client
     expect: match
     event:
       product: ot_ndr
       service: opcua
       timestamp: "2026-09-14T09:10:00Z"
       message_type: MSG
+      src_ip: 172.23.0.20
       secure_channel_id: 1
       request_id: 4
+      service_id: 712
+      opcua_service: CallRequest
+      direction: request
+
+  - name: an authorized client method call is normal
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:10:01Z"
+      message_type: MSG
+      src_ip: 172.22.0.10
+      secure_channel_id: 1
+      request_id: 5
+      service_id: 712
+      opcua_service: CallRequest
+      direction: request
+
+  - name: a method call without a source identity is not attributed
+    expect: no_match
+    event:
+      product: ot_ndr
+      service: opcua
+      timestamp: "2026-09-14T09:10:02Z"
+      message_type: MSG
       service_id: 712
       opcua_service: CallRequest
       direction: request
@@ -17,8 +43,9 @@ cases:
     event:
       product: ot_ndr
       service: opcua
-      timestamp: "2026-09-14T09:10:01Z"
+      timestamp: "2026-09-14T09:10:03Z"
       message_type: MSG
+      src_ip: 172.23.0.20
       service_id: 631
       opcua_service: ReadRequest
       direction: request
@@ -28,8 +55,9 @@ cases:
     event:
       product: ot_ndr
       service: opcua
-      timestamp: "2026-09-14T09:10:02Z"
+      timestamp: "2026-09-14T09:10:04Z"
       message_type: MSG
+      src_ip: 172.23.0.20
       service_id: 715
       opcua_service: CallResponse
       direction: response

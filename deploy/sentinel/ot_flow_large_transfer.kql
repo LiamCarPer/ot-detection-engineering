@@ -1,2 +1,3 @@
 // source: rules/sigma/ot/ot_flow_large_transfer.yml
-bytes >= 5000000
+OTTelemetry
+| where bytes >= 5000000 and (not((ipv4_is_in_range(dst_ip, "172.21.0.0/24") or ipv4_is_in_range(dst_ip, "172.22.0.0/24") or ipv4_is_in_range(dst_ip, "172.23.0.0/24") or ipv4_is_in_range(dst_ip, "172.24.0.0/24") or ipv4_is_in_range(dst_ip, "172.25.0.0/24"))))

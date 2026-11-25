@@ -21,7 +21,7 @@ from tools.otde.rules import conduit_rule_paths, load_cases, technique_ids
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONDUIT_RULES = conduit_rule_paths()
-SUPPORTED_TYPES = {"undeclared_path", "undeclared_service"}
+SUPPORTED_TYPES = {"undeclared_path", "undeclared_service", "unauthorized_source"}
 
 
 def test_conduit_rules_are_discovered() -> None:
@@ -62,16 +62,16 @@ def test_zone_lookup() -> None:
     policy = load_policy()
     assert zone_for("172.21.0.10", policy) == "control"
     assert zone_for("172.24.0.10", policy) == "it"
-    assert zone_for("172.31.0.10", policy) == "field"
+    assert zone_for("172.21.0.50", policy) == "control"
     assert zone_for("8.8.8.8", policy) is None
 
 
 def test_observed_and_unused_conduits() -> None:
     policy = load_policy()
-    events = [{"src_ip": "172.21.0.20", "dst_ip": "172.31.0.10", "dst_port": 20000}]
-    assert observed_conduits(policy, events) == {("control", "field")}
-    assert ["control", "field"] not in unused_conduits(policy, events)
-    assert ["it", "ops"] in unused_conduits(policy, events)
+    events = [{"src_ip": "172.22.0.10", "dst_ip": "172.21.0.10", "dst_port": 502}]
+    assert observed_conduits(policy, events) == {("supervisory", "control")}
+    assert ["supervisory", "control"] not in unused_conduits(policy, events)
+    assert ["it", "dmz"] in unused_conduits(policy, events)
 
 
 def _undeclared_path_rule() -> dict:
@@ -83,6 +83,12 @@ def _undeclared_path_rule() -> dict:
 def _undeclared_service_rule() -> dict:
     return load_conduit_rule(
         REPO_ROOT / "rules" / "conduit" / "conduit_undeclared_service.yml"
+    )
+
+
+def _unauthorized_source_rule() -> dict:
+    return load_conduit_rule(
+        REPO_ROOT / "rules" / "conduit" / "conduit_unauthorized_source.yml"
     )
 
 
@@ -117,3 +123,29 @@ def test_reverse_service_port_is_checked_on_the_source_side() -> None:
     assert match_conduit(rule, response, policy) is False
     wrong_service = {**response, "src_port": 9999}
     assert match_conduit(rule, wrong_service, policy) is True
+
+
+def test_unauthorized_source_on_a_restricted_conduit() -> None:
+    policy = load_policy()
+    rule = _unauthorized_source_rule()
+    wrong = {
+        "src_ip": "172.23.0.20",
+        "dst_ip": "172.21.0.10",
+        "dst_port": 8443,
+        "proto": "tcp",
+    }
+    assert match_conduit(rule, wrong, policy) is True
+    allowed = {**wrong, "src_ip": "172.23.0.4"}
+    assert match_conduit(rule, allowed, policy) is False
+
+
+def test_unauthorized_source_does_not_also_fire_the_service_rule() -> None:
+    policy = load_policy()
+    event = {
+        "src_ip": "172.23.0.20",
+        "dst_ip": "172.21.0.10",
+        "dst_port": 8443,
+        "proto": "tcp",
+    }
+    assert match_conduit(_undeclared_service_rule(), event, policy) is False
+    assert match_conduit(_unauthorized_source_rule(), event, policy) is True

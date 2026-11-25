@@ -145,7 +145,7 @@ windows:
         service: modbus
         direction: request
         function_code: 3
-        src_ip: 172.21.0.20
+        src_ip: 172.22.0.10
         dst_ip: 172.21.0.10
         unit_id: 1
         register: 0
@@ -154,7 +154,7 @@ windows:
         service: modbus
         direction: request
         function_code: 3
-        src_ip: 172.21.0.20
+        src_ip: 172.22.0.10
         dst_ip: 172.21.0.11
         unit_id: 1
         register: 0
@@ -163,7 +163,7 @@ windows:
         service: modbus
         direction: request
         function_code: 3
-        src_ip: 172.21.0.20
+        src_ip: 172.22.0.10
         dst_ip: 172.21.0.12
         unit_id: 1
         register: 0

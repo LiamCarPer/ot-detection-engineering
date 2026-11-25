@@ -10,3 +10,7 @@ cases:
   - name: a document with an embedded PE but no macro project
     expect: no_match
     file: tests/yara/samples/benign/ews_document_with_pe.docm
+
+  - name: a macro document with bare MZ and PE bytes but no valid PE header
+    expect: no_match
+    file: tests/yara/samples/benign/ews_macro_bare_mz.docm

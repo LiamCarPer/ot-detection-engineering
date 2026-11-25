@@ -1,2 +1,2 @@
 # source: rules/sigma/ot/ot_opcua_method_call.yml
-source=ot_ndr-opcua-* | where direction="request" AND opcua_service="CallRequest"
+source=ot_ndr-opcua-* | where direction="request" AND opcua_service="CallRequest" AND isnotnull(src_ip) AND NOT (src_ip in ("172.22.0.10", "172.23.0.4"))

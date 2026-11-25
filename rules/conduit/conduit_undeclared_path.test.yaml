@@ -3,17 +3,21 @@ cases:
     expect: match
     event: { src_ip: 172.24.0.10, dst_ip: 172.21.0.10, dst_port: 502 }
 
-  - name: an enterprise host reaches a field outstation
+  - name: an enterprise host reaches a control-zone outstation
     expect: match
-    event: { src_ip: 172.24.0.10, dst_ip: 172.31.0.10, dst_port: 20000 }
+    event: { src_ip: 172.24.0.10, dst_ip: 172.21.0.50, dst_port: 20000 }
 
-  - name: the HMI reaches an outstation over the declared control-to-field conduit
+  - name: the insider master reaches the outstation over the declared DNP3 conduit
     expect: no_match
-    event: { src_ip: 172.21.0.20, dst_ip: 172.31.0.10, dst_port: 20000 }
+    event: { src_ip: 172.23.0.20, dst_ip: 172.21.0.50, dst_port: 20000 }
+
+  - name: the HMI reaches a PLC over the declared supervisory-to-control conduit
+    expect: no_match
+    event: { src_ip: 172.22.0.10, dst_ip: 172.21.0.10, dst_port: 502 }
 
   - name: two hosts inside the control zone
     expect: no_match
-    event: { src_ip: 172.21.0.20, dst_ip: 172.21.0.10, dst_port: 502 }
+    event: { src_ip: 172.21.0.10, dst_ip: 172.21.0.11, dst_port: 502 }
 
   - name: a destination outside every declared zone
     expect: no_match

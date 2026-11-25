@@ -173,10 +173,10 @@ rules:
   version: 1
 - id: 2e6c9b14-7a58-4d03-8f21-9b4d6e1c3a80
   rule: rules/sigma/ot/ot_flow_large_transfer.yml
-  title: Large Transfer Between OT Assets
+  title: Large Transfer From OT To An External Destination
   kind: sigma
   techniques:
-  - T0867
+  - T0882
   severity: medium
   data_source: ot_flow/flow
   owner: Liam Carvajal
@@ -184,9 +184,9 @@ rules:
   expected_volume: null
   lab_alert_types: []
   known_false_positives:
-  - A scheduled backup or historian replication inside the plant
-  - An engineering workstation copying a project archive
-  - A firmware or patch distribution to many assets
+  - An approved offsite backup or cloud historian replication
+  - A vendor support upload of logs or a project archive
+  - A firmware or patch download that is large in the reverse direction
   runbook: null
   last_validated: '2026-11-04'
   version: 1
@@ -735,57 +735,6 @@ rules:
   last_validated: null
   version: 1
   sid: 9000007
-- id: sid:9000010
-  rule: rules/native/suricata/dnp3_dpi.rules
-  title: OT DNP3 Select Control Operation
-  kind: native
-  techniques:
-  - T1692.001
-  severity: high
-  data_source: suricata native (dnp3)
-  owner: Liam Carvajal
-  status: experimental
-  expected_volume: null
-  lab_alert_types: []
-  known_false_positives: []
-  runbook: null
-  last_validated: null
-  version: 1
-  sid: 9000010
-- id: sid:9000011
-  rule: rules/native/suricata/dnp3_dpi.rules
-  title: OT DNP3 Operate Control Operation
-  kind: native
-  techniques:
-  - T1692.001
-  severity: high
-  data_source: suricata native (dnp3)
-  owner: Liam Carvajal
-  status: experimental
-  expected_volume: null
-  lab_alert_types: []
-  known_false_positives: []
-  runbook: null
-  last_validated: null
-  version: 1
-  sid: 9000011
-- id: sid:9000012
-  rule: rules/native/suricata/dnp3_dpi.rules
-  title: OT DNP3 Direct Operate No Ack Control Operation
-  kind: native
-  techniques:
-  - T1692.001
-  severity: high
-  data_source: suricata native (dnp3)
-  owner: Liam Carvajal
-  status: experimental
-  expected_volume: null
-  lab_alert_types: []
-  known_false_positives: []
-  runbook: null
-  last_validated: null
-  version: 1
-  sid: 9000012
 - id: sid:9000013
   rule: rules/native/suricata/dnp3_dpi.rules
   title: OT DNP3 Unsolicited Responses Disabled
@@ -1238,4 +1187,95 @@ rules:
   - A deliberate process override during a documented emergency
   runbook: null
   last_validated: '2026-11-24'
+  version: 1
+- id: b3d7f9a2-4c61-4e08-9a5d-2f7c1e6b8d43
+  rule: rules/sigma/ot/ot_modbus_coil_write.yml
+  title: Modbus Coil Write From Unauthorized Control Writer
+  kind: sigma
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: ot_ndr/modbus
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A commissioning or maintenance tool that legitimately pulses an output
+  - A newly commissioned engineering workstation not yet added to the allowlist
+  runbook: null
+  last_validated: '2026-11-25'
+  version: 1
+- id: c4e8a0b3-5d72-4f19-8b6e-3a8d2f7c9e54
+  rule: rules/sigma/ot/ot_modbus_block_read.yml
+  title: Modbus Block Read From Unauthorized Reader
+  kind: sigma
+  techniques:
+  - T0802
+  severity: medium
+  data_source: ot_ndr/modbus
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A historian or asset-inventory collector not yet on the reader allowlist
+  - A commissioning tool reading a full block during a maintenance window
+  runbook: null
+  last_validated: '2026-11-25'
+  version: 1
+- id: d5f9b1c4-6e83-4a20-9c7f-4b9e3a8d1f65
+  rule: rules/stateful/stateful_dnp3_select_operate.yml
+  title: DNP3 Operate Without A Matching Select
+  kind: stateful
+  techniques:
+  - T1692.001
+  severity: high
+  data_source: ot_ndr/dnp3
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A master that legitimately retries an operate after the select window expired
+  - A decoder that does not expose the object index
+  runbook: null
+  last_validated: '2026-11-25'
+  version: 1
+- id: e6a0c2d5-7f94-4b31-8d80-5c1f4b9e2a76
+  rule: rules/stateful/stateful_process_safety_envelope.yml
+  title: Process Value Outside The Safety Envelope
+  kind: stateful
+  techniques:
+  - T0831
+  severity: critical
+  data_source: ot_process/safety_monitor
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A real process upset that the operations team already knows about
+  - A sensor calibration change that shifts the reading outside the envelope
+  - A deliberate process override during a documented emergency
+  runbook: null
+  last_validated: '2026-11-25'
+  version: 1
+- id: a8c4e6b2-3d71-4f90-8a25-6b1c9e7d4f38
+  rule: rules/conduit/conduit_unauthorized_source.yml
+  title: Flow From An Unauthorized Source On A Declared Conduit
+  kind: conduit
+  techniques:
+  - T0886
+  severity: high
+  data_source: ot_flow/flow
+  owner: Liam Carvajal
+  status: experimental
+  expected_volume: null
+  lab_alert_types: []
+  known_false_positives:
+  - A documented maintenance host temporarily using a restricted conduit
+  - A source-address migration that has not been reflected in the policy
+  runbook: null
+  last_validated: '2026-11-25'
   version: 1

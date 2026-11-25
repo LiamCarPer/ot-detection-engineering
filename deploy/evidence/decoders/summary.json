@@ -27,7 +27,7 @@
       "Modbus Exception Response",
       "Modbus Write To Safety Critical Parameter Register"
     ],
-    "unmatched_events": 20
+    "unmatched_events": 19
   },
   "opcua": {
     "events": 5,

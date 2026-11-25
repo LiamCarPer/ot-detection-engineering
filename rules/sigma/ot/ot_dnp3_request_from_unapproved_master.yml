@@ -24,9 +24,7 @@ detection:
     src_ip|exists: true
   filter_approved_master:
     src_ip:
-      - 172.21.0.20
-      - 172.23.0.50
-      - 172.22.0.10
+      - 172.23.0.20
   condition: selection_direction and selection_transport and not filter_approved_master
 fields:
   - src_ip

@@ -1,7 +1,7 @@
 {
   "baseline": {
     "assets": 8,
-    "pairs": 21,
+    "pairs": 10,
     "services": [
       "dnp3",
       "modbus",
@@ -55,14 +55,16 @@
       "observed": []
     },
     "suricata/modbus_attack": {
-      "events": 6,
+      "events": 8,
       "expected": [
         "New OT Communication Pair",
-        "New OT Source Asset Not In The Behaviour Baseline"
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New Protocol Function Code From An OT Asset"
       ],
       "observed": [
         "New OT Communication Pair",
-        "New OT Source Asset Not In The Behaviour Baseline"
+        "New OT Source Asset Not In The Behaviour Baseline",
+        "New Protocol Function Code From An OT Asset"
       ]
     },
     "suricata/modbus_benign": {
@@ -99,7 +101,7 @@
       "observed": []
     },
     "zeek/flow_modbus_attack": {
-      "events": 3,
+      "events": 4,
       "expected": [],
       "observed": []
     },

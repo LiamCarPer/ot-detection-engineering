@@ -15,18 +15,18 @@ cases:
       timestamp: "2026-09-22T09:05:05Z"
       product: ot_ndr
       service: modbus
-      src_ip: 172.21.0.20
+      src_ip: 172.22.0.10
       dst_ip: 172.21.0.10
       function_code: 6
 
-  - name: the HMI talks to the outstation, a known pair
+  - name: the insider talks to the outstation, a known pair
     expect: no_match
     event:
       timestamp: "2026-09-22T09:05:10Z"
       product: ot_ndr
       service: dnp3
-      src_ip: 172.21.0.20
-      dst_ip: 172.31.0.10
+      src_ip: 172.23.0.20
+      dst_ip: 172.21.0.50
       function_code: 1
 
   - name: an event with only one endpoint cannot be judged
@@ -35,5 +35,5 @@ cases:
       timestamp: "2026-09-22T09:05:15Z"
       product: ot_ndr
       service: modbus
-      src_ip: 172.21.0.20
+      src_ip: 172.22.0.10
       function_code: 6

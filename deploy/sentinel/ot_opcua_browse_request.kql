@@ -1,2 +1,3 @@
 // source: rules/sigma/ot/ot_opcua_browse_request.yml
-direction =~ "request" and (opcua_service in~ ("BrowseRequest", "BrowseNextRequest"))
+OTTelemetry
+| where direction =~ "request" and (opcua_service in~ ("BrowseRequest", "BrowseNextRequest")) and isnotempty(src_ip) and (not((src_ip in~ ("172.22.0.10", "172.23.0.4"))))

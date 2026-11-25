@@ -10,6 +10,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1000
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:00:10Z'
     product: ot_ndr
     service: opcua
@@ -18,6 +19,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1001
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:00:20Z'
     product: ot_ndr
     service: opcua
@@ -26,6 +28,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1002
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:00:30Z'
     product: ot_ndr
     service: opcua
@@ -34,6 +37,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1003
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:00:40Z'
     product: ot_ndr
     service: opcua
@@ -42,6 +46,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1004
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:00:50Z'
     product: ot_ndr
     service: opcua
@@ -50,6 +55,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1005
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:01:00Z'
     product: ot_ndr
     service: opcua
@@ -58,6 +64,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1006
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:01:10Z'
     product: ot_ndr
     service: opcua
@@ -66,6 +73,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1007
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:01:20Z'
     product: ot_ndr
     service: opcua
@@ -74,6 +82,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1008
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:01:30Z'
     product: ot_ndr
     service: opcua
@@ -82,6 +91,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1009
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:01:40Z'
     product: ot_ndr
     service: opcua
@@ -90,6 +100,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1010
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:01:50Z'
     product: ot_ndr
     service: opcua
@@ -98,6 +109,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1011
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:02:00Z'
     product: ot_ndr
     service: opcua
@@ -106,6 +118,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1012
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:02:10Z'
     product: ot_ndr
     service: opcua
@@ -114,6 +127,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1013
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:02:20Z'
     product: ot_ndr
     service: opcua
@@ -122,6 +136,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1014
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:02:30Z'
     product: ot_ndr
     service: opcua
@@ -130,6 +145,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1015
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:02:40Z'
     product: ot_ndr
     service: opcua
@@ -138,6 +154,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1016
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:02:50Z'
     product: ot_ndr
     service: opcua
@@ -146,6 +163,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1017
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:03:00Z'
     product: ot_ndr
     service: opcua
@@ -154,6 +172,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1018
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:03:10Z'
     product: ot_ndr
     service: opcua
@@ -162,6 +181,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1019
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T15:03:20Z'
     product: ot_ndr
     service: opcua
@@ -170,6 +190,7 @@ windows:
     direction: request
     secure_channel_id: 1
     request_id: 1020
+    src_ip: 172.23.0.20
 - name: nineteen browse requests is below the threshold
   expect: no_match
   events:
@@ -181,6 +202,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2000
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:00:10Z'
     product: ot_ndr
     service: opcua
@@ -189,6 +211,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2001
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:00:20Z'
     product: ot_ndr
     service: opcua
@@ -197,6 +220,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2002
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:00:30Z'
     product: ot_ndr
     service: opcua
@@ -205,6 +229,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2003
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:00:40Z'
     product: ot_ndr
     service: opcua
@@ -213,6 +238,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2004
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:00:50Z'
     product: ot_ndr
     service: opcua
@@ -221,6 +247,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2005
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:01:00Z'
     product: ot_ndr
     service: opcua
@@ -229,6 +256,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2006
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:01:10Z'
     product: ot_ndr
     service: opcua
@@ -237,6 +265,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2007
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:01:20Z'
     product: ot_ndr
     service: opcua
@@ -245,6 +274,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2008
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:01:30Z'
     product: ot_ndr
     service: opcua
@@ -253,6 +283,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2009
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:01:40Z'
     product: ot_ndr
     service: opcua
@@ -261,6 +292,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2010
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:01:50Z'
     product: ot_ndr
     service: opcua
@@ -269,6 +301,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2011
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:02:00Z'
     product: ot_ndr
     service: opcua
@@ -277,6 +310,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2012
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:02:10Z'
     product: ot_ndr
     service: opcua
@@ -285,6 +319,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2013
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:02:20Z'
     product: ot_ndr
     service: opcua
@@ -293,6 +328,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2014
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:02:30Z'
     product: ot_ndr
     service: opcua
@@ -301,6 +337,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2015
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:02:40Z'
     product: ot_ndr
     service: opcua
@@ -309,6 +346,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2016
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:02:50Z'
     product: ot_ndr
     service: opcua
@@ -317,6 +355,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2017
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T16:03:00Z'
     product: ot_ndr
     service: opcua
@@ -325,6 +364,7 @@ windows:
     direction: request
     secure_channel_id: 2
     request_id: 2018
+    src_ip: 172.23.0.20
 - name: twenty browse requests spread beyond the five-minute window
   expect: no_match
   events:
@@ -336,6 +376,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3000
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:00:20Z'
     product: ot_ndr
     service: opcua
@@ -344,6 +385,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3001
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:00:40Z'
     product: ot_ndr
     service: opcua
@@ -352,6 +394,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3002
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:01:00Z'
     product: ot_ndr
     service: opcua
@@ -360,6 +403,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3003
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:01:20Z'
     product: ot_ndr
     service: opcua
@@ -368,6 +412,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3004
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:01:40Z'
     product: ot_ndr
     service: opcua
@@ -376,6 +421,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3005
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:02:00Z'
     product: ot_ndr
     service: opcua
@@ -384,6 +430,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3006
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:02:20Z'
     product: ot_ndr
     service: opcua
@@ -392,6 +439,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3007
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:02:40Z'
     product: ot_ndr
     service: opcua
@@ -400,6 +448,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3008
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:03:00Z'
     product: ot_ndr
     service: opcua
@@ -408,6 +457,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3009
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:03:20Z'
     product: ot_ndr
     service: opcua
@@ -416,6 +466,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3010
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:03:40Z'
     product: ot_ndr
     service: opcua
@@ -424,6 +475,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3011
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:04:00Z'
     product: ot_ndr
     service: opcua
@@ -432,6 +484,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3012
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:04:20Z'
     product: ot_ndr
     service: opcua
@@ -440,6 +493,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3013
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:04:40Z'
     product: ot_ndr
     service: opcua
@@ -448,6 +502,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3014
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:05:00Z'
     product: ot_ndr
     service: opcua
@@ -456,6 +511,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3015
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:05:20Z'
     product: ot_ndr
     service: opcua
@@ -464,6 +520,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3016
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:05:40Z'
     product: ot_ndr
     service: opcua
@@ -472,6 +529,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3017
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:06:00Z'
     product: ot_ndr
     service: opcua
@@ -480,6 +538,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3018
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T17:06:20Z'
     product: ot_ndr
     service: opcua
@@ -488,6 +547,7 @@ windows:
     direction: request
     secure_channel_id: 3
     request_id: 3019
+    src_ip: 172.23.0.20
 - name: two sessions browse ten times each
   expect: no_match
   events:
@@ -499,6 +559,7 @@ windows:
     direction: request
     secure_channel_id: 4
     request_id: 4000
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T18:00:10Z'
     product: ot_ndr
     service: opcua
@@ -507,6 +568,7 @@ windows:
     direction: request
     secure_channel_id: 4
     request_id: 4001
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T18:00:20Z'
     product: ot_ndr
     service: opcua
@@ -515,6 +577,7 @@ windows:
     direction: request
     secure_channel_id: 4
     request_id: 4002
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T18:00:30Z'
     product: ot_ndr
     service: opcua
@@ -523,6 +586,7 @@ windows:
     direction: request
     secure_channel_id: 4
     request_id: 4003
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T18:00:40Z'
     product: ot_ndr
     service: opcua
@@ -531,6 +595,7 @@ windows:
     direction: request
     secure_channel_id: 4
     request_id: 4004
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T18:00:50Z'
     product: ot_ndr
     service: opcua
@@ -539,6 +604,7 @@ windows:
     direction: request
     secure_channel_id: 4
     request_id: 4005
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T18:01:00Z'
     product: ot_ndr
     service: opcua
@@ -547,6 +613,7 @@ windows:
     direction: request
     secure_channel_id: 4
     request_id: 4006
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T18:01:10Z'
     product: ot_ndr
     service: opcua
@@ -555,6 +622,7 @@ windows:
     direction: request
     secure_channel_id: 4
     request_id: 4007
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T18:01:20Z'
     product: ot_ndr
     service: opcua
@@ -563,6 +631,7 @@ windows:
     direction: request
     secure_channel_id: 4
     request_id: 4008
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T18:01:30Z'
     product: ot_ndr
     service: opcua
@@ -571,6 +640,7 @@ windows:
     direction: request
     secure_channel_id: 4
     request_id: 4009
+    src_ip: 172.23.0.20
   - timestamp: '2026-11-06T18:00:00Z'
     product: ot_ndr
     service: opcua
@@ -579,6 +649,7 @@ windows:
     direction: request
     secure_channel_id: 5
     request_id: 5000
+    src_ip: 172.23.0.21
   - timestamp: '2026-11-06T18:00:10Z'
     product: ot_ndr
     service: opcua
@@ -587,6 +658,7 @@ windows:
     direction: request
     secure_channel_id: 5
     request_id: 5001
+    src_ip: 172.23.0.21
   - timestamp: '2026-11-06T18:00:20Z'
     product: ot_ndr
     service: opcua
@@ -595,6 +667,7 @@ windows:
     direction: request
     secure_channel_id: 5
     request_id: 5002
+    src_ip: 172.23.0.21
   - timestamp: '2026-11-06T18:00:30Z'
     product: ot_ndr
     service: opcua
@@ -603,6 +676,7 @@ windows:
     direction: request
     secure_channel_id: 5
     request_id: 5003
+    src_ip: 172.23.0.21
   - timestamp: '2026-11-06T18:00:40Z'
     product: ot_ndr
     service: opcua
@@ -611,6 +685,7 @@ windows:
     direction: request
     secure_channel_id: 5
     request_id: 5004
+    src_ip: 172.23.0.21
   - timestamp: '2026-11-06T18:00:50Z'
     product: ot_ndr
     service: opcua
@@ -619,6 +694,7 @@ windows:
     direction: request
     secure_channel_id: 5
     request_id: 5005
+    src_ip: 172.23.0.21
   - timestamp: '2026-11-06T18:01:00Z'
     product: ot_ndr
     service: opcua
@@ -627,6 +703,7 @@ windows:
     direction: request
     secure_channel_id: 5
     request_id: 5006
+    src_ip: 172.23.0.21
   - timestamp: '2026-11-06T18:01:10Z'
     product: ot_ndr
     service: opcua
@@ -635,6 +712,7 @@ windows:
     direction: request
     secure_channel_id: 5
     request_id: 5007
+    src_ip: 172.23.0.21
   - timestamp: '2026-11-06T18:01:20Z'
     product: ot_ndr
     service: opcua
@@ -643,6 +721,7 @@ windows:
     direction: request
     secure_channel_id: 5
     request_id: 5008
+    src_ip: 172.23.0.21
   - timestamp: '2026-11-06T18:01:30Z'
     product: ot_ndr
     service: opcua
@@ -651,3 +730,4 @@ windows:
     direction: request
     secure_channel_id: 5
     request_id: 5009
+    src_ip: 172.23.0.21

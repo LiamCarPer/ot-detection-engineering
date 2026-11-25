@@ -10,7 +10,8 @@ description: |
 
   A single reset is routine. The rule exists so the flow layer records the
   event; escalation should depend on volume or on correlation with a process
-  signal.
+  signal. A connection with no reply (`S0`) is a probe or a dropped path, not a
+  refusal; it is deliberately excluded here.
 references:
   - https://attack.mitre.org/techniques/T0813/
 author: Liam Carvajal
@@ -22,7 +23,6 @@ detection:
   selection_state:
     flow_state:
       - REJ
-      - S0
       - RSTO
       - RSTR
   selection_service:

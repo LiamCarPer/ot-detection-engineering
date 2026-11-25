@@ -27,7 +27,7 @@ cases:
       timestamp: "2026-09-13T02:16:12.500Z"
       direction: request
       function_code: 6
-      src_ip: 172.21.0.20
+      src_ip: 172.22.0.10
       dst_ip: 172.21.0.10
       unit_id: 1
       register: 1024

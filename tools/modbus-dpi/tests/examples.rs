@@ -142,6 +142,7 @@ fn examples_include_the_block_write_range_boundary() {
         .find(|event| event.function_code == 16 && event.register == Some(3999))
         .expect("the 3999 block write is present");
     assert_eq!(block.quantity, Some(10));
+    assert_eq!(block.register_end, Some(4008));
     assert_eq!(block.values.len(), 10);
 }
 

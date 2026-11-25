@@ -1,0 +1,5 @@
+// source: rules/sigma/ot/ot_modbus_exception_flood.yml
+OTTelemetry
+| where direction =~ "response" and isnotempty(exception_code)
+| summarize event_count = count() by bin(TimeGenerated, 5m), dst_ip
+| where event_count >= 10

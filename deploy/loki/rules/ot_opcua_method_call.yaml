@@ -22,7 +22,8 @@ groups:
         '
       summary: OPC UA Method Call Request
     expr: sum(count_over_time({job=~".+", service="opcua"} | logfmt | direction=~`(?i)^request$`
-      and opcua_service=~`(?i)^CallRequest$` | line_format "{{.secure_channel_id}}
+      and opcua_service=~`(?i)^CallRequest$` and src_ip!="" and src_ip!~`(?i)^172\.22\.0\.10$`
+      and src_ip!~`(?i)^172\.23\.0\.4$` | line_format "{{.src_ip}} {{.secure_channel_id}}
       {{.request_id}} {{.service_id}}" [1m])) or vector(0) > 0
     labels:
       severity: high

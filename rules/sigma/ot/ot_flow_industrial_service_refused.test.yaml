@@ -57,3 +57,15 @@ cases:
       dst_ip: 172.21.0.10
       proto: tcp
       flow_state: REJ
+
+  - name: a no-reply connection is a probe, not a refusal
+    expect: no_match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:01:25Z"
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      dst_port: 502
+      proto: tcp
+      flow_state: S0

@@ -1,14 +1,15 @@
 # The intended OT segmentation, as code.
 #
-# Zones follow the Purdue model: field (L0) and control (L1) at the bottom,
-# supervisory (L2) and operations (L3) above, the industrial DMZ, and the
-# enterprise (L4/5) on top. Each conduit is an allowed zone-to-zone path and the
-# services it permits. Traffic inside a zone is not modelled here; traffic that
-# crosses zones without a declared conduit is what rules/conduit flags.
+# Zones follow the Purdue model: control (L1) at the bottom, supervisory (L2)
+# and operations (L3) above, the industrial DMZ, and the enterprise (L4/5) on
+# top. Each conduit is an allowed zone-to-zone path, the services it permits,
+# and — where the firewall restricts it — the source hosts allowed to use it.
 #
-# This models the intended segmentation. The lab firewall is the enforcement
-# point, not this file; the two are reconciled in the reviewer guide, and a
-# difference is a review event rather than a silent second source of truth.
+# This is the policy model. The lab firewall is the enforcement point; the two
+# are reconciled by review and a difference is a finding, not a second source of
+# truth. There is no separate field-zone CIDR in this lab: the DNP3, OPC UA and
+# S7 endpoints are single-homed control-zone hosts (172.21.0.50-52), and the
+# physical field devices are simulated behind them.
 version: 1
 zones:
   - { name: it, purdue: "4-5", cidr: 172.24.0.0/24 }
@@ -16,13 +17,59 @@ zones:
   - { name: ops, purdue: "3", cidr: 172.23.0.0/24 }
   - { name: supervisory, purdue: "2", cidr: 172.22.0.0/24 }
   - { name: control, purdue: "1", cidr: 172.21.0.0/24 }
-  - { name: field, purdue: "0", cidr: 172.31.0.0/24 }
 conduits:
-  - { from: supervisory, to: control, ports: [102, 502, 4840, 20000] }
-  - { from: supervisory, to: field, ports: [20000] }
-  - { from: ops, to: control, ports: [502, 8086] }
-  - { from: control, to: field, ports: [20000] }
-  - { from: supervisory, to: ops, ports: [8086] }
-  - { from: control, to: ops, ports: [8086] }
-  - { from: it, to: ops, ports: [8086] }
-  - { from: it, to: dmz, ports: [443] }
+  - from: supervisory
+    to: control
+    ports: [502]
+    protocols: [tcp]
+    purpose: HMI and L2 collector to PLC Modbus/TCP
+  - from: supervisory
+    to: ops
+    ports: [8086]
+    protocols: [tcp]
+    purpose: L2 historian collector to InfluxDB
+  - from: it
+    to: ops
+    ports: [8086]
+    protocols: [tcp]
+    purpose: Corporate reporting to the historian
+  - from: ops
+    to: control
+    ports: [8443]
+    protocols: [tcp]
+    sources: [172.23.0.4]
+    purpose: EWS logic deployment over the OpenPLC runtime API
+  - from: ops
+    to: control
+    ports: [20000]
+    protocols: [tcp]
+    sources: [172.23.0.20]
+    purpose: Insider DNP3 polling (source-restricted)
+  - from: ops
+    to: control
+    ports: [4840]
+    protocols: [tcp]
+    sources: [172.23.0.20]
+    purpose: Insider OPC UA client access (source-restricted)
+  - from: ops
+    to: control
+    ports: [102]
+    protocols: [tcp]
+    sources: [172.23.0.20]
+    purpose: Insider S7comm engineering access (source-restricted)
+  - from: it
+    to: dmz
+    ports: [80, 22]
+    protocols: [tcp]
+    purpose: Corporate access to the reverse proxy and bastion
+  - from: dmz
+    to: supervisory
+    ports: [8080]
+    protocols: [tcp]
+    purpose: Reverse proxy to the HMI
+  - from: dmz
+    to: ops
+    ports: [22]
+    protocols: [tcp]
+    sources: [172.25.0.11]
+    purpose: Bastion to the EWS for remote engineering

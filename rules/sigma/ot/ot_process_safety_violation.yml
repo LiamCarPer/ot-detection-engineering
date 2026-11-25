@@ -22,9 +22,15 @@ logsource:
 detection:
   selection_event:
     event_type: process_safety_violation
+  selection_high_level:
+    tank_level_pct|gte: 95
+  selection_low_level:
+    tank_level_pct|lte: 5
   selection_unmitigated:
     response: none
-  condition: selection_event and selection_unmitigated
+  condition: >-
+    selection_event and selection_unmitigated
+    and (selection_high_level or selection_low_level)
 fields:
   - asset
   - register

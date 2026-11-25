@@ -1,0 +1,28 @@
+title: Flow From An Unauthorized Source On A Declared Conduit
+id: a8c4e6b2-3d71-4f90-8a25-6b1c9e7d4f38
+status: experimental
+description: |
+  Detects a flow on a declared zone conduit from a source host the conduit does
+  not permit. The path exists, but only for a named asset: the EWS may deploy
+  logic to a controller, the insider host may poll DNP3, and the bastion may
+  reach the EWS. A different source on the same path is using a conduit outside
+  its scope, which a port-only policy cannot see.
+
+  The policy lives in `metadata/ot-conduit-policy.yaml`; the source scope is
+  committed with the conduit so a role change is one reviewable edit.
+references:
+  - https://attack.mitre.org/techniques/T0886/
+author: Liam Carvajal
+date: 2026-11-25
+conduit:
+  type: unauthorized_source
+fields:
+  - src_ip
+  - dst_ip
+  - dst_port
+falsepositives:
+  - A documented maintenance host temporarily using a restricted conduit
+  - A source-address migration that has not been reflected in the policy
+level: high
+tags:
+  - attack.t0886

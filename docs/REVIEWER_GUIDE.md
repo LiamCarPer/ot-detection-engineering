@@ -87,9 +87,12 @@ points alone. These are the questions I would ask.
   runner checks the lab's `mitre_id` against the plan, because several lab labels
   differ from the repository's rule mapping; the difference is declared, not
   hidden.
-- **The live-lab proof is a subset.** Eleven of the thirteen rules the lab
-  exercises fire on live traffic. The newer breadth rules are fixture-proven and
-  included in the bundle, but they are not all live-executed.
+- **The live-lab proof is a subset and a snapshot.** Eleven of the thirteen
+  rules the lab exercises fire in the committed 2026-09-15 run (lab revision
+  `11a17f7`). That snapshot predates the P1 rule changes; a fresh lab run is
+  required to re-confirm the changed rules. The newer breadth rules are
+  fixture-proven and included in the bundle, but they are not all
+  live-executed.
 - **Coverage is prioritized, not maximized.** `29 / 97` is raw ATT&CK for ICS
   coverage. Privilege Escalation is deliberately `0/2` because the repo has no
   host/auth telemetry. Padding that number with network rules would be
@@ -111,7 +114,7 @@ points alone. These are the questions I would ask.
   one with action start timestamps and provides the 2.45 s MTTD.
 - **HMI-login, C2-beacon and OT-port-scan are lab-only.** They are not scored
   because the repository has no matching rule.
-- **Only six rules are `stable`.** The other 60 are `experimental` and most
+- **Only six rules are `stable`.** The other 62 are `experimental` and most
   have no runbook or observed volume. That is the honest state of the
   catalogue, not a claim that every rule is operationally ready.
 - **The security/AI workstream is supporting evidence.** The threat model,

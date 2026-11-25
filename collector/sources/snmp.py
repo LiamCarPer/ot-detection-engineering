@@ -10,6 +10,7 @@ adapter itself is the same shape a real exporter produces.
 from __future__ import annotations
 
 import json
+import logging
 from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import Any
@@ -17,26 +18,47 @@ from typing import Any
 from collector.contract import event
 
 PRODUCT = "ot_snmp"
+LOGGER = logging.getLogger("collector.snmp")
+
+# Trap OIDs that carry a device event. The OID is the authority: an exporter
+# label is not trusted, because a mislabelled or attacker-supplied `event_type`
+# would otherwise be routed as a detection.
+OID_EVENTS: dict[str, str] = {
+    "1.3.6.1.6.3.1.1.5.1": "device_restart",  # coldStart
+    "1.3.6.1.6.3.1.1.5.2": "device_restart",  # warmStart
+    "1.3.6.1.6.3.1.1.5.3": "interface_down",  # linkDown
+    "1.3.6.1.6.3.1.1.5.4": "interface_up",  # linkUp
+    "1.3.6.1.2.1.1.3.0": "heartbeat",  # sysUpTime
+    "1.3.6.1.4.1.9.9.43.2.0.1": "config_change",  # Cisco config change
+}
 
 
 def events(paths: Iterable[Path]) -> Iterator[dict[str, Any]]:
     for path in paths:
-        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        try:
+            data = json.loads(Path(path).read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            LOGGER.warning("%s: skipping malformed JSON: %s", Path(path).name, error)
+            continue
         records = data if isinstance(data, list) else [data]
         for record in records:
-            yield _record(record)
+            try:
+                yield _record(record)
+            except (KeyError, TypeError, ValueError) as error:
+                LOGGER.warning("%s: skipping malformed record: %s", Path(path).name, error)
 
 
 def _record(record: dict[str, Any]) -> dict[str, Any]:
     device = record.get("device") or record.get("src_ip")
+    oid = record.get("oid")
     return event(
         PRODUCT,
         "snmp",
         record["timestamp"],
         src_ip=device,
         device=device,
-        event_type=record.get("event_type"),
-        oid=record.get("oid"),
+        event_type=OID_EVENTS.get(str(oid)) if oid is not None else None,
+        oid=oid,
         snmp_value=_string(record.get("value")),
         severity=record.get("severity"),
     )

@@ -1,0 +1,37 @@
+title: Process Value Outside The Safety Envelope
+id: e6a0c2d5-7f94-4b31-8d80-5c1f4b9e2a76
+status: experimental
+description: |
+  Detects a process value that stays outside an absolute safety envelope for
+  several consecutive samples. This is the repository's own envelope check over
+  process telemetry: it reads the level itself instead of trusting an external
+  monitor's pre-classified violation label.
+
+  A single high reading can be a sensor spike or a transient; a sustained move
+  outside the bound is a stuck sensor, a lost interlock or a command that the
+  process is not following. The envelope is site-specific and committed, so a
+  threshold change is a reviewable diff.
+references:
+  - https://attack.mitre.org/techniques/T0831/
+author: Liam Carvajal
+date: 2026-11-25
+stateful:
+  type: process_envelope
+  products:
+    - ot_process
+  event_type: process_update
+  field: tank_level_pct
+  min: 5
+  max: 95
+  consecutive: 3
+fields:
+  - timestamp
+  - asset
+  - tank_level_pct
+falsepositives:
+  - A real process upset that the operations team already knows about
+  - A sensor calibration change that shifts the reading outside the envelope
+  - A deliberate process override during a documented emergency
+level: critical
+tags:
+  - attack.t0831

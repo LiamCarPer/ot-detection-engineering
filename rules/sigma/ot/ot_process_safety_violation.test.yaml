@@ -34,3 +34,27 @@ cases:
       tank_level_pct: 42
       actor: 172.22.0.10
       response: none
+
+  - name: a violation label with a normal process level is not a safety violation
+    expect: no_match
+    event:
+      timestamp: "2026-09-13T03:43:00.000Z"
+      event_type: process_safety_violation
+      asset: plc_intake
+      register: 100
+      value: 1
+      tank_level_pct: 40
+      actor: 172.22.0.10
+      response: none
+
+  - name: outlet closed while the tank is draining
+    expect: match
+    event:
+      timestamp: "2026-09-13T03:44:00.000Z"
+      event_type: process_safety_violation
+      asset: plc_treatment
+      register: 200
+      value: 0
+      tank_level_pct: 4
+      actor: 172.22.0.10
+      response: none

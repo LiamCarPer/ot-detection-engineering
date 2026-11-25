@@ -7,6 +7,10 @@ cases:
     expect: no_match
     file: tests/yara/samples/benign/siemens_project_clean.bin
 
+  - name: a Siemens project file with bare MZ and PE bytes but no valid PE header
+    expect: no_match
+    file: tests/yara/samples/benign/siemens_project_bare_mz.bin
+
   - name: an S7 firmware blob is not a Siemens project file
     expect: no_match
     file: tests/yara/samples/malicious/s7_firmware_with_pe.bin

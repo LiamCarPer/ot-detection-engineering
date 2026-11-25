@@ -103,10 +103,11 @@ worked, and they are the reason the repository validates functionally:
   smoke-tested detection in its own right, so the correlation sets it
   deliberately, and a test asserts that an artifact either exists or is recorded
   as unsupported — never quietly absent.
-- **Correlation conversion is not backend-neutral.** Of the four pinned targets,
-  Loki, Splunk and OpenSearch implement `correlation_methods`; the Kusto backend
-  does not, so the correlation is recorded as unsupported for Sentinel in the
-  manifest rather than being silently dropped from the bundle.
+- **Correlation conversion is not backend-neutral, but all four are now
+  covered.** The pinned Kusto backend did not implement correlations, so the
+  first version recorded them as unsupported for Sentinel. `pipelines/convert.py`
+  now emits a KQL correlation (`summarize ... by bin(TimeGenerated, timespan)`)
+  and a test parses the shape; the earlier unsupported record is superseded.
 - **pySigma's Loki correlation conversion mutates the rule in place.** It appends
   the counted field to the rule's `group-by` list, so converting several targets
   from one loaded ruleset corrupted the Splunk and OpenSearch queries: the

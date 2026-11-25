@@ -1,0 +1,35 @@
+# source: rules/sigma/ot/ot_modbus_block_read.yml
+groups:
+- name: ot_modbus_block_read
+  rules:
+  - alert: Modbus_Block_Read_From_Unauthorized_Reader
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a single Modbus read covering a large contiguous block
+        of coils or
+
+        registers from a host that is not an approved operator interface. A polling
+
+        HMI reads a handful of tags per request; a block read of sixteen or more is
+
+        how a collector or an enumerator harvests a slice of the process image in
+        one
+
+        request, and it is the pattern a starting-address count misses.
+
+
+        The threshold is site-specific. This is the block-read counterpart to the
+
+        register-enumeration correlation, not a replacement: one large request and
+
+        many small requests are different shapes.
+
+        '
+      summary: Modbus Block Read From Unauthorized Reader
+    expr: sum(count_over_time({job=~".+", service="modbus"} | logfmt | direction=~`(?i)^request$`
+      and (function_code=1 or function_code=2 or function_code=3 or function_code=4)
+      and quantity>=16 and src_ip!="" and src_ip!~`(?i)^172\.22\.0\.10$` | line_format
+      "{{.src_ip}} {{.dst_ip}} {{.function_code}} {{.register}} {{.register_end}}
+      {{.quantity}}" [1m])) or vector(0) > 0
+    labels:
+      severity: medium

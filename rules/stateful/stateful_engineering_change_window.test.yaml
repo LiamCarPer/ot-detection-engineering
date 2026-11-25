@@ -18,12 +18,12 @@ windows:
         product: ot_ndr
         service: modbus
         direction: request
-        src_ip: 172.21.0.20
+        src_ip: 172.22.0.10
         dst_ip: 172.21.0.10
         function_code: 6
         register: 1024
 
-  - name: an engineering write inside its approved window
+  - name: an engineering write inside its approved window and scope
     expect: no_match
     events:
       - timestamp: "2026-12-01T11:00:00Z"
@@ -34,8 +34,9 @@ windows:
         dst_ip: 172.21.0.10
         function_code: 16
         register: 1024
+        register_end: 1030
 
-  - name: an engineering write inside the window for a different controller
+  - name: an engineering write inside the window but outside the approved register scope
     expect: match
     events:
       - timestamp: "2026-12-01T11:00:00Z"
@@ -43,9 +44,59 @@ windows:
         service: modbus
         direction: request
         src_ip: 172.23.0.4
-        dst_ip: 172.21.0.12
+        dst_ip: 172.21.0.10
+        function_code: 6
+        register: 2000
+
+  - name: a block write that starts in scope but ends outside it
+    expect: match
+    events:
+      - timestamp: "2026-12-01T11:00:00Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        src_ip: 172.23.0.4
+        dst_ip: 172.21.0.10
+        function_code: 16
+        register: 1090
+        register_end: 1120
+
+  - name: an S7 write inside the modbus window is a different service
+    expect: match
+    events:
+      - timestamp: "2026-12-01T11:00:00Z"
+        product: ot_ndr
+        service: s7comm
+        direction: request
+        src_ip: 172.23.0.4
+        dst_ip: 172.21.0.11
+        function_code: 26
+
+  - name: an event that carries a mismatched change ticket is not approved
+    expect: match
+    events:
+      - timestamp: "2026-12-01T11:00:00Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        src_ip: 172.23.0.4
+        dst_ip: 172.21.0.10
         function_code: 6
         register: 1024
+        change_id: CHG-OTHER
+
+  - name: an event that carries the matching change ticket is approved
+    expect: no_match
+    events:
+      - timestamp: "2026-12-01T11:00:00Z"
+        product: ot_ndr
+        service: modbus
+        direction: request
+        src_ip: 172.23.0.4
+        dst_ip: 172.21.0.10
+        function_code: 6
+        register: 1024
+        change_id: CHG-2026-12-01-001
 
   - name: a read outside every window is not a change
     expect: no_match

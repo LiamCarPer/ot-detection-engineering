@@ -1,2 +1,3 @@
 // source: rules/sigma/ot/ot_modbus_parameter_write.yml
-direction =~ "request" and (function_code in~ ("6", "16")) and register >= 4000
+OTTelemetry
+| where direction =~ "request" and (function_code in~ ("6", "16")) and (register >= 4000 or register_end >= 4000)

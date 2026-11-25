@@ -28,6 +28,10 @@ def _nanoseconds(timestamp: str) -> str:
 
 def _logfmt(value: Any) -> str:
     text = str(value)
+    # Control characters, including newlines, would break the Loki line
+    # boundary. Replace them before deciding whether to quote.
+    text = "".join(" " if ord(character) < 0x20 or ord(character) == 0x7F else character
+                   for character in text)
     if text == "" or any(character in text for character in ' "='):
         return '"' + text.replace("\\", "\\\\").replace('"', '\\"') + '"'
     return text

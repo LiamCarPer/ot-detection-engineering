@@ -1,0 +1,2 @@
+# source: rules/sigma/ot/ot_modbus_coil_write.yml
+source=ot_ndr-modbus-* | where direction="request" AND (function_code in (5, 15)) AND isnotnull(src_ip) AND NOT src_ip="172.22.0.10"

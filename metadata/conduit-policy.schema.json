@@ -40,7 +40,14 @@
             "type": "array",
             "uniqueItems": true,
             "items": { "type": "string" }
-          }
+          },
+          "sources": {
+            "type": "array",
+            "uniqueItems": true,
+            "description": "Source hosts allowed to initiate this conduit. Empty means the whole source zone.",
+            "items": { "type": "string" }
+          },
+          "purpose": { "type": "string", "minLength": 1 }
         }
       }
     }

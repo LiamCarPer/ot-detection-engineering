@@ -1,2 +1,3 @@
 // source: rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml
-direction =~ "request" and function_code == 21
+OTTelemetry
+| where direction =~ "request" and function_code == 21

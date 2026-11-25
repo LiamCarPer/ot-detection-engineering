@@ -6,20 +6,15 @@
   "assets": {
     "172.21.0.10": {
       "services": [
-        "modbus",
-        "s7comm"
+        "modbus"
       ],
       "functions": {
         "modbus": [
           3,
           4,
+          5,
           6,
           16
-        ],
-        "s7comm": [
-          4,
-          5,
-          240
         ]
       }
     },
@@ -31,6 +26,7 @@
         "modbus": [
           3,
           4,
+          5,
           6,
           16
         ]
@@ -44,64 +40,65 @@
         "modbus": [
           3,
           4,
+          5,
           6,
           16
         ]
       }
     },
-    "172.21.0.20": {
+    "172.21.0.50": {
       "services": [
         "dnp3"
       ],
       "functions": {
         "dnp3": [
-          129
+          1,
+          5,
+          20
+        ]
+      }
+    },
+    "172.21.0.51": {
+      "services": [
+        "opcua"
+      ],
+      "functions": {}
+    },
+    "172.21.0.52": {
+      "services": [
+        "s7comm"
+      ],
+      "functions": {
+        "s7comm": [
+          4,
+          5,
+          240
         ]
       }
     },
     "172.22.0.10": {
       "services": [
-        "dnp3"
+        "modbus"
+      ],
+      "functions": {
+        "modbus": [
+          3,
+          6
+        ]
+      }
+    },
+    "172.23.0.20": {
+      "services": [
+        "dnp3",
+        "opcua",
+        "s7comm"
       ],
       "functions": {
         "dnp3": [
           129
-        ]
-      }
-    },
-    "172.31.0.10": {
-      "services": [
-        "dnp3"
-      ],
-      "functions": {
-        "dnp3": [
-          1,
-          5,
-          20
-        ]
-      }
-    },
-    "172.31.0.11": {
-      "services": [
-        "dnp3"
-      ],
-      "functions": {
-        "dnp3": [
-          1,
-          5,
-          20
-        ]
-      }
-    },
-    "172.31.0.12": {
-      "services": [
-        "dnp3"
-      ],
-      "functions": {
-        "dnp3": [
-          1,
-          5,
-          20
+        ],
+        "s7comm": [
+          4
         ]
       }
     }

@@ -41,7 +41,7 @@ def test_prompt_injection_cannot_change_the_verdict() -> None:
     # The instruction is placed in a field the model must treat as data, while
     # the structured field still says "write". The verdict must follow the data.
     response = _client().post(
-        "/triage", json={"event": _event(src_ip=INJECTION)}, headers=HEADERS
+        "/triage", json={"event": _event(event_type=INJECTION)}, headers=HEADERS
     )
     assert response.status_code == 200
     assert response.json()["verdict"] == "suspicious"
@@ -49,7 +49,7 @@ def test_prompt_injection_cannot_change_the_verdict() -> None:
 
 def test_prompt_does_not_echo_attacker_text_into_the_rationale() -> None:
     response = _client().post(
-        "/triage", json={"event": _event(src_ip=INJECTION)}, headers=HEADERS
+        "/triage", json={"event": _event(event_type=INJECTION)}, headers=HEADERS
     )
     assert INJECTION not in response.json()["rationale"]
 
@@ -75,7 +75,7 @@ def test_the_provider_never_receives_the_raw_event() -> None:
     private_marker = "PRIVATE-SENTINEL"
     response = _client(provider).post(
         "/triage",
-        json={"event": _event(private_marker=private_marker, src_ip=INJECTION)},
+        json={"event": _event(decode_error=private_marker)},
         headers=HEADERS,
     )
     assert response.status_code == 200

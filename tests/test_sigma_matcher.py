@@ -80,6 +80,13 @@ def test_regex_is_unanchored_search() -> None:
     assert not match(rule, {"detail": "no match here"})
 
 
+def test_regex_case_insensitive_flag() -> None:
+    rule = _rule("regex", "  selection:\n    detail|re|i: 'foo.*bar'\n  condition: selection")
+    assert match(rule, {"detail": "FOO x BAR"})
+    assert match(rule, {"detail": "foo x bar"})
+    assert not match(rule, {"detail": "foo only"})
+
+
 def test_cased_is_case_sensitive() -> None:
     rule = _rule("cased", "  selection:\n    user|cased: Admin\n  condition: selection")
     assert match(rule, {"user": "Admin"})
@@ -118,6 +125,33 @@ def test_logsource_routes_events_by_product() -> None:
     rule = _rule("equality", "  selection:\n    code: 6\n  condition: selection")
     assert match(rule, {"product": "test", "code": 6})
     assert not match(rule, {"product": "other", "code": 6})
+    assert match(rule, {"code": 6})
+
+
+def test_routed_event_missing_a_declared_logsource_field_does_not_match() -> None:
+    rule = SigmaRule.from_yaml(
+        """
+title: routed
+id: 00000000-0000-0000-0000-000000000010
+status: test
+description: matcher unit test
+logsource:
+  product: test
+  service: modbus
+detection:
+  selection:
+    code: 6
+  condition: selection
+level: low
+author: test
+date: 2026-09-13
+"""
+    )
+    assert match(rule, {"product": "test", "service": "modbus", "code": 6})
+    assert not match(rule, {"product": "test", "code": 6})
+    assert not match(rule, {"service": "modbus", "code": 6})
+    assert not match(rule, {"product": "test", "service": "dnp3", "code": 6})
+    # A bare fixture has no route to disagree with; it still tests the block.
     assert match(rule, {"code": 6})
 
 

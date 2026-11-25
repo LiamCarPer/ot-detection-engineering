@@ -9,6 +9,7 @@ the master another way. See ``collector/README.md``.
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,7 @@ from typing import Any
 from collector.contract import event
 
 PRODUCT = "ot_ndr"
+LOGGER = logging.getLogger("collector.zeek")
 
 # Zeek logs function names; the contract uses the numeric code (docs/TELEMETRY.md).
 MODBUS_FUNCTIONS: dict[str, int] = {
@@ -102,17 +104,26 @@ def _rows(path: Path) -> Iterator[dict[str, str]]:
 
 
 def events(paths: Iterable[Path]) -> Iterator[dict[str, Any]]:
-    """Yield contract events from Zeek ``modbus.log`` and ``dnp3.log`` files."""
+    """Yield contract events from Zeek ``modbus.log`` and ``dnp3.log`` files.
+
+    A malformed row is reported and skipped; one bad sensor line must not abort
+    the whole file.
+    """
     for path in paths:
         name = Path(path).name
         for row in _rows(Path(path)):
             if "conn" in name:
-                converted = _conn(row)
+                converter = _conn
             elif "modbus" in name:
-                converted = _modbus(row)
+                converter = _modbus
             elif "dnp3" in name:
-                converted = _dnp3(row)
+                converter = _dnp3
             else:
+                continue
+            try:
+                converted = converter(row)
+            except (KeyError, TypeError, ValueError) as error:
+                LOGGER.warning("%s: skipping malformed row: %s", name, error)
                 continue
             if converted is not None:
                 yield converted
@@ -141,15 +152,23 @@ def _modbus(row: dict[str, str]) -> dict[str, Any] | None:
     code = MODBUS_FUNCTIONS.get(row.get("func", ""))
     if code is None:
         return None
+    direction = _direction(row.get("pdu_type", ""))
+    origin = row.get("id.orig_h")
+    responder = row.get("id.resp_h")
+    src_ip, dst_ip = (
+        (responder, origin) if direction == "response" else (origin, responder)
+    )
     return event(
         PRODUCT,
         "modbus",
         float(row["ts"]),
-        direction=_direction(row.get("pdu_type", "")),
+        direction=direction,
         function_code=code,
         unit_id=_int(row.get("unit")),
-        src_ip=row.get("id.orig_h"),
-        dst_ip=row.get("id.resp_h"),
+        src_ip=src_ip,
+        dst_ip=dst_ip,
+        responder_ip=responder if direction == "response" else None,
+        exception_code=_int(row.get("exception")),
     )
 
 
@@ -174,6 +193,7 @@ def _dnp3(row: dict[str, str]) -> dict[str, Any] | None:
         # Zeek's dnp3.log does not carry link source/destination addresses.
         src_ip=row.get("id.orig_h"),
         dst_ip=row.get("id.resp_h"),
+        responder_ip=row.get("id.resp_h") if direction == "response" else None,
     )
 
 

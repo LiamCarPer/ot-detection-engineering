@@ -9,8 +9,8 @@
 # Conventions (see rules/native/README.md): sid range 9000000-9000099, and
 # metadata carrying attack_ics <technique> for the generated coverage map.
 #
-# Authorized engineering clients: 172.21.0.20 (EWS) and 172.22.0.10 (HMI).
-# Controllers live in 172.21.0.0/24 on port 102.
+# Authorized engineering client: 172.23.0.20 (insider). Controllers live in
+# 172.21.0.0/24 on port 102; the S7 endpoint is 172.21.0.52.
 
 # --- Program download (T0843) -----------------------------------------------
 
@@ -36,4 +36,4 @@ alert tcp any any -> any 102 (msg:"OT S7comm PLC Stop"; flow:to_server,establish
 
 # --- Unauthorized write (T1692.001) -----------------------------------------
 
-alert tcp [!172.21.0.20,!172.22.0.10] any -> 172.21.0.0/24 102 (msg:"OT S7comm Write Variable From Unauthorized Client"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|05|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000028; rev:1;)
+alert tcp [!172.23.0.20] any -> 172.21.0.0/24 102 (msg:"OT S7comm Write Variable From Unauthorized Client"; flow:to_server,established; content:"|32|"; offset:7; depth:1; content:"|05|"; offset:17; depth:1; classtype:policy-violation; metadata: attack_ics T1692.001, detection_status experimental; reference:url,attack.mitre.org/techniques/T1692/001/; sid:9000028; rev:1;)

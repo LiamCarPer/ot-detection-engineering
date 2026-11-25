@@ -54,10 +54,10 @@ make health-check
 sed -n '1,40p' deploy/evidence/health/report.md
 ```
 
-What to say: **66 rules, 6 stable, 12 with observed lab volume.** The other 60
+What to say: **68 rules, 6 stable, 12 with observed lab volume.** The other 62
 are experimental and carry at least one operating gap; the health gate has 0
 blocking gaps. Every
-stable rule has a runbook and a validation date; the 60 experimental rules are
+stable rule has a runbook and a validation date; the 62 experimental rules are
 explicitly flagged, not hidden. The catalogue joins to the lab analysis so an
 expected volume cannot silently drift.
 
@@ -70,8 +70,8 @@ make perf-check
 sed -n '1,35p' docs/PERFORMANCE.md
 ```
 
-What to say: on the recorded host, the decoders process **6.9–11.5M frames/s**
-with **p99 60–150 ns per frame**; the offline matcher replays **~4,800 events/s**
+What to say: on the recorded host, the decoders process **6.2–10.9M frames/s**
+with **p99 70–180 ns per frame**; the offline matcher replays **~3,300 events/s**
 over 1,000 distinct benign events ten times.
 through 24 rules at p99 ~963 µs, with **0 matches on benign events**. The numbers
 are hardware- and frame-size-specific; there is no pcap replay or backpressure
@@ -86,7 +86,7 @@ make check
 What to say: the loop is the product: threat model → telemetry → detection →
 fixture and held-out tests → conversion → purple team → catalogue and runbooks →
 performance. The repo is explicit about the limits: generated benign data, a
-Dockerised lab, 60 experimental rules, and no production SOC.
+Dockerised lab, 62 experimental rules, and no production SOC.
 
 ## If you have ten minutes
 

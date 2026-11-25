@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "change-calendar.schema.json",
   "title": "Approved engineering-change calendar",
-  "description": "The policy the change-window stateful detection joins against. A write is approved only when a window matches source, destination, service and time.",
+  "description": "The policy the change-window stateful detection joins against. A write is approved only when a window matches source, destination, service, time and scope.",
   "type": "object",
   "required": ["version", "windows"],
   "additionalProperties": false,
@@ -16,13 +16,29 @@
         "additionalProperties": false,
         "properties": {
           "id": { "type": "string", "minLength": 1 },
+          "ticket": { "type": "string", "minLength": 1 },
           "starts": { "type": "string", "minLength": 1 },
           "ends": { "type": "string", "minLength": 1 },
+          "timezone": { "type": "string", "minLength": 1 },
           "src_ip": { "type": "string", "minLength": 1 },
           "dst_ip": { "type": "string", "minLength": 1 },
           "service": { "type": "string", "minLength": 1 },
           "approved_by": { "type": "string", "minLength": 1 },
-          "reason": { "type": "string", "minLength": 1 }
+          "reason": { "type": "string", "minLength": 1 },
+          "require_change_id": { "type": "boolean" },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "function_codes": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "type": "integer" }
+              },
+              "register_min": { "type": "integer" },
+              "register_max": { "type": "integer" }
+            }
+          }
         }
       }
     }

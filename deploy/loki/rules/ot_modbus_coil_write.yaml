@@ -1,0 +1,31 @@
+# source: rules/sigma/ot/ot_modbus_coil_write.yml
+groups:
+- name: ot_modbus_coil_write
+  rules:
+  - alert: Modbus_Coil_Write_From_Unauthorized_Control_Writer
+    annotations:
+      author: Liam Carvajal
+      description: 'Detects a Modbus coil write (FC5 Write Single Coil or FC15 Write
+        Multiple
+
+        Coils) from a host that is not an approved control writer. Coils are the
+
+        discrete outputs that start pumps, open valves and drive contactors; the
+
+        holding-register rules do not see them. A coil write from an unexpected host
+
+        is a direct physical command, not a setpoint change.
+
+
+        This rule operates on normalized NDR telemetry (see docs/TELEMETRY.md). The
+
+        approved writers are site-specific and must be tuned per environment.
+
+        '
+      summary: Modbus Coil Write From Unauthorized Control Writer
+    expr: sum(count_over_time({job=~".+", service="modbus"} | logfmt | direction=~`(?i)^request$`
+      and (function_code=5 or function_code=15) and src_ip!="" and src_ip!~`(?i)^172\.22\.0\.10$`
+      | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}} {{.register}} {{.quantity}}
+      {{.coils}}" [1m])) or vector(0) > 0
+    labels:
+      severity: high

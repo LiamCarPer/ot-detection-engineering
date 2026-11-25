@@ -1,2 +1,3 @@
 // source: rules/sigma/ot/ot_s7comm_program_download.yml
-direction =~ "request" and (function_code in~ ("26", "27", "28"))
+OTTelemetry
+| where direction =~ "request" and (function_code in~ ("26", "27", "28"))

@@ -5,11 +5,25 @@ cases:
       timestamp: "2026-09-15T08:10:00.100Z"
       direction: request
       function_code: 6
-      src_ip: 172.21.0.20
+      src_ip: 172.22.0.10
       dst_ip: 172.21.0.10
       unit_id: 1
       register: 4001
       value: 1
+
+  - name: multiple register write whose range enters the band
+    expect: match
+    event:
+      timestamp: "2026-09-15T08:10:01.100Z"
+      direction: request
+      function_code: 16
+      src_ip: 172.24.0.10
+      dst_ip: 172.21.0.10
+      unit_id: 1
+      register: 3999
+      register_end: 4008
+      quantity: 10
+      value: 0
 
   - name: multiple register write starting at the band edge
     expect: match
@@ -29,7 +43,7 @@ cases:
       timestamp: "2026-09-15T08:10:02.300Z"
       direction: request
       function_code: 6
-      src_ip: 172.21.0.20
+      src_ip: 172.22.0.10
       dst_ip: 172.21.0.10
       unit_id: 1
       register: 1024
@@ -53,7 +67,7 @@ cases:
       direction: response
       function_code: 6
       src_ip: 172.21.0.10
-      dst_ip: 172.21.0.20
+      dst_ip: 172.22.0.10
       unit_id: 1
       register: 4001
       value: 1

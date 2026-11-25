@@ -75,12 +75,26 @@ def match(rule: SigmaRule, event: Mapping[str, Any]) -> bool:
 
 def _logsource_matches(rule: SigmaRule, event: Mapping[str, Any]) -> bool:
     logsource = rule.logsource
-    for field, expected in (
+    fields = (
         ("product", logsource.product),
         ("service", logsource.service),
         ("category", logsource.category),
-    ):
-        if expected is not None and field in event and event[field] != expected:
+    )
+    # A bare fixture with no routing fields is still evaluated: it is testing
+    # the detection block, not the route. Once an event declares any routing
+    # field, every logsource field the rule declares must be present and match.
+    # That stops an event with `product: ot_ndr` but no `service` from matching a
+    # Modbus rule, which the old "only if the event has it" rule allowed.
+    routed = any(event.get(field) is not None for field, _ in fields)
+    for field, expected in fields:
+        if expected is None:
+            continue
+        actual = event.get(field)
+        if actual is None:
+            if routed:
+                return False
+            continue
+        if actual != expected:
             return False
     return True
 
@@ -245,7 +259,13 @@ def _match_regex(value: SigmaRegularExpression, actual: Any) -> bool:
 
 
 def _regex_case_insensitive(value: SigmaRegularExpression) -> bool:
-    return any(flag.name == "I" for flag in getattr(value, "flags", set()))
+    # pySigma exposes SigmaRegularExpressionFlag.IGNORECASE; older releases used
+    # the single-letter name "I". Accept both so the matcher cannot silently
+    # return a false negative for `|re|i`.
+    return any(
+        str(flag.name).upper() in {"I", "IGNORECASE"}
+        for flag in getattr(value, "flags", set())
+    )
 
 
 def _match_string(value: SigmaString, actual: Any) -> bool:

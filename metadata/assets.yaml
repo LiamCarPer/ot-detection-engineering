@@ -1,0 +1,91 @@
+# The lab asset inventory.
+#
+# The single place the lab's addresses, roles and criticality are written down.
+# The Sigma allowlists, the conduit policy and the change calendar must use these
+# addresses; `tests/test_assets.py` fails when a rule invents one. Generating
+# the allowlists from this file is the next step; the inventory exists first so a
+# role change has one reviewable home.
+version: 1
+assets:
+  - ip: 172.22.0.10
+    role: hmi
+    zone: supervisory
+    criticality: high
+    services: [modbus]
+    note: Operator interface and approved Modbus client.
+  - ip: 172.22.0.20
+    role: historian_collector
+    zone: supervisory
+    criticality: medium
+    services: [influxdb]
+  - ip: 172.22.0.30
+    role: powershell_workstation
+    zone: supervisory
+    criticality: medium
+    services: [modbus]
+    note: Deliberately exercises the unapproved-writer path in the lab.
+  - ip: 172.23.0.4
+    role: ews
+    zone: ops
+    criticality: high
+    services: [openplc_api, ssh]
+  - ip: 172.23.0.10
+    role: historian
+    zone: ops
+    criticality: high
+    services: [influxdb]
+  - ip: 172.23.0.20
+    role: insider_engineering_client
+    zone: ops
+    criticality: high
+    services: [dnp3, opcua, s7comm]
+  - ip: 172.24.0.10
+    role: attacker
+    zone: it
+    criticality: low
+    services: []
+  - ip: 172.24.0.30
+    role: corporate_workstation
+    zone: it
+    criticality: low
+    services: [http, https, ssh]
+  - ip: 172.25.0.10
+    role: reverse_proxy
+    zone: dmz
+    criticality: medium
+    services: [http]
+  - ip: 172.25.0.11
+    role: bastion
+    zone: dmz
+    criticality: high
+    services: [ssh]
+  - ip: 172.21.0.10
+    role: plc
+    zone: control
+    criticality: critical
+    services: [modbus]
+  - ip: 172.21.0.11
+    role: plc
+    zone: control
+    criticality: critical
+    services: [modbus, s7comm]
+  - ip: 172.21.0.12
+    role: plc
+    zone: control
+    criticality: critical
+    services: [modbus]
+  - ip: 172.21.0.50
+    role: dnp3_outstation
+    zone: control
+    criticality: critical
+    services: [dnp3]
+  - ip: 172.21.0.51
+    role: opcua_server
+    zone: control
+    criticality: critical
+    services: [opcua]
+  - ip: 172.21.0.52
+    role: s7_plc
+    zone: control
+    criticality: critical
+    services: [s7comm]

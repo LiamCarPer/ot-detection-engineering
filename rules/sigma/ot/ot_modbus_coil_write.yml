@@ -1,0 +1,47 @@
+title: Modbus Coil Write From Unauthorized Control Writer
+id: b3d7f9a2-4c61-4e08-9a5d-2f7c1e6b8d43
+status: experimental
+description: |
+  Detects a Modbus coil write (FC5 Write Single Coil or FC15 Write Multiple
+  Coils) from a host that is not an approved control writer. Coils are the
+  discrete outputs that start pumps, open valves and drive contactors; the
+  holding-register rules do not see them. A coil write from an unexpected host
+  is a direct physical command, not a setpoint change.
+
+  This rule operates on normalized NDR telemetry (see docs/TELEMETRY.md). The
+  approved writers are site-specific and must be tuned per environment.
+references:
+  - https://attack.mitre.org/techniques/T1692/001/
+author: Liam Carvajal
+date: 2026-11-25
+logsource:
+  product: ot_ndr
+  service: modbus
+detection:
+  selection_direction:
+    direction: request
+  selection_function:
+    function_code:
+      - 5
+      - 15
+  filter_authorized_writer:
+    src_ip:
+      - 172.22.0.10
+  filter_identified_writer:
+    src_ip|exists: true
+  condition: >-
+    selection_direction and selection_function and filter_identified_writer
+    and not filter_authorized_writer
+fields:
+  - src_ip
+  - dst_ip
+  - function_code
+  - register
+  - quantity
+  - coils
+falsepositives:
+  - A commissioning or maintenance tool that legitimately pulses an output
+  - A newly commissioned engineering workstation not yet added to the allowlist
+level: high
+tags:
+  - attack.t1692.001

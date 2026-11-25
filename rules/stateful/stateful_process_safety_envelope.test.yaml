@@ -1,0 +1,87 @@
+windows:
+  - name: three consecutive tank-level samples above the safety envelope
+    expect: match
+    events:
+      - timestamp: "2026-11-25T08:00:00Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_update
+        asset: plc_intake
+        tank_level_pct: 97
+      - timestamp: "2026-11-25T08:00:30Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_update
+        asset: plc_intake
+        tank_level_pct: 98
+      - timestamp: "2026-11-25T08:01:00Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_update
+        asset: plc_intake
+        tank_level_pct: 99
+
+  - name: two high samples then a return to the envelope
+    expect: no_match
+    events:
+      - timestamp: "2026-11-25T09:00:00Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_update
+        asset: plc_intake
+        tank_level_pct: 97
+      - timestamp: "2026-11-25T09:00:30Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_update
+        asset: plc_intake
+        tank_level_pct: 98
+      - timestamp: "2026-11-25T09:01:00Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_update
+        asset: plc_intake
+        tank_level_pct: 50
+
+  - name: a single high sample
+    expect: no_match
+    events:
+      - timestamp: "2026-11-25T10:00:00Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_update
+        asset: plc_intake
+        tank_level_pct: 99
+
+  - name: a normal tank cycle
+    expect: no_match
+    events:
+      - timestamp: "2026-11-25T11:00:00Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_update
+        asset: plc_treatment
+        tank_level_pct: 60
+      - timestamp: "2026-11-25T11:00:30Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_update
+        asset: plc_treatment
+        tank_level_pct: 61
+      - timestamp: "2026-11-25T11:01:00Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_update
+        asset: plc_treatment
+        tank_level_pct: 62
+
+  - name: an external monitor violation label alone does not fire the envelope
+    expect: no_match
+    events:
+      - timestamp: "2026-11-25T12:00:00Z"
+        product: ot_process
+        service: safety_monitor
+        event_type: process_safety_violation
+        asset: plc_intake
+        tank_level_pct: 97
+        response: none

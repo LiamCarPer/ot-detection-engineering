@@ -1,2 +1,2 @@
 # source: rules/sigma/ot/ot_opcua_node_enumeration.yml
-| search source=ot_ndr-opcua-* | where direction="request" AND (opcua_service in ("BrowseRequest", "BrowseNextRequest")) | stats count() as event_count by secure_channel_id | where event_count >= 20
+| search source=ot_ndr-opcua-* | where direction="request" AND (opcua_service in ("BrowseRequest", "BrowseNextRequest")) AND isnotnull(src_ip) AND NOT (src_ip in ("172.22.0.10", "172.23.0.4")) | stats count() as event_count by span(@timestamp, 5m), src_ip | where event_count >= 20

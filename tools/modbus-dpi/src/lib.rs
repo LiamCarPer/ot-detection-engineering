@@ -96,6 +96,8 @@ pub struct Event {
     pub exception_code: Option<u8>,
     /// Starting register for FC3/4/6/16/22/23.
     pub register: Option<u16>,
+    /// Last register covered by `register + quantity - 1`, when both are known.
+    pub register_end: Option<u32>,
     /// Register quantity for FC3/4/16/23 and coil quantity for FC1/2/15.
     pub quantity: Option<u16>,
     /// Written value for FC5/6/16/23 where derivable.
@@ -112,6 +114,8 @@ pub struct Event {
     pub or_mask: Option<u16>,
     /// Write starting register for the write half of FC23.
     pub write_register: Option<u16>,
+    /// Last register covered by the FC23 write half.
+    pub write_register_end: Option<u32>,
     /// Write quantity for the write half of FC23.
     pub write_quantity: Option<u16>,
     /// MEI type for FC43.
@@ -145,6 +149,7 @@ impl Event {
             pdu_length: frame.pdu.len(),
             exception_code: decoded.exception_code,
             register: decoded.register,
+            register_end: _register_end(decoded.register, decoded.quantity, decoded.function_code),
             quantity: decoded.quantity,
             value: decoded.value,
             values: decoded.values,
@@ -153,6 +158,11 @@ impl Event {
             and_mask: decoded.and_mask,
             or_mask: decoded.or_mask,
             write_register: decoded.write_register,
+            write_register_end: _register_end(
+                decoded.write_register,
+                decoded.write_quantity,
+                decoded.function_code,
+            ),
             write_quantity: decoded.write_quantity,
             mei_type: decoded.mei_type,
             read_device_id_code: decoded.read_device_id_code,
@@ -180,6 +190,9 @@ impl Event {
         push_u8(&mut fields, "raw_function_code", self.raw_function_code);
         push_u8(&mut fields, "exception_code", self.exception_code);
         push_u16(&mut fields, "register", self.register);
+        if let Some(end) = self.register_end {
+            fields.push(format!("\"register_end\":{end}"));
+        }
         push_u16(&mut fields, "quantity", self.quantity);
         if let Some(value) = self.value {
             fields.push(format!("\"value\":{value}"));
@@ -188,6 +201,9 @@ impl Event {
         push_u16(&mut fields, "and_mask", self.and_mask);
         push_u16(&mut fields, "or_mask", self.or_mask);
         push_u16(&mut fields, "write_register", self.write_register);
+        if let Some(end) = self.write_register_end {
+            fields.push(format!("\"write_register_end\":{end}"));
+        }
         push_u16(&mut fields, "write_quantity", self.write_quantity);
         push_u8(&mut fields, "mei_type", self.mei_type);
         push_u8(&mut fields, "read_device_id_code", self.read_device_id_code);
@@ -228,6 +244,22 @@ impl Event {
 
         format!("{{{}}}", fields.join(","))
     }
+}
+
+/// Last address covered by a starting address and quantity.
+///
+/// Single-address writes (FC5/FC6/FC22) do not carry a quantity on the wire, so
+/// they default to one. A zero quantity has no range.
+fn _register_end(start: Option<u16>, quantity: Option<u16>, function: u8) -> Option<u32> {
+    let start = start?;
+    let quantity = quantity.or(match function {
+        5 | 6 | 22 => Some(1),
+        _ => None,
+    })?;
+    if quantity == 0 {
+        return None;
+    }
+    Some(u32::from(start) + u32::from(quantity) - 1)
 }
 
 fn push_u16(fields: &mut Vec<String>, name: &str, value: Option<u16>) {

@@ -1,2 +1,3 @@
 // source: rules/sigma/ot/ot_snmp_config_change.yml
-event_type =~ "config_change"
+OTTelemetry
+| where event_type =~ "config_change"

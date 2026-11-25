@@ -107,11 +107,11 @@ CASES: dict[str, dict[str, object]] = {
     "Modbus_Write_To_Safety_Critical_Parameter_Register": {
         "service": "modbus",
         "attack": (
-            "direction=request function_code=6 src_ip=172.21.0.20 "
+            "direction=request function_code=6 src_ip=172.22.0.10 "
             "dst_ip=172.21.0.10 unit_id=1 register=4001 value=1"
         ),
         "benign": (
-            "direction=request function_code=6 src_ip=172.21.0.20 "
+            "direction=request function_code=6 src_ip=172.22.0.10 "
             "dst_ip=172.21.0.10 unit_id=1 register=1024 value=50"
         ),
     },
@@ -180,22 +180,31 @@ CASES: dict[str, dict[str, object]] = {
     },
     "Process_Safety_Violation_From_Physics_Aware_Monitor": {
         "service": "safety_monitor",
-        "attack": "event_type=process_safety_violation response=none",
-        "benign": "event_type=process_update response=none",
+        "attack": "event_type=process_safety_violation response=none tank_level_pct=98",
+        "benign": "event_type=process_update response=none tank_level_pct=50",
     },
     "OPC_UA_Write_Request": {
         "service": "opcua",
-        "attack": "message_type=MSG opcua_service=WriteRequest direction=request",
+        "attack": (
+            "message_type=MSG src_ip=172.23.0.20 "
+            "opcua_service=WriteRequest direction=request"
+        ),
         "benign": "message_type=MSG opcua_service=ReadRequest direction=request",
     },
     "OPC_UA_Method_Call_Request": {
         "service": "opcua",
-        "attack": "message_type=MSG opcua_service=CallRequest direction=request",
+        "attack": (
+            "message_type=MSG src_ip=172.23.0.20 "
+            "opcua_service=CallRequest direction=request"
+        ),
         "benign": "message_type=MSG opcua_service=ReadRequest direction=request",
     },
     "OPC_UA_Address_Space_Browse": {
         "service": "opcua",
-        "attack": "message_type=MSG opcua_service=BrowseRequest direction=request",
+        "attack": (
+            "message_type=MSG src_ip=172.23.0.20 "
+            "opcua_service=BrowseRequest direction=request"
+        ),
         "benign": "message_type=MSG opcua_service=ReadRequest direction=request",
     },
 }

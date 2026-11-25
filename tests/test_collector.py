@@ -29,9 +29,9 @@ def test_suricata_modbus_maps_to_the_contract() -> None:
         for event in events
         if event["service"] == "modbus" and event["direction"] == "request"
     ]
-    assert {event["function_code"] for event in requests} == {6, 16}
+    assert {event["function_code"] for event in requests} == {6, 16, 43}
     assert all(event["product"] == "ot_ndr" for event in requests)
-    assert all(event["src_ip"] == "172.24.0.10" and event["unit_id"] == 1 for event in requests)
+    assert all(event["src_ip"] == "172.22.0.30" and event["unit_id"] == 1 for event in requests)
     # The two single-register writes target 1024 and 50000.
     single = [event for event in requests if event["function_code"] == 6]
     assert {event["register"] for event in single} == {1024, 50000}
@@ -89,6 +89,30 @@ def test_snmp_export_maps_to_the_snmp_contract() -> None:
     assert all(event["product"] == "ot_snmp" and event["service"] == "snmp" for event in events)
 
 
+def test_snmp_event_type_is_derived_from_the_oid_not_the_label() -> None:
+    record = {
+        "timestamp": "2026-09-22T10:00:00Z",
+        "device": "172.21.0.10",
+        "event_type": "heartbeat",
+        "oid": "1.3.6.1.6.3.1.1.5.3",
+        "value": "linkDown",
+    }
+    derived = snmp._record(record)
+    assert derived["event_type"] == "interface_down"
+
+
+def test_snmp_unknown_oid_does_not_inherit_an_exporter_label() -> None:
+    record = {
+        "timestamp": "2026-09-22T10:00:00Z",
+        "device": "172.21.0.10",
+        "event_type": "config_change",
+        "oid": "1.3.6.1.4.1.99999.1",
+        "value": "unknown",
+    }
+    derived = snmp._record(record)
+    assert "event_type" not in derived
+
+
 def test_every_sample_event_validates_against_the_schema() -> None:
     for path in sorted((SAMPLES / "suricata").glob("*.json")):
         for event in suricata.events([path]):
@@ -112,3 +136,64 @@ def test_loki_sink_groups_by_service_with_the_routing_label() -> None:
     timestamp, line = streams[0]["values"][0]
     assert timestamp.isdigit()
     assert "function_code=" in line
+
+
+def test_malformed_suricata_records_are_skipped(tmp_path: Path) -> None:
+    path = tmp_path / "bad.eve.json"
+    path.write_text(
+        '{"event_type": "modbus", "modbus": {"request": {"function_raw": 6}}}\n'
+        '{"timestamp": "2026-11-25T10:00:00Z", "event_type": "modbus", '
+        '"src_ip": "172.22.0.10", "dest_ip": "172.21.0.10", '
+        '"modbus": {"request": {"function_raw": 6, "unit_id": 1}}}\n',
+        encoding="utf-8",
+    )
+    events = list(suricata.events([path]))
+    assert len(events) == 1
+    assert events[0]["function_code"] == 6
+
+
+def test_malformed_netflow_and_snmp_records_are_skipped(tmp_path: Path) -> None:
+    flow = tmp_path / "flows.json"
+    flow.write_text(
+        '[{"bytes": 1}, {"timestamp": "2026-11-25T10:00:00Z", '
+        '"src_ip": "172.22.0.10", "dst_ip": "172.21.0.10", '
+        '"dst_port": 502, "proto": "tcp", "bytes": 10}]',
+        encoding="utf-8",
+    )
+    assert len(list(netflow.events([flow]))) == 1
+
+    snmp_path = tmp_path / "snmp.json"
+    snmp_path.write_text(
+        '[{"device": "172.21.0.10"}, {"timestamp": "2026-11-25T10:00:00Z", '
+        '"device": "172.21.0.10", "oid": "1.3.6.1.6.3.1.1.5.3", "value": "linkDown"}]',
+        encoding="utf-8",
+    )
+    events = list(snmp.events([snmp_path]))
+    assert len(events) == 1
+    assert events[0]["event_type"] == "interface_down"
+
+
+def test_loki_logfmt_escapes_newlines() -> None:
+    streams = sinks.to_loki_streams(
+        [
+            {
+                "timestamp": "2026-11-25T10:00:00Z",
+                "product": "ot_ndr",
+                "service": "modbus",
+                "function_name": "line one\nline two",
+            }
+        ]
+    )
+    line = streams[0]["values"][0][1]
+    assert "\n" not in line
+    assert "line one line two" in line
+
+
+def test_schema_rejects_an_unknown_field() -> None:
+    event = {
+        "timestamp": "2026-11-25T10:00:00Z",
+        "product": "ot_ndr",
+        "service": "modbus",
+        "unknown_field": 1,
+    }
+    assert contract.schema_errors(event)

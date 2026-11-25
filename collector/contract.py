@@ -56,7 +56,7 @@ def event(
         "timestamp": normalize_timestamp(timestamp),
     }
     for name, value in fields.items():
-        if value is not None:
+        if value is not None and value != "":
             event[name] = value
     return event
 

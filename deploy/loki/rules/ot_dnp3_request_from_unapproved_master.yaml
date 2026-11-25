@@ -25,8 +25,8 @@ groups:
         '
       summary: DNP3 Request From An Unapproved Master Address
     expr: sum(count_over_time({job=~".+", service="dnp3"} | logfmt | direction=~`(?i)^request$`
-      and src_ip!="" and src_ip!~`(?i)^172\.21\.0\.20$` and src_ip!~`(?i)^172\.23\.0\.50$`
-      and src_ip!~`(?i)^172\.22\.0\.10$` | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}}
-      {{.link_source}} {{.link_destination}}" [1m])) or vector(0) > 0
+      and src_ip!="" and src_ip!~`(?i)^172\.23\.0\.20$` | line_format "{{.src_ip}}
+      {{.dst_ip}} {{.function_code}} {{.link_source}} {{.link_destination}}" [1m]))
+      or vector(0) > 0
     labels:
       severity: high

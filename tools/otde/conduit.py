@@ -34,6 +34,16 @@ POLICY_PATH = REPO_ROOT / "metadata" / "ot-conduit-policy.yaml"
 CONDUIT_KEY = "conduit"
 ICMP_PROTOCOLS = {"icmp", "icmpv6", "ipv6-icmp", "1", "58"}
 
+# Service to TCP port, used when an NDR event does not carry a transport port.
+# The policy is port-based; a decoded DNP3 event still belongs to the DNP3
+# conduit even though the decoder does not emit a port.
+SERVICE_PORTS = {
+    "modbus": 502,
+    "dnp3": 20000,
+    "opcua": 4840,
+    "s7comm": 102,
+}
+
 
 class UnsupportedConduitError(RuntimeError):
     """Raised when a conduit rule uses a feature this harness cannot evaluate."""
@@ -66,21 +76,22 @@ def zone_for(address: Any, policy: Mapping[str, Any]) -> str | None:
     return None
 
 
-def _conduit(
+def _conduits(
     policy: Mapping[str, Any], src: str, dst: str
-) -> tuple[Mapping[str, Any] | None, bool]:
-    """Return the conduit between two zones and whether the flow is the reverse leg.
+) -> list[tuple[Mapping[str, Any], bool]]:
+    """All conduits between two zones, with whether the flow is the reverse leg.
 
-    The policy declares one direction per conduit. A stateful firewall permits
-    the response on the same path, so the reverse direction resolves to the same
-    conduit and the caller checks the service port on the correct side.
+    There can be more than one conduit between the same zones (the lab has four
+    ops-to-control paths, each with a different port and source scope). The
+    caller selects the one that carries the service.
     """
+    matches: list[tuple[Mapping[str, Any], bool]] = []
     for conduit in policy["conduits"]:
         if conduit["from"] == src and conduit["to"] == dst:
-            return conduit, False
-        if conduit["from"] == dst and conduit["to"] == src:
-            return conduit, True
-    return None, False
+            matches.append((conduit, False))
+        elif conduit["from"] == dst and conduit["to"] == src:
+            matches.append((conduit, True))
+    return matches
 
 
 def _is_icmp(event: Mapping[str, Any]) -> bool:
@@ -88,6 +99,52 @@ def _is_icmp(event: Mapping[str, Any]) -> bool:
     if proto is None:
         return False
     return str(proto).strip().lower() in ICMP_PROTOCOLS
+
+
+def _initiator(event: Mapping[str, Any], reverse: bool) -> Any:
+    """The host that initiated the flow, not the responder."""
+    return event.get("dst_ip") if reverse else event.get("src_ip")
+
+
+def _source_allowed(
+    conduit: Mapping[str, Any], event: Mapping[str, Any], reverse: bool
+) -> bool:
+    sources = conduit.get("sources") or []
+    if not sources:
+        return True
+    return str(_initiator(event, reverse)) in {str(source) for source in sources}
+
+
+def _event_port(event: Mapping[str, Any], reverse: bool) -> int | None:
+    field = "src_port" if reverse else "dst_port"
+    value = event.get(field)
+    if value is not None:
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            pass
+    service = event.get("service")
+    return SERVICE_PORTS.get(str(service).lower()) if service is not None else None
+
+
+def _protocol_allowed(conduit: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    protocols = conduit.get("protocols")
+    proto = event.get("proto")
+    if not protocols or proto is None:
+        return True
+    return str(proto).strip().lower() in {str(protocol).lower() for protocol in protocols}
+
+
+def _service_allowed(
+    conduit: Mapping[str, Any], event: Mapping[str, Any], reverse: bool
+) -> bool:
+    if not _protocol_allowed(conduit, event):
+        return False
+    ports = conduit.get("ports")
+    if not ports:
+        return True
+    port = _event_port(event, reverse)
+    return port is not None and port in ports
 
 
 def match_conduit(
@@ -110,26 +167,30 @@ def match_conduit(
     if src is None or dst is None or src == dst:
         return False
 
-    conduit, reverse = _conduit(policy, src, dst)
+    conduits = _conduits(policy, src, dst)
     kind = config.get("type")
     if kind == "undeclared_path":
-        return conduit is None
+        return not conduits
+    if kind == "unauthorized_source":
+        carried = [
+            (conduit, reverse)
+            for conduit, reverse in conduits
+            if _service_allowed(conduit, event, reverse)
+        ]
+        if not carried:
+            # No conduit carries this service; the service rule owns it.
+            return False
+        return not any(
+            _source_allowed(conduit, event, reverse)
+            for conduit, reverse in carried
+        )
     if kind == "undeclared_service":
-        if conduit is None:
+        if not conduits:
             return False
-        ports = conduit.get("ports")
-        if not ports:
-            return False
-        # On the forward leg the service is the destination port. On the return
-        # leg the service port is the source port; the destination is ephemeral.
-        field = "src_port" if reverse else "dst_port"
-        try:
-            port = int(event.get(field))
-        except (TypeError, ValueError):
-            # A flow without a numeric service port cannot be judged against
-            # the conduit.
-            return False
-        return port not in ports
+        return not any(
+            _service_allowed(conduit, event, reverse)
+            for conduit, reverse in conduits
+        )
     raise UnsupportedConduitError(f"unsupported conduit type: {kind!r}")
 
 
