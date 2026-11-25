@@ -1,0 +1,44 @@
+{
+  "failures": [],
+  "high_level_pct": 90.0,
+  "model": "tank with measured inlet/outlet flow; the estimator never reads the reported level",
+  "rule": "rules/sigma/ot/ot_process_safety_violation.yml",
+  "scenarios": [
+    {
+      "detections": 0,
+      "events": 120,
+      "first_detection": null,
+      "max_divergence_pct": 0.0,
+      "max_estimated_level_pct": 95.5,
+      "scenario": "normal",
+      "shadow_would_detect": false
+    },
+    {
+      "detections": 1,
+      "events": 121,
+      "first_detection": {
+        "estimated_level_pct": 94.0,
+        "reported_level_pct": 94.0,
+        "timestamp": "2026-11-25T06:00:55Z"
+      },
+      "max_divergence_pct": 0.0,
+      "max_estimated_level_pct": 100.0,
+      "scenario": "unsafe",
+      "shadow_would_detect": true
+    },
+    {
+      "detections": 1,
+      "events": 121,
+      "first_detection": {
+        "estimated_level_pct": 94.0,
+        "reported_level_pct": 41.5,
+        "timestamp": "2026-11-25T06:00:55Z"
+      },
+      "max_divergence_pct": 60.0,
+      "max_estimated_level_pct": 100.0,
+      "scenario": "spoof",
+      "shadow_would_detect": false
+    }
+  ],
+  "schema_version": 1
+}

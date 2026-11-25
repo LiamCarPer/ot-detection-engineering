@@ -243,6 +243,12 @@ allowlists: setup
 allowlists-check: setup
 	$(PY) tools/allowlists.py --check
 
+process-model: setup
+	$(PY) tools/process_model_check.py
+
+process-model-check: setup
+	$(PY) tools/process_model_check.py --check
+
 parity-up: setup
 	services/parity/setup.sh
 
@@ -261,7 +267,7 @@ metrics: setup
 		--out deploy/evidence/purple
 	$(PY) metrics/compute.py
 
-check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check stateful-check perf-check fpr-check deploy-check purple-check case-study-check health-check allowlists-check
+check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check stateful-check perf-check fpr-check deploy-check purple-check case-study-check health-check allowlists-check process-model-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target

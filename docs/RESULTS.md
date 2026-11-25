@@ -50,6 +50,7 @@ per-tactic rationale for the gaps is in the README.
 | Every single-event rule converts to Loki, Splunk, Sentinel and OpenSearch, with provenance | `deploy/manifest.json` | `make convert-all` |
 | Every single-event rule's Splunk SPL, OpenSearch PPL and Kusto KQL executes and returns exactly the repository matcher's event set (30 / 30 each) | `deploy/evidence/engine-parity/` | `make engine-parity` (containers) |
 | Every Sigma filter and native Suricata exclusion resolves to one declared allowlist whose members exist with the declared roles (6 sets) | `metadata/allowlists.generated.yaml` | `make allowlists-check` |
+| A mass-balance estimate fires the process-safety rule under a 60% spoofed level; a shadow monitor does not; the normal cycle is quiet | `deploy/evidence/process-model/` | `make process-model-check` |
 | Every correlation rule converts to Loki, Splunk, OpenSearch and Sentinel | `deploy/manifest.json` | `make convert-all` |
 | Every correlation rule fires on its labeled windows offline; the original correlation also fires in a live Loki stack | `deploy/evidence/loki/`, fixtures | `make loki-check`, `make test` (Docker) |
 | The 2026-11-24 lab alert-signal replay matches 14 / 14 expected signals across 8 steps, with 0 unexpected alerts and a passing benign window | `deploy/evidence/purple/` | `make purple-check` |

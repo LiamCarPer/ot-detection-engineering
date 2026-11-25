@@ -208,6 +208,22 @@
     "tank_level_pct": {
       "type": "number"
     },
+    "reported_level_pct": {
+      "type": "number"
+    },
+    "divergence_pct": {
+      "type": "number"
+    },
+    "inlet_valve": {
+      "type": "integer",
+      "enum": [0, 1]
+    },
+    "inlet_flow": {
+      "type": "number"
+    },
+    "outlet_flow": {
+      "type": "number"
+    },
     "actor": {
       "type": "string"
     },
