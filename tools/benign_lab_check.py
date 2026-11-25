@@ -20,6 +20,7 @@ import json
 import shutil
 import subprocess  # nosec B404 - fixed Docker commands
 import sys
+import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -106,8 +107,7 @@ def _normalized_events(suricata_dir: Path, zeek_dir: Path) -> list[dict[str, Any
 
 
 def build(pcap: Path) -> dict[str, Any]:
-    work = Path("/tmp/opencode/benign-lab")
-    work.mkdir(parents=True, exist_ok=True)
+    work = Path(tempfile.mkdtemp(prefix="otde-benign-lab-"))
     local = work / "capture.pcap"
     shutil.copyfile(pcap, local)
 
