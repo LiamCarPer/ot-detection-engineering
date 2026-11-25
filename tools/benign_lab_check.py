@@ -110,7 +110,9 @@ def _normalized_events(suricata_dir: Path, zeek_dir: Path) -> list[dict[str, Any
     return events
 
 
-def _observed_span(events: list[dict[str, Any]]) -> tuple[float, float | None]:
+def _observed_span(
+    events: list[dict[str, Any]],
+) -> tuple[float, float | None, str | None, str | None]:
     moments = []
     for event in events:
         value = event.get("timestamp")
@@ -121,9 +123,15 @@ def _observed_span(events: list[dict[str, Any]]) -> tuple[float, float | None]:
         except ValueError:
             continue
     if len(moments) < 2:
-        return 0.0, None
-    span = (max(moments) - min(moments)).total_seconds()
-    return span, round(len(events) / (span / 3600), 2) if span else None
+        return 0.0, None, None, None
+    first, last = min(moments), max(moments)
+    span = (last - first).total_seconds()
+    return (
+        span,
+        round(len(events) / (span / 3600), 2) if span else None,
+        first.isoformat(),
+        last.isoformat(),
+    )
 
 
 def build(pcap: Path, events_out: Path | None = None) -> dict[str, Any]:
@@ -156,7 +164,7 @@ def build(pcap: Path, events_out: Path | None = None) -> dict[str, Any]:
             "families": ["host/sysmon", "auth/hmi", "plc/diagnostics", "detection_health"],
         },
     }
-    span, per_hour = _observed_span(events)
+    span, per_hour, first_event, last_event = _observed_span(events)
     if events_out:
         events_out.write_text(
             "".join(json.dumps(event, sort_keys=True) + "\n" for event in events),
@@ -170,10 +178,14 @@ def build(pcap: Path, events_out: Path | None = None) -> dict[str, Any]:
             "path": str(pcap),
             "sha256": _sha256(pcap),
             "bytes": pcap.stat().st_size,
-            "captured_at": datetime.now(UTC).isoformat(),
+            "analyzed_at": datetime.now(UTC).isoformat(),
+        },
+        "window": {
+            "first_event_at": first_event,
+            "last_event_at": last_event,
+            "span_seconds": round(span, 3),
         },
         "events": len(events),
-        "span_seconds": round(span, 3),
         "events_per_hour": per_hour,
         "suricata_alerts": len(alerts),
         "families": families,
@@ -188,7 +200,9 @@ def render(report: dict[str, Any]) -> str:
         f"Capture: `{report['capture']['path']}`  ",
         f"SHA-256: `{report['capture']['sha256']}`  ",
         f"Size: {report['capture']['bytes']:,} bytes  ",
-        f"Observed span: {report['span_seconds'] / 3600:.2f} h  ",
+        f"Window: {report['window']['first_event_at']} to "
+        f"{report['window']['last_event_at']} "
+        f"({report['window']['span_seconds'] / 3600:.2f} h)  ",
         f"Normalized events: {report['events']:,} "
         f"({report['events_per_hour']} / h)",
         "",

@@ -31,8 +31,10 @@ events, 88,305 events/hour):
 | Stateful | 0 fired |
 | Native Suricata | 0 alerts |
 
-The pilot is committed under `deploy/evidence/benign-lab/`. It is a pipeline
-validation and a first real-traffic result, not the 24-hour claim.
+The committed evidence under `deploy/evidence/benign-lab/` is the last completed
+capture: the report records its observed span, so the pilot and the 24-hour run
+cannot be confused. The pilot was a pipeline validation and a first real-traffic
+result; the 24-hour run replaces it when the writer stops.
 
 ## 24-hour run
 

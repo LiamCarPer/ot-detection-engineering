@@ -40,7 +40,7 @@ def test_every_network_family_is_measured() -> None:
         assert name in families
 
 
-def test_every_rule_is_silent_on_the_pilot() -> None:
+def test_every_rule_is_silent_on_the_committed_capture() -> None:
     families = _summary()["families"]
     fired = [
         (rule, count)
@@ -51,7 +51,7 @@ def test_every_rule_is_silent_on_the_pilot() -> None:
     assert fired == []
 
 
-def test_the_pilot_has_no_network_false_positives() -> None:
+def test_the_committed_capture_has_no_network_false_positives() -> None:
     families = _summary()["families"]
     assert families["sigma_single_event"]["false_positive_events"] == 0
     assert families["baseline"]["false_positive_events"] == 0
@@ -69,5 +69,7 @@ def test_not_observed_families_are_labelled() -> None:
 
 def test_capture_span_and_rate_are_recorded() -> None:
     summary = _summary()
-    assert summary["span_seconds"] > 0
+    assert summary["window"]["span_seconds"] > 0
+    assert summary["window"]["first_event_at"]
+    assert summary["window"]["last_event_at"]
     assert summary["events_per_hour"] > 0
