@@ -5,22 +5,26 @@ next and what I deliberately did not do.
 
 ## Next
 
-1. **Capture real benign traffic.** Replace the generated benign corpus with a
-   24-hour lab capture, reported separately from the generated set. The current
-   1,000-event corpus is a statistical bound, not a field baseline.
-2. **Run the purple team in CI.** The 2026-11-24 evidence is a replay of the
-   lab's alert labels. An ephemeral lab in CI would make 8-step execution and
-   MTTD reproducible on every commit.
-3. **Add host/auth telemetry.** Privilege Escalation is 0/2 because there is no
-   host or authentication source. A Sysmon/auth-log collector would close it
-   honestly.
-4. **Build a pcap replay and backpressure test.** The current performance
-   numbers are decoder and matcher microbenchmarks. The next step is a live
-   sensor at sustained rate with a slow consumer and a full queue.
+1. **Capture real benign traffic.** A 24-hour lab capture is running; the
+   analysis pipeline and a 9.5-minute pilot are committed, and the finalizer
+   replaces the pilot evidence when the capture stops. The generated 1,000-event
+   corpus remains a statistical bound, not a field baseline.
+2. **Run the purple team in CI.** The live run executes the repository rules,
+   but it is manual and needs the lab. An ephemeral lab in CI would make the
+   7-step run and MTTD reproducible on every commit.
+3. **Map host/auth telemetry to privilege escalation.** Sysmon process events
+   and HMI access logs are collected now, but Privilege Escalation is still 0/2
+   because no rule maps local privilege escalation. Adding the source was not
+   enough; the technique needs its own behavioural content.
+4. **Add a full sensor replay.** The matcher now has a sustained-rate and
+   bounded-queue test, and the decoders have a microbenchmark. A replay through
+   a real sensor at sustained rate, with its own slow consumer, is still the
+   missing end-to-end load proof.
 5. **Integrate the change calendar.** Replace the committed YAML with a read-only
    feed from the change-management system; the detection logic does not change.
-6. **Add repo rules for the lab-only detections.** HMI login failure, C2 beacon
-   and OT port scan are emitted by the lab but not scored by this repo.
+6. **Add repo rules for the remaining lab-only detections.** C2 beacon and OT
+   port scan are emitted by the lab but not scored by this repo; HMI login
+   failure and its burst now have rules.
 7. **Add Wazuh as a conversion target.** It is the next platform in the
    deployment matrix.
 

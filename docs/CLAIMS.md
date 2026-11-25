@@ -105,16 +105,16 @@ These are deliberately not claimed. They are also listed in
 | Gap | Why it is open |
 | :-- | :-- |
 | Production field telemetry | The repo has no plant traffic. The benign corpus is generated and the lab is a Dockerised plant. |
-| Host and authentication telemetry | Privilege Escalation is `0/2` because the repo has no host/auth source; tagging a network rule would be tag-gaming. |
-| Purple-team breadth and repeatability | The 2026-11-24 replay is 8 steps / 14 expected lab signals and the MTTD run is 2 steps / 4 expectations. The replay matches lab labels, not repository rules; repeated runs and analyst MTTA are not measured. |
-| Live execution of every rule | The live-lab proof covers 11 of 13 exercised rules; the newer breadth rules are fixture-proven and bundle-converted. |
+| Host and authentication telemetry | Sysmon and HMI access logs are collected, but Privilege Escalation is `0/2` because no rule maps local privilege escalation; tagging a network rule would be tag-gaming. |
+| Purple-team breadth and repeatability | The live run is 7 steps / 12 Sigma expectations over 3 runs; the 2026-11-24 replay is 8 steps / 14 lab signals; the MTTD run is 2 steps / 4 expectations. Analyst MTTA is not measured. |
+| Live execution of every rule | The live purple run covers the plan's 7 steps; the older lab-loki snapshot covers 11 of 13 exercised rules. The newer breadth rules are fixture-proven and bundle-converted. |
 | Commercial BAS | AttackIQ is commercial; the lab uses a deterministic harness and an optional Caldera profile. |
 | 24/7 SOC operations | No on-call rota, shift handover, or production incident load. |
 | Physical process safety | The lab is a software emulation; there is no physical PLC, sensor or actuator. |
 | Real malware analysis | Out of scope by design. Public-sample analysis in an isolated lab would be the credible next step. |
 | Production triage / MTTA | The case study has no analyst acknowledgement or resolution timestamps; it measures queue reduction, not human performance. |
 | MTTD on the replay | The 2026-11-24 snapshot has alert timestamps but not action start timestamps; MTTD comes only from the 2026-09-13 run. |
-| HMI-login, C2-beacon and OT-port-scan coverage | The lab emits those alerts, but the repository has no matching rule; they are not scored in the purple plan. |
+| C2-beacon and OT-port-scan coverage | The lab emits those alerts, but the repository has no matching rule; they are not scored in the purple plan. HMI login failure and its burst now have rules. |
 | Operational maturity of most rules | 67 of 73 rules are `experimental`; only 6 have runbooks and 12 have observed lab volume. |
 | Production-scale performance | The benchmark is a desktop, small example frames, no pcap replay, no sustained load, no backpressure. |
 

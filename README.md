@@ -89,13 +89,13 @@ tags would make the repo worse, not better.
 | Initial Access | 4 / 12 | Remote services, rogue-master and file-delivered phishing are covered; wireless, transient assets and supply chain need other telemetry. |
 | Execution | 3 / 10 | Protocol-level execution is covered; host execution needs EDR telemetry the lab does not have. |
 | Persistence | 4 / 10 | Project-file and firmware tampering are covered; PLC program download is counted under Lateral Movement; host persistence needs EDR. |
-| Privilege Escalation | 0 / 2 | Deliberately uncovered: it requires host/auth telemetry, and tagging a network rule would be dishonest. |
+| Privilege Escalation | 0 / 2 | Host and HMI-auth telemetry is now collected, but no rule models local privilege escalation; tagging a network rule would be dishonest. |
 | Evasion | 2 / 9 | Protocol-visible evasion is covered; host evasion needs EDR. |
 | Discovery | 3 / 8 | Network-connection, remote-system and device-identification discovery are covered. |
 | Lateral Movement | 4 / 11 | PLC program download, remote-service exploitation and cross-zone remote services are covered; the large outbound transfer is counted under Impact. |
 | Collection | 4 / 11 | Register and address-space enumeration are covered. |
 | Command and Control | 2 / 3 | Control-zone egress and proxy fan-out are covered; a live C2 channel is not built. |
-| Inhibit Response Function | 5 / 20 | Device restart, denial of service, alarm suppression and firmware tampering are covered; detection-service health (T0881) is a planned gap. |
+| Inhibit Response Function | 5 / 20 | Device restart, denial of service, alarm suppression, firmware tampering and detection-service health (T0881) are covered. |
 | Impair Process Control | 4 / 8 | I/O brute force, parameter modification, unauthorized command messages and firmware tampering are covered; the process-safety envelope is counted under Impact. |
 | Impact | 4 / 12 | View/control denial, safety impact and operational-information theft are covered; physical damage needs process context. |
 
