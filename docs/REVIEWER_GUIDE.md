@@ -11,6 +11,8 @@ this page is to let a reviewer choose a depth and get to the evidence quickly.
 | 2 min | [`docs/RESULTS.md`](RESULTS.md) | The numbers, their scope, and what they do not mean. |
 | 5 min | [`docs/CASE_STUDY_ALERT_FLOOD.md`](CASE_STUDY_ALERT_FLOOD.md) | Real lab data: 151 alerts → 24 episodes → 5 operational events, with the triage judgment. |
 | 8 min | [`docs/STATE_DETECTIONS.md`](STATE_DETECTIONS.md) | Drift, change-window and per-asset behaviour: what needs context, and why. |
+| 5 min | [`docs/ENGINE_PARITY.md`](ENGINE_PARITY.md) | The converted SPL, PPL and KQL executed in real engines, and the bug that found. |
+| 5 min | [`docs/PROCESS_SAFETY.md`](PROCESS_SAFETY.md) | A mass balance that catches an unsafe command through a spoofed level. |
 | 8 min | [`docs/PERFORMANCE.md`](PERFORMANCE.md) | Decoder p99, replay throughput, SLOs and what they do not measure. |
 | 8 min | [`deploy/evidence/health/report.md`](../deploy/evidence/health/report.md) | Owners, runbooks, observed volume and the stable/experimental split. |
 | 10 min | [`deploy/report.md`](../deploy/report.md) | Functional validation: Suricata, Loki, Malcolm, decoders, collector. |
@@ -62,6 +64,10 @@ If you only read code, read these in order:
 | How do you own a rule after it ships? | [`deploy/evidence/health/report.md`](../deploy/evidence/health/report.md), [`docs/runbooks/`](runbooks/), `make health` |
 | How do you detect something that needs context? | [`docs/STATE_DETECTIONS.md`](STATE_DETECTIONS.md), `make stateful-check` |
 | Does it work at scale? | [`docs/PERFORMANCE.md`](PERFORMANCE.md), `make perf-check` |
+| Do the converted queries actually run in the vendor engines? | [`docs/ENGINE_PARITY.md`](ENGINE_PARITY.md), `make engine-parity` |
+| How do you stop an allowlist drifting from the asset inventory? | [`docs/ALLOWLISTS.md`](ALLOWLISTS.md), `make allowlists-check` |
+| How do you detect a safety violation when the level sensor lies? | [`docs/PROCESS_SAFETY.md`](PROCESS_SAFETY.md), `make process-model-check` |
+| How do you run every lab proof in one command? | [`docs/LAB_PROOF.md`](LAB_PROOF.md), `make lab-proof` |
 | How do you validate detections against an adversary? | [`docs/PURPLE_TEAM.md`](PURPLE_TEAM.md), `make purple-check` |
 | How would you operate one of these rules? | [`docs/OPERATIONS.md`](OPERATIONS.md), [`docs/runbooks/`](runbooks/) |
 | How do you measure a detection programme? | [`docs/RESULTS.md`](RESULTS.md), `make metrics` |

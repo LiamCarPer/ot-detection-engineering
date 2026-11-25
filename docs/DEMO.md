@@ -47,6 +47,31 @@ replay snapshot has alert timestamps but not action start timestamps.
 
 Point at `docs/PURPLE_TEAM.md` and `deploy/evidence/purple/`.
 
+## 1:30 — Do the converted queries run?
+
+```bash
+make parity-up        # Splunk Free and OpenSearch containers
+make engine-parity
+```
+
+What to say: every single-event rule is converted to Splunk SPL, OpenSearch PPL
+and Sentinel KQL. **30/30 rules return exactly the same event set as the
+repository matcher in each engine.** The run caught a real conversion bug: PPL
+escaped the underscore in `event_type="login\_failure"`, so the query was valid
+and matched nothing. Point at `docs/ENGINE_PARITY.md`.
+
+## 1:40 — Safety when the level sensor lies
+
+```bash
+make process-model-check
+```
+
+What to say: the independent mass balance estimates the tank level from the
+flows and never reads the reported level. In the spoof scenario the reported
+value is pinned near 40% and a shadow monitor stays quiet; the estimate reaches
+**94%** and the safety rule fires. **Normal cycle quiet, unsafe command
+detected.** Point at `docs/PROCESS_SAFETY.md`.
+
 ## 1:50 — Operational ownership
 
 ```bash

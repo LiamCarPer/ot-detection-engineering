@@ -19,8 +19,12 @@ drops only the `OTTelemetry` table.
 ## Start
 
 ```bash
-docker compose -f services/parity/docker-compose.yml up -d
+make parity-up      # or services/parity/setup.sh
 ```
+
+Do not use `docker compose up -d` alone on a fresh volume: the image rewrites
+`/opt/splunk/etc` at start, so the JSON props and the Free-licence remote-login
+flag are installed by the setup script after the first boot.
 
 Starting the container sets `SPLUNK_GENERAL_TERMS` and
 `SPLUNK_START_ARGS=--accept-license`, which is Splunk's required signal that you
