@@ -1,0 +1,91 @@
+# Authorized actors per detection allowlist.
+#
+# Each set is resolved against metadata/assets.yaml: every member must exist and
+# have one of the declared roles. `tools/allowlists.py` then checks that every
+# Sigma filter and every native Suricata negation excludes exactly the set bound
+# to it with `detection`, so a new IP literal cannot bypass this file.
+#
+# Roles are an assertion about the inventory, not a copy of it. The inventory's
+# `services` field records protocol capability; an allowlist records
+# authorization. The HMI can speak OPC UA without being authorized to write.
+version: 1
+allowlists:
+  - name: modbus_approved_writers
+    purpose: >-
+      Hosts allowed to write Modbus registers and coils. The operator HMI is the
+      only standing writer; engineering changes use the change calendar.
+    roles: [hmi]
+    members:
+      - 172.22.0.10
+    detection:
+      sigma:
+        - rules/sigma/ot/ot_modbus_unauthorized_write.yml
+        - rules/sigma/ot/ot_modbus_coil_write.yml
+      native: [9000001, 9000002]
+
+  - name: modbus_approved_readers
+    purpose: >-
+      Hosts allowed to issue large block reads. The HMI and the L2 historian
+      collector poll the controllers; any other reader is enumeration.
+    roles: [hmi, historian_collector]
+    members:
+      - 172.22.0.10
+      - 172.22.0.20
+    detection:
+      sigma:
+        - rules/sigma/ot/ot_modbus_block_read.yml
+        - rules/sigma/ot/ot_modbus_process_state_read.yml
+      native: []
+
+  - name: dnp3_approved_masters
+    purpose: >-
+      The DNP3 master allowed to poll and operate the outstation without an
+      out-of-policy alert. The lab's engineering client is the approved master;
+      a second master is a rogue-master finding.
+    roles: [insider_engineering_client]
+    members:
+      - 172.23.0.20
+    detection:
+      sigma:
+        - rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml
+      native: [9000005, 9000006]
+
+  - name: opcua_approved_writers
+    purpose: >-
+      Clients allowed to write node values over OPC UA. The HMI and the EWS are
+      the interactive clients; the engineering client's OPC UA use is the
+      malicious-insider path this detection exists to catch.
+    roles: [hmi, ews]
+    members:
+      - 172.22.0.10
+      - 172.23.0.4
+    detection:
+      sigma:
+        - rules/sigma/ot/ot_opcua_write_request.yml
+        - rules/sigma/ot/ot_opcua_browse_request.yml
+        - rules/sigma/ot/ot_opcua_method_call.yml
+      native: []
+
+  - name: opcua_approved_connectors
+    purpose: >-
+      Clients allowed to open an OPC UA secure channel. This is the connection
+      allowlist, not a write allowlist: the engineering client may connect, but
+      a write from it still alerts.
+    roles: [insider_engineering_client]
+    members:
+      - 172.23.0.20
+    detection:
+      sigma: []
+      native: [9000008, 9000009]
+
+  - name: s7comm_approved_clients
+    purpose: >-
+      Clients allowed to read and write Siemens controller memory without a
+      connection alert. Program downloads are still detected by the Sigma rule
+      and checked against the change window.
+    roles: [insider_engineering_client]
+    members:
+      - 172.23.0.20
+    detection:
+      sigma: []
+      native: [9000028]

@@ -2,9 +2,9 @@
 #
 # The single place the lab's addresses, roles and criticality are written down.
 # The Sigma allowlists, the conduit policy and the change calendar must use these
-# addresses; `tests/test_assets.py` fails when a rule invents one. Generating
-# the allowlists from this file is the next step; the inventory exists first so a
-# role change has one reviewable home.
+# addresses. `metadata/allowlists.yaml` declares who is authorized per protocol
+# and `tools/allowlists.py` resolves it against this file; a role change and a
+# rule allowlist cannot drift apart without the check failing.
 version: 1
 assets:
   - ip: 172.22.0.10

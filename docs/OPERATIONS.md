@@ -68,7 +68,7 @@ make purple-check
 
 | Change | Action |
 | :-- | :-- |
-| New permanent engineering workstation | Add it to the writer allowlist and the catalogue note; test the change against the purple step. |
+| New permanent engineering workstation | Add it to `metadata/assets.yaml`, then to the relevant set in `metadata/allowlists.yaml`; run `make allowlists` and the purple step. |
 | New safety register band | Update the parameter-write rule and the runbook, not this rule. |
 | A noisy source | Do not add a blanket suppression; check whether the source is a legitimate writer or a compromised host. |
 | A change in architecture | Update the runbook and `last_validated`; re-run `make health`. |

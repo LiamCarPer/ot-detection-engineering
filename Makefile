@@ -237,6 +237,12 @@ health: setup
 health-check: setup
 	$(PY) tools/detection_health.py --check
 
+allowlists: setup
+	$(PY) tools/allowlists.py
+
+allowlists-check: setup
+	$(PY) tools/allowlists.py --check
+
 parity-up: setup
 	services/parity/setup.sh
 
@@ -255,7 +261,7 @@ metrics: setup
 		--out deploy/evidence/purple
 	$(PY) metrics/compute.py
 
-check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check stateful-check perf-check fpr-check deploy-check purple-check case-study-check health-check
+check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check stateful-check perf-check fpr-check deploy-check purple-check case-study-check health-check allowlists-check
 
 clean:
 	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target
