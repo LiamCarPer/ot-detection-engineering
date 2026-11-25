@@ -56,7 +56,7 @@ BENIGN = REPO_ROOT / "metrics" / "baseline" / "benign-events.jsonl"
 
 SPLUNK_REST = "https://127.0.0.1:18089"
 SPLUNK_HEC = "https://127.0.0.1:18088"
-OPEN_SEARCH = "http://127.0.0.1:9200"
+OPEN_SEARCH = "http://127.0.0.1:19200"
 KUSTO = "http://127.0.0.1:18080"
 KUSTO_DB = "NetDefaultDB"
 KUSTO_TABLE = "OTTelemetry"

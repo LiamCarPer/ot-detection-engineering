@@ -54,3 +54,9 @@ def test_not_observed_families_are_labelled() -> None:
     not_observed = _summary()["families"]["not_observed"]
     assert "host/sysmon" in not_observed["families"]
     assert "not present" in not_observed["reason"]
+
+
+def test_capture_span_and_rate_are_recorded() -> None:
+    summary = _summary()
+    assert summary["span_seconds"] > 0
+    assert summary["events_per_hour"] > 0

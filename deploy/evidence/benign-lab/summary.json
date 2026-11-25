@@ -1,11 +1,12 @@
 {
   "capture": {
     "bytes": 7366183,
-    "captured_at": "2026-11-25T03:55:41.284046+00:00",
-    "path": "/media/liamcarvajal/Storage/code/ot-security-lab/detection/logs/benign-pilot-70m.pcap",
+    "captured_at": "2026-11-25T05:03:14.030501+00:00",
+    "path": "/media/liamcarvajal/Storage/code/ot-security-lab/detection/logs/benign-pilot-10m.pcap",
     "sha256": "5eeedf309d35714925a9b49c2d6999880649b918c4600a1afd7103cf2c111f17"
   },
   "events": 13949,
+  "events_per_hour": 88304.62,
   "families": {
     "baseline": {
       "event_indexes": [],
@@ -111,5 +112,6 @@
     }
   },
   "schema_version": 1,
+  "span_seconds": 568.672,
   "suricata_alerts": 0
 }

@@ -91,7 +91,7 @@ recomputing the SLOs from the recorded numbers.
 ## Sustained matcher load
 
 The decoder microbenchmark is not a load test. This run replays the normalized
-events from the 70-minute lab-benign capture at a fixed arrival rate through
+events from the 9.5-minute lab-benign pilot at a fixed arrival rate through
 every single-event Sigma rule, with a bounded queue.
 
 | Target | Achieved | Drops | p99 | Max queue |

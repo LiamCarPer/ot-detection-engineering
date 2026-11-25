@@ -39,6 +39,7 @@ not current and must not be used.
 | Engine parity | **30 / 30 single-event rules** execute in Splunk Free, OpenSearch PPL and Kusto and return exactly the matcher's event set |
 | Detection allowlists | **6 sets generated from the asset inventory**; every Sigma filter and native exclusion is bound to one |
 | Process safety | **Independent mass balance catches an unsafe command through a 60% spoofed level** where a shadow monitor does not |
+| Lab proof | **One command** runs the live health, live rules, live purple, engine parity and benign capture, and refuses to attack a running capture |
 | Test suite | The count is not a quality claim; see the CI run |
 | Live lab | **11 of the 13 rules the lab exercises** fire on live traffic (snapshot 2026-09-15; predates the P1 rule changes) |
 

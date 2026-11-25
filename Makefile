@@ -224,6 +224,15 @@ purple: setup
 purple-check: setup
 	$(PY) purple/runner/run_emulation.py --observations purple/emulation/lab-observations.json --out deploy/evidence/purple --check
 
+purple-live: setup
+	$(PY) purple/runner/live_lab.py --runs 1
+
+lab-proof: setup
+	$(PY) tools/lab_proof.py
+
+lab-proof-dry-run: setup
+	$(PY) tools/lab_proof.py --dry-run
+
 case-study: setup
 	$(PY) analysis/lab_case_study.py --input analysis/data/lab-2026-11-24 --out analysis/out
 	$(PY) analysis/lab_case_study.py --input analysis/data/lab-2026-11-24 --out analysis/out --check
@@ -253,7 +262,7 @@ parity-up: setup
 	services/parity/setup.sh
 
 engine-parity: setup
-	$(PY) tools/engine_parity.py
+	$(PY) tools/engine_parity.py --unblock-open-search
 
 # Replays the recorded lab run so metrics are reproducible without a lab.
 metrics: setup

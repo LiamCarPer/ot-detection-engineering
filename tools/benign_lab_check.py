@@ -110,6 +110,22 @@ def _normalized_events(suricata_dir: Path, zeek_dir: Path) -> list[dict[str, Any
     return events
 
 
+def _observed_span(events: list[dict[str, Any]]) -> tuple[float, float | None]:
+    moments = []
+    for event in events:
+        value = event.get("timestamp")
+        if not isinstance(value, str):
+            continue
+        try:
+            moments.append(datetime.fromisoformat(value.replace("Z", "+00:00")))
+        except ValueError:
+            continue
+    if len(moments) < 2:
+        return 0.0, None
+    span = (max(moments) - min(moments)).total_seconds()
+    return span, round(len(events) / (span / 3600), 2) if span else None
+
+
 def build(pcap: Path, events_out: Path | None = None) -> dict[str, Any]:
     work = Path(tempfile.mkdtemp(prefix="otde-benign-lab-"))
     local = work / "capture.pcap"
@@ -140,11 +156,14 @@ def build(pcap: Path, events_out: Path | None = None) -> dict[str, Any]:
             "families": ["host/sysmon", "auth/hmi", "plc/diagnostics", "detection_health"],
         },
     }
+    span, per_hour = _observed_span(events)
     if events_out:
         events_out.write_text(
             "".join(json.dumps(event, sort_keys=True) + "\n" for event in events),
             encoding="utf-8",
         )
+    # The 24-hour run copies a ~1 GB capture; leaving it behind fills /tmp.
+    shutil.rmtree(work, ignore_errors=True)
     return {
         "schema_version": 1,
         "capture": {
@@ -154,6 +173,8 @@ def build(pcap: Path, events_out: Path | None = None) -> dict[str, Any]:
             "captured_at": datetime.now(UTC).isoformat(),
         },
         "events": len(events),
+        "span_seconds": round(span, 3),
+        "events_per_hour": per_hour,
         "suricata_alerts": len(alerts),
         "families": families,
     }
@@ -167,7 +188,9 @@ def render(report: dict[str, Any]) -> str:
         f"Capture: `{report['capture']['path']}`  ",
         f"SHA-256: `{report['capture']['sha256']}`  ",
         f"Size: {report['capture']['bytes']:,} bytes  ",
-        f"Normalized events: {report['events']}",
+        f"Observed span: {report['span_seconds'] / 3600:.2f} h  ",
+        f"Normalized events: {report['events']:,} "
+        f"({report['events_per_hour']} / h)",
         "",
         "| Family | Result |",
         "| :-- | :-- |",

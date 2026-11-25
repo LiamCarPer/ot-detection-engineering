@@ -11,9 +11,9 @@ Engines: Splunk 10.6.2.5 Free, index ot_parity; OpenSearch 3.10.1 PPL at http://
 
 | Engine | Pass | Fail | Not converted | Skipped |
 | :-- | --: | --: | --: | --: |
-| kusto | 30 | 0 | 0 | 0 |
-| opensearch | 30 | 0 | 0 | 0 |
 | splunk | 30 | 0 | 0 | 0 |
+| opensearch | 30 | 0 | 0 | 0 |
+| kusto | 30 | 0 | 0 | 0 |
 
 ## Failures
 

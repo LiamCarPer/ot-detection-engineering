@@ -19,8 +19,8 @@ collector and run through every network detection family.
 
 ## Pilot result
 
-The pilot is 70 minutes of background traffic (7.37 MB, 13,949 normalized
-events):
+The pilot is 9.5 minutes of background traffic (7.37 MB, 13,949 normalized
+events, 88,305 events/hour):
 
 | Family | Result |
 | :-- | --: |
@@ -44,7 +44,10 @@ make lab-benign-check LAB_PCAP=/path/to/benign-24h.pcap
 ```
 
 This rewrites `deploy/evidence/benign-lab/` with the full capture. The report
-records the capture hash, size, normalized event count and per-family result.
+records the capture hash, size, observed span, normalized event rate and
+per-family result. `scripts/finalize_benign_capture.sh` performs the same step
+once the writer stops and the PCAP has been idle for five minutes; it is safe to
+leave running because it only waits and then reads the file.
 
 ## What this does not prove
 

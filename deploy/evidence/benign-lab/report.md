@@ -1,9 +1,10 @@
 # Lab benign capture
 
-Capture: `/media/liamcarvajal/Storage/code/ot-security-lab/detection/logs/benign-pilot-70m.pcap`  
+Capture: `/media/liamcarvajal/Storage/code/ot-security-lab/detection/logs/benign-pilot-10m.pcap`  
 SHA-256: `5eeedf309d35714925a9b49c2d6999880649b918c4600a1afd7103cf2c111f17`  
 Size: 7,366,183 bytes  
-Normalized events: 13949
+Observed span: 0.16 h  
+Normalized events: 13,949 (88304.62 / h)
 
 | Family | Result |
 | :-- | :-- |
