@@ -10,10 +10,10 @@ sample.
 
 | File | Contents | Labels |
 | :--- | :--- | :--- |
-| `positives.jsonl` | 48 events, 2 per single-event Sigma rule | `rule` is the rule the event must fire |
+| `positives.jsonl` | 54 events: 2 each for 24 rules, 1 each for six rules | `rule` is the rule the event must fire |
 | `negatives.jsonl` | 1,000 generated benign events, seed `20260202` | none; every rule must stay silent |
-| `near-misses.jsonl` | 24 events, 1 per single-event rule | none; each differs from its rule in the decisive field |
-| `windows.jsonl` | 26 correlation windows (12 positive, 14 negative) across six rules | `expect` is `match` or `no_match` |
+| `near-misses.jsonl` | 24 events | none; each differs from its rule in the decisive field |
+| `windows.jsonl` | 28 correlation windows (13 positive, 15 negative) across seven rules | `expect` is `match` or `no_match` |
 | `yara.jsonl` | 8 labeled artifacts, 2 per YARA rule | `rule` is the rule the file must match |
 | `files/negatives/` | 8 shared negative artifacts | none; every YARA rule must stay silent |
 

@@ -25,10 +25,24 @@ allowlists:
         - rules/sigma/ot/ot_modbus_coil_write.yml
       native: [9000001, 9000002]
 
-  - name: modbus_approved_readers
+  - name: modbus_approved_block_readers
     purpose: >-
       Hosts allowed to issue large block reads. The HMI and the L2 historian
-      collector poll the controllers; any other reader is enumeration.
+      collector poll the controllers; any other reader is enumeration. The
+      sensor gateway is deliberately not in this set: it polls one register.
+    roles: [hmi, historian_collector]
+    members:
+      - 172.22.0.10
+      - 172.22.0.20
+    detection:
+      sigma:
+        - rules/sigma/ot/ot_modbus_block_read.yml
+      native: []
+
+  - name: modbus_approved_process_readers
+    purpose: >-
+      Hosts allowed to read process state. The HMI and historian poll the
+      controllers; the gateway reads HR5 for the process-level shadow.
     roles: [sensor_gateway, hmi, historian_collector]
     members:
       - 172.21.0.2
@@ -36,7 +50,6 @@ allowlists:
       - 172.22.0.20
     detection:
       sigma:
-        - rules/sigma/ot/ot_modbus_block_read.yml
         - rules/sigma/ot/ot_modbus_process_state_read.yml
       native: []
 

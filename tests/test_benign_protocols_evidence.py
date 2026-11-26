@@ -18,6 +18,10 @@ def _summary() -> dict:
     return json.loads(EVIDENCE.read_text(encoding="utf-8"))
 
 
+def test_the_modbus_decoder_is_recorded() -> None:
+    assert _summary()["decoders"]["modbus"] == "tshark"
+
+
 def test_the_window_is_recorded_and_short() -> None:
     window = _summary()["window"]
     assert 0.3 * 3600 < window["span_seconds"] < 0.7 * 3600

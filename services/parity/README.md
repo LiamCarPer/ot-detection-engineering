@@ -5,16 +5,16 @@ The repository converts every single-event Sigma rule to Loki, Splunk, Sentinel
 `make engine-parity` proves that the artifact selects the same events as the
 repository matcher.
 
-This directory starts the two engines that are not part of the OT lab:
+This directory starts the three engines the parity harness needs:
 
 - **Splunk Free** on `127.0.0.1:18000` (REST `18089`, HEC `18088`), index
   `ot_parity`.
 - **OpenSearch** on `127.0.0.1:19200` (security plugin disabled, PPL enabled),
   with `*-parity` indices created and removed by the harness.
+- **Kusto** (`kustainer`) on `127.0.0.1:18080`; the harness writes and drops
+  only the `OTTelemetry` table.
 
-Loki is measured separately on live lab traffic by `make lab-loki-check`. Kusto
-uses the lab's `kustainer` on `127.0.0.1:18080`; the harness writes and then
-drops only the `OTTelemetry` table.
+Loki is measured separately on live lab traffic by `make lab-loki-check`.
 
 ## Start
 

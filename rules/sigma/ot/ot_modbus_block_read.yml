@@ -31,7 +31,6 @@ detection:
     quantity|gte: 16
   filter_authorized_reader:
     src_ip:
-      - 172.21.0.2
       - 172.22.0.10
       - 172.22.0.20
   filter_identified_reader:

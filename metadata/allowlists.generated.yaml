@@ -17,9 +17,26 @@ allowlists:
     native:
     - rules/native/suricata/dnp3_dpi.rules (sid:9000005)
     - rules/native/suricata/dnp3_dpi.rules (sid:9000006)
-- name: modbus_approved_readers
-  purpose: Hosts allowed to issue large block reads. The HMI and the L2 historian
-    collector poll the controllers; any other reader is enumeration.
+- name: modbus_approved_block_readers
+  purpose: 'Hosts allowed to issue large block reads. The HMI and the L2 historian
+    collector poll the controllers; any other reader is enumeration. The sensor gateway
+    is deliberately not in this set: it polls one register.'
+  members:
+  - ip: 172.22.0.10
+    role: hmi
+    zone: supervisory
+    criticality: high
+  - ip: 172.22.0.20
+    role: historian_collector
+    zone: supervisory
+    criticality: medium
+  used_by:
+    sigma:
+    - rules/sigma/ot/ot_modbus_block_read.yml (filter_authorized_reader)
+    native: []
+- name: modbus_approved_process_readers
+  purpose: Hosts allowed to read process state. The HMI and historian poll the controllers;
+    the gateway reads HR5 for the process-level shadow.
   members:
   - ip: 172.21.0.2
     role: sensor_gateway
@@ -35,7 +52,6 @@ allowlists:
     criticality: medium
   used_by:
     sigma:
-    - rules/sigma/ot/ot_modbus_block_read.yml (filter_authorized_reader)
     - rules/sigma/ot/ot_modbus_process_state_read.yml (filter_authorized_reader)
     native: []
 - name: modbus_approved_writers

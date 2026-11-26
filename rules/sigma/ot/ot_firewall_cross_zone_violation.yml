@@ -1,6 +1,6 @@
 title: Industrial Protocol Traffic From Enterprise To Control Zone
 id: aaaaba9c-627e-4dfb-adda-4d719c81cb89
-status: experimental
+status: stable
 description: |
   Detects the zone firewall dropping industrial protocol traffic that
   originates in the enterprise zone and targets the control zone. A healthy

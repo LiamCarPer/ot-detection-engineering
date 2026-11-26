@@ -153,7 +153,10 @@ def _tshark_modbus(pcap: Path) -> list[dict[str, Any]]:
     exception code, which is what the Sigma rules need.
     """
     if not shutil.which("tshark"):
-        return []
+        raise RuntimeError(
+            "tshark is required for the Modbus register/quantity decode; "
+            "install Wireshark's CLI or run the analysis on a host that has it"
+        )
     command = [
         "tshark", "-n", "-r", str(pcap), "-Y", "modbus", "-T", "fields",
         "-E", "separator=\t",
@@ -225,11 +228,7 @@ def _normalized_events(
     logs = [zeek_dir / "conn.log"]
     if include_dnp3:
         logs.append(zeek_dir / "dnp3.log")
-    modbus = _tshark_modbus(pcap)
-    if modbus:
-        events.extend(modbus)
-    else:
-        logs.append(zeek_dir / "modbus.log")
+    events.extend(_tshark_modbus(pcap))
     existing = [path for path in logs if path.exists()]
     events.extend(zeek.events(existing))
     return events
@@ -538,13 +537,33 @@ def _observed_span(
     )
 
 
+def _tshark_version() -> str:
+    try:
+        result = subprocess.run(  # nosec B603 - fixed command
+            ["tshark", "--version"], capture_output=True, text=True, check=True
+        )
+        return result.stdout.splitlines()[0] if result.stdout else "unknown"
+    except (OSError, subprocess.CalledProcessError):
+        return "unknown"
+
+
 def build(
     pcap: Path,
     events_out: Path | None = None,
     loki_url: str | None = None,
     snmp_events: Path | None = None,
 ) -> dict[str, Any]:
-    work = Path(tempfile.mkdtemp(prefix="otde-benign-lab-"))
+    with tempfile.TemporaryDirectory(prefix="otde-benign-lab-") as directory:
+        return _build_in(Path(directory), pcap, events_out, loki_url, snmp_events)
+
+
+def _build_in(
+    work: Path,
+    pcap: Path,
+    events_out: Path | None = None,
+    loki_url: str | None = None,
+    snmp_events: Path | None = None,
+) -> dict[str, Any]:
     local = work / "capture.pcap"
     shutil.copyfile(pcap, local)
 
@@ -602,8 +621,6 @@ def build(
             "".join(json.dumps(event, sort_keys=True) + "\n" for event in events),
             encoding="utf-8",
         )
-    # The 24-hour run copies a ~1 GB capture; leaving it behind fills /tmp.
-    shutil.rmtree(work, ignore_errors=True)
     return {
         "schema_version": 1,
         "capture": {
@@ -620,6 +637,7 @@ def build(
         "events": len(events),
         "events_per_hour": per_hour,
         "suricata_alerts": len(alerts),
+        "decoders": {"modbus": "tshark", "version": _tshark_version()},
         "coverage": coverage,
         "lab_baseline": lab_baseline,
         "families": families,

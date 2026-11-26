@@ -166,7 +166,7 @@ team owns.
 
 ## Why stateful detections are a separate family
 
-Three detections need context that Sigma's single-event and count primitives
+Five detections need context that Sigma's single-event and count primitives
 do not express: a process value that stays outside its learned envelope for
 several samples, a write that falls outside an approved change window, and a
 known asset that starts using a new protocol service.
@@ -191,19 +191,20 @@ production throughput claim.
 ## Known limitations
 
 - **Coverage is prioritized, not maximized.** The raw ATT&CK for ICS number is
-  29 of 97 techniques. The gaps are deliberate: Privilege Escalation needs
+  32 of 97 techniques. The gaps are deliberate: Privilege Escalation needs
   host/auth telemetry, and several Impact techniques need process context. The
   point is the engineering process, which scales unchanged to a larger ruleset.
 - **Fixture precision and recall measure rule/fixture agreement**, not field
-  performance, and the benign corpus is 1,000 generated events (30 behavioural
+  performance, and the benign corpus is 1,000 generated events (37 behavioural
   shapes) covering normal traffic for every protocol and stream the rules
   consume. The Sigma single-event result is reported as `0/1,000` with a 95%
   Wilson upper bound of 0.38%; the all-family result, including baseline,
-  conduit, correlation and stateful rules, is in `deploy/evidence/fpr/report.md`. The
-  held-out set in `metrics/heldout/` is an independent second sample — two
-  authored positives per rule, a second-seed negative corpus and one near miss
-  per rule — but it is still small and is not field data.
-- **Detection is still mostly signature-based.** Six correlation rules add
+  conduit, correlation and stateful rules, is in `deploy/evidence/fpr/report.md`;
+  correlation rules with no referenced-rule input are labelled unexercised. The
+  held-out set in `metrics/heldout/` is an independent second sample — at least
+  one authored positive per rule (two for 24 of 30), a second-seed negative
+  corpus and 24 near misses — but it is still small and is not field data.
+- **Detection is still mostly signature-based.** Seven correlation rules add
   windowed behaviour — destination fan-out, port sweeps, register enumeration,
   browse bursts and exception floods — over both `value_count` and
   `event_count`, and behaviour-baseline rules flag a new asset, pair or function
@@ -231,7 +232,7 @@ production throughput claim.
 
 1. Add a broader tactic spread (Impact, Evasion, C2, Initial Access) rather than
    deepening the same columns.
-2. Extend the stateful family. Three detections landed — process-value drift,
+2. Extend the stateful family. Five detections landed — process-value drift,
    engineering change windows and per-asset protocol profiles — along with the
    fixture format and evaluator they need. The next candidates are select/operate
    pairing, command-versus-feedback and alarm-setting changes.

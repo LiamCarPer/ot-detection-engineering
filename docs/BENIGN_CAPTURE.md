@@ -43,10 +43,12 @@ normalized through the collector and run through the network detection families.
 | Native Suricata | 0 alerts |
 | Sigma rules with input | 9 / 30 |
 
-The 21 unexercised Sigma rules are the DNP3, OPC UA, S7comm, SNMP, firewall,
-host, auth, PLC-diagnostic, sensor-health and process-safety rules. The capture
-has no traffic for them, or their source is not a network packet. That is a
-coverage limit, not a clean result.
+In this 25-hour window, the 21 unexercised Sigma rules are the DNP3, OPC UA,
+S7comm, SNMP, firewall, host, auth, PLC-diagnostic, sensor-health and
+process-safety rules. The capture has no traffic for them, or their source is
+not a network packet. The 0.5-hour protocol window below closes the DNP3,
+OPC UA, S7comm and SNMP-input part of that gap; it is not a claim that the other
+families were measured here.
 
 ## Benign protocol window
 
@@ -68,19 +70,22 @@ input coverage per rule. The committed 30-minute window is:
 | Flows / Modbus | 35,382 / 15,525 |
 | DNP3 / OPC UA / S7comm | 130 / 1,170 / 520 |
 | SNMP heartbeats | 83 |
-| Sigma rules with input | **22 / 30** |
+| Sigma rules with input | **22 / 30** (logsource input, not a positive path) |
 | Sigma / native FPs | **0 / 0** |
 | Lab-trained baseline | **0 / 38,276** |
 
 The 8 rules still without input need a source a network capture cannot carry
 (firewall iptables records, HMI auth, host Sysmon, PLC diagnostics, watchdog) or
-an attack (process safety). The Modbus write logsources have input but the
-window contains no writes, so their write path is not asserted by this window.
+an attack (process safety). The three SNMP rules have heartbeat input but none of
+their config-change/restart/link-down events occurred, so they are not
+positively exercised. The Modbus write logsources have input but the window
+contains no writes, so their write path is not asserted by this window.
 
-The remaining unexercised rules are firewall (no iptables records), SNMP (no
-device yet), host/auth/PLC diagnostics and sensor health (not network packets),
-and process safety (needs an unsafe command, which is an attack, not benign
-traffic).
+The eight rules still without input are the three firewall rules, HMI auth,
+host Sysmon, PLC diagnostics, sensor health and process safety. The protocol
+window supplies DNP3, OPC UA, S7comm and SNMP heartbeats; the three SNMP rules
+select config-change/restart/link-down events, which this benign window does not
+produce.
 
 ## Findings
 
@@ -93,7 +98,8 @@ traffic).
    the result is zero. Refusal volume belongs in a correlation or the health
    rules, not a per-packet medium alert.
 2. **The committed baseline is environment-specific.** Run unchanged against the
-   lab it flags 159,785 new pairs and 73,800 new assets. A baseline learned on
+   lab it flags 159,785 events on the new-pair rule and 73,800 on the
+   new-source-asset rule (the same event can match both). A baseline learned on
    the first two hours and tested on the remaining 23.45 hours flags zero.
 3. **Zeek was silently dropping packets.** `-C` changed the pilot from 13,949 to
    5,881 flows. The analyser now records the flag and the corrected count.
@@ -116,9 +122,9 @@ the report records its window, hash and per-rule coverage.
   background load beyond the lab's containers, and no 24/7 operation.
 - The network capture cannot see host, auth, PLC diagnostics, sensor health or
   firewall log records; those families are measured on their own samples.
-- DNP3, OPC UA, S7comm, SNMP and Modbus writes are not present in this window.
-  A separate benign protocol capture is the next step for those rules.
-- **56% of the flows are the lab's own Loki/InfluxDB observability traffic**
-  (490,821 Loki + 12,685 InfluxDB of 890,723 flows). The result is a lab
-  baseline, not a plant baseline.
+- This window has Modbus reads and flows only. DNP3, OPC UA, S7comm and SNMP are
+  measured in the separate 0.5-hour protocol window, not here; Modbus writes
+  are not asserted by either window.
+- **More than half of the flows are the lab's own Loki/InfluxDB observability
+  traffic.** The result is a lab baseline, not a plant baseline.
 - Zero false positives in one window is a bound, not a guarantee.

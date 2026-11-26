@@ -21,7 +21,9 @@ when it is. Analysing a growing PCAP would report a partial window as if it were
 the full run.
 
 `make lab-proof-dry-run` prints the plan and the skip decision without running
-anything.
+anything. The live proof writes to `deploy/evidence/lab-proof/`, which is a local
+run artifact and intentionally not committed; the canonical purple evidence is
+the stable 12/12 snapshot under `deploy/evidence/purple-live/`.
 
 ## Scheduling
 

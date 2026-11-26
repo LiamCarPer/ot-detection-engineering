@@ -1,0 +1,1571 @@
+{
+  "coverage": {
+    "techniques_total": 97,
+    "techniques_covered": 32,
+    "coverage_pct": 33.0,
+    "rules_total": 65,
+    "techniques_validated": 32,
+    "techniques_live": 10
+  },
+  "rule_validation": {
+    "per_rule": [
+      {
+        "rule": "rules/sigma/ot/ot_detection_service_down.yml",
+        "title": "Detection Service Stopped",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml",
+        "title": "DNP3 Request From An Unapproved Master Address",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 3,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_dnp3_restart_command.yml",
+        "title": "DNP3 Cold Or Warm Restart Command",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
+        "title": "DNP3 Control Operation From Unauthorized Master",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 3,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml",
+        "title": "DNP3 Unsolicited Responses Disabled",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_firewall_control_port_scan.yml",
+        "title": "Enterprise Host Probing Multiple Control Zone Ports",
+        "correlation": true,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 4,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_firewall_control_zone_egress.yml",
+        "title": "Control Zone Egress To The Enterprise Over A Standard Port",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 4,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_firewall_control_zone_proxy.yml",
+        "title": "Control Zone Host Reaching Multiple Enterprise Destinations",
+        "correlation": true,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 3,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
+        "title": "Industrial Protocol Traffic From Enterprise To Control Zone",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 3,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_firewall_enterprise_control_service.yml",
+        "title": "Enterprise Host Permitted To Reach A Control Zone Service",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 4,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_flow_industrial_service_reset.yml",
+        "title": "Connection Reset To An Industrial Service",
+        "correlation": false,
+        "tp": 3,
+        "fn": 0,
+        "fp": 0,
+        "tn": 5,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_flow_large_transfer.yml",
+        "title": "Large Transfer From OT To An External Destination",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 4,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_hmi_login_failure.yml",
+        "title": "HMI Login Failure",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 1,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_hmi_login_failure_burst.yml",
+        "title": "HMI Login Failure Burst From One Source",
+        "correlation": true,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_host_suspicious_modbus_client.yml",
+        "title": "Suspicious Modbus Client Initiated From An Endpoint",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_modbus_block_read.yml",
+        "title": "Modbus Block Read From Unauthorized Reader",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 6,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_modbus_coil_write.yml",
+        "title": "Modbus Coil Write From Unauthorized Control Writer",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 4,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
+        "title": "Modbus Control Asset Enumeration",
+        "correlation": true,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 5,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
+        "title": "Modbus Device Identification Scan",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_modbus_exception_flood.yml",
+        "title": "Modbus Exception Flood Toward An Operator Interface",
+        "correlation": true,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 3,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_modbus_exception_response.yml",
+        "title": "Modbus Exception Response",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_modbus_parameter_write.yml",
+        "title": "Modbus Write To Safety Critical Parameter Register",
+        "correlation": false,
+        "tp": 3,
+        "fn": 0,
+        "fp": 0,
+        "tn": 3,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_modbus_process_state_read.yml",
+        "title": "Modbus Process State Read From Unauthorized Source",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 5,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_modbus_register_enumeration.yml",
+        "title": "Modbus Register Enumeration From One Host",
+        "correlation": true,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 4,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
+        "title": "Modbus Write From Unauthorized Control Writer",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 4,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_opcua_browse_request.yml",
+        "title": "OPC UA Address Space Browse",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 4,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_opcua_method_call.yml",
+        "title": "OPC UA Method Call Request",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 4,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_opcua_node_enumeration.yml",
+        "title": "OPC UA Address Space Enumeration",
+        "correlation": true,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 3,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_opcua_write_request.yml",
+        "title": "OPC UA Write Request",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 5,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_plc_logic_tampered.yml",
+        "title": "PLC Logic Integrity Verification Failed",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 1,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_process_safety_violation.yml",
+        "title": "Process Safety Violation From Physics-Aware Monitor",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 3,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_s7comm_change_operating_mode.yml",
+        "title": "S7comm PLC Control Or Stop",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_s7comm_program_download.yml",
+        "title": "S7comm Program Download",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_s7comm_program_upload.yml",
+        "title": "S7comm Program Upload",
+        "correlation": false,
+        "tp": 2,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_snmp_config_change.yml",
+        "title": "OT Device Configuration Change",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_snmp_device_restart.yml",
+        "title": "OT Device Restart",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "rule": "rules/sigma/ot/ot_snmp_interface_down.yml",
+        "title": "Network Interface Down On An OT Device",
+        "correlation": false,
+        "tp": 1,
+        "fn": 0,
+        "fp": 0,
+        "tn": 2,
+        "precision": 1.0,
+        "recall": 1.0
+      }
+    ],
+    "aggregate": {
+      "tp": 57,
+      "fn": 0,
+      "fp": 0,
+      "tn": 114,
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_positive_rate": 0.0
+    }
+  },
+  "baseline": {
+    "events_total": 1000,
+    "false_positive_events": 0,
+    "false_positive_rate": 0.0,
+    "false_positive_rate_ci95": [
+      0.0,
+      0.0038
+    ],
+    "details": []
+  },
+  "heldout": {
+    "single_event": {
+      "rules_total": 30,
+      "positives_total": 54,
+      "negatives_total": 1024,
+      "per_rule": [
+        {
+          "rule": "rules/sigma/ot/ot_detection_service_down.yml",
+          "title": "Detection Service Stopped",
+          "positives": 1,
+          "negatives": 1024,
+          "tp": 1,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.2065,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.2065,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml",
+          "title": "DNP3 Request From An Unapproved Master Address",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_dnp3_restart_command.yml",
+          "title": "DNP3 Cold Or Warm Restart Command",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
+          "title": "DNP3 Control Operation From Unauthorized Master",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml",
+          "title": "DNP3 Unsolicited Responses Disabled",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_firewall_control_zone_egress.yml",
+          "title": "Control Zone Egress To The Enterprise Over A Standard Port",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
+          "title": "Industrial Protocol Traffic From Enterprise To Control Zone",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_firewall_enterprise_control_service.yml",
+          "title": "Enterprise Host Permitted To Reach A Control Zone Service",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_flow_industrial_service_reset.yml",
+          "title": "Connection Reset To An Industrial Service",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_flow_large_transfer.yml",
+          "title": "Large Transfer From OT To An External Destination",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_hmi_login_failure.yml",
+          "title": "HMI Login Failure",
+          "positives": 1,
+          "negatives": 1024,
+          "tp": 1,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.2065,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.2065,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_host_suspicious_modbus_client.yml",
+          "title": "Suspicious Modbus Client Initiated From An Endpoint",
+          "positives": 1,
+          "negatives": 1024,
+          "tp": 1,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.2065,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.2065,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_modbus_block_read.yml",
+          "title": "Modbus Block Read From Unauthorized Reader",
+          "positives": 1,
+          "negatives": 1024,
+          "tp": 1,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.2065,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.2065,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_modbus_coil_write.yml",
+          "title": "Modbus Coil Write From Unauthorized Control Writer",
+          "positives": 1,
+          "negatives": 1024,
+          "tp": 1,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.2065,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.2065,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
+          "title": "Modbus Device Identification Scan",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_modbus_exception_response.yml",
+          "title": "Modbus Exception Response",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_modbus_parameter_write.yml",
+          "title": "Modbus Write To Safety Critical Parameter Register",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_modbus_process_state_read.yml",
+          "title": "Modbus Process State Read From Unauthorized Source",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
+          "title": "Modbus Write From Unauthorized Control Writer",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_opcua_browse_request.yml",
+          "title": "OPC UA Address Space Browse",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_opcua_method_call.yml",
+          "title": "OPC UA Method Call Request",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_opcua_write_request.yml",
+          "title": "OPC UA Write Request",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_plc_logic_tampered.yml",
+          "title": "PLC Logic Integrity Verification Failed",
+          "positives": 1,
+          "negatives": 1024,
+          "tp": 1,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.2065,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.2065,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_process_safety_violation.yml",
+          "title": "Process Safety Violation From Physics-Aware Monitor",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_s7comm_change_operating_mode.yml",
+          "title": "S7comm PLC Control Or Stop",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_s7comm_program_download.yml",
+          "title": "S7comm Program Download",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_s7comm_program_upload.yml",
+          "title": "S7comm Program Upload",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_snmp_config_change.yml",
+          "title": "OT Device Configuration Change",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_snmp_device_restart.yml",
+          "title": "OT Device Restart",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_snmp_interface_down.yml",
+          "title": "Network Interface Down On An OT Device",
+          "positives": 2,
+          "negatives": 1024,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1024,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.0037
+          ]
+        }
+      ],
+      "aggregate": {
+        "tp": 54,
+        "fn": 0,
+        "fp": 0,
+        "tn": 30720,
+        "precision": 1.0,
+        "precision_ci95": [
+          0.9336,
+          1.0
+        ],
+        "recall": 1.0,
+        "recall_ci95": [
+          0.9336,
+          1.0
+        ],
+        "false_positive_rate": 0.0,
+        "false_positive_rate_ci95": [
+          0.0,
+          0.0001
+        ]
+      }
+    },
+    "correlation": {
+      "rules_total": 7,
+      "positives_total": 13,
+      "negatives_total": 15,
+      "per_rule": [
+        {
+          "rule": "rules/sigma/ot/ot_firewall_control_port_scan.yml",
+          "title": "Enterprise Host Probing Multiple Control Zone Ports",
+          "positives": 2,
+          "negatives": 2,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 2,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.6576
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_firewall_control_zone_proxy.yml",
+          "title": "Control Zone Host Reaching Multiple Enterprise Destinations",
+          "positives": 2,
+          "negatives": 2,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 2,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.6576
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_hmi_login_failure_burst.yml",
+          "title": "HMI Login Failure Burst From One Source",
+          "positives": 1,
+          "negatives": 1,
+          "tp": 1,
+          "fn": 0,
+          "fp": 0,
+          "tn": 1,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.2065,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.2065,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
+          "title": "Modbus Control Asset Enumeration",
+          "positives": 2,
+          "negatives": 4,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 4,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_modbus_exception_flood.yml",
+          "title": "Modbus Exception Flood Toward An Operator Interface",
+          "positives": 2,
+          "negatives": 2,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 2,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.6576
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_modbus_register_enumeration.yml",
+          "title": "Modbus Register Enumeration From One Host",
+          "positives": 2,
+          "negatives": 2,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 2,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.6576
+          ]
+        },
+        {
+          "rule": "rules/sigma/ot/ot_opcua_node_enumeration.yml",
+          "title": "OPC UA Address Space Enumeration",
+          "positives": 2,
+          "negatives": 2,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 2,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.6576
+          ]
+        }
+      ],
+      "aggregate": {
+        "tp": 13,
+        "fn": 0,
+        "fp": 0,
+        "tn": 15,
+        "precision": 1.0,
+        "precision_ci95": [
+          0.7719,
+          1.0
+        ],
+        "recall": 1.0,
+        "recall_ci95": [
+          0.7719,
+          1.0
+        ],
+        "false_positive_rate": 0.0,
+        "false_positive_rate_ci95": [
+          0.0,
+          0.2039
+        ]
+      }
+    },
+    "yara": {
+      "rules_total": 4,
+      "positives_total": 8,
+      "negatives_total": 8,
+      "per_rule": [
+        {
+          "rule": "rules/yara/ot_macro_document_with_pe.yar",
+          "title": "OT_Macro_Document_With_Embedded_PE",
+          "positives": 2,
+          "negatives": 8,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 8,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.3244
+          ]
+        },
+        {
+          "rule": "rules/yara/ot_powershell_dropper_on_ews.yar",
+          "title": "OT_PowerShell_Dropper_On_EWS",
+          "positives": 2,
+          "negatives": 8,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 8,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.3244
+          ]
+        },
+        {
+          "rule": "rules/yara/ot_s7_firmware_with_pe.yar",
+          "title": "OT_S7_Firmware_With_Embedded_PE",
+          "positives": 2,
+          "negatives": 8,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 8,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.3244
+          ]
+        },
+        {
+          "rule": "rules/yara/ot_siemens_project_file_with_pe.yar",
+          "title": "OT_Siemens_Project_File_With_Embedded_PE",
+          "positives": 2,
+          "negatives": 8,
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "tn": 8,
+          "precision": 1.0,
+          "precision_ci95": [
+            0.3424,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_ci95": [
+            0.3424,
+            1.0
+          ],
+          "false_positive_rate": 0.0,
+          "false_positive_rate_ci95": [
+            0.0,
+            0.3244
+          ]
+        }
+      ],
+      "aggregate": {
+        "tp": 8,
+        "fn": 0,
+        "fp": 0,
+        "tn": 32,
+        "precision": 1.0,
+        "precision_ci95": [
+          0.6756,
+          1.0
+        ],
+        "recall": 1.0,
+        "recall_ci95": [
+          0.6756,
+          1.0
+        ],
+        "false_positive_rate": 0.0,
+        "false_positive_rate_ci95": [
+          0.0,
+          0.1072
+        ]
+      }
+    }
+  },
+  "emulation": {
+    "expectations_total": 4,
+    "expectations_detected": 4,
+    "detection_rate_pct": 100.0,
+    "mean_mttd_seconds": 2.45,
+    "max_mttd_seconds": 4.761,
+    "unexpected_alerts": 0,
+    "benign_alerts": null,
+    "benign_passed": null
+  },
+  "purple_coverage": {
+    "expectations_total": 14,
+    "expectations_detected": 14,
+    "detection_rate_pct": 100.0,
+    "mean_mttd_seconds": null,
+    "max_mttd_seconds": null,
+    "unexpected_alerts": 0,
+    "benign_alerts": 0,
+    "benign_passed": true
+  }
+}

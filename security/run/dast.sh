@@ -13,5 +13,5 @@ for _ in $(seq 1 30); do
   sleep 1
 done
 docker run --rm --network host -v "$PWD/security/zap:/zap/wrk:ro" \
-  ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+  ghcr.io/zaproxy/zaproxy@sha256:c2d63bbb2d907a5c5257914fb20e26e969c92b25f265def7f89f08203f912882 zap-baseline.py \
   -t http://localhost:18080 -c /zap/wrk/baseline.conf -I

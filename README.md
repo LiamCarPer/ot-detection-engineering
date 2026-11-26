@@ -115,15 +115,15 @@ by `tests/test_claims.py`.
 | Mean MTTD (live lab) | 2.45 s | Time from action start to first matching alert, 2026-09-13 run (`n=4`, one run). |
 | Purple-team live | **12 / 12** Sigma expectations (7 steps, 3 runs) | 2026-11-26; 0 unexpected; benign windows clean; non-process MTTD mean **2.53 s**, the process step's **125 s** is fill-cycle phase wait. |
 | Purple-team replay | 14 / 14 expectations (8 steps) | 2026-11-24 replay of the lab's `alert_type` snapshot; 0 unexpected; benign window passed; a lab alert-signal mapping test, not rule execution and not MTTD. |
-| Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s; ~3,375 events/s achieved at a 4,000 target with 0 drops, 20,000 saturates and drops | Release build on the recorded host; small example frames; per-frame p99, see `docs/PERFORMANCE.md`. |
+| Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s; ~3,500 events/s achieved at a 4,000 target with 0 drops, 20,000 saturates and drops | Release build on the recorded host; small example frames; per-frame p99, see `docs/PERFORMANCE.md`. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule matches against its own committed fixtures. A regression check, not field precision. |
-| Sigma single-event FPR | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every stream the Sigma rules consume. The corpus has 30 behavioural shapes, so the binomial bound overstates effective N. |
-| All-family FPR (generated) | baseline, conduit, stateful, correlation, native and YARA all 0 | Same corpus plus the committed benign captures and fixtures; see [`deploy/evidence/fpr/report.md`](deploy/evidence/fpr/report.md). |
-| Lab benign capture (25.45 h) | 0 Sigma/native FPs on 1,136,470 events; lab-trained baseline 0 / 1,041,580 test events | 9 / 30 Sigma rules had input; DNP3, OPC UA, S7, SNMP, firewall, host/auth/PLC/health and process rules are unexercised. See [`docs/BENIGN_CAPTURE.md`](docs/BENIGN_CAPTURE.md). |
+| Sigma single-event FPR | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every stream the Sigma rules consume. The corpus has 37 behavioural shapes, so the binomial bound overstates effective N. |
+| All-family FPR (generated) | Sigma, baseline, conduit, native and YARA 0; correlation 0 fired but 0/7 exercised; stateful 0 fired | Same corpus plus the committed benign captures and fixtures; correlation zeros are labelled unexercised. See [`deploy/evidence/fpr/report.md`](deploy/evidence/fpr/report.md). |
+| Lab benign capture (25.45 h) | 0 Sigma/native FPs on 1,136,470 events; lab-trained baseline 0 / 1,041,580 test events | 9 / 30 Sigma rules had input in this flow/Modbus window; the 0.5 h protocol window adds DNP3, OPC UA, S7comm and SNMP. See [`docs/BENIGN_CAPTURE.md`](docs/BENIGN_CAPTURE.md). |
 | Benign protocol window (0.5 h) | 0 Sigma/native FPs on 52,811 events; lab baseline 0 / 38,276 | 22 / 30 Sigma rules had input, including DNP3, OPC UA, S7comm and SNMP. |
 | Held-out single-event recall | 54 / 54 (95% CI 0.9336–1.0) | Labeled positives authored separately from the rule fixtures. |
 | Held-out single-event precision | 54 / 54 (95% CI 0.9336–1.0) | Same positives against 1,024 held-out negatives per rule. |
-| Held-out correlation recall | 13 / 13 positive windows (95% CI 0.7719–1.0) | Window-level across six correlation rules. |
+| Held-out correlation recall | 13 / 13 positive windows (95% CI 0.7719–1.0) | Window-level across seven correlation rules. |
 | Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
 
 ## Architecture
@@ -231,7 +231,7 @@ through the same matcher as the rule tests. The results are in
   actuator.
 - **The benign corpus is generated.** The Sigma single-event claim is `0/1,000`
   with a 95% Wilson upper bound of **0.38%**, not "0.0 FPR". The corpus cycles
-  30 behavioural shapes, so the interval overstates the effective sample size.
+  37 behavioural shapes, so the interval overstates the effective sample size.
   Behaviour-baseline, conduit, correlation and stateful rules are measured on
   the same corpus in [`deploy/evidence/fpr/report.md`](deploy/evidence/fpr/report.md); they are not
   included in the Sigma-only bound.

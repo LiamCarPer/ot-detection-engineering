@@ -12,7 +12,7 @@ depends on its claims being checkable; a claim without evidence is a liability.
 - **Partial** — only part of the claim is demonstrated.
 - **Known gap** — deliberately not claimed.
 
-Last audited: **2026-11-24**. The independent runs and their limits are in
+Last audited: **2026-11-26**. The independent runs and their limits are in
 [`EVIDENCE_MAP.md`](EVIDENCE_MAP.md).
 
 ## Canonical numbers
@@ -27,7 +27,7 @@ not current and must not be used.
 | Benign baseline (generated) | **Sigma single-event: 0 / 1,000 generated events**, 95% Wilson upper bound **0.38%**; all-family report in `deploy/evidence/fpr/report.md` |
 | Lab benign capture | **25.45 h, 1,136,470 events, 0 Sigma/native FPs** from the 9 / 30 rules with input; lab-trained baseline **0 / 1,041,580** |
 | Benign protocol window | **0.5 h, 52,811 events, 0 Sigma/native FPs**; **22 / 30** Sigma rules had input, including DNP3, OPC UA, S7comm and SNMP; lab-trained baseline **0 / 38,276** |
-| Held-out single-event | **54 / 54** positives, **0** false positives over 1,024 negatives per rule |
+| Held-out single-event | **54 / 54** positives (24 rules × 2, six × 1), **0** false positives over 1,024 shared negatives evaluated by each rule |
 | Held-out correlation | **13 / 13** positive windows, **0** false positives over 15 negative windows |
 | Held-out YARA | **8 / 8** artifacts, **0** false positives over 8 shared negatives |
 | Purple team (MTTD run) | **4 / 4** expectations, mean MTTD **2.45 s** (`n=4`, one run) |
@@ -37,13 +37,13 @@ not current and must not be used.
 | Sensor health | **Detection Service Stopped firing live** in the lab ruler |
 | Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
 | Detection catalogue | **73 rules, 6 stable, 67 experimental, 12 with observed lab volume, 0 blocking gaps** |
-| Performance | **7.8–11.0M decoder frames/s; ~2,800 replay events/s; ~3,375 events/s achieved at a 4,000 target, 0 drops** on the recorded host |
+| Performance | **7.8–11.0M decoder frames/s; ~2,800 replay events/s; ~3,500 events/s achieved at a 4,000 target, 0 drops** on the recorded host |
 | Engine parity | **30 / 30 single-event rules** execute in Splunk Free, OpenSearch PPL and Kusto and return exactly the matcher's event set |
-| Detection allowlists | **6 sets generated from the asset inventory**; every Sigma filter and native exclusion is bound to one |
+| Detection allowlists | **7 sets generated from the asset inventory**; every Sigma filter and native exclusion is bound to one |
 | Process safety | **Independent mass balance catches an unsafe command through a 60% spoofed level** where a shadow monitor does not |
 | Lab proof | **One command** runs the live health, live rules, live purple, engine parity and benign capture, and refuses to attack a running capture |
 | Test suite | The count is not a quality claim; see the CI run |
-| Live lab | **11 of the 13 rules the lab exercises** fire on live traffic (snapshot 2026-09-15; predates the P1 rule changes) |
+| Live lab | **11 of 11 declared rules** fire in the 2026-09-15 snapshot; two Modbus rules had no normalized Loki input (superseded by the 2026-11-26 live run) |
 
 ## Claims
 
@@ -54,9 +54,9 @@ not current and must not be used.
 | Every correlation rule fires on its labeled windows and stays silent on its negatives | Verified | `rules/sigma/ot/*.test.yaml` (`windows:`) | `tests/test_sigma_correlations.py` |
 | YARA rules compile, match their synthetic positives, and pass the EICAR self-test | Verified | `rules/yara/`, `deploy/evidence/yara/summary.json` | `make yara-check`, `tests/test_yara.py` |
 | Native Suricata rules fire on the attack captures and stay silent on the benign captures | Implemented | `deploy/report.md`, `deploy/evidence/*/eve.json` | `make suricata-check` (Docker) |
-| The ruleset loads and fires inside a Malcolm pipeline alongside 59,188 default rules | Implemented | `deploy/evidence/malcolm/` | `tools/malcolm_check.py` |
+| The ruleset loads and fires inside a Malcolm pipeline alongside 59,185 loaded rules | Implemented | `deploy/evidence/malcolm/` | `tools/malcolm_check.py` |
 | The Loki ruler bundle fires the 18 rules in the live Loki proof in a full stack | Implemented | `deploy/evidence/loki/` | `make loki-check` (Docker) |
-| The generated rules fire on live traffic in a real-endpoint OT lab for 11 of the 13 rules the lab exercises | Implemented (snapshot 2026-09-15; predates the P1 rule changes) | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
+| The generated rules fire on live traffic in a real-endpoint OT lab for the 11 rules with normalized Loki input | Implemented (snapshot 2026-09-15; two Modbus rules unmeasured) | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
 | The Rust decoders decode the committed examples and the resulting events satisfy the Sigma rules | Verified | `deploy/evidence/decoders/summary.json` | `make decoder-check` |
 | Suricata and Zeek sensor output, plus authored NetFlow/IPFIX and SNMP exports in the exporter's shape, normalize to the contract and fire the expected rules | Verified | `deploy/evidence/collector/summary.json` | `make collector-check` |
 | The behaviour baseline is reproducible and its rules fire on deviations and stay silent on benign telemetry | Verified | `deploy/evidence/baseline/summary.json` | `make baseline-check` |
@@ -92,11 +92,11 @@ not current and must not be used.
 | The write-up, demo and operations walkthrough use the current evidence and state their scope | Verified | `docs/WRITEUP.md`, `docs/DEMO.md`, `docs/OPERATIONS.md` | `tests/test_communication.py` |
 | The catalogue's observed volume matches the Phase 1 lab analysis | Verified | `analysis/out/rule_health.json` | `tests/test_detection_health.py` |
 | The recorded purple-team MTTD run detected 4 / 4 expectations at a mean MTTD of 2.45 s | Implemented (`n=4`, one run) | `purple/emulation/lab-observations-2026-09-13.json`, `purple/results/` | `make metrics` (replay) |
-| The 2026-11-25 live run executes the generated Loki rules against 7 steps and 3 runs | Implemented (lab, 3 runs) | `deploy/evidence/purple-live/` | `python purple/runner/live_lab.py` |
+| The 2026-11-26 live run executes the generated Loki rules against 7 steps and 3 runs | Implemented (lab, 3 runs) | `deploy/evidence/purple-live/` | `python purple/runner/live_lab.py --plan purple/emulation/emulation-plan-live.yaml --runs 3` |
 | The 2026-11-24 lab alert-signal replay matches 14 / 14 expected signals across 8 steps | Verified (replay) | `deploy/evidence/purple/emulation_results.json` | `make purple-check`, `tests/test_emulation.py` |
-| The 2026-11-24 replay produced 0 unexpected alerts and passed a 30-second benign window | Verified (replay) |
+| The 2026-11-24 replay produced 0 unexpected alerts and passed a 30-second benign window | Verified (replay) | `deploy/evidence/purple/emulation_results.json` | `make purple-check` |
 | The Alertmanager grouping policy reduces 151 alerts to 21 notifications and preserves C2/C3/C4/C5 | Verified (model) | `analysis/out/suppression.json` | `python analysis/suppression.py` |
-| The sensor-health rule fires on a stopped detection producer in the lab | Implemented (lab) | `deploy/evidence/lab-health/` | `make lab-health-check` | `deploy/evidence/purple/emulation_results.json` | `make purple-check` |
+| The sensor-health rule fires on a stopped detection producer in the lab | Implemented (lab) | `deploy/evidence/lab-health/` | `make lab-health-check` |
 | Security controls and threats are governed as code | Verified | `metadata/security-controls.yaml`, `metadata/threat-model.yaml` | `make security-preflight`, `tests/test_security_governance.py` |
 | CI runs the offline checks; container and live-lab evidence is committed and guarded rather than re-run | Verified | `.github/workflows/ci.yml`, `tests/test_*_evidence.py` | CI |
 | No real malware is committed; YARA samples are inert and the engine is proven with EICAR in memory | Verified | `tests/yara/samples/README.md`, `tools/yara_check.py` | `make yara-check` |
@@ -111,18 +111,18 @@ These are deliberately not claimed. They are also listed in
 | Production field telemetry | The repo has no plant traffic. The benign corpus is generated and the lab is a Dockerised plant. |
 | Host and authentication telemetry | Sysmon and HMI access logs are collected, but Privilege Escalation is `0/2` because no rule maps local privilege escalation; tagging a network rule would be tag-gaming. |
 | Purple-team breadth and repeatability | The live run is 7 steps / 12 Sigma expectations over 3 runs; the 2026-11-24 replay is 8 steps / 14 lab signals; the MTTD run is 2 steps / 4 expectations. Analyst MTTA is not measured. |
-| Live execution of every rule | The live purple run covers the plan's 7 steps; the older lab-loki snapshot covers 11 of 13 exercised rules. The newer breadth rules are fixture-proven and bundle-converted. |
+| Live execution of every rule | The live purple run covers the plan's 7 steps; the older lab-loki snapshot covers 11 of 11 declared rules, with two Modbus rules unmeasured for lack of normalized Loki input. The newer breadth rules are fixture-proven and bundle-converted. |
 | Commercial BAS | AttackIQ is commercial; the lab uses a deterministic harness and an optional Caldera profile. |
 | 24/7 SOC operations | No on-call rota, shift handover, or production incident load. |
 | Physical process safety | The lab is a software emulation; there is no physical PLC, sensor or actuator. |
 | Real malware analysis | Out of scope by design. Public-sample analysis in an isolated lab would be the credible next step. |
 | Production triage / MTTA | The case study has no analyst acknowledgement or resolution timestamps; it measures queue reduction, not human performance. |
-| MTTD on the replay | The 2026-11-24 snapshot has alert timestamps but not action start timestamps; MTTD comes only from the 2026-09-13 run. |
+| MTTD on the replay | The 2026-11-24 snapshot has alert timestamps but not action start timestamps; MTTD comes from the 2026-09-13 run and the 2026-11-26 live run. |
 | C2-beacon and OT-port-scan coverage | The lab emits those alerts, but the repository has no matching rule; they are not scored in the purple plan. HMI login failure and its burst now have rules. |
-| Lab-capture protocol coverage | The 25.45-hour benign window contains Modbus reads and flows only. DNP3, OPC UA, S7, SNMP and Modbus writes are unexercised; a separate benign protocol capture is the next step. |
+| Lab-capture protocol coverage | The 25.45-hour window contains Modbus reads and flows. The 0.5-hour protocol window adds DNP3/OPC UA/S7/SNMP input; Modbus writes and the three SNMP event types are still unexercised. The eight rules with no input are named in `docs/BENIGN_CAPTURE.md`. |
 | Baseline portability | The committed baseline is learned from the generated seed and flags every lab asset and pair as new. The lab result uses a baseline trained on the first two hours; a deployment must learn its own baseline. |
 | Operational maturity of most rules | 67 of 73 rules are `experimental`; only 6 have runbooks and 12 have observed lab volume. |
-| Production-scale performance | The benchmark is a desktop, small example frames, no pcap replay, no sustained load, no backpressure. |
+| Production-scale performance | The benchmark is a desktop with small example frames and no pcap sensor replay. The bounded-queue matcher load covers 4,000/20,000 EPS; a production sensor and restart are still untested. |
 
 ## How to audit this file
 

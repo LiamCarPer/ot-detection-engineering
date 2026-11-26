@@ -17,6 +17,10 @@ for _ in $(seq 1 120); do
   fi
   sleep 3
 done
+if [ "$(docker inspect ot_splunk --format '{{.State.Health.Status}}' 2>/dev/null)" != "healthy" ]; then
+  echo "Splunk did not become healthy; refusing to install the app" >&2
+  exit 1
+fi
 
 docker exec -u root ot_splunk rm -rf /opt/splunk/etc/apps/otde_parity
 docker cp services/parity/splunk-app ot_splunk:/opt/splunk/etc/apps/otde_parity
@@ -33,8 +37,16 @@ docker restart ot_splunk >/dev/null
 echo "waiting for Splunk to restart..."
 for _ in $(seq 1 120); do
   if [ "$(docker inspect ot_splunk --format '{{.State.Health.Status}}' 2>/dev/null)" = "healthy" ]; then
-    echo "parity engines ready"
-    exit 0
+    echo "waiting for OpenSearch..."
+    for _ in $(seq 1 60); do
+      if curl -fsS http://127.0.0.1:19200 >/dev/null 2>&1; then
+        echo "parity engines ready"
+        exit 0
+      fi
+      sleep 2
+    done
+    echo "OpenSearch did not become ready" >&2
+    exit 1
   fi
   sleep 3
 done

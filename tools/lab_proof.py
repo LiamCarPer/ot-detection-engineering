@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess  # nosec B404 - fixed commands, no user input
 import sys
 import time
@@ -28,8 +29,14 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = REPO_ROOT / "deploy" / "evidence" / "lab-proof"
-LAB_DIR = Path("/media/liamcarvajal/Storage/code/ot-security-lab")
-CAPTURE = LAB_DIR / "detection" / "logs" / "benign-24h.pcap"
+LAB_DIR = Path(
+    os.environ.get(
+        "OT_LAB_DIR", "/media/liamcarvajal/Storage/code/ot-security-lab"
+    )
+)
+CAPTURE = Path(
+    os.environ.get("BENIGN_PCAP", str(LAB_DIR / "detection" / "logs" / "benign-24h.pcap"))
+)
 CAPTURE_IDLE_SECONDS = 300
 
 
@@ -89,12 +96,14 @@ def _steps(include_attacks: bool) -> list[Step]:
             [
                 py,
                 "purple/runner/live_lab.py",
+                "--plan",
+                "purple/emulation/emulation-plan-live.yaml",
                 "--runs",
-                "1",
+                "3",
                 "--out",
-                str(REPO_ROOT / "deploy" / "evidence" / "purple-live"),
+                "deploy/evidence/lab-proof/purple-live",
             ],
-            REPO_ROOT / "deploy" / "evidence" / "purple-live",
+            REPO_ROOT / "deploy" / "evidence" / "lab-proof" / "purple-live",
             attack=True,
             timeout=1800,
             tags=["purple"],

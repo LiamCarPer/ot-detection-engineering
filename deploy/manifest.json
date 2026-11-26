@@ -26,7 +26,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
-      "source_sha256": "29e1950d9ccf6c124c696e6d11814a36e54aca7660e77865f8615763d34a53b7",
+      "source_sha256": "91b59d46e08670f29e6754bac5ae43cc8b0a3ea6b31ddd69a67bbb15dcf2b21f",
       "target": "loki/rules/ot_dnp3_unauthorized_control.yaml",
       "backend": "loki"
     },
@@ -56,7 +56,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
-      "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
+      "source_sha256": "61fa9bf93276619a6d9d87c264bd27e0c0eb9e4904bdedd06bfb4e19c2e0e9c3",
       "target": "loki/rules/ot_firewall_cross_zone_violation.yaml",
       "backend": "loki"
     },
@@ -98,7 +98,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_block_read.yml",
-      "source_sha256": "68d4067018ce5af07fec84cfd87bc3ad54d0ce8d72a531cca7c41a6bf16047a2",
+      "source_sha256": "b7423c9c5b1468b0f76a128231f3c106ad314d0a653b13b6575d03a795dd6e08",
       "target": "loki/rules/ot_modbus_block_read.yaml",
       "backend": "loki"
     },
@@ -152,13 +152,13 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
-      "source_sha256": "fc3bf854b8af177713bf597b6b35abffe753f8abf06ee9d3fcf5e964235711d6",
+      "source_sha256": "50514742d2ef5fc6118c781e6bbbf0c66cc4f99f4d076dc694509bb9aed27c2f",
       "target": "loki/rules/ot_modbus_unauthorized_write.yaml",
       "backend": "loki"
     },
     {
       "source": "rules/sigma/ot/ot_opcua_browse_request.yml",
-      "source_sha256": "90e96b1cd430a42a21c7f429a602839b1fee503b96bc276bcf158e14a349efa8",
+      "source_sha256": "d9f2ca8f5f0d0343f3d8301b981eb139ebd00e6cce8414bdd2f1947a5fa97c2a",
       "target": "loki/rules/ot_opcua_browse_request.yaml",
       "backend": "loki"
     },
@@ -188,7 +188,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_process_safety_violation.yml",
-      "source_sha256": "1e8809c4ca4f70a290c54bee1bf319ba04779cdf403b1c707a5974ecd5bf6474",
+      "source_sha256": "e310fa9ac13fb9db6692588038d4db84966f6f94fea1527de7e9f87e02f68fab",
       "target": "loki/rules/ot_process_safety_violation.yaml",
       "backend": "loki"
     },
@@ -200,7 +200,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_s7comm_program_download.yml",
-      "source_sha256": "bc9922d19f71a74b909a2f492c5b7ce2bc31dde4ac746a8dc2e81afaeb4038d2",
+      "source_sha256": "72c1c018d51b4346583bb19dd33fa4206438e8ecb521cd0736d22267224823a1",
       "target": "loki/rules/ot_s7comm_program_download.yaml",
       "backend": "loki"
     },
@@ -248,7 +248,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
-      "source_sha256": "29e1950d9ccf6c124c696e6d11814a36e54aca7660e77865f8615763d34a53b7",
+      "source_sha256": "91b59d46e08670f29e6754bac5ae43cc8b0a3ea6b31ddd69a67bbb15dcf2b21f",
       "target": "opensearch/ot_dnp3_unauthorized_control.ppl",
       "backend": "opensearch"
     },
@@ -278,7 +278,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
-      "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
+      "source_sha256": "61fa9bf93276619a6d9d87c264bd27e0c0eb9e4904bdedd06bfb4e19c2e0e9c3",
       "target": "opensearch/ot_firewall_cross_zone_violation.ppl",
       "backend": "opensearch"
     },
@@ -320,7 +320,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_block_read.yml",
-      "source_sha256": "68d4067018ce5af07fec84cfd87bc3ad54d0ce8d72a531cca7c41a6bf16047a2",
+      "source_sha256": "b7423c9c5b1468b0f76a128231f3c106ad314d0a653b13b6575d03a795dd6e08",
       "target": "opensearch/ot_modbus_block_read.ppl",
       "backend": "opensearch"
     },
@@ -374,13 +374,13 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
-      "source_sha256": "fc3bf854b8af177713bf597b6b35abffe753f8abf06ee9d3fcf5e964235711d6",
+      "source_sha256": "50514742d2ef5fc6118c781e6bbbf0c66cc4f99f4d076dc694509bb9aed27c2f",
       "target": "opensearch/ot_modbus_unauthorized_write.ppl",
       "backend": "opensearch"
     },
     {
       "source": "rules/sigma/ot/ot_opcua_browse_request.yml",
-      "source_sha256": "90e96b1cd430a42a21c7f429a602839b1fee503b96bc276bcf158e14a349efa8",
+      "source_sha256": "d9f2ca8f5f0d0343f3d8301b981eb139ebd00e6cce8414bdd2f1947a5fa97c2a",
       "target": "opensearch/ot_opcua_browse_request.ppl",
       "backend": "opensearch"
     },
@@ -410,7 +410,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_process_safety_violation.yml",
-      "source_sha256": "1e8809c4ca4f70a290c54bee1bf319ba04779cdf403b1c707a5974ecd5bf6474",
+      "source_sha256": "e310fa9ac13fb9db6692588038d4db84966f6f94fea1527de7e9f87e02f68fab",
       "target": "opensearch/ot_process_safety_violation.ppl",
       "backend": "opensearch"
     },
@@ -422,7 +422,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_s7comm_program_download.yml",
-      "source_sha256": "bc9922d19f71a74b909a2f492c5b7ce2bc31dde4ac746a8dc2e81afaeb4038d2",
+      "source_sha256": "72c1c018d51b4346583bb19dd33fa4206438e8ecb521cd0736d22267224823a1",
       "target": "opensearch/ot_s7comm_program_download.ppl",
       "backend": "opensearch"
     },
@@ -470,7 +470,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
-      "source_sha256": "29e1950d9ccf6c124c696e6d11814a36e54aca7660e77865f8615763d34a53b7",
+      "source_sha256": "91b59d46e08670f29e6754bac5ae43cc8b0a3ea6b31ddd69a67bbb15dcf2b21f",
       "target": "sentinel/ot_dnp3_unauthorized_control.kql",
       "backend": "sentinel"
     },
@@ -500,7 +500,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
-      "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
+      "source_sha256": "61fa9bf93276619a6d9d87c264bd27e0c0eb9e4904bdedd06bfb4e19c2e0e9c3",
       "target": "sentinel/ot_firewall_cross_zone_violation.kql",
       "backend": "sentinel"
     },
@@ -542,7 +542,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_block_read.yml",
-      "source_sha256": "68d4067018ce5af07fec84cfd87bc3ad54d0ce8d72a531cca7c41a6bf16047a2",
+      "source_sha256": "b7423c9c5b1468b0f76a128231f3c106ad314d0a653b13b6575d03a795dd6e08",
       "target": "sentinel/ot_modbus_block_read.kql",
       "backend": "sentinel"
     },
@@ -596,13 +596,13 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
-      "source_sha256": "fc3bf854b8af177713bf597b6b35abffe753f8abf06ee9d3fcf5e964235711d6",
+      "source_sha256": "50514742d2ef5fc6118c781e6bbbf0c66cc4f99f4d076dc694509bb9aed27c2f",
       "target": "sentinel/ot_modbus_unauthorized_write.kql",
       "backend": "sentinel"
     },
     {
       "source": "rules/sigma/ot/ot_opcua_browse_request.yml",
-      "source_sha256": "90e96b1cd430a42a21c7f429a602839b1fee503b96bc276bcf158e14a349efa8",
+      "source_sha256": "d9f2ca8f5f0d0343f3d8301b981eb139ebd00e6cce8414bdd2f1947a5fa97c2a",
       "target": "sentinel/ot_opcua_browse_request.kql",
       "backend": "sentinel"
     },
@@ -632,7 +632,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_process_safety_violation.yml",
-      "source_sha256": "1e8809c4ca4f70a290c54bee1bf319ba04779cdf403b1c707a5974ecd5bf6474",
+      "source_sha256": "e310fa9ac13fb9db6692588038d4db84966f6f94fea1527de7e9f87e02f68fab",
       "target": "sentinel/ot_process_safety_violation.kql",
       "backend": "sentinel"
     },
@@ -644,7 +644,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_s7comm_program_download.yml",
-      "source_sha256": "bc9922d19f71a74b909a2f492c5b7ce2bc31dde4ac746a8dc2e81afaeb4038d2",
+      "source_sha256": "72c1c018d51b4346583bb19dd33fa4206438e8ecb521cd0736d22267224823a1",
       "target": "sentinel/ot_s7comm_program_download.kql",
       "backend": "sentinel"
     },
@@ -692,7 +692,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
-      "source_sha256": "29e1950d9ccf6c124c696e6d11814a36e54aca7660e77865f8615763d34a53b7",
+      "source_sha256": "91b59d46e08670f29e6754bac5ae43cc8b0a3ea6b31ddd69a67bbb15dcf2b21f",
       "target": "splunk/ot_dnp3_unauthorized_control.conf",
       "backend": "splunk"
     },
@@ -722,7 +722,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_firewall_cross_zone_violation.yml",
-      "source_sha256": "ca09380659c79829f71658610d6c79aaa5c7d6ce6636d7db87802dc32cd2ff47",
+      "source_sha256": "61fa9bf93276619a6d9d87c264bd27e0c0eb9e4904bdedd06bfb4e19c2e0e9c3",
       "target": "splunk/ot_firewall_cross_zone_violation.conf",
       "backend": "splunk"
     },
@@ -764,7 +764,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_block_read.yml",
-      "source_sha256": "68d4067018ce5af07fec84cfd87bc3ad54d0ce8d72a531cca7c41a6bf16047a2",
+      "source_sha256": "b7423c9c5b1468b0f76a128231f3c106ad314d0a653b13b6575d03a795dd6e08",
       "target": "splunk/ot_modbus_block_read.conf",
       "backend": "splunk"
     },
@@ -818,13 +818,13 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
-      "source_sha256": "fc3bf854b8af177713bf597b6b35abffe753f8abf06ee9d3fcf5e964235711d6",
+      "source_sha256": "50514742d2ef5fc6118c781e6bbbf0c66cc4f99f4d076dc694509bb9aed27c2f",
       "target": "splunk/ot_modbus_unauthorized_write.conf",
       "backend": "splunk"
     },
     {
       "source": "rules/sigma/ot/ot_opcua_browse_request.yml",
-      "source_sha256": "90e96b1cd430a42a21c7f429a602839b1fee503b96bc276bcf158e14a349efa8",
+      "source_sha256": "d9f2ca8f5f0d0343f3d8301b981eb139ebd00e6cce8414bdd2f1947a5fa97c2a",
       "target": "splunk/ot_opcua_browse_request.conf",
       "backend": "splunk"
     },
@@ -854,7 +854,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_process_safety_violation.yml",
-      "source_sha256": "1e8809c4ca4f70a290c54bee1bf319ba04779cdf403b1c707a5974ecd5bf6474",
+      "source_sha256": "e310fa9ac13fb9db6692588038d4db84966f6f94fea1527de7e9f87e02f68fab",
       "target": "splunk/ot_process_safety_violation.conf",
       "backend": "splunk"
     },
@@ -866,7 +866,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_s7comm_program_download.yml",
-      "source_sha256": "bc9922d19f71a74b909a2f492c5b7ce2bc31dde4ac746a8dc2e81afaeb4038d2",
+      "source_sha256": "72c1c018d51b4346583bb19dd33fa4206438e8ecb521cd0736d22267224823a1",
       "target": "splunk/ot_s7comm_program_download.conf",
       "backend": "splunk"
     },

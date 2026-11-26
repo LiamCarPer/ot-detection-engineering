@@ -3,7 +3,7 @@
 # detection families over it and replace the pilot evidence.
 #
 # Run with nohup so it survives the shell that starts it:
-#   nohup scripts/finalize_benign_capture.sh > /tmp/opencode/finalize-capture.log 2>&1 &
+#   nohup scripts/finalize_benign_capture.sh > "${TMPDIR:-/tmp}/finalize-capture.log" 2>&1 &
 #
 # It never sends traffic; it only waits for the capture writer and then reads the
 # saved PCAP.

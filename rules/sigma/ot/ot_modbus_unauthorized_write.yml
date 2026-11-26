@@ -1,6 +1,6 @@
 title: Modbus Write From Unauthorized Control Writer
 id: 62dc6867-340d-4560-a957-53826aa802eb
-status: experimental
+status: stable
 description: |
   Detects a Modbus write to a PLC from a host that is not an approved control
   writer. In a segmented OT network, Modbus writes should originate only from

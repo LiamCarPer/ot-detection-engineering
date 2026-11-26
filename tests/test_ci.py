@@ -29,7 +29,14 @@ EVIDENCE_TOOLS = (
     "tools/detection_health.py",
     "analysis/lab_case_study.py",
     "purple/runner/run_emulation.py",
+    "tools/allowlists.py",
+    "tools/process_model_check.py",
+    "coverage/security_coverage.py",
+    "tools/check_action_pins.py",
 )
+
+# Tools that only have a check mode; no --check flag exists.
+CHECK_ONLY = {"tools/check_action_pins.py"}
 
 
 def _steps() -> list[str]:
@@ -52,6 +59,8 @@ def test_every_evidence_tool_runs_in_check_mode() -> None:
     steps = _steps()
     failures = []
     for tool in EVIDENCE_TOOLS:
+        if tool in CHECK_ONLY:
+            continue
         matching = [step for step in steps if tool in step]
         if not any("--check" in step for step in matching):
             failures.append(tool)

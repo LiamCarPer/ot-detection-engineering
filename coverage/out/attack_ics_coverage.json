@@ -1,0 +1,1626 @@
+{
+  "attack_version": "19.2",
+  "summary": {
+    "techniques_total": 97,
+    "techniques_covered": 32,
+    "coverage_pct": 33.0,
+    "rules_total": 65,
+    "techniques_validated": 32,
+    "techniques_live": 10
+  },
+  "tactics": [
+    {
+      "id": "TA0108",
+      "name": "Initial Access",
+      "shortname": "initial-access",
+      "techniques_total": 12,
+      "techniques_covered": 4,
+      "coverage_pct": 33.3,
+      "techniques": [
+        "T0817",
+        "T0819",
+        "T0822",
+        "T0847",
+        "T0848",
+        "T0860",
+        "T0862",
+        "T0864",
+        "T0865",
+        "T0866",
+        "T0883",
+        "T0886"
+      ]
+    },
+    {
+      "id": "TA0104",
+      "name": "Execution",
+      "shortname": "execution",
+      "techniques_total": 10,
+      "techniques_covered": 3,
+      "coverage_pct": 30.0,
+      "techniques": [
+        "T0807",
+        "T0821",
+        "T0823",
+        "T0834",
+        "T0853",
+        "T0858",
+        "T0863",
+        "T0871",
+        "T0874",
+        "T0895"
+      ]
+    },
+    {
+      "id": "TA0110",
+      "name": "Persistence",
+      "shortname": "persistence",
+      "techniques_total": 10,
+      "techniques_covered": 4,
+      "coverage_pct": 40.0,
+      "techniques": [
+        "T0859",
+        "T0873",
+        "T0873.001",
+        "T0889",
+        "T1693",
+        "T1693.001",
+        "T1693.002",
+        "T1694",
+        "T1694.001",
+        "T1694.002"
+      ]
+    },
+    {
+      "id": "TA0111",
+      "name": "Privilege Escalation",
+      "shortname": "privilege-escalation",
+      "techniques_total": 2,
+      "techniques_covered": 0,
+      "coverage_pct": 0.0,
+      "techniques": [
+        "T0874",
+        "T0890"
+      ]
+    },
+    {
+      "id": "TA0103",
+      "name": "Evasion",
+      "shortname": "evasion",
+      "techniques_total": 9,
+      "techniques_covered": 2,
+      "coverage_pct": 22.2,
+      "techniques": [
+        "T0820",
+        "T0849",
+        "T0851",
+        "T0858",
+        "T0872",
+        "T0894",
+        "T1692",
+        "T1692.001",
+        "T1692.002"
+      ]
+    },
+    {
+      "id": "TA0102",
+      "name": "Discovery",
+      "shortname": "discovery",
+      "techniques_total": 8,
+      "techniques_covered": 3,
+      "coverage_pct": 37.5,
+      "techniques": [
+        "T0840",
+        "T0842",
+        "T0846",
+        "T0846.001",
+        "T0846.002",
+        "T0846.003",
+        "T0887",
+        "T0888"
+      ]
+    },
+    {
+      "id": "TA0109",
+      "name": "Lateral Movement",
+      "shortname": "lateral-movement",
+      "techniques_total": 11,
+      "techniques_covered": 4,
+      "coverage_pct": 36.4,
+      "techniques": [
+        "T0843",
+        "T0843.001",
+        "T0843.002",
+        "T0843.003",
+        "T0859",
+        "T0866",
+        "T0867",
+        "T0886",
+        "T1694",
+        "T1694.001",
+        "T1694.002"
+      ]
+    },
+    {
+      "id": "TA0100",
+      "name": "Collection",
+      "shortname": "collection",
+      "techniques_total": 11,
+      "techniques_covered": 4,
+      "coverage_pct": 36.4,
+      "techniques": [
+        "T0801",
+        "T0802",
+        "T0811",
+        "T0830",
+        "T0845",
+        "T0852",
+        "T0861",
+        "T0868",
+        "T0877",
+        "T0887",
+        "T0893"
+      ]
+    },
+    {
+      "id": "TA0101",
+      "name": "Command and Control",
+      "shortname": "command-and-control",
+      "techniques_total": 3,
+      "techniques_covered": 2,
+      "coverage_pct": 66.7,
+      "techniques": [
+        "T0869",
+        "T0884",
+        "T0885"
+      ]
+    },
+    {
+      "id": "TA0107",
+      "name": "Inhibit Response Function",
+      "shortname": "inhibit-response-function",
+      "techniques_total": 20,
+      "techniques_covered": 5,
+      "coverage_pct": 25.0,
+      "techniques": [
+        "T0800",
+        "T0809",
+        "T0814",
+        "T0816",
+        "T0835",
+        "T0838",
+        "T0851",
+        "T0878",
+        "T0881",
+        "T0892",
+        "T1691",
+        "T1691.001",
+        "T1691.002",
+        "T1693",
+        "T1693.001",
+        "T1693.002",
+        "T1695",
+        "T1695.001",
+        "T1695.002",
+        "T1695.003"
+      ]
+    },
+    {
+      "id": "TA0106",
+      "name": "Impair Process Control",
+      "shortname": "impair-process-control",
+      "techniques_total": 8,
+      "techniques_covered": 4,
+      "coverage_pct": 50.0,
+      "techniques": [
+        "T0806",
+        "T0836",
+        "T1692",
+        "T1692.001",
+        "T1692.002",
+        "T1693",
+        "T1693.001",
+        "T1693.002"
+      ]
+    },
+    {
+      "id": "TA0105",
+      "name": "Impact",
+      "shortname": "impact",
+      "techniques_total": 12,
+      "techniques_covered": 4,
+      "coverage_pct": 33.3,
+      "techniques": [
+        "T0813",
+        "T0815",
+        "T0826",
+        "T0827",
+        "T0828",
+        "T0829",
+        "T0831",
+        "T0832",
+        "T0837",
+        "T0879",
+        "T0880",
+        "T0882"
+      ]
+    }
+  ],
+  "techniques": [
+    {
+      "id": "T0800",
+      "name": "Activate Firmware Update Mode",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0801",
+      "name": "Monitor Process State",
+      "tactics": [
+        "TA0100"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_modbus_process_state_read.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0802",
+      "name": "Automated Collection",
+      "tactics": [
+        "TA0100"
+      ],
+      "covered": true,
+      "rule_count": 2,
+      "sources": [
+        "rules/sigma/ot/ot_modbus_block_read.yml",
+        "rules/sigma/ot/ot_modbus_register_enumeration.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0806",
+      "name": "Brute Force I/O",
+      "tactics": [
+        "TA0106"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/native/suricata/modbus_dpi.rules"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0807",
+      "name": "Command-Line Interface",
+      "tactics": [
+        "TA0104"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0809",
+      "name": "Data Destruction",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0811",
+      "name": "Data from Information Repositories",
+      "tactics": [
+        "TA0100"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0813",
+      "name": "Denial of Control",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_flow_industrial_service_reset.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0814",
+      "name": "Denial of Service",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_snmp_interface_down.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0815",
+      "name": "Denial of View",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": true,
+      "rule_count": 2,
+      "sources": [
+        "rules/sigma/ot/ot_modbus_exception_flood.yml",
+        "rules/sigma/ot/ot_modbus_exception_response.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0816",
+      "name": "Device Restart/Shutdown",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": true,
+      "rule_count": 3,
+      "sources": [
+        "rules/native/suricata/dnp3_dpi.rules",
+        "rules/sigma/ot/ot_dnp3_restart_command.yml",
+        "rules/sigma/ot/ot_snmp_device_restart.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": true,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0817",
+      "name": "Drive-by Compromise",
+      "tactics": [
+        "TA0108"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0819",
+      "name": "Exploit Public-Facing Application",
+      "tactics": [
+        "TA0108"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0820",
+      "name": "Exploitation for Evasion",
+      "tactics": [
+        "TA0103"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0821",
+      "name": "Modify Controller Tasking",
+      "tactics": [
+        "TA0104"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0822",
+      "name": "External Remote Services",
+      "tactics": [
+        "TA0108"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0823",
+      "name": "Graphical User Interface",
+      "tactics": [
+        "TA0104"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0826",
+      "name": "Loss of Availability",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0827",
+      "name": "Loss of Control",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0828",
+      "name": "Loss of Productivity and Revenue",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0829",
+      "name": "Loss of View",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0830",
+      "name": "Adversary-in-the-Middle",
+      "tactics": [
+        "TA0100"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0831",
+      "name": "Manipulation of Control",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": true,
+      "rule_count": 3,
+      "sources": [
+        "rules/sigma/ot/ot_process_safety_violation.yml",
+        "rules/stateful/stateful_process_safety_envelope.yml",
+        "rules/stateful/stateful_process_value_drift.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": true,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0832",
+      "name": "Manipulation of View",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0834",
+      "name": "Native API",
+      "tactics": [
+        "TA0104"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0835",
+      "name": "Manipulate I/O Image",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0836",
+      "name": "Modify Parameter",
+      "tactics": [
+        "TA0106"
+      ],
+      "covered": true,
+      "rule_count": 2,
+      "sources": [
+        "rules/sigma/ot/ot_modbus_parameter_write.yml",
+        "rules/sigma/ot/ot_snmp_config_change.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0837",
+      "name": "Loss of Protection",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0838",
+      "name": "Modify Alarm Settings",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0840",
+      "name": "Network Connection Enumeration",
+      "tactics": [
+        "TA0102"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_firewall_control_port_scan.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0842",
+      "name": "Network Sniffing",
+      "tactics": [
+        "TA0102"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0843",
+      "name": "Program Download",
+      "tactics": [
+        "TA0109"
+      ],
+      "covered": true,
+      "rule_count": 3,
+      "sources": [
+        "rules/native/suricata/s7comm_dpi.rules",
+        "rules/sigma/ot/ot_s7comm_program_download.yml",
+        "rules/stateful/stateful_engineering_change_window.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": true,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0843.001",
+      "name": "Download All",
+      "tactics": [
+        "TA0109"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0843.002",
+      "name": "Online Edit",
+      "tactics": [
+        "TA0109"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0843.003",
+      "name": "Program Append",
+      "tactics": [
+        "TA0109"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0845",
+      "name": "Program Upload",
+      "tactics": [
+        "TA0100"
+      ],
+      "covered": true,
+      "rule_count": 2,
+      "sources": [
+        "rules/native/suricata/s7comm_dpi.rules",
+        "rules/sigma/ot/ot_s7comm_program_upload.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": true,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0846",
+      "name": "Remote System Discovery",
+      "tactics": [
+        "TA0102"
+      ],
+      "covered": true,
+      "rule_count": 5,
+      "sources": [
+        "rules/baseline/baseline_new_function_code.yml",
+        "rules/baseline/baseline_new_pair.yml",
+        "rules/sigma/ot/ot_host_suspicious_modbus_client.yml",
+        "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
+        "rules/stateful/stateful_asset_protocol_baseline.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0846.001",
+      "name": "Port Scan",
+      "tactics": [
+        "TA0102"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0846.002",
+      "name": "Broadcast Discovery",
+      "tactics": [
+        "TA0102"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0846.003",
+      "name": "Multicast Discovery",
+      "tactics": [
+        "TA0102"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0847",
+      "name": "Replication Through Removable Media",
+      "tactics": [
+        "TA0108"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0848",
+      "name": "Rogue Master",
+      "tactics": [
+        "TA0108"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_dnp3_request_from_unapproved_master.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0849",
+      "name": "Masquerading",
+      "tactics": [
+        "TA0103"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0851",
+      "name": "Rootkit",
+      "tactics": [
+        "TA0103",
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0852",
+      "name": "Screen Capture",
+      "tactics": [
+        "TA0100"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0853",
+      "name": "Scripting",
+      "tactics": [
+        "TA0104"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/yara/ot_powershell_dropper_on_ews.yar"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0858",
+      "name": "Change Operating Mode",
+      "tactics": [
+        "TA0104",
+        "TA0103"
+      ],
+      "covered": true,
+      "rule_count": 2,
+      "sources": [
+        "rules/native/suricata/s7comm_dpi.rules",
+        "rules/sigma/ot/ot_s7comm_change_operating_mode.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": true,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0859",
+      "name": "Valid Accounts",
+      "tactics": [
+        "TA0110",
+        "TA0109"
+      ],
+      "covered": true,
+      "rule_count": 2,
+      "sources": [
+        "rules/sigma/ot/ot_hmi_login_failure.yml",
+        "rules/sigma/ot/ot_hmi_login_failure_burst.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0860",
+      "name": "Wireless Compromise",
+      "tactics": [
+        "TA0108"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0861",
+      "name": "Point & Tag Identification",
+      "tactics": [
+        "TA0100"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_opcua_node_enumeration.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0862",
+      "name": "Supply Chain Compromise",
+      "tactics": [
+        "TA0108"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0863",
+      "name": "User Execution",
+      "tactics": [
+        "TA0104"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0864",
+      "name": "Transient Cyber Asset",
+      "tactics": [
+        "TA0108"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0865",
+      "name": "Spearphishing Attachment",
+      "tactics": [
+        "TA0108"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/yara/ot_macro_document_with_pe.yar"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0866",
+      "name": "Exploitation of Remote Services",
+      "tactics": [
+        "TA0108",
+        "TA0109"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_firewall_enterprise_control_service.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0867",
+      "name": "Lateral Tool Transfer",
+      "tactics": [
+        "TA0109"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0868",
+      "name": "Detect Operating Mode",
+      "tactics": [
+        "TA0100"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0869",
+      "name": "Standard Application Layer Protocol",
+      "tactics": [
+        "TA0101"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_firewall_control_zone_egress.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0871",
+      "name": "Execution through API",
+      "tactics": [
+        "TA0104"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_opcua_method_call.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": true,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0872",
+      "name": "Indicator Removal on Host",
+      "tactics": [
+        "TA0103"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0873",
+      "name": "Project File Infection",
+      "tactics": [
+        "TA0110"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0873.001",
+      "name": "Siemens Project File Format",
+      "tactics": [
+        "TA0110"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/yara/ot_siemens_project_file_with_pe.yar"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0874",
+      "name": "Hooking",
+      "tactics": [
+        "TA0104",
+        "TA0111"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0877",
+      "name": "I/O Image",
+      "tactics": [
+        "TA0100"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0878",
+      "name": "Alarm Suppression",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": true,
+      "rule_count": 2,
+      "sources": [
+        "rules/native/suricata/dnp3_dpi.rules",
+        "rules/sigma/ot/ot_dnp3_unsolicited_disabled.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": true,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0879",
+      "name": "Damage to Property",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0880",
+      "name": "Loss of Safety",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0881",
+      "name": "Service Stop",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_detection_service_down.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0882",
+      "name": "Theft of Operational Information",
+      "tactics": [
+        "TA0105"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_flow_large_transfer.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0883",
+      "name": "Internet Accessible Device",
+      "tactics": [
+        "TA0108"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0884",
+      "name": "Connection Proxy",
+      "tactics": [
+        "TA0101"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_firewall_control_zone_proxy.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0885",
+      "name": "Commonly Used Port",
+      "tactics": [
+        "TA0101"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0886",
+      "name": "Remote Services",
+      "tactics": [
+        "TA0108",
+        "TA0109"
+      ],
+      "covered": true,
+      "rule_count": 5,
+      "sources": [
+        "rules/conduit/conduit_unauthorized_source.yml",
+        "rules/conduit/conduit_undeclared_path.yml",
+        "rules/conduit/conduit_undeclared_service.yml",
+        "rules/native/suricata/opcua_dpi.rules",
+        "rules/sigma/ot/ot_firewall_cross_zone_violation.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": true,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0887",
+      "name": "Wireless Sniffing",
+      "tactics": [
+        "TA0102",
+        "TA0100"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0888",
+      "name": "Remote System Information Discovery",
+      "tactics": [
+        "TA0102"
+      ],
+      "covered": true,
+      "rule_count": 6,
+      "sources": [
+        "rules/baseline/baseline_new_source_asset.yml",
+        "rules/native/suricata/dnp3_dpi.rules",
+        "rules/native/suricata/modbus_dpi.rules",
+        "rules/sigma/ot/ot_modbus_control_asset_enumeration.yml",
+        "rules/sigma/ot/ot_modbus_device_identification_scan.yml",
+        "rules/sigma/ot/ot_opcua_browse_request.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": true,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0889",
+      "name": "Modify Program",
+      "tactics": [
+        "TA0110"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/sigma/ot/ot_plc_logic_tampered.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T0890",
+      "name": "Exploitation for Privilege Escalation",
+      "tactics": [
+        "TA0111"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0892",
+      "name": "Change Credential",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0893",
+      "name": "Data from Local System",
+      "tactics": [
+        "TA0100"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0894",
+      "name": "System Binary Proxy Execution",
+      "tactics": [
+        "TA0103"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T0895",
+      "name": "Autorun Image",
+      "tactics": [
+        "TA0104"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1691",
+      "name": "Block Operational Technology Message",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1691.001",
+      "name": "Command Message",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1691.002",
+      "name": "Reporting Message",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1692",
+      "name": "Unauthorized Message",
+      "tactics": [
+        "TA0103",
+        "TA0106"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1692.001",
+      "name": "Command Message",
+      "tactics": [
+        "TA0103",
+        "TA0106"
+      ],
+      "covered": true,
+      "rule_count": 8,
+      "sources": [
+        "rules/native/suricata/dnp3_dpi.rules",
+        "rules/native/suricata/modbus_dpi.rules",
+        "rules/native/suricata/s7comm_dpi.rules",
+        "rules/sigma/ot/ot_dnp3_unauthorized_control.yml",
+        "rules/sigma/ot/ot_modbus_coil_write.yml",
+        "rules/sigma/ot/ot_modbus_unauthorized_write.yml",
+        "rules/sigma/ot/ot_opcua_write_request.yml",
+        "rules/stateful/stateful_dnp3_select_operate.yml"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": true,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T1692.002",
+      "name": "Reporting Message",
+      "tactics": [
+        "TA0103",
+        "TA0106"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1693",
+      "name": "Modify Firmware",
+      "tactics": [
+        "TA0110",
+        "TA0107",
+        "TA0106"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1693.001",
+      "name": "System Firmware",
+      "tactics": [
+        "TA0110",
+        "TA0107",
+        "TA0106"
+      ],
+      "covered": true,
+      "rule_count": 1,
+      "sources": [
+        "rules/yara/ot_s7_firmware_with_pe.yar"
+      ],
+      "evidence": {
+        "fixture": true,
+        "held_out_or_capture": true,
+        "live": false,
+        "benign": true,
+        "validated": true
+      }
+    },
+    {
+      "id": "T1693.002",
+      "name": "Module Firmware",
+      "tactics": [
+        "TA0110",
+        "TA0107",
+        "TA0106"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1694",
+      "name": "Insecure Credentials",
+      "tactics": [
+        "TA0110",
+        "TA0109"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1694.001",
+      "name": "Default Credentials",
+      "tactics": [
+        "TA0110",
+        "TA0109"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1694.002",
+      "name": "Hardcoded Credentials",
+      "tactics": [
+        "TA0110",
+        "TA0109"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1695",
+      "name": "Block Communications",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1695.001",
+      "name": "Serial COM",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1695.002",
+      "name": "Ethernet",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    },
+    {
+      "id": "T1695.003",
+      "name": "Wi-Fi",
+      "tactics": [
+        "TA0107"
+      ],
+      "covered": false,
+      "rule_count": 0,
+      "sources": [],
+      "evidence": {}
+    }
+  ]
+}

@@ -80,7 +80,7 @@ points alone. These are the questions I would ask.
 
 - **The benign corpus is generated.** The Sigma single-event claim is `0/1,000`
   with a 95% Wilson upper bound of 0.38%; it is a bound on modelled normal
-  operation, not a field FPR, and the corpus has only 30 behavioural shapes. The
+  operation, not a field FPR, and the corpus has only 37 behavioural shapes. The
   all-family result (baseline, conduit, correlation, stateful, native, YARA) is
   in `deploy/evidence/fpr/report.md`. The generator is in `tools/make_benign.py`; the
   provenance and limits are in `metrics/baseline/README.md`.

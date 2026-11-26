@@ -1,6 +1,6 @@
 title: OPC UA Address Space Browse
 id: 71de3736-4142-435e-9f87-70e5c08bd872
-status: experimental
+status: stable
 description: |
   Detects an OPC UA Browse or BrowseNext request. Browsing walks the address
   space to enumerate nodes, which is how an attacker discovers the tags and

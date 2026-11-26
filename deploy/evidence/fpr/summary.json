@@ -40,6 +40,15 @@
     },
     "sigma_correlation": {
       "fired": [],
+      "not_exercised": [
+        "Modbus Exception Flood Toward An Operator Interface",
+        "Enterprise Host Probing Multiple Control Zone Ports",
+        "OPC UA Address Space Enumeration",
+        "HMI Login Failure Burst From One Source",
+        "Modbus Control Asset Enumeration",
+        "Modbus Register Enumeration From One Host",
+        "Control Zone Host Reaching Multiple Enterprise Destinations"
+      ],
       "per_rule": {
         "Control Zone Host Reaching Multiple Enterprise Destinations": false,
         "Enterprise Host Probing Multiple Control Zone Ports": false,
@@ -48,6 +57,15 @@
         "Modbus Exception Flood Toward An Operator Interface": false,
         "Modbus Register Enumeration From One Host": false,
         "OPC UA Address Space Enumeration": false
+      },
+      "per_rule_input": {
+        "Control Zone Host Reaching Multiple Enterprise Destinations": 0,
+        "Enterprise Host Probing Multiple Control Zone Ports": 0,
+        "HMI Login Failure Burst From One Source": 0,
+        "Modbus Control Asset Enumeration": 0,
+        "Modbus Exception Flood Toward An Operator Interface": 0,
+        "Modbus Register Enumeration From One Host": 0,
+        "OPC UA Address Space Enumeration": 0
       },
       "rules": 7
     },

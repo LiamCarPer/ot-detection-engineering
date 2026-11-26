@@ -35,6 +35,19 @@ services:
         hard: -1
     restart: unless-stopped
 
+  kusto:
+    # The vendor image has no stable manifest digest available to pin; it is
+    # the same kustainer the lab runs. The harness records its version in the
+    # evidence.
+    image: mcr.microsoft.com/azuredataexplorer/kustainer-linux
+    container_name: otde-kusto
+    environment:
+      ACCEPT_EULA: "Y"
+    ports:
+      - "127.0.0.1:18080:8080"
+    mem_limit: 2g
+    restart: unless-stopped
+
 volumes:
   splunk-var:
   splunk-etc:

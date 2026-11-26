@@ -1,0 +1,513 @@
+{
+  "summary": {
+    "threats_total": 17,
+    "threats_covered": 15,
+    "coverage_pct": 88.2,
+    "controls_total": 29,
+    "controls_implemented": 23
+  },
+  "assets": [
+    {
+      "id": "decode-path",
+      "description": "Rust DNP3/S7comm/OPC UA parsers reading attacker-controlled bytes."
+    },
+    {
+      "id": "telemetry-pipeline",
+      "description": "Collectors, normalized contract and the policy/baseline artifacts."
+    },
+    {
+      "id": "rule-corpus",
+      "description": "Sigma/native rules, fixtures and generated SIEM queries."
+    },
+    {
+      "id": "release-bundle",
+      "description": "deploy/ artifacts and the provenance manifest."
+    },
+    {
+      "id": "ingest-api",
+      "description": "HTTP service that accepts and validates telemetry."
+    },
+    {
+      "id": "ai-triage",
+      "description": "LLM-assisted triage of an alert, with a stub provider in CI."
+    },
+    {
+      "id": "ci-supply-chain",
+      "description": "GitHub Actions, Python/Rust dependencies and container images."
+    }
+  ],
+  "threats": [
+    {
+      "id": "T-001",
+      "title": "A malformed protocol frame crashes or corrupts the decoder",
+      "framework": "STRIDE",
+      "category": "tampering",
+      "asset": "decode-path",
+      "controls": [
+        "C-001",
+        "C-002",
+        "C-016"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-001",
+        "C-016"
+      ]
+    },
+    {
+      "id": "T-002",
+      "title": "Hostile input causes resource exhaustion in a parser",
+      "framework": "STRIDE",
+      "category": "denial-of-service",
+      "asset": "decode-path",
+      "controls": [
+        "C-001",
+        "C-002",
+        "C-013"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-001",
+        "C-013"
+      ]
+    },
+    {
+      "id": "T-003",
+      "title": "A dependency or toolchain component is compromised or vulnerable",
+      "framework": "STRIDE",
+      "category": "tampering",
+      "asset": "ci-supply-chain",
+      "controls": [
+        "C-004",
+        "C-005",
+        "C-006",
+        "C-007"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-004",
+        "C-005",
+        "C-006"
+      ]
+    },
+    {
+      "id": "T-004",
+      "title": "A compromised GitHub Action executes with repository credentials",
+      "framework": "STRIDE",
+      "category": "elevation-of-privilege",
+      "asset": "ci-supply-chain",
+      "controls": [
+        "C-008",
+        "C-009"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-008",
+        "C-009"
+      ]
+    },
+    {
+      "id": "T-005",
+      "title": "A credential or secret is committed to the repository",
+      "framework": "STRIDE",
+      "category": "information-disclosure",
+      "asset": "ci-supply-chain",
+      "controls": [
+        "C-010",
+        "C-011"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-010",
+        "C-011"
+      ]
+    },
+    {
+      "id": "T-006",
+      "title": "A released artifact is substituted after generation",
+      "framework": "STRIDE",
+      "category": "tampering",
+      "asset": "release-bundle",
+      "controls": [
+        "C-012",
+        "C-014"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-012"
+      ]
+    },
+    {
+      "id": "T-007",
+      "title": "An unauthenticated or spoofed client submits telemetry",
+      "framework": "STRIDE",
+      "category": "spoofing",
+      "asset": "ingest-api",
+      "controls": [
+        "C-004",
+        "C-017"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-004",
+        "C-017"
+      ]
+    },
+    {
+      "id": "T-008",
+      "title": "A client floods the ingest API",
+      "framework": "STRIDE",
+      "category": "denial-of-service",
+      "asset": "ingest-api",
+      "controls": [
+        "C-013",
+        "C-018"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-013",
+        "C-018"
+      ]
+    },
+    {
+      "id": "T-009",
+      "title": "Prompt injection through attacker-controlled log fields",
+      "framework": "OWASP-LLM",
+      "category": "prompt-injection",
+      "asset": "ai-triage",
+      "controls": [
+        "C-019",
+        "C-022"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-019",
+        "C-022"
+      ]
+    },
+    {
+      "id": "T-010",
+      "title": "Insecure handling of model output",
+      "framework": "OWASP-LLM",
+      "category": "insecure-output-handling",
+      "asset": "ai-triage",
+      "controls": [
+        "C-020",
+        "C-022"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-020",
+        "C-022"
+      ]
+    },
+    {
+      "id": "T-011",
+      "title": "The model is given excessive agency",
+      "framework": "OWASP-LLM",
+      "category": "excessive-agency",
+      "asset": "ai-triage",
+      "controls": [
+        "C-021",
+        "C-022"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-021",
+        "C-022"
+      ]
+    },
+    {
+      "id": "T-012",
+      "title": "Attacker traffic evades the committed detections",
+      "framework": "STRIDE",
+      "category": "evasion",
+      "asset": "rule-corpus",
+      "controls": [
+        "C-023"
+      ],
+      "covered": false,
+      "implemented_controls": []
+    },
+    {
+      "id": "T-013",
+      "title": "Security-relevant actions are not attributable",
+      "framework": "STRIDE",
+      "category": "repudiation",
+      "asset": "ingest-api",
+      "controls": [
+        "C-024"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-024"
+      ]
+    },
+    {
+      "id": "T-014",
+      "title": "The service container escapes or runs with excess privilege",
+      "framework": "STRIDE",
+      "category": "elevation-of-privilege",
+      "asset": "ingest-api",
+      "controls": [
+        "C-025",
+        "C-026"
+      ],
+      "covered": false,
+      "implemented_controls": []
+    },
+    {
+      "id": "T-015",
+      "title": "Security requirements and controls drift from the code",
+      "framework": "NIST-SSDF",
+      "category": "governance",
+      "asset": "rule-corpus",
+      "controls": [
+        "C-003",
+        "C-027"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-003",
+        "C-027"
+      ]
+    },
+    {
+      "id": "T-016",
+      "title": "Unreviewed or untested logic regresses",
+      "framework": "NIST-SSDF",
+      "category": "governance",
+      "asset": "telemetry-pipeline",
+      "controls": [
+        "C-011",
+        "C-015",
+        "C-028"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-011",
+        "C-015",
+        "C-028"
+      ]
+    },
+    {
+      "id": "T-017",
+      "title": "A vulnerability is reported with no handling process",
+      "framework": "NIST-SSDF",
+      "category": "governance",
+      "asset": "release-bundle",
+      "controls": [
+        "C-029"
+      ],
+      "covered": true,
+      "implemented_controls": [
+        "C-029"
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "id": "C-001",
+      "title": "Bounds-checked, panic-resistant protocol decoders",
+      "status": "implemented",
+      "verify": "make rust",
+      "evidence": "tools/dnp3-dpi/tests/robustness.rs"
+    },
+    {
+      "id": "C-002",
+      "title": "Fuzzing campaign for the decoders",
+      "status": "planned",
+      "verify": "n/a (planned)",
+      "evidence": "security/run/fuzz.sh"
+    },
+    {
+      "id": "C-003",
+      "title": "Threat and control coverage governance",
+      "status": "implemented",
+      "verify": "make security-preflight",
+      "evidence": "tests/test_security_governance.py"
+    },
+    {
+      "id": "C-004",
+      "title": "Pinned Python dependencies and Rust toolchain",
+      "status": "implemented",
+      "verify": "make check",
+      "evidence": "requirements.txt"
+    },
+    {
+      "id": "C-005",
+      "title": "Software composition analysis (pip-audit)",
+      "status": "implemented",
+      "verify": "make security-sca",
+      "evidence": "security/run/sca.sh"
+    },
+    {
+      "id": "C-006",
+      "title": "Automated dependency updates",
+      "status": "implemented",
+      "verify": "n/a",
+      "evidence": ".github/dependabot.yml"
+    },
+    {
+      "id": "C-007",
+      "title": "Hash-pinned Python dependencies",
+      "status": "planned",
+      "verify": "make security-sca",
+      "evidence": "security/run/sca.sh"
+    },
+    {
+      "id": "C-008",
+      "title": "GitHub Actions pinned by commit SHA",
+      "status": "implemented",
+      "verify": "make security-preflight",
+      "evidence": ".github/workflows/ci.yml"
+    },
+    {
+      "id": "C-009",
+      "title": "CI workflow security analysis",
+      "status": "implemented",
+      "verify": "make security-actions",
+      "evidence": "security/run/actions.sh"
+    },
+    {
+      "id": "C-010",
+      "title": "Secret scanning",
+      "status": "implemented",
+      "verify": "make security-secrets",
+      "evidence": "security/run/secrets.sh"
+    },
+    {
+      "id": "C-011",
+      "title": "Pre-commit security hooks",
+      "status": "implemented",
+      "verify": "pre-commit run --all-files",
+      "evidence": ".pre-commit-config.yaml"
+    },
+    {
+      "id": "C-012",
+      "title": "Deployment artifact digest manifest",
+      "status": "implemented",
+      "verify": "make deploy-check",
+      "evidence": "deploy/manifest.json"
+    },
+    {
+      "id": "C-013",
+      "title": "Input size and resource limits",
+      "status": "implemented",
+      "verify": "make security-api-check",
+      "evidence": "services/ingest/app.py"
+    },
+    {
+      "id": "C-014",
+      "title": "Signed release provenance",
+      "status": "planned",
+      "verify": "make security-sbom",
+      "evidence": "security/run/sbom.sh"
+    },
+    {
+      "id": "C-015",
+      "title": "Property-based tests for the security-critical library",
+      "status": "implemented",
+      "verify": "make test",
+      "evidence": "tests/test_properties.py"
+    },
+    {
+      "id": "C-016",
+      "title": "Truncation and mutation robustness tests",
+      "status": "implemented",
+      "verify": "make rust",
+      "evidence": "tools/s7comm-dpi/tests/robustness.rs"
+    },
+    {
+      "id": "C-017",
+      "title": "API key authentication with constant-time comparison",
+      "status": "implemented",
+      "verify": "make security-api-check",
+      "evidence": "services/ingest/auth.py"
+    },
+    {
+      "id": "C-018",
+      "title": "Rate limiting and request body caps",
+      "status": "implemented",
+      "verify": "make security-api-check",
+      "evidence": "services/ingest/app.py"
+    },
+    {
+      "id": "C-019",
+      "title": "Prompt-injection isolation and adversarial tests",
+      "status": "implemented",
+      "verify": "make security-ai-check",
+      "evidence": "tests/test_ingest_ai_security.py"
+    },
+    {
+      "id": "C-020",
+      "title": "Model output schema validation, never executed",
+      "status": "implemented",
+      "verify": "make security-ai-check",
+      "evidence": "services/ingest/ai.py"
+    },
+    {
+      "id": "C-021",
+      "title": "No tool access and mandatory human review",
+      "status": "implemented",
+      "verify": "make security-ai-check",
+      "evidence": "services/ingest/ai.py"
+    },
+    {
+      "id": "C-022",
+      "title": "LLM adversarial test suite (OWASP LLM Top 10)",
+      "status": "implemented",
+      "verify": "make security-ai-check",
+      "evidence": "tests/test_ingest_ai_security.py"
+    },
+    {
+      "id": "C-023",
+      "title": "Detection evasion testing",
+      "status": "planned",
+      "verify": "n/a (planned)",
+      "evidence": "tools/evasion_check.py"
+    },
+    {
+      "id": "C-024",
+      "title": "Structured audit log for API and triage decisions",
+      "status": "implemented",
+      "verify": "make security-api-check",
+      "evidence": "services/ingest/app.py"
+    },
+    {
+      "id": "C-025",
+      "title": "Non-root, read-only service container",
+      "status": "planned",
+      "verify": "n/a (planned)",
+      "evidence": "services/ingest/Dockerfile"
+    },
+    {
+      "id": "C-026",
+      "title": "Container image scanning",
+      "status": "planned",
+      "verify": "n/a (planned)",
+      "evidence": "security/run/container.sh"
+    },
+    {
+      "id": "C-027",
+      "title": "Security requirements mapped to NIST SSDF and OWASP ASVS",
+      "status": "implemented",
+      "verify": "n/a",
+      "evidence": "docs/SECURITY_REQUIREMENTS.md"
+    },
+    {
+      "id": "C-028",
+      "title": "Secure code review checklist",
+      "status": "implemented",
+      "verify": "n/a",
+      "evidence": "docs/SECURE_CODE_REVIEW.md"
+    },
+    {
+      "id": "C-029",
+      "title": "Vulnerability disclosure and remediation SLA",
+      "status": "implemented",
+      "verify": "n/a",
+      "evidence": "SECURITY.md"
+    }
+  ]
+}

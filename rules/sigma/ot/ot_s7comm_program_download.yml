@@ -1,6 +1,6 @@
 title: S7comm Program Download
 id: e252ae54-8784-4286-ad9f-2b007c508ee5
-status: experimental
+status: stable
 description: |
   Detects a program block download to a Siemens controller (Request Download,
   Download Block, Download Ended). Downloading logic to a controller is how an

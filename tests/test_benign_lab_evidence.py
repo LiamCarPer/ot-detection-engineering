@@ -20,6 +20,7 @@ def _summary() -> dict:
 
 def test_capture_metadata_is_recorded() -> None:
     summary = _summary()
+    assert summary["decoders"]["modbus"] == "tshark"
     capture = summary["capture"]
     assert capture["path"]
     assert len(capture["sha256"]) == 64

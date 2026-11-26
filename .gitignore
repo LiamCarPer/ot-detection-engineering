@@ -16,9 +16,8 @@ target/
 # Generated / runtime artifacts
 build/
 dist/
-coverage/out/
-metrics/out/
 pipelines/out/
+deploy/evidence/lab-proof/
 
 # Local data downloads (see scripts/build_attack_catalog.py)
 ics-attack.json

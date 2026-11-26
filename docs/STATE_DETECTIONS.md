@@ -1,6 +1,6 @@
 # Stateful detections
 
-Three detections need more than a single event or a simple count. They live in
+Five detections need more than a single event or a simple count. They live in
 `rules/stateful/` and are evaluated by `tools/otde/stateful.py`:
 
 | Rule | What it needs | Technique |
@@ -8,6 +8,8 @@ Three detections need more than a single event or a simple count. They live in
 | Process Value Drift From Learned Baseline | Mean/std per asset and consecutive samples | T0831 |
 | Engineering Change Outside Approved Window | `metadata/change-calendar.yaml` | T0843 |
 | New Protocol Service Or Function On A Known Asset | Per-asset service/function profile | T0846 |
+| DNP3 Select Then Operate Pair | Two application functions in one window | T1692.001 |
+| Process Safety Envelope | Estimated level and valve state | T0831 |
 
 The family is separate from Sigma because the conditions are not expressible as
 `value_count` or `event_count`. Forcing them into a correlation rule would make
@@ -81,6 +83,24 @@ detection (`rules/baseline/baseline_new_source_asset.yml`).
 **Tuning:** regenerate the baseline after an approved protocol change, and review
 the diff.
 
+## 4. DNP3 select then operate
+
+**Rule:** `rules/stateful/stateful_dnp3_select_operate.yml`
+
+A DNP3 Select followed by an Operate against the same outstation inside the
+declared window is the normal two-step control sequence. The rule pairs the two
+functions, so a stray Select or a bare Operate is judged differently from a
+complete control operation.
+
+## 5. Process safety envelope
+
+**Rule:** `rules/stateful/stateful_process_safety_envelope.yml`
+
+The mass-balance estimator emits `process_update` samples with the estimated
+level, the reported level and the inlet valve state. The rule fires when the
+estimate is outside the envelope while the inlet is open, independently of the
+PLC's reported level.
+
 ## Evidence and reproduction
 
 ```bash
@@ -90,7 +110,7 @@ make stateful-check                     # the CI gate
 ```
 
 The evidence is committed at `deploy/evidence/stateful/summary.json`. It records
-the three rules, 15 labeled windows, the two change windows, and whether both
+the five rules, 31 labeled windows, the two change windows, and whether both
 baselines are current.
 
 ## What this proves and does not

@@ -9,7 +9,7 @@ BACKEND ?= loki
 RUST_DIR := tools
 CARGO ?= cargo
 
-.PHONY: help setup lint validate test rust security-preflight security-api-check security-sast security-sca security-actions security-secrets security-ai-check security-sbom yara yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder decoder-check collector collector-check baseline baseline-check conduit conduit-check stateful stateful-check perf perf-check fpr fpr-check lab-loki-check coverage emulate-validate purple purple-check case-study case-study-check health health-check metrics check clean
+.PHONY: help setup lint validate test rust security-preflight security-api-check security-sast security-sca security-actions security-secrets security-ai-check security-sbom yara yara-check demo convert convert-all deploy deploy-check suricata-check loki-check decoder decoder-check collector collector-check baseline baseline-check conduit conduit-check stateful stateful-check perf perf-check load-check fpr fpr-check lab-loki-check lab-benign-check lab-protocols-check lab-health-check lab-rules coverage emulate-validate purple purple-check purple-live case-study case-study-check health health-check metrics allowlists allowlists-check process-model process-model-check engine-parity parity-up lab-proof lab-proof-dry-run check clean
 
 help:
 	@echo "Targets:"
@@ -114,6 +114,7 @@ security-sbom: setup
 
 security-preflight: setup
 	$(PY) tools/check_action_pins.py
+	@test -f coverage/out/security_coverage.json || $(PY) coverage/security_coverage.py
 	$(PY) coverage/security_coverage.py --check
 
 security-coverage: setup
@@ -185,7 +186,7 @@ perf: setup
 perf-check: setup
 	$(PY) tools/perf_check.py --check
 
-LOAD_EVENTS ?= /tmp/benign-events.jsonl
+LOAD_EVENTS ?= deploy/evidence/load/corpus.jsonl
 
 load-check: setup
 	$(PY) tools/load_check.py --events "$(LOAD_EVENTS)" --target-eps 4000 --duration 5
@@ -288,5 +289,5 @@ metrics: setup
 check: lint validate test rust security-preflight yara-check decoder-check collector-check baseline-check conduit-check stateful-check perf-check fpr-check deploy-check purple-check case-study-check health-check allowlists-check process-model-check
 
 clean:
-	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out coverage/out tools/target
+	rm -rf $(VENV) .pytest_cache .ruff_cache pipelines/out tools/target
 	find . -type d -name __pycache__ -prune -exec rm -rf {} +

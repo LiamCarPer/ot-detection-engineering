@@ -1,6 +1,6 @@
 {
   "capture": {
-    "analyzed_at": "2026-11-26T06:49:57.955769+00:00",
+    "analyzed_at": "2026-11-26T12:22:28.011888+00:00",
     "bytes": 1099348789,
     "path": "/media/liamcarvajal/Storage/code/ot-security-lab/detection/logs/benign-24h.pcap",
     "sha256": "42dbea21d4550937f5a65b7032a5a973143e32d8660133fc2e7b726773bd12bc"
@@ -334,6 +334,10 @@
       },
       "total": 5
     }
+  },
+  "decoders": {
+    "modbus": "tshark",
+    "version": "TShark (Wireshark) 4.2.2 (Git v4.2.2 packaged as 4.2.2-1.1build3)."
   },
   "events": 1136470,
   "events_per_hour": 44651.17,

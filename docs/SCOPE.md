@@ -34,7 +34,7 @@ recorded run against that lab.
 - **The benign baseline is generated, not harvested.** It is 1,000 deterministic
   events from `tools/make_benign.py` (seed `20260101`). The Sigma single-event
   claim is `0/1,000` with a 95% Wilson upper bound of **0.38%**, not "0.0 FPR".
-  The corpus cycles 30 behavioural shapes, so the binomial interval over 1,000
+  The corpus cycles 37 behavioural shapes, so the binomial interval over 1,000
   rows overstates the effective sample size. Behaviour-baseline, conduit,
   correlation and stateful rules are measured separately in
   [`deploy/evidence/fpr/report.md`](../deploy/evidence/fpr/report.md); that report, not the Sigma

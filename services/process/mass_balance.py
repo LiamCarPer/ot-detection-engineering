@@ -128,7 +128,7 @@ def simulate(
             "service": "safety_monitor",
             "producer": "mass_balance",
             "asset": "PLC-01",
-            "event_type": "process_state",
+            "event_type": "process_update",
             "tank_level_pct": round(estimated, 2),
             "reported_level_pct": round(reported, 2),
             "divergence_pct": round(divergence, 2),
@@ -148,7 +148,7 @@ def simulate(
                     "event_type": "process_safety_violation",
                     "severity": "critical",
                     "actor": "external-write",
-                    "register": "HR0",
+                    "register": 0,
                     "value": 1,
                     "description": (
                         "External open command with the estimated tank level at or "

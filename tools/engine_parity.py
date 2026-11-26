@@ -14,7 +14,7 @@ covered by the local stateful/correlation harness and the live Loki run.
 
 Engines:
 
-- Splunk Free (``deploy/splunk/docker-compose.yml``) over the HEC-fed index.
+- Splunk Free (``services/parity/docker-compose.yml``) over the HEC-fed index.
 - OpenSearch (any cluster with the PPL plugin) over ``*-parity`` indices.
 - Kusto (``kustainer``) over the ``OTTelemetry`` table.
 

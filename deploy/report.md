@@ -71,7 +71,7 @@ Malcolm's full default ruleset enabled.
 | :--- | :--- |
 | Malcolm revision | `e60cbd07` |
 | Suricata | 8.0.4 RELEASE (`ghcr.io/idaholab/malcolm/suricata:26.04.1`) |
-| Rules loaded | 59188, 0 failed |
+| Rules loaded | 59185, 0 failed |
 | Duplicate signatures | 0 |
 | Evidence | `deploy/evidence/malcolm/` (`summary.json`, `alerts.json`) |
 

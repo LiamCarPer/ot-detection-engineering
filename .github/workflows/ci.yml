@@ -94,6 +94,13 @@ jobs:
       - name: Check the detection catalogue
         run: python tools/detection_health.py --check
 
+      - name: Check security, allowlist and process-model evidence
+        run: |
+          python tools/check_action_pins.py
+          python coverage/security_coverage.py --check
+          python tools/allowlists.py --check
+          python tools/process_model_check.py --check
+
       - name: Age stable rules against the real date
         run: python tools/detection_health.py --today
 
@@ -140,7 +147,7 @@ jobs:
           python metrics/compute.py
 
       - name: Check generated metrics and coverage are current
-        run: git diff --exit-code coverage/out metrics/out purple/results
+        run: git diff --exit-code coverage/out metrics/out
 
       - name: Upload coverage map and metrics
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4

@@ -1,6 +1,6 @@
 title: Process Safety Violation From Physics-Aware Monitor
 id: 2569c23f-8db1-428e-b708-251d73855980
-status: experimental
+status: stable
 description: |
   Detects a command that is protocol-valid and issued from an authorized
   writer, but that violates the physical safety envelope of the process, for

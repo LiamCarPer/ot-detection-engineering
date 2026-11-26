@@ -1,6 +1,6 @@
 title: DNP3 Control Operation From Unauthorized Master
 id: c56a5b89-e153-4ae5-aed9-2397f691b4d4
-status: experimental
+status: stable
 description: |
   Detects a DNP3 control operation (Select, Operate, Direct Operate or Direct
   Operate No Ack) issued by a master that is not an approved control master.

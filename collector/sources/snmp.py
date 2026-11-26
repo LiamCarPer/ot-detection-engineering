@@ -1,10 +1,9 @@
 """SNMP trap / poll JSON -> telemetry contract (``ot_snmp`` / ``snmp``).
 
 Reads JSON exported from ``snmptrapd`` or a poller — one object or an array per
-file — and normalizes it to the SNMP contract. The lab has no managed switch to
-poll, so the committed sample is a labelled export in the documented shape
-(``collector/samples/snmp/PROVENANCE.md``) rather than a live capture; the
-adapter itself is the same shape a real exporter produces.
+file — and normalizes it to the SNMP contract. The repository still ships the
+original labelled export as a fixture; the lab protocol window also runs a real
+net-snmp switch and poller, and the adapter consumes their JSONL directly.
 """
 
 from __future__ import annotations

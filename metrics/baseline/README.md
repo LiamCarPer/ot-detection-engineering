@@ -49,7 +49,7 @@ This is generated telemetry, not traffic captured from a plant. It checks that n
 rule fires on **modelled normal operation** and gives a sample size for a
 statistical bound; it does not estimate field false-positive volume. A real plant
 has vendor quirks, clock skew, partial sessions and long-tail traffic that a
-template generator cannot invent. The corpus cycles **30 behavioural shapes**, so
+template generator cannot invent. The corpus cycles **37 behavioural shapes**, so
 a binomial interval over 1,000 rows overstates the effective sample size.
 
 `metrics/out/fpr.md` measures every family separately. The Sigma single-event

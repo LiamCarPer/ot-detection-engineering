@@ -137,12 +137,27 @@ def sigma_correlation(events: list[dict]) -> dict[str, Any]:
     collection = SigmaCollection.load_ruleset([SIGMA_RULES_DIR])
     rules = [rule for rule in collection.rules if isinstance(rule, SigmaCorrelationRule)]
     per_rule = {}
+    per_rule_input = {}
     for rule in rules:
         per_rule[rule.title] = match_correlation(rule, events)
+        references = [
+            reference.rule
+            for reference in rule.referenced_rules
+            if reference.rule is not None and isinstance(reference.rule, SigmaRule)
+        ]
+        per_rule_input[rule.title] = sum(
+            1
+            for event in events
+            if any(match(reference, event) for reference in references)
+        )
     return {
         "rules": len(rules),
         "fired": [title for title, fired in per_rule.items() if fired],
         "per_rule": per_rule,
+        "per_rule_input": per_rule_input,
+        "not_exercised": [
+            title for title, count in per_rule_input.items() if count == 0
+        ],
     }
 
 
@@ -301,7 +316,9 @@ def render_markdown(report: dict[str, Any]) -> str:
     correlation = families["sigma_correlation"]
     lines.append(
         f"| Sigma correlation | {correlation['rules']} | "
-        f"{len(correlation['fired'])} fired on the corpus | "
+        f"{len(correlation['fired'])} fired; "
+        f"{correlation['rules'] - len(correlation['not_exercised'])}/"
+        f"{correlation['rules']} had referenced-rule input | "
         f"{'—' if not correlation['fired'] else 'see detail'} |"
     )
     baseline = families["baseline"]
@@ -359,6 +376,18 @@ def render_markdown(report: dict[str, Any]) -> str:
         lines.append(
             "- Conduit rules with benign matches: "
             + ", ".join(f"{title} ({count})" for title, count in sorted(noisy_conduit.items()))
+        )
+    if correlation.get("not_exercised"):
+        lines.append(
+            "- Correlation rules with no referenced-rule input on this corpus are "
+            "not a measured zero: "
+            + ", ".join(sorted(correlation["not_exercised"]))
+        )
+    if not stateful["fired"]:
+        lines.append(
+            "- Stateful: 0 fired. The engineering-change rule needs an "
+            "engineering-source write, which this corpus does not contain; its "
+            "held-out windows cover it."
         )
     if not (correlation["fired"] or stateful["fired"] or noisy_baseline or noisy_conduit):
         lines.append("- No correlation, baseline, conduit or stateful rule fired on benign input.")

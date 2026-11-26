@@ -83,7 +83,13 @@ Events from the physics-aware process safety monitor.
 | `asset` | string | Logical asset name (for example `plc_intake`). |
 | `register` | integer | Register targeted by the command. |
 | `value` | integer | Commanded value. |
-| `tank_level_pct` | number | Observed process state used for the safety decision. |
+| `tank_level_pct` | number | Estimated level used for the safety decision. |
+| `reported_level_pct` | number | Level reported by the PLC sensor, when available. |
+| `divergence_pct` | number | Absolute difference between estimate and report. |
+| `inlet_valve` | integer | Valve state (`0` closed, `1` open) at the sample. |
+| `inlet_flow` | number | Measured inlet flow (m3/s in the model). |
+| `outlet_flow` | number | Measured outlet flow (m3/s in the model). |
+| `producer` | string | `mass_balance` when the sample came from the independent estimator. |
 | `actor` | string | Source that issued the command. |
 | `response` | string | `none` or `auto_mitigated`. |
 
