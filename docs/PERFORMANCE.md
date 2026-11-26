@@ -96,13 +96,15 @@ every single-event Sigma rule, with a bounded queue.
 
 | Target | Achieved | Drops | p99 | Max queue |
 | ---: | ---: | ---: | ---: | ---: |
-| 4,000 events/s | ~4,000 events/s | 0 | ~10.7 ms | 72 |
-| 20,000 events/s | ~5,000 events/s | ~64,897 (64.9%) | ~2.25 s | 10,000 |
+| 4,000 events/s | **~3,375 events/s achieved** | 0 | ~1.2 s | 4,113 |
+| 20,000 events/s | ~3,050 events/s | ~70,816 (70.8%) | ~3.8 s | 10,000 |
 
-At 4,000 EPS the matcher keeps up with no drops; the p99 includes queue wait.
-At 20,000 EPS the consumer saturates, the queue fills, and the producer drops
-64.9% rather than growing without bound. This is a single-process Python
-matcher, not a production sensor or a pcap replay.
+At a 4,000 EPS target the producer achieves ~3,375 EPS with no drops; the
+Python producer loop, not the bounded queue, is the limit at this rate. At
+20,000 EPS the consumer saturates, the queue fills, and the producer drops
+~70.8% rather than growing without bound. This is a single-process Python
+matcher on the real Modbus+flow corpus, not a production sensor or a pcap
+replay.
 
 The event file is produced from a capture:
 

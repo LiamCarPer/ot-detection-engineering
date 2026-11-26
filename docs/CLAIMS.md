@@ -36,7 +36,7 @@ not current and must not be used.
 | Sensor health | **Detection Service Stopped firing live** in the lab ruler |
 | Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
 | Detection catalogue | **73 rules, 6 stable, 67 experimental, 12 with observed lab volume, 0 blocking gaps** |
-| Performance | **7.8–11.0M decoder frames/s; ~2,800 replay events/s; 4,000 events/s sustained, 0 drops** on the recorded host |
+| Performance | **7.8–11.0M decoder frames/s; ~2,800 replay events/s; ~3,375 events/s achieved at a 4,000 target, 0 drops** on the recorded host |
 | Engine parity | **30 / 30 single-event rules** execute in Splunk Free, OpenSearch PPL and Kusto and return exactly the matcher's event set |
 | Detection allowlists | **6 sets generated from the asset inventory**; every Sigma filter and native exclusion is bound to one |
 | Process safety | **Independent mass balance catches an unsafe command through a 60% spoofed level** where a shadow monitor does not |
