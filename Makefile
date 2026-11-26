@@ -52,6 +52,7 @@ help:
 	@echo "  fpr-check        Fail if the all-family false-positive report has drifted"
 	@echo "  lab-loki-check   Refresh the OT-Security-Lab ruler evidence (lab required)"
 	@echo "  lab-benign-check Measure the network families on a lab PCAP (Docker required)"
+	@echo "  lab-protocols-check Measure the benign protocol window with Loki NDR events"
 	@echo "  lab-health-check Capture the live sensor-health rule proof"
 	@echo "  lab-rules        Copy the generated Loki rules into the lab and reload"
 	@echo "  coverage         Generate the ATT&CK for ICS coverage map"
@@ -203,6 +204,14 @@ LAB_PCAP ?= $(LAB_DIR)/detection/logs/benign-24h.pcap
 
 lab-benign-check: setup
 	$(PY) tools/benign_lab_check.py --pcap "$(LAB_PCAP)"
+
+LAB_PROTOCOL_PCAP ?= $(LAB_DIR)/detection/logs/benign-protocols-30m.pcap
+
+lab-protocols-check: setup
+	$(PY) tools/benign_lab_check.py --pcap "$(LAB_PROTOCOL_PCAP)" \
+		--loki-url "$${LAB_LOKI_URL:-http://localhost:3100}" \
+		--snmp-events "$(LAB_DIR)/detection/logs/snmp-events.jsonl" \
+		--out deploy/evidence/benign-protocols
 
 lab-health-check: setup
 	$(PY) tools/lab_health_check.py

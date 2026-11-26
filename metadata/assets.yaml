@@ -39,6 +39,12 @@ assets:
     zone: ops
     criticality: high
     services: [dnp3, opcua, s7comm]
+  - ip: 172.23.0.30
+    role: managed_switch
+    zone: ops
+    criticality: medium
+    services: [snmp]
+    note: Lab SNMP switch; heartbeats and link events for the SNMP rules.
   - ip: 172.24.0.10
     role: attacker
     zone: it

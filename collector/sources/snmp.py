@@ -35,12 +35,24 @@ OID_EVENTS: dict[str, str] = {
 
 def events(paths: Iterable[Path]) -> Iterator[dict[str, Any]]:
     for path in paths:
+        text = Path(path).read_text(encoding="utf-8")
         try:
-            data = json.loads(Path(path).read_text(encoding="utf-8"))
-        except json.JSONDecodeError as error:
-            LOGGER.warning("%s: skipping malformed JSON: %s", Path(path).name, error)
-            continue
-        records = data if isinstance(data, list) else [data]
+            data = json.loads(text)
+            records = data if isinstance(data, list) else [data]
+        except json.JSONDecodeError:
+            # A live poller appends one object per line; the committed sample is
+            # a JSON array. Accept both shapes.
+            try:
+                records = [
+                    json.loads(line)
+                    for line in text.splitlines()
+                    if line.strip()
+                ]
+            except json.JSONDecodeError as error:
+                LOGGER.warning(
+                    "%s: skipping malformed JSON: %s", Path(path).name, error
+                )
+                continue
         for record in records:
             try:
                 yield _record(record)

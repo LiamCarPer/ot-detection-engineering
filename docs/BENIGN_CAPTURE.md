@@ -48,6 +48,40 @@ host, auth, PLC-diagnostic, sensor-health and process-safety rules. The capture
 has no traffic for them, or their source is not a network packet. That is a
 coverage limit, not a clean result.
 
+## Benign protocol window
+
+The 25-hour window is Modbus and flows only. A second, short window runs the
+benign DNP3/OPC UA/S7 pollers from the approved engineering client and evaluates
+the same families with two additions:
+
+- the pcap supplies flows and Modbus;
+- the lab's DPI producers supply normalized DNP3, OPC UA and S7comm events from
+  Loki, because the offline pcap decode is weaker for those protocols.
+
+The analyzer merges the two streams, adds the SNMP exporter's JSONL, and reports
+input coverage per rule. The committed 30-minute window is:
+
+| Metric | Value |
+| :-- | --: |
+| Window | 0.5 h |
+| Events | 52,811 |
+| Flows / Modbus | 35,382 / 15,525 |
+| DNP3 / OPC UA / S7comm | 130 / 1,170 / 520 |
+| SNMP heartbeats | 83 |
+| Sigma rules with input | **22 / 30** |
+| Sigma / native FPs | **0 / 0** |
+| Lab-trained baseline | **0 / 38,276** |
+
+The 8 rules still without input need a source a network capture cannot carry
+(firewall iptables records, HMI auth, host Sysmon, PLC diagnostics, watchdog) or
+an attack (process safety). The Modbus write logsources have input but the
+window contains no writes, so their write path is not asserted by this window.
+
+The remaining unexercised rules are firewall (no iptables records), SNMP (no
+device yet), host/auth/PLC diagnostics and sensor health (not network packets),
+and process safety (needs an unsafe command, which is an attack, not benign
+traffic).
+
 ## Findings
 
 1. **The first 25-hour run exposed 3,576 flow false positives.** All were

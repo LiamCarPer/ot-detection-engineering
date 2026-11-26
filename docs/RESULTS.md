@@ -24,6 +24,7 @@ per-tactic rationale for the gaps is in the README.
 | Sigma single-event FPR | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events; 30 behavioural shapes. |
 | All-family FPR (generated) | baseline, conduit, stateful, correlation, native, YARA all 0 | Same corpus plus benign captures and fixtures; `deploy/evidence/fpr/report.md`. |
 | Lab benign capture | 0 Sigma/native FPs on **1,136,470 events over 25.45 h**; lab-trained baseline **0 / 1,041,580** test events | 9 / 30 Sigma rules had input; 21 are explicitly unexercised; committed baseline domain shift disclosed. `deploy/evidence/benign-lab/`. |
+| Benign protocol window | 0 Sigma/native FPs on **52,811 events over 0.5 h**; lab baseline **0 / 38,276** | **22 / 30** Sigma rules had input, including DNP3, OPC UA, S7comm and SNMP; `deploy/evidence/benign-protocols/`. |
 | Held-out single-event recall | 54 / 54 (95% CI 0.9336–1.0) | 2 labeled positives per rule, authored separately from the fixtures. |
 | Held-out single-event precision | 54 / 54 (95% CI 0.9336–1.0) | The same positives against 1,024 held-out negatives per rule. |
 | Held-out single-event false-positive rate | 0 / 1,024 per rule (95% CI 0.0–0.0037) | 1,000 generated at a different seed plus one near miss per rule. |

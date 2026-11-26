@@ -17,10 +17,13 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import subprocess  # nosec B404 - fixed Docker commands
 import sys
 import tempfile
+import urllib.parse
+import urllib.request
 from collections import Counter
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -47,7 +50,7 @@ from fpr import (  # noqa: E402
 
 from baseline.build import build as build_baseline  # noqa: E402
 from collector.contract import event as contract_event  # noqa: E402
-from collector.sources import suricata, zeek  # noqa: E402
+from collector.sources import snmp, suricata, zeek  # noqa: E402
 from tools.otde.baseline import load_baseline_rule, match_baseline  # noqa: E402
 from tools.otde.rules import (  # noqa: E402
     SIGMA_RULES_DIR,
@@ -210,7 +213,7 @@ def _int(value: Any) -> int | None:
 
 
 def _normalized_events(
-    suricata_dir: Path, zeek_dir: Path, pcap: Path
+    suricata_dir: Path, zeek_dir: Path, pcap: Path, include_dnp3: bool = True
 ) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
     eve = suricata_dir / "eve.json"
@@ -219,7 +222,9 @@ def _normalized_events(
     # conn.log is the flow baseline; dnp3.log carries the DNP3 function. Modbus
     # comes from tshark when it is available because Zeek omits register and
     # quantity; the Zeek log is the fallback.
-    logs = [zeek_dir / "conn.log", zeek_dir / "dnp3.log"]
+    logs = [zeek_dir / "conn.log"]
+    if include_dnp3:
+        logs.append(zeek_dir / "dnp3.log")
     modbus = _tshark_modbus(pcap)
     if modbus:
         events.extend(modbus)
@@ -397,6 +402,118 @@ def _coverage(events: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+LOKFMT_PAIR = re.compile(r'([A-Za-z_][A-Za-z0-9_.]*)=("(?:[^"\\]|\\.)*"|\S*)')
+INT_FIELDS = {
+    "function_code",
+    "register",
+    "register_end",
+    "quantity",
+    "link_source",
+    "link_destination",
+    "unit_id",
+    "transaction_id",
+    "request_id",
+    "service_id",
+    "secure_channel_id",
+    "sequence_number",
+    "rosctr",
+    "parameter_length",
+    "pdu_reference",
+    "exception_code",
+    "event_id",
+    "dst_port",
+    "src_port",
+    "status",
+    "object_group",
+    "control_code",
+    "iin",
+    "bytes",
+    "packets",
+}
+FLOAT_FIELDS = {"tank_level_pct", "duration", "value"}
+
+
+def _logfmt(line: str) -> dict[str, Any]:
+    fields: dict[str, Any] = {}
+    for key, raw in LOKFMT_PAIR.findall(line):
+        value = raw[1:-1] if raw.startswith('"') and raw.endswith('"') else raw
+        if key in INT_FIELDS:
+            try:
+                fields[key] = int(value)
+                continue
+            except ValueError:
+                pass
+        elif key in FLOAT_FIELDS:
+            try:
+                fields[key] = float(value)
+                continue
+            except ValueError:
+                pass
+        fields[key] = value
+    return fields
+
+
+def _loki_events(
+    base_url: str, events: list[dict[str, Any]], limit: int = 5000
+) -> list[dict[str, Any]]:
+    """Read the lab's normalized NDR/process/firewall events for the PCAP window.
+
+    The lab's DPI producers already decode OPC UA and S7comm (which tshark's
+    export is awkward for) and push logfmt lines to Loki. Reuse that decoded
+    stream for the offline family evaluation; the pcap still supplies flows and
+    Modbus.
+    """
+    moments = []
+    for event in events:
+        value = event.get("timestamp")
+        if not isinstance(value, str):
+            continue
+        try:
+            moments.append(datetime.fromisoformat(value.replace("Z", "+00:00")))
+        except ValueError:
+            continue
+    if len(moments) < 2:
+        return []
+    start_ns = int(min(moments).timestamp() * 1_000_000_000)
+    end_ns = int(max(moments).timestamp() * 1_000_000_000)
+    query = '{job=~"ot_ndr|ot_process|ot_firewall|ot_snmp|ot_flow"}'
+    params = urllib.parse.urlencode(
+        {
+            "query": query,
+            "start": start_ns,
+            "end": end_ns,
+            "limit": limit,
+            "direction": "forward",
+        }
+    )
+    url = f"{base_url.rstrip('/')}/loki/api/v1/query_range?{params}"
+    with urllib.request.urlopen(url, timeout=120) as response:  # nosec B310
+        payload = json.loads(response.read().decode("utf-8"))
+    if payload.get("status") != "success":
+        raise RuntimeError(f"Loki query failed: {payload}")
+    seen: set[tuple] = set()
+    converted: list[dict[str, Any]] = []
+    for stream in payload["data"]["result"]:
+        labels = stream.get("stream", {})
+        job = labels.get("job", "")
+        service = labels.get("service") or labels.get("service_name")
+        if not job or not service:
+            continue
+        product = job
+        for raw_ns, line in stream.get("values", []):
+            fields = _logfmt(line)
+            if not fields:
+                continue
+            key = (raw_ns, product, service, tuple(sorted(fields.items())))
+            if key in seen:
+                continue
+            seen.add(key)
+            converted.append(
+                contract_event(product, service, int(raw_ns) / 1_000_000_000, **fields)
+            )
+    return converted
+
+
 def _observed_span(
     events: list[dict[str, Any]],
 ) -> tuple[float, float | None, str | None, str | None]:
@@ -421,7 +538,12 @@ def _observed_span(
     )
 
 
-def build(pcap: Path, events_out: Path | None = None) -> dict[str, Any]:
+def build(
+    pcap: Path,
+    events_out: Path | None = None,
+    loki_url: str | None = None,
+    snmp_events: Path | None = None,
+) -> dict[str, Any]:
     work = Path(tempfile.mkdtemp(prefix="otde-benign-lab-"))
     local = work / "capture.pcap"
     shutil.copyfile(pcap, local)
@@ -431,7 +553,28 @@ def build(pcap: Path, events_out: Path | None = None) -> dict[str, Any]:
     alerts = [
         record for record in suricata_records if record.get("event_type") == "alert"
     ]
-    events = _normalized_events(work / "suricata", work / "zeek", local)
+    events = _normalized_events(
+        work / "suricata", work / "zeek", local, include_dnp3=not loki_url
+    )
+    if loki_url:
+        events.extend(_loki_events(loki_url, events))
+    if snmp_events and snmp_events.exists():
+        moments = [
+            datetime.fromisoformat(event["timestamp"].replace("Z", "+00:00"))
+            for event in events
+            if isinstance(event.get("timestamp"), str)
+        ]
+        if moments:
+            first, last = min(moments), max(moments)
+            for event in snmp.events([snmp_events]):
+                try:
+                    moment = datetime.fromisoformat(
+                        event["timestamp"].replace("Z", "+00:00")
+                    )
+                except (KeyError, ValueError):
+                    continue
+                if first <= moment <= last:
+                    events.append(event)
     coverage = _coverage(events)
     lab_baseline = _lab_baseline(events)
 
@@ -605,13 +748,26 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pcap", required=True)
     parser.add_argument("--out", default=str(OUT_DIR))
     parser.add_argument(
+        "--loki-url",
+        default=None,
+        help="Read normalized NDR/process/firewall events from the lab's Loki",
+    )
+    parser.add_argument(
+        "--snmp-events",
+        default=None,
+        help="SNMP exporter JSONL from the benign protocol window",
+    )
+    parser.add_argument(
         "--events-out",
         default=None,
         help="Optional JSONL path for the normalized events, for a load replay",
     )
     args = parser.parse_args(argv)
     report = build(
-        Path(args.pcap), Path(args.events_out) if args.events_out else None
+        Path(args.pcap),
+        Path(args.events_out) if args.events_out else None,
+        args.loki_url,
+        Path(args.snmp_events) if args.snmp_events else None,
     )
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)

@@ -26,6 +26,7 @@ not current and must not be used.
 | Detection content | **30 Sigma + 7 correlation + 4 YARA + 21 native + 5 stateful**, plus 3 baseline + 3 conduit = 73 catalogued rules |
 | Benign baseline (generated) | **Sigma single-event: 0 / 1,000 generated events**, 95% Wilson upper bound **0.38%**; all-family report in `deploy/evidence/fpr/report.md` |
 | Lab benign capture | **25.45 h, 1,136,470 events, 0 Sigma/native FPs** from the 9 / 30 rules with input; lab-trained baseline **0 / 1,041,580** |
+| Benign protocol window | **0.5 h, 52,811 events, 0 Sigma/native FPs**; **22 / 30** Sigma rules had input, including DNP3, OPC UA, S7comm and SNMP; lab-trained baseline **0 / 38,276** |
 | Held-out single-event | **54 / 54** positives, **0** false positives over 1,024 negatives per rule |
 | Held-out correlation | **13 / 13** positive windows, **0** false positives over 15 negative windows |
 | Held-out YARA | **8 / 8** artifacts, **0** false positives over 8 shared negatives |
@@ -65,6 +66,7 @@ not current and must not be used.
 | Every rule exclusion resolves to a declared allowlist whose members exist with the declared roles | Verified | `metadata/allowlists.generated.yaml` | `make allowlists-check` |
 | A mass-balance estimate detects an unsafe command while the reported level is spoofed; the normal cycle stays quiet | Verified (model) | `deploy/evidence/process-model/` | `make process-model-check` |
 | The real-traffic analyser decodes Modbus and flows, reports 0 Sigma/native FPs over 25.45 h, and labels every rule without input as unexercised | Verified | `deploy/evidence/benign-lab/` | `make lab-benign-check LAB_PCAP=...` |
+| A benign DNP3/OPC UA/S7/SNMP window has input for 22/30 Sigma rules and produces no false positives | Verified | `deploy/evidence/benign-protocols/` | `make lab-protocols-check` |
 | Every correlation rule converts to Loki, Splunk, OpenSearch and Sentinel | Verified | `deploy/manifest.json` | `make convert-all` |
 | The committed deployment bundle cannot drift from the rules | Verified | `deploy/`, `pipelines/deploy.py --check` | `make deploy-check` |
 | Coverage, fixture metrics and held-out metrics are derived from rule content | Verified | `coverage/`, `metrics/` | `make coverage`, `make metrics`, `tests/test_coverage.py`, `tests/test_metrics.py` |
