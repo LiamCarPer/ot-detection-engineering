@@ -1,65 +1,90 @@
 # Lab benign capture
 
-The generated corpus is a model. This is the real-traffic counterpart: a PCAP
-captured at the lab gateway, with no adversary traffic, normalized through the
-collector and run through every network detection family.
+The generated corpus is a model. This is the real-traffic counterpart: a
+25.45-hour PCAP captured at the lab gateway, with no adversary traffic,
+normalized through the collector and run through the network detection families.
 
 ## Method
 
 - Capture on every non-loopback gateway interface with a Scapy `PcapWriter`
   (`ot-security-lab/lab-environment/scripts/benign_capture.py`). The gateway is
   the only multi-homed container, so it sees every inter-zone flow. A routed
-  frame is recorded twice, on the ingress and the egress interface; the raw
-  packet count is therefore roughly doubled. Suricata and Zeek normalize per
-  flow, so the family measurements count flows, not frames.
-- No attack scenario is run during the capture. The lab's normal HMI, historian
-  and simulator polling is the background traffic.
-- Run Suricata with the repository's rules and Zeek over the capture; normalize
-  both through `collector/`.
-- Apply the same all-family FPR functions as `metrics/fpr.py`.
-- Host, auth, PLC-diagnostic and sensor-health events are not present in a
-  network capture; the report labels them **not observed**, not clean.
+  frame is recorded twice, on ingress and egress; Suricata and Zeek normalize
+  per flow, so the family measurements count flows, not frames.
+- Run Zeek with **`-C`** and the `modbus`/`dnp3` analyzers. Without `-C` the
+  capture's checksum offload makes Zeek discard packets and split connections:
+  on the 9.5-minute pilot the flow count was **13,949 instead of 5,881**.
+- Run Suricata with the repository rules and checksum validation disabled for
+  the same reason.
+- Decode Modbus with `tshark -Y modbus`, not only Zeek's `modbus.log`: the Zeek
+  log has direction and function but no register or quantity, so block-read and
+  enumeration rules cannot be evaluated from it.
+- Apply the same family functions as `metrics/fpr.py`, then report **per-rule
+  input counts**. A rule with zero events from its own logsource is **not
+  exercised**; its zero is not a measurement.
+- Learn the behaviour baseline on the first two hours and test on the remaining
+  23.45 hours. The committed baseline was learned from the generated seed and is
+  reported separately as a domain shift, not a false-positive rate.
 
-## Pilot result
+## Result
 
-The pilot is 9.5 minutes of background traffic (7.37 MB, 13,949 normalized
-events, 88,305 events/hour):
-
-| Family | Result |
+| Metric | Value |
 | :-- | --: |
-| Sigma single-event | 0 / 13,949 events |
-| Sigma correlation | 0 fired |
-| Behaviour baseline | 0 events |
-| Conduit | 0 events |
-| Stateful | 0 fired |
+| Window | 25.45 h |
+| Normalized events | 1,136,470 (44,651 / h) |
+| Flows | 890,723 |
+| Modbus messages | 245,747 |
+| Sigma single-event FPs | 0 |
+| Sigma correlation | 0 fired (3 / 7 rules had input) |
+| Lab-trained baseline | 0 events over 1,041,580 test events |
+| Committed baseline (domain shift) | 159,785 new pairs, 73,800 new assets |
+| Stateful | 0 fired (2 / 5 rules had input) |
+| Conduit / firewall | not exercised (no iptables records in a PCAP) |
 | Native Suricata | 0 alerts |
+| Sigma rules with input | 9 / 30 |
 
-The committed evidence under `deploy/evidence/benign-lab/` is the last completed
-capture: the report records its observed span, so the pilot and the 24-hour run
-cannot be confused. The pilot was a pipeline validation and a first real-traffic
-result; the 24-hour run replaces it when the writer stops.
+The 21 unexercised Sigma rules are the DNP3, OPC UA, S7comm, SNMP, firewall,
+host, auth, PLC-diagnostic, sensor-health and process-safety rules. The capture
+has no traffic for them, or their source is not a network packet. That is a
+coverage limit, not a clean result.
 
-## 24-hour run
+## Findings
 
-The 24-hour capture is at
-`ot-security-lab/detection/logs/benign-24h.pcap`. When it completes:
+1. **The first 25-hour run exposed 3,576 flow false positives.** All were
+   `REJ` from the approved HMI (`172.22.0.10`) to one PLC (`172.21.0.11:502`):
+   ordinary reconnect churn against a controller that was not accepting a new
+   session. The single-event rule now covers **established-session resets**
+   (`RSTO`/`RSTR`) and is named
+   `ot_flow_industrial_service_reset.yml`; the benign capture has no resets, and
+   the result is zero. Refusal volume belongs in a correlation or the health
+   rules, not a per-packet medium alert.
+2. **The committed baseline is environment-specific.** Run unchanged against the
+   lab it flags 159,785 new pairs and 73,800 new assets. A baseline learned on
+   the first two hours and tested on the remaining 23.45 hours flags zero.
+3. **Zeek was silently dropping packets.** `-C` changed the pilot from 13,949 to
+   5,881 flows. The analyser now records the flag and the corrected count.
+4. **The capture outlived its timeout.** `sniff(timeout=86400)` with several
+   interfaces did not stop; the run reached 25.45 h. The lab script now uses
+   `AsyncSniffer` with an explicit wall-clock deadline.
+
+## Reproduce
 
 ```bash
 make lab-benign-check LAB_PCAP=/path/to/benign-24h.pcap
 ```
 
-This rewrites `deploy/evidence/benign-lab/` with the full capture. The report
-records the capture hash, size, observed span, normalized event rate and
-per-family result. `scripts/finalize_benign_capture.sh` performs the same step
-once the writer stops and the PCAP has been idle for five minutes; it is safe to
-leave running because it only waits and then reads the file.
+The committed evidence under `deploy/evidence/benign-lab/` is the capture above;
+the report records its window, hash and per-rule coverage.
 
 ## What this does not prove
 
 - One Dockerised lab, not a plant. There is no physical process, no enterprise
   background load beyond the lab's containers, and no 24/7 operation.
-- The network capture cannot see host, auth, PLC diagnostics or sensor health;
-  those families are measured on their own samples.
-- Suricata and Zeek are the sensors; a different sensor mix will produce a
-  different field set and a different false-positive profile.
-- Zero network false positives in one capture is a bound, not a guarantee.
+- The network capture cannot see host, auth, PLC diagnostics, sensor health or
+  firewall log records; those families are measured on their own samples.
+- DNP3, OPC UA, S7comm, SNMP and Modbus writes are not present in this window.
+  A separate benign protocol capture is the next step for those rules.
+- **56% of the flows are the lab's own Loki/InfluxDB observability traffic**
+  (490,821 Loki + 12,685 InfluxDB of 890,723 flows). The result is a lab
+  baseline, not a plant baseline.
+- Zero false positives in one window is a bound, not a guarantee.

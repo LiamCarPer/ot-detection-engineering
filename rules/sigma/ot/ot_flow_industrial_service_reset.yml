@@ -1,0 +1,46 @@
+title: Connection Reset To An Industrial Service
+id: 8d2f5a90-6c41-4b7e-a3d8-1f9e4c02b6a7
+status: experimental
+description: |
+  Detects an established flow to an industrial service that the peer reset
+  (`RSTO`/`RSTR`) rather than closed normally. A reset of an established session
+  against a controller, outstation or OPC UA server is how a denial-of-control
+  attempt looks from the network: the service was working and is now tearing down
+  every session.
+
+  A refused connection (`REJ`) is deliberately excluded. It says the service was
+  not accepting work at all — common during a controller restart, a connection
+  limit or an HMI reconnect — and a 25-hour benign lab capture produced 3,576 of
+  them from one approved HMI. Volume and availability belong in a correlation or
+  the health rules; this rule keeps the signal that an established session was
+  reset.
+references:
+  - https://attack.mitre.org/techniques/T0813/
+author: Liam Carvajal
+date: 2026-11-04
+logsource:
+  product: ot_flow
+  service: flow
+detection:
+  selection_state:
+    flow_state:
+      - RSTO
+      - RSTR
+  selection_service:
+    dst_port:
+      - 102
+      - 502
+      - 4840
+      - 20000
+  condition: selection_state and selection_service
+fields:
+  - src_ip
+  - dst_ip
+  - dst_port
+  - flow_state
+falsepositives:
+  - A controller restarting and resetting its established sessions
+  - A network device or load balancer resetting idle sessions
+level: medium
+tags:
+  - attack.t0813

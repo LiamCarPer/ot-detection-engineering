@@ -68,7 +68,7 @@
         "rules/sigma/ot/ot_firewall_control_zone_egress.yml": 0,
         "rules/sigma/ot/ot_firewall_cross_zone_violation.yml": 0,
         "rules/sigma/ot/ot_firewall_enterprise_control_service.yml": 0,
-        "rules/sigma/ot/ot_flow_industrial_service_refused.yml": 0,
+        "rules/sigma/ot/ot_flow_industrial_service_reset.yml": 0,
         "rules/sigma/ot/ot_flow_large_transfer.yml": 0,
         "rules/sigma/ot/ot_hmi_login_failure.yml": 0,
         "rules/sigma/ot/ot_host_suspicious_modbus_client.yml": 0,

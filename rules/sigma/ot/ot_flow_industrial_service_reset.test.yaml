@@ -1,6 +1,6 @@
 cases:
-  - name: a Modbus connection is refused
-    expect: match
+  - name: a refused Modbus connection is reconnect noise, not a reset
+    expect: no_match
     event:
       product: ot_flow
       service: flow
@@ -10,6 +10,18 @@ cases:
       dst_port: 502
       proto: tcp
       flow_state: REJ
+
+  - name: an established Modbus session is reset by the controller
+    expect: match
+    event:
+      product: ot_flow
+      service: flow
+      timestamp: "2026-11-05T09:01:02Z"
+      src_ip: 172.22.0.10
+      dst_ip: 172.21.0.10
+      dst_port: 502
+      proto: tcp
+      flow_state: RSTO
 
   - name: an S7 connection is reset by the controller
     expect: match
@@ -45,9 +57,9 @@ cases:
       dst_ip: 172.25.0.2
       dst_port: 443
       proto: tcp
-      flow_state: REJ
+      flow_state: RSTO
 
-  - name: a refused flow with no destination port cannot be attributed to a service
+  - name: a reset with no destination port cannot be attributed to a service
     expect: no_match
     event:
       product: ot_flow
@@ -56,9 +68,9 @@ cases:
       src_ip: 172.24.0.10
       dst_ip: 172.21.0.10
       proto: tcp
-      flow_state: REJ
+      flow_state: RSTO
 
-  - name: a no-reply connection is a probe, not a refusal
+  - name: a no-reply connection is a probe, not a reset
     expect: no_match
     event:
       product: ot_flow

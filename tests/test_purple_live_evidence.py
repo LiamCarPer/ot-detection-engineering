@@ -46,9 +46,10 @@ def test_mttd_is_measured() -> None:
     assert mttd["max"] >= mttd["mean"]
 
 
-def test_the_process_safety_miss_is_visible_not_hidden() -> None:
+def test_the_process_safety_step_is_recorded_with_its_outcome() -> None:
     entry = _summary()["steps"]["process-safety-violation"]
     assert entry["runs"] == 3
-    # The lab's counter model is the current limitation; the step must be present
-    # and report its misses rather than being dropped from the plan.
-    assert entry["misses"]
+    assert entry["expected"]
+    # The step must be present and account for every run, whether it detected or
+    # missed. The timed stimulus is the current fix; a miss is reported, not hidden.
+    assert entry["detected"] + len(entry["misses"]) == entry["runs"]

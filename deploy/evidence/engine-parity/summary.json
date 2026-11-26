@@ -272,7 +272,7 @@
         "status": "pass"
       }
     },
-    "rules/sigma/ot/ot_flow_industrial_service_refused.yml": {
+    "rules/sigma/ot/ot_flow_industrial_service_reset.yml": {
       "expected": [
         "e00040",
         "e00041"

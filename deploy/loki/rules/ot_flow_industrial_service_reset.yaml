@@ -1,0 +1,24 @@
+# source: rules/sigma/ot/ot_flow_industrial_service_reset.yml
+groups:
+- name: ot_flow_industrial_service_reset
+  rules:
+  - alert: Connection_Reset_To_An_Industrial_Service
+    annotations:
+      author: Liam Carvajal
+      description: "Detects an established flow to an industrial service that the\
+        \ peer reset\n(`RSTO`/`RSTR`) rather than closed normally. A reset of an established\
+        \ session\nagainst a controller, outstation or OPC UA server is how a denial-of-control\n\
+        attempt looks from the network: the service was working and is now tearing\
+        \ down\nevery session.\n\nA refused connection (`REJ`) is deliberately excluded.\
+        \ It says the service was\nnot accepting work at all \u2014 common during\
+        \ a controller restart, a connection\nlimit or an HMI reconnect \u2014 and\
+        \ a 25-hour benign lab capture produced 3,576 of\nthem from one approved HMI.\
+        \ Volume and availability belong in a correlation or\nthe health rules; this\
+        \ rule keeps the signal that an established session was\nreset.\n"
+      summary: Connection Reset To An Industrial Service
+    expr: sum(count_over_time({job=~".+", service="flow"} | logfmt | (flow_state=~`(?i)^RSTO$`
+      or flow_state=~`(?i)^RSTR$`) and (dst_port=102 or dst_port=502 or dst_port=4840
+      or dst_port=20000) | line_format "{{.src_ip}} {{.dst_ip}} {{.dst_port}} {{.flow_state}}"
+      [1m])) or vector(0) > 0
+    labels:
+      severity: medium

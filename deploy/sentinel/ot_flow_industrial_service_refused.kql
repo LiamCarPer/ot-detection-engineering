@@ -1,3 +1,0 @@
-// source: rules/sigma/ot/ot_flow_industrial_service_refused.yml
-OTTelemetry
-| where (flow_state in~ ("REJ", "RSTO", "RSTR")) and (dst_port in~ ("102", "502", "4840", "20000"))

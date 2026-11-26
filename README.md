@@ -43,10 +43,14 @@ prove.
   response rule that could not attribute the responder and was withdrawn, a DNP3
   allowlist that missed the benign master, and a Suricata exception rule that
   used invalid syntax. The point is the loop, not a perfect first draft.
-- **What it is not.** The benign corpus is generated, the lab is a Dockerised
-  plant, and the purple-team evidence is an 8-step alert-signal replay, a
-  separate 2-step MTTD run and a 7-step live run. Those are limitations, not
-  footnotes.
+- **What it is not.** The generated benign corpus is a model, the lab is a
+  Dockerised plant, and the purple-team evidence is an 8-step alert-signal
+  replay, a separate 2-step MTTD run and a 7-step live run. Those are
+  limitations, not footnotes.
+- **What the real capture adds.** A 25.45-hour benign gateway capture, decoded
+  with Zeek `-C` and Modbus DPI, gives 1.14M events with zero false positives
+  from the 9 Sigma single-event rules that have input. The 21 rules without
+  input are labelled unexercised, not clean.
 
 ## Case study: 151 alerts in 160 seconds
 
@@ -114,7 +118,8 @@ by `tests/test_claims.py`.
 | Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s; 4,000 events/s sustained with 0 drops, 20,000 saturates and drops | Release build on the recorded host; small example frames; per-frame p99, see `docs/PERFORMANCE.md`. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule matches against its own committed fixtures. A regression check, not field precision. |
 | Sigma single-event FPR | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events across every stream the Sigma rules consume. The corpus has 30 behavioural shapes, so the binomial bound overstates effective N. |
-| All-family FPR | baseline, conduit, stateful, correlation, native and YARA all 0 | Same corpus plus the committed benign captures and fixtures; see [`deploy/evidence/fpr/report.md`](deploy/evidence/fpr/report.md). |
+| All-family FPR (generated) | baseline, conduit, stateful, correlation, native and YARA all 0 | Same corpus plus the committed benign captures and fixtures; see [`deploy/evidence/fpr/report.md`](deploy/evidence/fpr/report.md). |
+| Lab benign capture (25.45 h) | 0 Sigma/native FPs on 1,136,470 events; lab-trained baseline 0 / 1,041,580 test events | 9 / 30 Sigma rules had input; DNP3, OPC UA, S7, SNMP, firewall, host/auth/PLC/health and process rules are unexercised. See [`docs/BENIGN_CAPTURE.md`](docs/BENIGN_CAPTURE.md). |
 | Held-out single-event recall | 54 / 54 (95% CI 0.9336–1.0) | Labeled positives authored separately from the rule fixtures. |
 | Held-out single-event precision | 54 / 54 (95% CI 0.9336–1.0) | Same positives against 1,024 held-out negatives per rule. |
 | Held-out correlation recall | 13 / 13 positive windows (95% CI 0.7719–1.0) | Window-level across six correlation rules. |

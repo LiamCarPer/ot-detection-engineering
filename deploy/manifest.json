@@ -67,9 +67,9 @@
       "backend": "loki"
     },
     {
-      "source": "rules/sigma/ot/ot_flow_industrial_service_refused.yml",
-      "source_sha256": "ef496705fa42db5b2531d6a43098eaaeb284737c42413cc367b3b3e94db8e6a1",
-      "target": "loki/rules/ot_flow_industrial_service_refused.yaml",
+      "source": "rules/sigma/ot/ot_flow_industrial_service_reset.yml",
+      "source_sha256": "35f7930c7bf36365470dccc61128b6a8cfb0138b785de6cb33fae89b1453e75c",
+      "target": "loki/rules/ot_flow_industrial_service_reset.yaml",
       "backend": "loki"
     },
     {
@@ -289,9 +289,9 @@
       "backend": "opensearch"
     },
     {
-      "source": "rules/sigma/ot/ot_flow_industrial_service_refused.yml",
-      "source_sha256": "ef496705fa42db5b2531d6a43098eaaeb284737c42413cc367b3b3e94db8e6a1",
-      "target": "opensearch/ot_flow_industrial_service_refused.ppl",
+      "source": "rules/sigma/ot/ot_flow_industrial_service_reset.yml",
+      "source_sha256": "35f7930c7bf36365470dccc61128b6a8cfb0138b785de6cb33fae89b1453e75c",
+      "target": "opensearch/ot_flow_industrial_service_reset.ppl",
       "backend": "opensearch"
     },
     {
@@ -511,9 +511,9 @@
       "backend": "sentinel"
     },
     {
-      "source": "rules/sigma/ot/ot_flow_industrial_service_refused.yml",
-      "source_sha256": "ef496705fa42db5b2531d6a43098eaaeb284737c42413cc367b3b3e94db8e6a1",
-      "target": "sentinel/ot_flow_industrial_service_refused.kql",
+      "source": "rules/sigma/ot/ot_flow_industrial_service_reset.yml",
+      "source_sha256": "35f7930c7bf36365470dccc61128b6a8cfb0138b785de6cb33fae89b1453e75c",
+      "target": "sentinel/ot_flow_industrial_service_reset.kql",
       "backend": "sentinel"
     },
     {
@@ -733,9 +733,9 @@
       "backend": "splunk"
     },
     {
-      "source": "rules/sigma/ot/ot_flow_industrial_service_refused.yml",
-      "source_sha256": "ef496705fa42db5b2531d6a43098eaaeb284737c42413cc367b3b3e94db8e6a1",
-      "target": "splunk/ot_flow_industrial_service_refused.conf",
+      "source": "rules/sigma/ot/ot_flow_industrial_service_reset.yml",
+      "source_sha256": "35f7930c7bf36365470dccc61128b6a8cfb0138b785de6cb33fae89b1453e75c",
+      "target": "splunk/ot_flow_industrial_service_reset.conf",
       "backend": "splunk"
     },
     {

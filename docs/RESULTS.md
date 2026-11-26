@@ -22,7 +22,8 @@ per-tactic rationale for the gaps is in the README.
 | Purple-team replay | 14 / 14 expectations (8 steps) | 2026-11-24 replay of the lab's `alert_type` snapshot; 0 unexpected, benign window passed; not rule execution and not MTTD. |
 | Rule fixture agreement | precision 1.0, recall 1.0 | Rule vs. its own committed fixtures — a regression check. |
 | Sigma single-event FPR | 0 / 1,000 (95% Wilson upper bound 0.38%) | Generated benign events; 30 behavioural shapes. |
-| All-family FPR | baseline, conduit, stateful, correlation, native, YARA all 0 | Same corpus plus benign captures and fixtures; `deploy/evidence/fpr/report.md`. |
+| All-family FPR (generated) | baseline, conduit, stateful, correlation, native, YARA all 0 | Same corpus plus benign captures and fixtures; `deploy/evidence/fpr/report.md`. |
+| Lab benign capture | 0 Sigma/native FPs on **1,136,470 events over 25.45 h**; lab-trained baseline **0 / 1,041,580** test events | 9 / 30 Sigma rules had input; 21 are explicitly unexercised; committed baseline domain shift disclosed. `deploy/evidence/benign-lab/`. |
 | Held-out single-event recall | 54 / 54 (95% CI 0.9336–1.0) | 2 labeled positives per rule, authored separately from the fixtures. |
 | Held-out single-event precision | 54 / 54 (95% CI 0.9336–1.0) | The same positives against 1,024 held-out negatives per rule. |
 | Held-out single-event false-positive rate | 0 / 1,024 per rule (95% CI 0.0–0.0037) | 1,000 generated at a different seed plus one near miss per rule. |
@@ -42,6 +43,7 @@ per-tactic rationale for the gaps is in the README.
 | The Loki ruler bundle fires the 18 rules in the live Loki proof, including the original correlation, in a full stack; the newer breadth rules are fixture-proven and included in the bundle | `deploy/evidence/loki/` | `make loki-check` (Docker) |
 | The ruleset loads and fires inside a Malcolm pipeline alongside 59,188 default rules | `deploy/evidence/malcolm/` | `tools/malcolm_check.py` |
 | The rules the lab exercises fire on live traffic in a real-endpoint OT lab (DNP3, OPC UA, S7comm); 11 of 13 are confirmed in the 2026-09-15 snapshot, which predates the P1 rule changes | `deploy/evidence/lab-loki/` | `tools/lab_loki_check.py` (lab up) |
+| The corrected analyser finds no Sigma or native false positive in a 25.45-hour lab capture and states which families had input | `deploy/evidence/benign-lab/` | `make lab-benign-check LAB_PCAP=...` |
 | The Rust decoders' output satisfies the Sigma rules | `deploy/evidence/decoders/summary.json` | `make decoder-check` |
 | Suricata and Zeek sensor output, plus authored NetFlow/IPFIX and SNMP exports in the exporter's shape, normalize to the contract; the SNMP device-event rules fire and stay silent on benign samples | `deploy/evidence/collector/summary.json` | `make collector-check` |
 | Behaviour-baseline rules flag a new asset, pair or function code on attack samples and stay silent on benign ones, and the committed baseline is reproducible | `deploy/evidence/baseline/summary.json` | `make baseline-check` |

@@ -154,8 +154,8 @@ rules:
   last_validated: '2026-09-15'
   version: 1
 - id: 8d2f5a90-6c41-4b7e-a3d8-1f9e4c02b6a7
-  rule: rules/sigma/ot/ot_flow_industrial_service_refused.yml
-  title: Connection Refused Or Reset To An Industrial Service
+  rule: rules/sigma/ot/ot_flow_industrial_service_reset.yml
+  title: Connection Reset To An Industrial Service
   kind: sigma
   techniques:
   - T0813

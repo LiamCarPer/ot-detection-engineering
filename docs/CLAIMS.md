@@ -24,7 +24,8 @@ not current and must not be used.
 | :-- | :-- |
 | ATT&CK for ICS coverage | **32 / 97 techniques (33.0%)** tagged, **32 validated**, **10 live-lab proven** |
 | Detection content | **30 Sigma + 7 correlation + 4 YARA + 21 native + 5 stateful**, plus 3 baseline + 3 conduit = 73 catalogued rules |
-| Benign baseline | **Sigma single-event: 0 / 1,000 generated events**, 95% Wilson upper bound **0.38%**; all-family report in `deploy/evidence/fpr/report.md` |
+| Benign baseline (generated) | **Sigma single-event: 0 / 1,000 generated events**, 95% Wilson upper bound **0.38%**; all-family report in `deploy/evidence/fpr/report.md` |
+| Lab benign capture | **25.45 h, 1,136,470 events, 0 Sigma/native FPs** from the 9 / 30 rules with input; lab-trained baseline **0 / 1,041,580** |
 | Held-out single-event | **54 / 54** positives, **0** false positives over 1,024 negatives per rule |
 | Held-out correlation | **13 / 13** positive windows, **0** false positives over 15 negative windows |
 | Held-out YARA | **8 / 8** artifacts, **0** false positives over 8 shared negatives |
@@ -63,6 +64,7 @@ not current and must not be used.
 | The converted SPL, PPL and KQL select exactly the same events as the repository matcher over the held-out corpus | Verified | `deploy/evidence/engine-parity/summary.json` | `make engine-parity` (containers) |
 | Every rule exclusion resolves to a declared allowlist whose members exist with the declared roles | Verified | `metadata/allowlists.generated.yaml` | `make allowlists-check` |
 | A mass-balance estimate detects an unsafe command while the reported level is spoofed; the normal cycle stays quiet | Verified (model) | `deploy/evidence/process-model/` | `make process-model-check` |
+| The real-traffic analyser decodes Modbus and flows, reports 0 Sigma/native FPs over 25.45 h, and labels every rule without input as unexercised | Verified | `deploy/evidence/benign-lab/` | `make lab-benign-check LAB_PCAP=...` |
 | Every correlation rule converts to Loki, Splunk, OpenSearch and Sentinel | Verified | `deploy/manifest.json` | `make convert-all` |
 | The committed deployment bundle cannot drift from the rules | Verified | `deploy/`, `pipelines/deploy.py --check` | `make deploy-check` |
 | Coverage, fixture metrics and held-out metrics are derived from rule content | Verified | `coverage/`, `metrics/` | `make coverage`, `make metrics`, `tests/test_coverage.py`, `tests/test_metrics.py` |
@@ -115,6 +117,8 @@ These are deliberately not claimed. They are also listed in
 | Production triage / MTTA | The case study has no analyst acknowledgement or resolution timestamps; it measures queue reduction, not human performance. |
 | MTTD on the replay | The 2026-11-24 snapshot has alert timestamps but not action start timestamps; MTTD comes only from the 2026-09-13 run. |
 | C2-beacon and OT-port-scan coverage | The lab emits those alerts, but the repository has no matching rule; they are not scored in the purple plan. HMI login failure and its burst now have rules. |
+| Lab-capture protocol coverage | The 25.45-hour benign window contains Modbus reads and flows only. DNP3, OPC UA, S7, SNMP and Modbus writes are unexercised; a separate benign protocol capture is the next step. |
+| Baseline portability | The committed baseline is learned from the generated seed and flags every lab asset and pair as new. The lab result uses a baseline trained on the first two hours; a deployment must learn its own baseline. |
 | Operational maturity of most rules | 67 of 73 rules are `experimental`; only 6 have runbooks and 12 have observed lab volume. |
 | Production-scale performance | The benchmark is a desktop, small example frames, no pcap replay, no sustained load, no backpressure. |
 

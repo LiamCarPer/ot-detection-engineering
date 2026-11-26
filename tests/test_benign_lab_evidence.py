@@ -27,6 +27,14 @@ def test_capture_metadata_is_recorded() -> None:
     assert summary["events"] > 0
 
 
+def test_capture_spans_more_than_a_day() -> None:
+    window = _summary()["window"]
+    assert window["span_seconds"] > 24 * 3600
+    assert window["first_event_at"]
+    assert window["last_event_at"]
+    assert _summary()["events_per_hour"] > 0
+
+
 def test_every_network_family_is_measured() -> None:
     families = _summary()["families"]
     for name in (
@@ -40,36 +48,40 @@ def test_every_network_family_is_measured() -> None:
         assert name in families
 
 
-def test_every_rule_is_silent_on_the_committed_capture() -> None:
-    families = _summary()["families"]
-    fired = [
-        (rule, count)
-        for family in ("sigma_single_event", "baseline", "conduit")
-        for rule, count in families[family]["per_rule"].items()
-        if count
-    ]
-    assert fired == []
+def test_the_corpus_is_not_flow_only() -> None:
+    coverage = _summary()["coverage"]
+    assert coverage["by_service"].get("ot_ndr/modbus", 0) > 1_000
+    assert coverage["sigma_single_event"]["with_input"] >= 9
+    # A zero from a rule with no input is not a measurement; the report must
+    # carry the list rather than hide it.
+    assert coverage["sigma_single_event"]["without_input"]
 
 
-def test_the_committed_capture_has_no_network_false_positives() -> None:
+def test_sigma_and_native_are_clean_on_the_committed_capture() -> None:
     families = _summary()["families"]
     assert families["sigma_single_event"]["false_positive_events"] == 0
-    assert families["baseline"]["false_positive_events"] == 0
     assert families["conduit"]["false_positive_events"] == 0
     assert families["sigma_correlation"]["fired"] == []
     assert families["stateful"]["fired"] == []
     assert families["native"]["false_positive_alerts"] == 0
 
 
+def test_the_lab_trained_baseline_is_clean() -> None:
+    baseline = _summary()["lab_baseline"]
+    assert baseline["exercised"] is True
+    assert baseline["test_events"] > 100_000
+    assert baseline["events"] == 0
+    assert all(count == 0 for count in baseline["per_rule"].values())
+
+
+def test_the_committed_baseline_domain_shift_is_disclosed() -> None:
+    # The committed baseline was learned from the generated seed. On the lab
+    # every asset and pair is new; the report must say so rather than present
+    # the resulting events as a false-positive rate.
+    assert _summary()["families"]["baseline"]["false_positive_events"] > 0
+
+
 def test_not_observed_families_are_labelled() -> None:
     not_observed = _summary()["families"]["not_observed"]
     assert "host/sysmon" in not_observed["families"]
     assert "not present" in not_observed["reason"]
-
-
-def test_capture_span_and_rate_are_recorded() -> None:
-    summary = _summary()
-    assert summary["window"]["span_seconds"] > 0
-    assert summary["window"]["first_event_at"]
-    assert summary["window"]["last_event_at"]
-    assert summary["events_per_hour"] > 0
