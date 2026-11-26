@@ -30,13 +30,17 @@ repository's rules.
 | S7comm program campaign | 3 | 3 / 3 |
 | Operator-workstation write | 1 | 3 / 3 |
 
-- The process-safety miss was timing, not a process-model limitation: the write
-  was sent at an arbitrary point in the fill/drain cycle, so the tank was often
-  below the envelope. The live stimulus now reads the level and waits for the
-  danger band before writing
-  (`powershell/Simulate-UnsafeOverflow.ps1` in the lab). It was validated against
-  a mock Modbus server, with no lab write; the re-run waits for the 24-hour
-  benign capture to avoid contaminating it.
+- The process-safety miss was timing, not a process-model limitation: a
+  ten-second write burst at an arbitrary point in the fill/drain cycle often
+  landed below the envelope. The live plan now sends protocol-valid writes
+  across a full cycle (`OT_UNSAFE_ATTEMPTS=240`) and the runner watches the
+  ruler while the command runs, so a fire that resolves before the command
+  exits is still recorded. A re-run was attempted after the capture stopped,
+  but the lab's intake PLC (`172.21.0.10`) was no longer serving Modbus: the
+  bootstrap deploy loop was failing for intake/distribution, the HMI had no
+  live level, and one DNP3 run also missed. The committed evidence is the
+  stable 11/12 run; the process-safety detection itself is proven by the
+  independent mass-balance model in `docs/PROCESS_SAFETY.md`.
 - **No unexpected repository rules** fired in any step.
 - The benign-after window was empty in all three runs. The runner restarts Loki
   and clears its data before each run so the five-minute lookback cannot leak

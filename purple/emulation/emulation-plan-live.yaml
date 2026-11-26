@@ -52,13 +52,14 @@ steps:
     name: Unsafe command while the tank is in a danger state
     technique: T0831
     description: |
-      A supervisory workstation reads the live tank level until it is inside the
-      danger envelope, then sends a protocol-valid write that opens the inlet
-      valve. The monitor emits a safety violation, and the write itself is an
-      unauthorized control command. Timing the write against the level is what
-      makes the scenario deterministic; an untimed write is a coin toss.
+      The enterprise attacker sends protocol-valid Modbus writes that open the
+      inlet valve across a full fill/drain cycle. The firewall drops them at the
+      PLC boundary, but the gateway monitor sees them; when one lands above the
+      envelope it emits the safety violation. A ten-second burst was a coin
+      toss against the process phase, so the stimulus now spans the cycle and
+      the runner watches the ruler while the command runs.
     execute:
-      command: docker exec ot_powershell pwsh -NoProfile -File /opt/otsec/Simulate-UnsafeOverflow.ps1
+      command: docker exec -e OT_UNSAFE_ATTEMPTS=240 ot_attacker python3 /attacker/simulate_process_violation.py
     expectations:
       - signal: PROCESS_SAFETY_VIOLATION
         technique: T0831
@@ -66,7 +67,9 @@ steps:
         rule: rules/sigma/ot/ot_process_safety_violation.yml
     secondary:
       - rule: rules/sigma/ot/ot_modbus_unauthorized_write.yml
-        reason: The supervisory workstation is not an approved Modbus writer.
+        reason: The stimulus is a Modbus write from an unapproved source.
+      - rule: rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+        reason: The write originates in the enterprise zone and is dropped.
 
   - id: dnp3-control-campaign
     name: DNP3 control, restart and unsolicited-response changes

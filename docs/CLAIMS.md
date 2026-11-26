@@ -30,7 +30,7 @@ not current and must not be used.
 | Held-out correlation | **13 / 13** positive windows, **0** false positives over 15 negative windows |
 | Held-out YARA | **8 / 8** artifacts, **0** false positives over 8 shared negatives |
 | Purple team (MTTD run) | **4 / 4** expectations, mean MTTD **2.45 s** (`n=4`, one run) |
-| Purple team (live) | **11 / 12 Sigma expectations**, 7 steps, 3 runs, 0 unexpected, benign windows clean, mean MTTD **2.43 s** |
+| Purple team (live) | **11 / 12 Sigma expectations**, 7 steps, 3 runs, 0 unexpected, benign windows clean, mean MTTD **2.43 s**; the process step's stimulus now spans the fill cycle, but a re-run was blocked by the intake PLC runtime |
 | Purple team (replay) | **14 / 14** lab alert signals, 8 steps, 0 unexpected, benign passed |
 | Suppression | **151 alerts → 21 notifications (86.09%)**; C2/C3/C4/C5 preserved |
 | Sensor health | **Detection Service Stopped firing live** in the lab ruler |

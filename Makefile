@@ -225,7 +225,7 @@ purple-check: setup
 	$(PY) purple/runner/run_emulation.py --observations purple/emulation/lab-observations.json --out deploy/evidence/purple --check
 
 purple-live: setup
-	$(PY) purple/runner/live_lab.py --runs 1
+	$(PY) purple/runner/live_lab.py --plan purple/emulation/emulation-plan-live.yaml --runs 3
 
 lab-proof: setup
 	$(PY) tools/lab_proof.py

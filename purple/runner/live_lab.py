@@ -22,6 +22,7 @@ import argparse
 import json
 import subprocess  # nosec B404 - fixed plan commands, no user input
 import sys
+import threading
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -247,9 +248,42 @@ def run_once(
         started = datetime.now(UTC)
         command = step["execute"]["command"]
         print(f"[live] {step['id']}: {command}", flush=True)
+        # A long stimulus can fire and resolve while the command is still
+        # running; polling only after it exits misses the alert. Watch the
+        # required rules for the whole command and merge the earliest firing
+        # into the normal post-command window.
+        stop = threading.Event()
+        during: dict[str, Any] = {"first_fire": {}, "fired": set()}
+
+        def watch(
+            stop: threading.Event = stop,
+            step: dict[str, Any] = step,
+            during: dict[str, Any] = during,
+        ) -> None:
+            while not stop.is_set():
+                try:
+                    rules = ruler_rules(base_url)
+                except Exception:  # noqa: BLE001 - transient ruler read
+                    time.sleep(poll_seconds)
+                    continue
+                groups = groups_by_name(rules)
+                for group, name in groups.items():
+                    if group not in required[step["id"]]:
+                        continue
+                    if rules[name].get("state") == "firing":
+                        during["fired"].add(group)
+                        during["first_fire"].setdefault(
+                            group, datetime.now(UTC).isoformat()
+                        )
+                time.sleep(poll_seconds)
+
+        watcher = threading.Thread(target=watch, daemon=True)
+        watcher.start()
         result = subprocess.run(  # nosec B603 - fixed plan command
             command, shell=True, capture_output=True, text=True
         )
+        stop.set()
+        watcher.join(timeout=5)
         settle = max(settle_seconds, 2.0)
         poll = poll_window(
             base_url,
@@ -259,6 +293,9 @@ def run_once(
             poll_seconds,
             quiet_seconds,
         )
+        for group, timestamp in during["first_fire"].items():
+            poll["first_fire"].setdefault(group, timestamp)
+        poll["observed"] = sorted(set(poll["observed"]) | during["fired"])
         finished = datetime.now(UTC)
         lab_new = _new_lab_alerts(lab_alerts, lab_before)
         steps.append(
