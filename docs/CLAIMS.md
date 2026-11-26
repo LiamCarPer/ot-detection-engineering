@@ -26,7 +26,7 @@ not current and must not be used.
 | Detection content | **30 Sigma + 7 correlation + 4 YARA + 21 native + 5 stateful**, plus 3 baseline + 3 conduit = 73 catalogued rules |
 | Benign baseline (generated) | **Sigma single-event: 0 / 1,000 generated events**, 95% Wilson upper bound **0.38%**; all-family report in `deploy/evidence/fpr/report.md` |
 | Lab benign capture | **25.45 h, 1,136,470 events, 0 Sigma/native FPs** from the 9 / 30 rules with input; lab-trained baseline **0 / 1,041,580** |
-| Benign protocol window | **0.5 h, 52,811 events, 0 Sigma/native FPs**; **22 / 30** Sigma rules had input, including DNP3, OPC UA, S7comm and SNMP; lab-trained baseline **0 / 38,276** |
+| Benign protocol window | **0.5 h, 52,811 events, 0 Sigma/native FPs**; **22 / 30** Sigma rules had input, including DNP3, OPC UA, S7comm and SNMP heartbeat input; no SNMP trap event occurred. Lab-trained baseline **0 / 38,276** |
 | Held-out single-event | **54 / 54** positives (24 rules × 2, six × 1), **0** false positives over 1,024 shared negatives evaluated by each rule |
 | Held-out correlation | **13 / 13** positive windows, **0** false positives over 15 negative windows |
 | Held-out YARA | **8 / 8** artifacts, **0** false positives over 8 shared negatives |
