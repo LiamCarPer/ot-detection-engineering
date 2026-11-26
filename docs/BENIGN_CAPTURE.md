@@ -8,7 +8,10 @@ collector and run through every network detection family.
 
 - Capture on every non-loopback gateway interface with a Scapy `PcapWriter`
   (`ot-security-lab/lab-environment/scripts/benign_capture.py`). The gateway is
-  the only multi-homed container, so it sees every inter-zone flow.
+  the only multi-homed container, so it sees every inter-zone flow. A routed
+  frame is recorded twice, on the ingress and the egress interface; the raw
+  packet count is therefore roughly doubled. Suricata and Zeek normalize per
+  flow, so the family measurements count flows, not frames.
 - No attack scenario is run during the capture. The lab's normal HMI, historian
   and simulator polling is the background traffic.
 - Run Suricata with the repository's rules and Zeek over the capture; normalize
