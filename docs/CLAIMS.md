@@ -73,7 +73,7 @@ not current and must not be used.
 | The benign baseline is deterministic and reproducible | Verified | `metrics/baseline/` | `tests/test_baseline_corpus.py` |
 | The benign baseline is 0 / 1,000 for the single-event Sigma family, with a 95% Wilson upper bound of 0.38% | Verified (modelled) | `metrics/baseline/README.md`, `deploy/evidence/fpr/report.md` | `make fpr` |
 | Every detection family is measured on the benign corpus: baseline, conduit, correlation, stateful, native and YARA are silent | Verified (modelled) | `deploy/evidence/fpr/report.md` | `make fpr-check` |
-| Held-out single-event precision and recall are 54 / 54 with 0 false positives over 1,024 negatives per rule | Verified (authored/generated set) | `metrics/heldout/README.md` | `make metrics`, `tests/test_heldout.py` |
+| Held-out single-event precision and recall are 54 / 54 with 0 false positives over 1,024 shared negatives evaluated by each rule | Verified (authored/generated set) | `metrics/heldout/README.md` | `make metrics`, `tests/test_heldout.py` |
 | Held-out correlation recall is 13 / 13 positive windows with 0 false positives over 15 negatives | Verified (authored set) | `metrics/heldout/README.md` | `make metrics`, `tests/test_heldout.py` |
 | Held-out YARA recall is 8 / 8 artifacts with 0 false positives over 8 shared negatives | Verified (authored set) | `metrics/heldout/README.md` | `make metrics`, `tests/test_heldout.py` |
 | No held-out event duplicates a rule fixture | Verified | `tests/test_heldout.py` | `make test` |

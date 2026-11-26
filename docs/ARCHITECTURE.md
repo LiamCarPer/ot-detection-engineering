@@ -176,8 +176,9 @@ emulation-plan.yaml ──▶ purple/runner ──▶ detection rate + MTTD ─�
 - **Held-out precision / recall** — the same definitions applied to
   `metrics/heldout/`, which is authored and generated separately from each
   rule's fixtures and is never used for tuning. The held-out false-positive rate
-  is measured over 1,024 negatives per rule (1,000 at a second seed plus one
-  near miss per rule); YARA is measured over 2 files per rule and 8 shared
+  is measured over 1,024 shared negatives evaluated by each rule (1,000 at a
+  second seed plus 24 authored near misses); YARA is measured over 2 files per
+  rule and 8 shared
   negatives. Every rate carries a 95% Wilson interval.
 - **False-positive rate by family** — each family is measured against the same
   benign corpus: single-event Sigma, correlation, behaviour baseline, conduit,
