@@ -41,13 +41,13 @@
     "sigma_correlation": {
       "fired": [],
       "not_exercised": [
-        "Modbus Exception Flood Toward An Operator Interface",
+        "Control Zone Host Reaching Multiple Enterprise Destinations",
         "Enterprise Host Probing Multiple Control Zone Ports",
-        "OPC UA Address Space Enumeration",
         "HMI Login Failure Burst From One Source",
         "Modbus Control Asset Enumeration",
+        "Modbus Exception Flood Toward An Operator Interface",
         "Modbus Register Enumeration From One Host",
-        "Control Zone Host Reaching Multiple Enterprise Destinations"
+        "OPC UA Address Space Enumeration"
       ],
       "per_rule": {
         "Control Zone Host Reaching Multiple Enterprise Destinations": false,

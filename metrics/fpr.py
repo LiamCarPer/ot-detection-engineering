@@ -152,12 +152,12 @@ def sigma_correlation(events: list[dict]) -> dict[str, Any]:
         )
     return {
         "rules": len(rules),
-        "fired": [title for title, fired in per_rule.items() if fired],
+        "fired": sorted(title for title, fired in per_rule.items() if fired),
         "per_rule": per_rule,
         "per_rule_input": per_rule_input,
-        "not_exercised": [
+        "not_exercised": sorted(
             title for title, count in per_rule_input.items() if count == 0
-        ],
+        ),
     }
 
 
@@ -215,7 +215,7 @@ def stateful_family(events: list[dict]) -> dict[str, Any]:
         per_rule[rule["title"]] = match_stateful(rule, events)
     return {
         "rules": len(per_rule),
-        "fired": [title for title, fired in per_rule.items() if fired],
+        "fired": sorted(title for title, fired in per_rule.items() if fired),
         "per_rule": per_rule,
     }
 
