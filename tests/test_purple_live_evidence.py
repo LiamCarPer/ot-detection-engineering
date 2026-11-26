@@ -46,10 +46,16 @@ def test_mttd_is_measured() -> None:
     assert mttd["max"] >= mttd["mean"]
 
 
-def test_the_process_safety_step_is_recorded_with_its_outcome() -> None:
+def test_every_step_detects_in_every_run() -> None:
+    summary = _summary()
+    for step, entry in summary["steps"].items():
+        assert entry["detected"] == entry["runs"], step
+        assert entry["misses"] == [], step
+        assert entry["unexpected"] == [], step
+
+
+def test_the_process_safety_step_is_live() -> None:
     entry = _summary()["steps"]["process-safety-violation"]
     assert entry["runs"] == 3
-    assert entry["expected"]
-    # The step must be present and account for every run, whether it detected or
-    # missed. The timed stimulus is the current fix; a miss is reported, not hidden.
-    assert entry["detected"] + len(entry["misses"]) == entry["runs"]
+    assert entry["detected"] == 3
+    assert entry["misses"] == []

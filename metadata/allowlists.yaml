@@ -29,8 +29,9 @@ allowlists:
     purpose: >-
       Hosts allowed to issue large block reads. The HMI and the L2 historian
       collector poll the controllers; any other reader is enumeration.
-    roles: [hmi, historian_collector]
+    roles: [sensor_gateway, hmi, historian_collector]
     members:
+      - 172.21.0.2
       - 172.22.0.10
       - 172.22.0.20
     detection:

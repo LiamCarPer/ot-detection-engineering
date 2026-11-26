@@ -1,2 +1,2 @@
 # source: rules/sigma/ot/ot_modbus_control_asset_enumeration.yml
-| search source=ot_ndr-modbus-* | where direction="request" AND (function_code in (3, 4)) AND isnotnull(src_ip) AND NOT (src_ip in ("172.22.0.10", "172.22.0.20")) | stats dc(dst_ip) as value_count by span(@timestamp, 5m), src_ip | where value_count >= 3
+| search source=ot_ndr-modbus-* | where direction="request" AND (function_code in (3, 4)) AND isnotnull(src_ip) AND NOT (src_ip in ("172.21.0.2", "172.22.0.10", "172.22.0.20")) | stats dc(dst_ip) as value_count by span(@timestamp, 5m), src_ip | where value_count >= 3

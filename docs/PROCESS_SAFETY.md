@@ -49,6 +49,17 @@ fires, with the reported value recorded on the alert.
   detection-layer estimate, not a certified trip; the controller's own interlock
   still owns the physical trip.
 
+## Live lab
+
+The live purple run now detects the process-safety step **3 / 3**. Two lab
+changes made it work without weakening the rule: the monitor polls HR5 from the
+gateway as well as shadowing PLC -> HMI responses, and the gateway's control
+address (`172.21.0.2`) is in the approved Modbus reader allowlist so the sensor's
+own poll is not an unauthorized read. The stimulus spans a full fill/drain cycle
+and the runner watches the ruler during the command; the first fire is ~125 s
+from launch because that is when the write lands above the envelope, not because
+detection is slow.
+
 ## Reproduce
 
 ```bash

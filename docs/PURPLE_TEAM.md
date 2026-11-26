@@ -4,7 +4,7 @@ The repository runs three complementary exercises:
 
 | Run | Purpose | Result |
 | :-- | :-- | :-- |
-| 2026-11-25 | **Live repository rules** | **11 / 12 Sigma expectations across 7 steps, 3 runs**; 0 unexpected; benign windows clean; mean MTTD 2.43 s |
+| 2026-11-26 | **Live repository rules** | **12 / 12 Sigma expectations across 7 steps, 3 runs**; 0 unexpected; benign windows clean; non-process MTTD **2.53 s** |
 | 2026-11-24 | Lab alert-signal replay | **14 / 14 expected signals across 8 steps**; 0 unexpected alerts; benign window passed |
 | 2026-09-13 | MTTD measurement | **4 / 4 expectations**; mean MTTD 2.45 s, max 4.761 s |
 
@@ -13,46 +13,42 @@ repository's generated rules, and the runner records action start/stop times.
 The replay is retained as a regression fixture and is explicitly not a
 rule-coverage result. The 2026-09-13 run is the historical MTTD run.
 
-## What the 2026-11-25 live run proves
+## What the 2026-11-26 live run proves
 
-The runner is [`purple/runner/live_lab.py`](../purple/runner/live_lab.py). It
-syncs the generated Loki rules into the lab, clears the ruler lookback state,
-runs each step, polls the ruler, and records the first firing time of the
+The runner is [`purple/runner/live_lab.py`](../purple/runner/live_lab.py). The
+generated Loki rules are synced into the lab with `make lab-rules`; the runner
+then clears the ruler lookback state, runs each step, watches the ruler while
+the command runs and after it settles, and records the first firing time of the
 repository's rules.
 
 | Step | Expectations | Detected (3 runs) |
 | :-- | --: | --: |
 | Enterprise cross-zone read | 1 | 3 / 3 |
 | Enterprise Modbus write | 1 | 3 / 3 |
-| Process safety violation | 1 | **0 / 3** (untimed stimulus; fixed below) |
+| Process safety violation | 1 | **3 / 3** |
 | DNP3 control campaign | 3 | 3 / 3 |
 | OPC UA discovery campaign | 3 | 3 / 3 |
 | S7comm program campaign | 3 | 3 / 3 |
 | Operator-workstation write | 1 | 3 / 3 |
 
-- The process-safety miss was timing, not a process-model limitation: a
-  ten-second write burst at an arbitrary point in the fill/drain cycle often
-  landed below the envelope. The live plan now sends protocol-valid writes
-  across a full cycle (`OT_UNSAFE_ATTEMPTS=240`) and the runner watches the
-  ruler while the command runs, so a fire that resolves before the command
-  exits is still recorded. A re-run was attempted after the capture stopped,
-  but the lab's intake PLC (`172.21.0.10`) was no longer serving Modbus: the
-  bootstrap deploy loop was failing for intake/distribution, the HMI had no
-  live level, and one DNP3 run also missed. The committed evidence is the
-  stable 11/12 run; the process-safety detection itself is proven by the
-  independent mass-balance model in `docs/PROCESS_SAFETY.md`.
+- **The process-safety step now detects 3 / 3.** The monitor used to learn the
+  tank level only from PLC -> HMI responses; when the HMI's data source was
+  down, the shadow froze. It now also polls HR5 from the gateway, the gateway's
+  control address is in the approved Modbus reader allowlist, and the live
+  stimulus sends writes across a full fill/drain cycle. The runner watches the
+  ruler while the command runs, so a fire that resolves before the command exits
+  is still recorded.
 - **No unexpected repository rules** fired in any step.
-- The benign-after window was empty in all three runs. The runner restarts Loki
-  and clears its data before each run so the five-minute lookback cannot leak
-  the previous attack into the benign window.
-- Mean MTTD was **2.43 s** (max 3.52 s) at a 1-second ruler evaluation interval.
-- **The process-safety miss is real and visible.** The lab's process model is a
-  counter with an in-PLC interlock; the simulated attack is dropped at the
-  firewall, and the tank level did not reach the repository rule's 90% envelope
-  in these runs. P2-08 replaces that model with a mass balance and an
-  independent SIS. The step is reported as a miss, not removed from the plan.
-- The native Modbus brute-force rule is capture-proven, not Loki-backed, and is
-  absent from the live Sigma plan. It remains in the capture evidence.
+- The benign-before and benign-after windows were empty in all three runs. The
+  runner restarts Loki and clears its data before each run so the five-minute
+  lookback cannot leak the previous attack into the benign window.
+- **MTTD**: the six action steps average **2.53 s** (max 3.54 s) at a 1-second
+  ruler interval. The process step's **125 s** is not detection latency: the
+  stimulus spans the cycle, so the first write above the envelope arrives late
+  in the campaign. Reporting it as a 125-second detection would be wrong.
+- The DNP3, OPC UA and S7 campaigns each cover three expectations in every run;
+  the native Modbus brute-force rule is capture-proven, not Loki-backed, and is
+  absent from the live Sigma plan.
 
 ## What the 2026-11-24 replay actually proves
 

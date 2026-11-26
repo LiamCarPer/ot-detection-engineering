@@ -59,6 +59,12 @@ assets:
     zone: dmz
     criticality: high
     services: [ssh]
+  - ip: 172.21.0.2
+    role: sensor_gateway
+    zone: control
+    criticality: critical
+    services: [modbus]
+    note: Gateway/IDS control interface; polls HR5 for the process-level shadow.
   - ip: 172.21.0.10
     role: plc
     zone: control

@@ -98,7 +98,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_block_read.yml",
-      "source_sha256": "b7423c9c5b1468b0f76a128231f3c106ad314d0a653b13b6575d03a795dd6e08",
+      "source_sha256": "68d4067018ce5af07fec84cfd87bc3ad54d0ce8d72a531cca7c41a6bf16047a2",
       "target": "loki/rules/ot_modbus_block_read.yaml",
       "backend": "loki"
     },
@@ -140,7 +140,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
-      "source_sha256": "a9d69f70a9d6ba25bfb7b3ab25045d24dd6bb0f77d9939e734bbdc10722ca2de",
+      "source_sha256": "97fbdee0e3bd4a14632a683511d88a54ab1299d01d9f65d296be6914a29e9d10",
       "target": "loki/rules/ot_modbus_process_state_read.yaml",
       "backend": "loki"
     },
@@ -320,7 +320,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_block_read.yml",
-      "source_sha256": "b7423c9c5b1468b0f76a128231f3c106ad314d0a653b13b6575d03a795dd6e08",
+      "source_sha256": "68d4067018ce5af07fec84cfd87bc3ad54d0ce8d72a531cca7c41a6bf16047a2",
       "target": "opensearch/ot_modbus_block_read.ppl",
       "backend": "opensearch"
     },
@@ -362,7 +362,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
-      "source_sha256": "a9d69f70a9d6ba25bfb7b3ab25045d24dd6bb0f77d9939e734bbdc10722ca2de",
+      "source_sha256": "97fbdee0e3bd4a14632a683511d88a54ab1299d01d9f65d296be6914a29e9d10",
       "target": "opensearch/ot_modbus_process_state_read.ppl",
       "backend": "opensearch"
     },
@@ -542,7 +542,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_block_read.yml",
-      "source_sha256": "b7423c9c5b1468b0f76a128231f3c106ad314d0a653b13b6575d03a795dd6e08",
+      "source_sha256": "68d4067018ce5af07fec84cfd87bc3ad54d0ce8d72a531cca7c41a6bf16047a2",
       "target": "sentinel/ot_modbus_block_read.kql",
       "backend": "sentinel"
     },
@@ -584,7 +584,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
-      "source_sha256": "a9d69f70a9d6ba25bfb7b3ab25045d24dd6bb0f77d9939e734bbdc10722ca2de",
+      "source_sha256": "97fbdee0e3bd4a14632a683511d88a54ab1299d01d9f65d296be6914a29e9d10",
       "target": "sentinel/ot_modbus_process_state_read.kql",
       "backend": "sentinel"
     },
@@ -764,7 +764,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_block_read.yml",
-      "source_sha256": "b7423c9c5b1468b0f76a128231f3c106ad314d0a653b13b6575d03a795dd6e08",
+      "source_sha256": "68d4067018ce5af07fec84cfd87bc3ad54d0ce8d72a531cca7c41a6bf16047a2",
       "target": "splunk/ot_modbus_block_read.conf",
       "backend": "splunk"
     },
@@ -806,7 +806,7 @@
     },
     {
       "source": "rules/sigma/ot/ot_modbus_process_state_read.yml",
-      "source_sha256": "a9d69f70a9d6ba25bfb7b3ab25045d24dd6bb0f77d9939e734bbdc10722ca2de",
+      "source_sha256": "97fbdee0e3bd4a14632a683511d88a54ab1299d01d9f65d296be6914a29e9d10",
       "target": "splunk/ot_modbus_process_state_read.conf",
       "backend": "splunk"
     },

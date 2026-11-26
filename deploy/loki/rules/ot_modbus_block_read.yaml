@@ -28,8 +28,8 @@ groups:
       summary: Modbus Block Read From Unauthorized Reader
     expr: sum(count_over_time({job=~".+", service="modbus"} | logfmt | direction=~`(?i)^request$`
       and (function_code=1 or function_code=2 or function_code=3 or function_code=4)
-      and quantity>=16 and src_ip!="" and src_ip!~`(?i)^172\.22\.0\.10$` and src_ip!~`(?i)^172\.22\.0\.20$`
-      | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}} {{.register}} {{.register_end}}
-      {{.quantity}}" [1m])) or vector(0) > 0
+      and quantity>=16 and src_ip!="" and src_ip!~`(?i)^172\.21\.0\.2$` and src_ip!~`(?i)^172\.22\.0\.10$`
+      and src_ip!~`(?i)^172\.22\.0\.20$` | line_format "{{.src_ip}} {{.dst_ip}} {{.function_code}}
+      {{.register}} {{.register_end}} {{.quantity}}" [1m])) or vector(0) > 0
     labels:
       severity: medium

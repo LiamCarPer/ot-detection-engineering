@@ -4,9 +4,9 @@
       "expected": [
         "ot_firewall_cross_zone_violation"
       ],
-      "finished_at": "2026-11-25T03:36:18.656799+00:00",
+      "finished_at": "2026-11-26T09:24:53.676315+00:00",
       "first_fire": {
-        "ot_firewall_cross_zone_violation": "2026-11-25T03:35:58.503748+00:00"
+        "ot_firewall_cross_zone_violation": "2026-11-26T09:24:18.399041+00:00"
       },
       "id": "cross-zone-read",
       "lab_alerts": [
@@ -17,16 +17,16 @@
         "ot_firewall_cross_zone_violation"
       ],
       "returncode": 0,
-      "started_at": "2026-11-25T03:35:56.626991+00:00",
+      "started_at": "2026-11-26T09:24:16.379510+00:00",
       "unexpected": []
     },
     {
       "expected": [
         "ot_modbus_unauthorized_write"
       ],
-      "finished_at": "2026-11-25T03:36:40.612762+00:00",
+      "finished_at": "2026-11-26T09:25:31.054495+00:00",
       "first_fire": {
-        "ot_modbus_unauthorized_write": "2026-11-25T03:36:20.475172+00:00"
+        "ot_modbus_unauthorized_write": "2026-11-26T09:24:55.773226+00:00"
       },
       "id": "modbus-write",
       "lab_alerts": [
@@ -38,24 +38,29 @@
         "ot_modbus_unauthorized_write"
       ],
       "returncode": 0,
-      "started_at": "2026-11-25T03:36:18.663969+00:00",
+      "started_at": "2026-11-26T09:24:53.749269+00:00",
       "unexpected": []
     },
     {
       "expected": [
         "ot_process_safety_violation"
       ],
-      "finished_at": "2026-11-25T03:37:11.902233+00:00",
-      "first_fire": {},
+      "finished_at": "2026-11-26T09:28:11.478260+00:00",
+      "first_fire": {
+        "ot_process_safety_violation": "2026-11-26T09:27:36.191392+00:00"
+      },
       "id": "process-safety-violation",
       "lab_alerts": [
         "CROSS_ZONE_VIOLATION",
+        "PROCESS_SAFETY_VIOLATION",
         "UNAUTHORIZED_MODBUS_WRITE"
       ],
       "native_not_evaluated": [],
-      "observed": [],
+      "observed": [
+        "ot_process_safety_violation"
+      ],
       "returncode": 0,
-      "started_at": "2026-11-25T03:36:40.620169+00:00",
+      "started_at": "2026-11-26T09:25:31.148770+00:00",
       "unexpected": []
     },
     {
@@ -64,11 +69,11 @@
         "ot_dnp3_unauthorized_control",
         "ot_dnp3_unsolicited_disabled"
       ],
-      "finished_at": "2026-11-25T03:37:35.571538+00:00",
+      "finished_at": "2026-11-26T09:28:50.365318+00:00",
       "first_fire": {
-        "ot_dnp3_restart_command": "2026-11-25T03:37:15.429469+00:00",
-        "ot_dnp3_unauthorized_control": "2026-11-25T03:37:15.429483+00:00",
-        "ot_dnp3_unsolicited_disabled": "2026-11-25T03:37:15.429486+00:00"
+        "ot_dnp3_restart_command": "2026-11-26T09:28:15.080214+00:00",
+        "ot_dnp3_unauthorized_control": "2026-11-26T09:28:15.080229+00:00",
+        "ot_dnp3_unsolicited_disabled": "2026-11-26T09:28:15.080233+00:00"
       },
       "id": "dnp3-control-campaign",
       "lab_alerts": [
@@ -83,7 +88,7 @@
         "ot_dnp3_unsolicited_disabled"
       ],
       "returncode": 0,
-      "started_at": "2026-11-25T03:37:11.909460+00:00",
+      "started_at": "2026-11-26T09:28:11.548853+00:00",
       "unexpected": []
     },
     {
@@ -92,11 +97,11 @@
         "ot_opcua_method_call",
         "ot_opcua_write_request"
       ],
-      "finished_at": "2026-11-25T03:37:56.359402+00:00",
+      "finished_at": "2026-11-26T09:29:26.740740+00:00",
       "first_fire": {
-        "ot_opcua_browse_request": "2026-11-25T03:37:36.199904+00:00",
-        "ot_opcua_method_call": "2026-11-25T03:37:36.703716+00:00",
-        "ot_opcua_write_request": "2026-11-25T03:37:37.207336+00:00"
+        "ot_opcua_browse_request": "2026-11-26T09:28:51.465854+00:00",
+        "ot_opcua_method_call": "2026-11-26T09:28:51.465871+00:00",
+        "ot_opcua_write_request": "2026-11-26T09:28:51.969107+00:00"
       },
       "id": "opcua-discovery-campaign",
       "lab_alerts": [
@@ -111,7 +116,7 @@
         "ot_opcua_write_request"
       ],
       "returncode": 0,
-      "started_at": "2026-11-25T03:37:35.580036+00:00",
+      "started_at": "2026-11-26T09:28:50.454318+00:00",
       "unexpected": []
     },
     {
@@ -120,15 +125,14 @@
         "ot_s7comm_program_download",
         "ot_s7comm_program_upload"
       ],
-      "finished_at": "2026-11-25T03:38:19.747922+00:00",
+      "finished_at": "2026-11-26T09:30:05.648550+00:00",
       "first_fire": {
-        "ot_s7comm_change_operating_mode": "2026-11-25T03:37:59.602479+00:00",
-        "ot_s7comm_program_download": "2026-11-25T03:37:59.602496+00:00",
-        "ot_s7comm_program_upload": "2026-11-25T03:37:59.602501+00:00"
+        "ot_s7comm_change_operating_mode": "2026-11-26T09:29:30.367729+00:00",
+        "ot_s7comm_program_download": "2026-11-26T09:29:30.367743+00:00",
+        "ot_s7comm_program_upload": "2026-11-26T09:29:30.367747+00:00"
       },
       "id": "s7-program-campaign",
       "lab_alerts": [
-        "OT_PORT_SCAN",
         "S7COMM_CHANGE_OPERATING_MODE",
         "S7COMM_PROGRAM_DOWNLOAD",
         "S7COMM_PROGRAM_UPLOAD"
@@ -140,16 +144,16 @@
         "ot_s7comm_program_upload"
       ],
       "returncode": 0,
-      "started_at": "2026-11-25T03:37:56.367921+00:00",
+      "started_at": "2026-11-26T09:29:26.834471+00:00",
       "unexpected": []
     },
     {
       "expected": [
         "ot_modbus_unauthorized_write"
       ],
-      "finished_at": "2026-11-25T03:38:40.690086+00:00",
+      "finished_at": "2026-11-26T09:30:42.053871+00:00",
       "first_fire": {
-        "ot_modbus_unauthorized_write": "2026-11-25T03:38:21.050941+00:00"
+        "ot_modbus_unauthorized_write": "2026-11-26T09:30:07.236380+00:00"
       },
       "id": "operator-workstation-write",
       "lab_alerts": [
@@ -160,7 +164,7 @@
         "ot_modbus_unauthorized_write"
       ],
       "returncode": 0,
-      "started_at": "2026-11-25T03:38:19.759454+00:00",
+      "started_at": "2026-11-26T09:30:05.719594+00:00",
       "unexpected": []
     },
     {
@@ -168,7 +172,7 @@
       "id": "benign-after",
       "lab_alerts": [],
       "observed": [],
-      "started_at": "2026-11-25T03:39:00.095752+00:00",
+      "started_at": "2026-11-26T09:31:15.962796+00:00",
       "unexpected": []
     }
   ]

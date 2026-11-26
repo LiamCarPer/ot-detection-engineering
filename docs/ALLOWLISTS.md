@@ -17,7 +17,7 @@ criticality for review and for the site's firewall or EDR.
 | Set | Members | Meaning |
 | :-- | :-- | :-- |
 | `modbus_approved_writers` | HMI | The only standing Modbus writer; engineering changes use the change calendar |
-| `modbus_approved_readers` | HMI, L2 historian collector | Large block reads are polling, not enumeration |
+| `modbus_approved_readers` | Gateway/IDS, HMI, L2 historian collector | Large block reads and the monitor's level poll are polling, not enumeration |
 | `dnp3_approved_masters` | Engineering client | A second master is a rogue-master finding |
 | `opcua_approved_writers` | HMI, EWS | Interactive OPC UA clients; the engineering client's OPC UA use is the insider path |
 | `opcua_approved_connectors` | Engineering client | Allowed to open a channel, not to write |
