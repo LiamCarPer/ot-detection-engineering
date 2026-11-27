@@ -121,6 +121,7 @@ by `tests/test_claims.py`.
 | All-family FPR (generated) | Sigma, baseline, conduit, native and YARA 0; correlation 0 fired but 0/7 exercised; stateful 0 fired | Same corpus plus the committed benign captures and fixtures; correlation zeros are labelled unexercised. See [`deploy/evidence/fpr/report.md`](deploy/evidence/fpr/report.md). |
 | Lab benign capture (25.45 h) | 0 Sigma/native FPs on 1,136,470 events; lab-trained baseline 0 / 1,041,580 test events | 9 / 30 Sigma rules had input in this flow/Modbus window; the 0.5 h protocol window adds DNP3, OPC UA, S7comm and SNMP. See [`docs/BENIGN_CAPTURE.md`](docs/BENIGN_CAPTURE.md). |
 | Benign protocol window (0.5 h) | 0 Sigma/native FPs on 52,811 events; lab baseline 0 / 38,276 | 22 / 30 Sigma rules had input, including DNP3, OPC UA, S7comm and SNMP heartbeat input (no trap event). |
+| Approved-write window (10 min) | 0 Sigma/native FPs on 12,916 events; lab baseline 0 | Approved HMI writes to HR1; the PLC does not return a benign Modbus exception. |
 | Held-out single-event recall | 54 / 54 (95% CI 0.9336–1.0) | Labeled positives authored separately from the rule fixtures. |
 | Held-out single-event precision | 54 / 54 (95% CI 0.9336–1.0) | Same positives against 1,024 held-out negatives per rule. |
 | Held-out correlation recall | 13 / 13 positive windows (95% CI 0.7719–1.0) | Window-level across seven correlation rules. |

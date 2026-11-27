@@ -87,6 +87,17 @@ window supplies DNP3, OPC UA, S7comm and SNMP heartbeats; the three SNMP rules
 select config-change/restart/link-down events, which this benign window does not
 produce.
 
+## Approved-write window
+
+A 10-minute window runs the HMI's benign Modbus writer: it reads HR0..6, writes
+the pump-speed register HR1 and restores it, and probes an unmapped register.
+The result is **12,916 events, 0 Sigma/native false positives**; the approved
+HMI writes do not trip the unauthorized-writer or block-read rules. The lab PLC
+returns zeros for out-of-range reads and echoes out-of-range writes, so the
+probe does **not** produce a Modbus exception; the exception rule remains proven
+by its fixtures and held-out positives, not by this device. Evidence:
+`deploy/evidence/benign-writes/`.
+
 ## Findings
 
 1. **The first 25-hour run exposed 3,576 flow false positives.** All were
