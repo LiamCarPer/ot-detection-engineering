@@ -137,7 +137,8 @@ def load_catalog(path: Path = CATALOG_PATH) -> dict:
 def _volume_summary(volume: dict | None) -> str | None:
     if not volume:
         return None
-    return f"{volume['raw_alerts']} raw / {volume['episodes']} episodes"
+    kind = volume.get("volume_kind", "unknown")
+    return f"{volume['raw_alerts']} raw / {volume['episodes']} episodes ({kind})"
 
 
 def _parse_date(value: str | None) -> date | None:

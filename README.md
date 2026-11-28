@@ -58,7 +58,7 @@ A fresh lab run produced **151 alerts across 17 types from four sources in 160
 seconds**. The analysis collapses them into **24 one-minute episodes** and
 **five operational events** — four adversary campaigns and one sensor-health
 event — and explains what to suppress, what to keep, and what the reduction
-does not prove. The implemented grouping policy turns 151 alerts into 21
+does not prove. The five-label grouping model turns 151 alerts into 21
 notifications and preserves the four campaigns and the sensor-health event.
 
 [Read the case study](docs/CASE_STUDY_ALERT_FLOOD.md) ·
@@ -246,6 +246,8 @@ The detailed limits are in [docs/SCOPE.md](docs/SCOPE.md), and every claim is in
 
 ## Further reading
 
+- [Plant threat model](docs/PLANT_THREAT_MODEL.md) — zones, adversary paths and the owner gaps.
+- [ATT&CK mapping notes](docs/ATTACK_MAPPING.md) — the tags that need a written justification.
 - [Purple team](docs/PURPLE_TEAM.md) — coverage, MTTD and the lab-only gaps.
 - [Evidence map](docs/EVIDENCE_MAP.md) — every independent run, its date, and what it does not prove.
 - [Stateful detections](docs/STATE_DETECTIONS.md) — drift, change windows and per-asset profiles.

@@ -70,3 +70,10 @@ Conduit and firewall families are **not exercised**: the capture has packets, no
 
 This is real lab background traffic, not a plant. Host, auth, PLC, health
 and firewall families are measured on their own committed samples, not here.
+
+## Committed sample
+
+A 10-minute, 8.5 MB slice is committed as `benign-24h-sample.pcap` for
+inspection. It contains Modbus/TCP, HTTP, TLS and discovery traffic. The full
+1.1 GB capture is external; `summary.json` records its SHA-256. The sample does
+not reproduce the 1,136,470-event result — it is a smoke test.

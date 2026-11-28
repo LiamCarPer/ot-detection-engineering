@@ -24,12 +24,12 @@ By severity: `critical` 5, `high` 45, `low` 3, `medium` 20
 
 | Rule | Severity | Runbook | Volume | Last validated | Age (days) |
 | :-- | :-- | :-- | :-- | :-- | --: |
-| DNP3 Control Operation From Unauthorized Master | high | [runbook](../../../docs/runbooks/dnp3-unauthorized-control.md) | 6 raw / 1 episodes | 2026-11-24 | 0 |
-| Industrial Protocol Traffic From Enterprise To Control Zone | high | [runbook](../../../docs/runbooks/cross-zone-violation.md) | 74 raw / 6 episodes | 2026-11-24 | 0 |
-| Modbus Write From Unauthorized Control Writer | high | [runbook](../../../docs/runbooks/modbus-unauthorized-write.md) | 27 raw / 2 episodes | 2026-11-24 | 0 |
-| OPC UA Address Space Browse | medium | [runbook](../../../docs/runbooks/opcua-browse-request.md) | 2 raw / 1 episodes | 2026-11-24 | 0 |
-| Process Safety Violation From Physics-Aware Monitor | critical | [runbook](../../../docs/runbooks/process-safety-violation.md) | 7 raw / 1 episodes | 2026-11-24 | 0 |
-| S7comm Program Download | high | [runbook](../../../docs/runbooks/s7comm-program-download.md) | 6 raw / 1 episodes | 2026-11-24 | 0 |
+| DNP3 Control Operation From Unauthorized Master | high | [runbook](../../../docs/runbooks/dnp3-unauthorized-control.md) | 6 raw / 1 episodes (attack-replay) | 2026-11-24 | 0 |
+| Industrial Protocol Traffic From Enterprise To Control Zone | high | [runbook](../../../docs/runbooks/cross-zone-violation.md) | 74 raw / 6 episodes (attack-replay) | 2026-11-24 | 0 |
+| Modbus Write From Unauthorized Control Writer | high | [runbook](../../../docs/runbooks/modbus-unauthorized-write.md) | 27 raw / 2 episodes (attack-replay) | 2026-11-24 | 0 |
+| OPC UA Address Space Browse | medium | [runbook](../../../docs/runbooks/opcua-browse-request.md) | 2 raw / 1 episodes (attack-replay) | 2026-11-24 | 0 |
+| Process Safety Violation From Physics-Aware Monitor | critical | [runbook](../../../docs/runbooks/process-safety-violation.md) | 7 raw / 1 episodes (attack-replay) | 2026-11-24 | 0 |
+| S7comm Program Download | high | [runbook](../../../docs/runbooks/s7comm-program-download.md) | 6 raw / 1 episodes (attack-replay) | 2026-11-24 | 0 |
 
 ## Rules with observed lab volume
 

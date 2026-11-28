@@ -1,3 +1,5 @@
+# expected_volume is attack-replay volume from the 2026-11-24 lab run unless
+# its volume_kind says otherwise; it is not benign daily volume.
 version: 1
 rules:
 - id: 7f1a4d38-2b96-4c5e-9e70-3d8a5f1b6c02
@@ -29,6 +31,7 @@ rules:
   owner: Liam Carvajal
   status: experimental
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 2
     episodes: 1
@@ -54,6 +57,7 @@ rules:
   owner: Liam Carvajal
   status: stable
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 6
     episodes: 1
@@ -79,6 +83,7 @@ rules:
   owner: Liam Carvajal
   status: experimental
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 2
     episodes: 1
@@ -122,6 +127,7 @@ rules:
   owner: Liam Carvajal
   status: stable
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 74
     episodes: 6
@@ -273,6 +279,7 @@ rules:
   owner: Liam Carvajal
   status: stable
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 27
     episodes: 2
@@ -298,6 +305,7 @@ rules:
   owner: Liam Carvajal
   status: stable
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 2
     episodes: 1
@@ -323,6 +331,7 @@ rules:
   owner: Liam Carvajal
   status: experimental
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 2
     episodes: 1
@@ -347,6 +356,7 @@ rules:
   owner: Liam Carvajal
   status: experimental
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 2
     episodes: 1
@@ -371,6 +381,7 @@ rules:
   owner: Liam Carvajal
   status: stable
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 7
     episodes: 1
@@ -395,6 +406,7 @@ rules:
   owner: Liam Carvajal
   status: experimental
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 4
     episodes: 1
@@ -419,6 +431,7 @@ rules:
   owner: Liam Carvajal
   status: stable
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 6
     episodes: 1
@@ -443,6 +456,7 @@ rules:
   owner: Liam Carvajal
   status: experimental
   expected_volume:
+    volume_kind: attack-replay
     source: lab-2026-11-24
     raw_alerts: 6
     episodes: 1

@@ -80,13 +80,13 @@
     },
     {
       "source": "rules/sigma/ot/ot_hmi_login_failure.yml",
-      "source_sha256": "6b50a4e3a4cedc9766315ddac2ce58dc6fd958ed4bdc8c80c234ddab7bc73f33",
+      "source_sha256": "db60e01fab805be93b77914dbe99a285ab260e116f01a1690f90f3e46bc55927",
       "target": "loki/rules/ot_hmi_login_failure.yaml",
       "backend": "loki"
     },
     {
       "source": "rules/sigma/ot/ot_hmi_login_failure_burst.yml",
-      "source_sha256": "d01226a42d351ae019f88280e410ff2ec8f812ce53c20b30b338422b5443102a",
+      "source_sha256": "ba85c0250aa6c2937b80305605a6499356c651602ffe2d4285e33c7447191f29",
       "target": "loki/rules/ot_hmi_login_failure_burst.yaml",
       "backend": "loki"
     },
@@ -302,13 +302,13 @@
     },
     {
       "source": "rules/sigma/ot/ot_hmi_login_failure.yml",
-      "source_sha256": "6b50a4e3a4cedc9766315ddac2ce58dc6fd958ed4bdc8c80c234ddab7bc73f33",
+      "source_sha256": "db60e01fab805be93b77914dbe99a285ab260e116f01a1690f90f3e46bc55927",
       "target": "opensearch/ot_hmi_login_failure.ppl",
       "backend": "opensearch"
     },
     {
       "source": "rules/sigma/ot/ot_hmi_login_failure_burst.yml",
-      "source_sha256": "d01226a42d351ae019f88280e410ff2ec8f812ce53c20b30b338422b5443102a",
+      "source_sha256": "ba85c0250aa6c2937b80305605a6499356c651602ffe2d4285e33c7447191f29",
       "target": "opensearch/ot_hmi_login_failure_burst.ppl",
       "backend": "opensearch"
     },
@@ -524,13 +524,13 @@
     },
     {
       "source": "rules/sigma/ot/ot_hmi_login_failure.yml",
-      "source_sha256": "6b50a4e3a4cedc9766315ddac2ce58dc6fd958ed4bdc8c80c234ddab7bc73f33",
+      "source_sha256": "db60e01fab805be93b77914dbe99a285ab260e116f01a1690f90f3e46bc55927",
       "target": "sentinel/ot_hmi_login_failure.kql",
       "backend": "sentinel"
     },
     {
       "source": "rules/sigma/ot/ot_hmi_login_failure_burst.yml",
-      "source_sha256": "d01226a42d351ae019f88280e410ff2ec8f812ce53c20b30b338422b5443102a",
+      "source_sha256": "ba85c0250aa6c2937b80305605a6499356c651602ffe2d4285e33c7447191f29",
       "target": "sentinel/ot_hmi_login_failure_burst.kql",
       "backend": "sentinel"
     },
@@ -746,13 +746,13 @@
     },
     {
       "source": "rules/sigma/ot/ot_hmi_login_failure.yml",
-      "source_sha256": "6b50a4e3a4cedc9766315ddac2ce58dc6fd958ed4bdc8c80c234ddab7bc73f33",
+      "source_sha256": "db60e01fab805be93b77914dbe99a285ab260e116f01a1690f90f3e46bc55927",
       "target": "splunk/ot_hmi_login_failure.conf",
       "backend": "splunk"
     },
     {
       "source": "rules/sigma/ot/ot_hmi_login_failure_burst.yml",
-      "source_sha256": "d01226a42d351ae019f88280e410ff2ec8f812ce53c20b30b338422b5443102a",
+      "source_sha256": "ba85c0250aa6c2937b80305605a6499356c651602ffe2d4285e33c7447191f29",
       "target": "splunk/ot_hmi_login_failure_burst.conf",
       "backend": "splunk"
     },

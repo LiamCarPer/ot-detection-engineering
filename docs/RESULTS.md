@@ -32,7 +32,7 @@ per-tactic rationale for the gaps is in the README.
 | Held-out correlation recall | 13 / 13 windows (95% CI 0.7719–1.0) | Window-level across seven correlation rules. |
 | Held-out YARA recall | 8 / 8 artifacts (95% CI 0.676–1.0) | Two labeled artifacts per rule against eight shared negatives. |
 | Alert-flood case study | 151 alerts → 24 episodes → 5 operational events | One 160-second lab burst; no analyst action timestamps. |
-| Suppression | 151 alerts → 21 notifications (86.09%) | Grouping policy; C2/C3/C4/C5 preserved. |
+| Suppression | 151 alerts → 21 notifications (86.09%) | Five-label grouping model; C2/C3/C4/C5 preserved; inhibit rules not replayed. |
 | Detection catalogue | 73 rules, 6 stable, 67 experimental | 12 rules have observed lab volume; the health gate has 0 blocking gaps. |
 | Stateful detections | 5 rules, 31 windows, 2 change windows, baselines current | DNP3 select/operate, drift, approved change window, per-asset protocol profile, process envelope. |
 | Performance | 7.8–11.0M decoder frames/s; ~2,800 replay events/s; ~3,500 events/s achieved at a 4,000 target, 0 drops | Release build; per-frame p99; small example frames; hardware in `docs/PERFORMANCE.md`. |

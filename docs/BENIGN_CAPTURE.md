@@ -26,6 +26,14 @@ normalized through the collector and run through the network detection families.
   23.45 hours. The committed baseline was learned from the generated seed and is
   reported separately as a domain shift, not a false-positive rate.
 
+## Committed sample
+
+The full 1.1 GB capture is external. `deploy/evidence/benign-lab/benign-24h-sample.pcap`
+is a contiguous 10-minute slice (61,940 packets, 8.5 MB) with Modbus/TCP, HTTP,
+TLS and discovery traffic, so the traffic mix can be inspected without the full
+file. It is a smoke test, not the headline measurement; `summary.json` records
+the full capture's SHA-256 and byte count.
+
 ## Result
 
 | Metric | Value |

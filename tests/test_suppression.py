@@ -40,6 +40,7 @@ def test_committed_result_is_reproducible_and_preserves_the_signals() -> None:
     committed = json.loads(RESULT.read_text(encoding="utf-8"))
     assert committed == build()
     assert committed["raw_alerts"] == 151
+    assert committed["group_by"] == _policy()["route"]["group_by"]
     assert committed["notifications"] <= 24
     assert committed["preserved"]["C2_hmi_login"] > 0
     assert committed["preserved"]["C3_protocol_chain"] > 0

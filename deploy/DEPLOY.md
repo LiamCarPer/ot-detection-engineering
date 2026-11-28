@@ -95,6 +95,20 @@ cat deploy/splunk/*.conf > $SPLUNK_HOME/etc/apps/ot_detection/local/savedsearche
 Field names in the SPL are the normalized telemetry fields; map them to your
 sourcetype with a field extraction or a `props.conf`/`transforms.conf` pair.
 
+The generated `search =` bodies intentionally omit `index`/`sourcetype` so the
+same rule can be installed against a site's own index. They are not
+self-contained saved searches: install each one with an explicit scope, for
+example:
+
+```
+search index=ot_telemetry sourcetype=ot:telemetry <generated body>
+```
+
+The parity harness adds `index=ot_parity parity_run="<run>"` for the same
+reason; that scoping is evidence plumbing, not part of the rule. If you install
+the bodies without a scope, the search runs against the user's default index and
+the conversion result does not apply.
+
 ## Microsoft Sentinel
 
 Each `deploy/sentinel/*.kql` file is an analytics rule query. Create a scheduled

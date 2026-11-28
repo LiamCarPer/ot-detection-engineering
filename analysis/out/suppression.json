@@ -18,132 +18,223 @@
     "S7COMM_PROGRAM_UPLOAD": 6,
     "UNAUTHORIZED_MODBUS_WRITE": 27
   },
+  "group_by": [
+    "alertname",
+    "severity",
+    "src_ip",
+    "dst_ip",
+    "dst_zone"
+  ],
   "groups": [
     {
-      "alert_type": "C2_BEACON",
       "alerts": 1,
-      "dest_ip": "172.24.0.10",
-      "source_ip": "172.23.0.20"
+      "key": [
+        "C2_BEACON",
+        "unknown",
+        "172.23.0.20",
+        "172.24.0.10",
+        "it"
+      ]
     },
     {
-      "alert_type": "CROSS_ZONE_VIOLATION",
       "alerts": 56,
-      "dest_ip": "172.21.0.10",
-      "source_ip": "172.24.0.10"
+      "key": [
+        "CROSS_ZONE_VIOLATION",
+        "high",
+        "172.24.0.10",
+        "172.21.0.10",
+        "control"
+      ]
     },
     {
-      "alert_type": "CROSS_ZONE_VIOLATION",
       "alerts": 9,
-      "dest_ip": "172.21.0.11",
-      "source_ip": "172.24.0.10"
+      "key": [
+        "CROSS_ZONE_VIOLATION",
+        "high",
+        "172.24.0.10",
+        "172.21.0.11",
+        "control"
+      ]
     },
     {
-      "alert_type": "CROSS_ZONE_VIOLATION",
       "alerts": 9,
-      "dest_ip": "172.21.0.12",
-      "source_ip": "172.24.0.10"
+      "key": [
+        "CROSS_ZONE_VIOLATION",
+        "high",
+        "172.24.0.10",
+        "172.21.0.12",
+        "control"
+      ]
     },
     {
-      "alert_type": "DETECTION_SERVICE_DOWN",
       "alerts": 1,
-      "dest_ip": null,
-      "source_ip": null
+      "key": [
+        "DETECTION_SERVICE_DOWN",
+        "unknown",
+        null,
+        null,
+        null
+      ]
     },
     {
-      "alert_type": "DNP3_RESTART_COMMAND",
       "alerts": 2,
-      "dest_ip": "172.21.0.50",
-      "source_ip": "172.23.0.20"
+      "key": [
+        "DNP3_RESTART_COMMAND",
+        "high",
+        "172.23.0.20",
+        "172.21.0.50",
+        "control"
+      ]
     },
     {
-      "alert_type": "DNP3_UNAUTHORIZED_CONTROL",
       "alerts": 6,
-      "dest_ip": "172.21.0.50",
-      "source_ip": "172.23.0.20"
+      "key": [
+        "DNP3_UNAUTHORIZED_CONTROL",
+        "high",
+        "172.23.0.20",
+        "172.21.0.50",
+        "control"
+      ]
     },
     {
-      "alert_type": "DNP3_UNSOLICITED_DISABLED",
       "alerts": 2,
-      "dest_ip": "172.21.0.50",
-      "source_ip": "172.23.0.20"
+      "key": [
+        "DNP3_UNSOLICITED_DISABLED",
+        "medium",
+        "172.23.0.20",
+        "172.21.0.50",
+        "control"
+      ]
     },
     {
-      "alert_type": "HMI_LOGIN_FAILURE",
       "alerts": 3,
-      "dest_ip": null,
-      "source_ip": "172.24.0.30"
+      "key": [
+        "HMI_LOGIN_FAILURE",
+        "unknown",
+        "172.24.0.30",
+        null,
+        null
+      ]
     },
     {
-      "alert_type": "OPCUA_BROWSE_REQUEST",
       "alerts": 2,
-      "dest_ip": "172.21.0.51",
-      "source_ip": "172.23.0.20"
+      "key": [
+        "OPCUA_BROWSE_REQUEST",
+        "medium",
+        "172.23.0.20",
+        "172.21.0.51",
+        "control"
+      ]
     },
     {
-      "alert_type": "OPCUA_METHOD_CALL",
       "alerts": 2,
-      "dest_ip": "172.21.0.51",
-      "source_ip": "172.23.0.20"
+      "key": [
+        "OPCUA_METHOD_CALL",
+        "high",
+        "172.23.0.20",
+        "172.21.0.51",
+        "control"
+      ]
     },
     {
-      "alert_type": "OPCUA_WRITE_REQUEST",
       "alerts": 2,
-      "dest_ip": "172.21.0.51",
-      "source_ip": "172.23.0.20"
+      "key": [
+        "OPCUA_WRITE_REQUEST",
+        "high",
+        "172.23.0.20",
+        "172.21.0.51",
+        "control"
+      ]
     },
     {
-      "alert_type": "OT_BRUTE_FORCE_SCAN",
       "alerts": 4,
-      "dest_ip": null,
-      "source_ip": "172.24.0.10"
+      "key": [
+        "OT_BRUTE_FORCE_SCAN",
+        "unknown",
+        "172.24.0.10",
+        null,
+        null
+      ]
     },
     {
-      "alert_type": "OT_PORT_SCAN",
       "alerts": 1,
-      "dest_ip": null,
-      "source_ip": "172.23.0.20"
+      "key": [
+        "OT_PORT_SCAN",
+        "unknown",
+        "172.23.0.20",
+        null,
+        null
+      ]
     },
     {
-      "alert_type": "OT_PORT_SCAN",
       "alerts": 1,
-      "dest_ip": null,
-      "source_ip": "172.24.0.10"
+      "key": [
+        "OT_PORT_SCAN",
+        "unknown",
+        "172.24.0.10",
+        null,
+        null
+      ]
     },
     {
-      "alert_type": "PROCESS_SAFETY_VIOLATION",
       "alerts": 7,
-      "dest_ip": null,
-      "source_ip": "172.24.0.10"
+      "key": [
+        "PROCESS_SAFETY_VIOLATION",
+        "critical",
+        "172.24.0.10",
+        null,
+        null
+      ]
     },
     {
-      "alert_type": "S7COMM_CHANGE_OPERATING_MODE",
       "alerts": 4,
-      "dest_ip": "172.21.0.52",
-      "source_ip": "172.23.0.20"
+      "key": [
+        "S7COMM_CHANGE_OPERATING_MODE",
+        "high",
+        "172.23.0.20",
+        "172.21.0.52",
+        "control"
+      ]
     },
     {
-      "alert_type": "S7COMM_PROGRAM_DOWNLOAD",
       "alerts": 6,
-      "dest_ip": "172.21.0.52",
-      "source_ip": "172.23.0.20"
+      "key": [
+        "S7COMM_PROGRAM_DOWNLOAD",
+        "high",
+        "172.23.0.20",
+        "172.21.0.52",
+        "control"
+      ]
     },
     {
-      "alert_type": "S7COMM_PROGRAM_UPLOAD",
       "alerts": 6,
-      "dest_ip": "172.21.0.52",
-      "source_ip": "172.23.0.20"
+      "key": [
+        "S7COMM_PROGRAM_UPLOAD",
+        "medium",
+        "172.23.0.20",
+        "172.21.0.52",
+        "control"
+      ]
     },
     {
-      "alert_type": "UNAUTHORIZED_MODBUS_WRITE",
       "alerts": 4,
-      "dest_ip": null,
-      "source_ip": "172.22.0.30"
+      "key": [
+        "UNAUTHORIZED_MODBUS_WRITE",
+        "high",
+        "172.22.0.30",
+        null,
+        null
+      ]
     },
     {
-      "alert_type": "UNAUTHORIZED_MODBUS_WRITE",
       "alerts": 23,
-      "dest_ip": null,
-      "source_ip": "172.24.0.10"
+      "key": [
+        "UNAUTHORIZED_MODBUS_WRITE",
+        "high",
+        "172.24.0.10",
+        null,
+        null
+      ]
     }
   ],
   "notifications": 21,
@@ -157,5 +248,7 @@
   "raw_alerts": 151,
   "reduction_pct": 86.09,
   "schema_version": 1,
-  "source": "analysis/data/lab-2026-11-24/alerts.jsonl"
+  "severity_source": "metadata/detection-catalog.yaml; unknown stays unknown",
+  "source": "analysis/data/lab-2026-11-24/alerts.jsonl",
+  "zone_source": "metadata/assets.yaml"
 }

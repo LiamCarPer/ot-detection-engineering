@@ -27,8 +27,11 @@ installed as the lab's Alertmanager configuration.
 | Reduction | 86.09% |
 
 The case study's 24 episodes are a 60-second time-window rollup. The 21 are the
-unique `(alert_type, source, destination)` groups under the policy. The five
-operational events remain the analyst's campaign rollup.
+unique groups under the policy's five-label key (`alertname`, `severity`,
+`src_ip`, `dst_ip`, `dst_zone`). The snapshot has no severity or zone labels, so
+severity is resolved from the detection catalogue (unknown stays unknown) and
+zone from the asset inventory. The five operational events remain the analyst's
+campaign rollup.
 
 ## Preserved signals
 
@@ -52,9 +55,10 @@ make suppression
 
 ## What this does not prove
 
-- It is an **offline simulation** of the declared group key, not a replay through
-  a live Alertmanager instance. The policy is installed and validated with
-  `amtool check-config`; the notification counts are a model.
+- It is an **offline grouping model** of the declared key, not a replay through
+  a live Alertmanager instance. `group_wait`, repeat intervals and inhibit rules
+  are not simulated; the policy is validated with `amtool check-config`, but the
+  notification counts are a model.
 - The lab's alert names and the generated rule names differ; the inhibit
   matchers cover both, but a new rule name must be added to the policy.
 - The group key does not include the register. The first alert in a group carries

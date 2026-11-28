@@ -3,7 +3,14 @@
     "analyzed_at": "2026-11-26T12:22:28.011888+00:00",
     "bytes": 1099348789,
     "path": "/media/liamcarvajal/Storage/code/ot-security-lab/detection/logs/benign-24h.pcap",
-    "sha256": "42dbea21d4550937f5a65b7032a5a973143e32d8660133fc2e7b726773bd12bc"
+    "sha256": "42dbea21d4550937f5a65b7032a5a973143e32d8660133fc2e7b726773bd12bc",
+    "sample": {
+      "path": "deploy/evidence/benign-lab/benign-24h-sample.pcap",
+      "bytes": 8839476,
+      "sha256": "03588784f54746624566c1cc64988fffa7ea53747ae66cd5edb3a322173f0207",
+      "window": "2026-11-25T16:45:31Z to 2026-11-25T16:55:31Z",
+      "note": "10-minute bounded slice of the full capture; the full 1.1 GB capture stays external because of size. The sample contains Modbus, HTTP, TLS and discovery traffic."
+    }
   },
   "coverage": {
     "baseline": {

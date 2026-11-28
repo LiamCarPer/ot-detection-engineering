@@ -1,0 +1,98 @@
+# Plant-level threat model, separate from metadata/threat-model.yaml.
+#
+# The other model covers the repository as a software product (STRIDE, LLM and
+# supply-chain risk). This one covers the water-treatment plant the detections
+# are written for: zones, critical assets, plausible adversary paths, the
+# detections that cover them and the gaps a plant owner would still own.
+version: 1
+plant: water treatment
+zones: [it, dmz, ops, supervisory, control]
+assets:
+  - 172.21.0.10
+  - 172.21.0.11
+  - 172.23.0.4
+  - 172.23.0.10
+  - 172.23.0.20
+  - 172.22.0.10
+safety_consequences:
+  - Tank overflow and loss of containment
+  - Loss of dosing control and unsafe water quality
+  - Loss of view during a process upset
+  - Pump or valve damage from unauthorized cycling
+paths:
+  - id: enterprise-to-control
+    name: Enterprise host pivots to a controller
+    entry_zone: it
+    target_asset: 172.21.0.10
+    target_zone: control
+    techniques: [T0886, T0843, T1692.001]
+    detections:
+      - rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+      - rules/sigma/ot/ot_s7comm_program_download.yml
+      - rules/sigma/ot/ot_process_safety_violation.yml
+    gaps:
+      - No VPN or remote-access identity telemetry
+      - Field firewalls are a model, not an owned configuration
+  - id: insider-engineering-client
+    name: Compromised engineering client abuses an approved conduit
+    entry_zone: ops
+    target_asset: 172.21.0.51
+    target_zone: control
+    techniques: [T0843, T1692.001, T0886]
+    detections:
+      - rules/sigma/ot/ot_dnp3_unauthorized_control.yml
+      - rules/sigma/ot/ot_opcua_write_request.yml
+      - rules/sigma/ot/ot_s7comm_program_download.yml
+      - rules/stateful/stateful_engineering_change_window.yml
+    gaps:
+      - The client is allowlisted by source, so approved-host misuse is not blocked
+      - No low-and-slow behaviour baseline for the engineering client
+  - id: compromised-hmi
+    name: HMI or operator workstation sends unsafe commands
+    entry_zone: supervisory
+    target_asset: 172.21.0.10
+    target_zone: control
+    techniques: [T0831, T0836, T0859]
+    detections:
+      - rules/sigma/ot/ot_process_safety_violation.yml
+      - rules/stateful/stateful_process_safety_envelope.yml
+      - rules/stateful/stateful_engineering_change_window.yml
+    gaps:
+      - The HMI is an approved writer; the detection is process/safety-based, not source-based
+      - No EDR on the HMI host
+  - id: enterprise-ransomware-historian
+    name: Enterprise ransomware reaches the historian
+    entry_zone: it
+    target_asset: 172.23.0.10
+    target_zone: ops
+    techniques: [T0811, T0879]
+    detections:
+      - rules/sigma/ot/ot_flow_large_transfer.yml
+      - rules/sigma/ot/ot_firewall_enterprise_control_service.yml
+    gaps:
+      - No host or backup telemetry
+      - No data-loss or restore objective in the detection layer
+  - id: dmz-bastion-to-ews
+    name: Bastion or vendor session reaches the EWS
+    entry_zone: dmz
+    target_asset: 172.23.0.4
+    target_zone: ops
+    techniques: [T0886, T0859]
+    detections:
+      - rules/sigma/ot/ot_firewall_cross_zone_violation.yml
+    gaps:
+      - No bastion session or MFA telemetry
+      - Vendor identity is not represented in the asset inventory
+  - id: firmware-supply-chain
+    name: Malicious or unsigned firmware reaches a PLC
+    entry_zone: ops
+    target_asset: 172.21.0.10
+    target_zone: control
+    techniques: [T0800, T0843]
+    detections:
+      - rules/yara/ot_s7_firmware_with_pe.yar
+      - rules/sigma/ot/ot_s7comm_program_download.yml
+      - rules/sigma/ot/ot_plc_logic_tampered.yml
+    gaps:
+      - No firmware signing or golden-image inventory
+      - YARA proves the file class, not provenance

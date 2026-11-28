@@ -80,8 +80,10 @@ Neither run exercises every rule.
 - The DNP3 decoder reads the first object header only.
 - The native Modbus/DNP3 rules require Suricata's application layer to be
   enabled.
-- Splunk and OpenSearch queries are generated and inspected but have not been
-  executed in a live Splunk/OpenSearch cluster.
+- Splunk and OpenSearch queries were executed against the held-out corpus in
+  the engine-parity run (30/30 in each engine), but not against a production
+  schema, volume or deployment. The generated Splunk bodies still need an
+  index/sourcetype stanza; see `deploy/DEPLOY.md`.
 
 ## Correlation and Loki
 

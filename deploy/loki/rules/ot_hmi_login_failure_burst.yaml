@@ -12,6 +12,18 @@ groups:
 
         attack, and grouping by source keeps unrelated users apart.
 
+
+        The T0859 tag is a coverage annotation, not a claim that valid accounts were
+
+        used: ATT&CK for ICS has no dedicated authentication brute-force technique,
+        and
+
+        Valid Accounts is the closest technique this sequence precedes. If the
+
+        enterprise ATT&CK matrix is in use, T1110 is the more precise tag. See
+
+        docs/ATTACK_MAPPING.md.
+
         '
       summary: HMI Login Failure Burst From One Source
     expr: sum by (src_ip) (count_over_time({job=~".+", service="hmi"} | logfmt | event_type=~`(?i)^login_failure$`

@@ -5,8 +5,10 @@ description: |
   Detects a failed HMI login at the DMZ reverse proxy. A single failure is
   routine; the constituent event exists so a burst can be correlated by source
   without relying on the proxy's own threshold.
-references:
-  - https://attack.mitre.org/techniques/T0859/
+# T0859 is a coverage annotation, not a claim that an account was used. ATT&CK
+# for ICS has no authentication brute-force technique; Valid Accounts is the
+# closest technique this failure precedes. The enterprise matrix's T1110 is the
+# more precise tag if that matrix is in use. See docs/ATTACK_MAPPING.md.
 author: Liam Carvajal
 date: 2026-11-25
 logsource:

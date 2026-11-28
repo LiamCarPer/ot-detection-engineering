@@ -41,7 +41,7 @@
     {
       "age_days": 72,
       "episodes": 1,
-      "expected_volume": "2 raw / 1 episodes",
+      "expected_volume": "2 raw / 1 episodes (attack-replay)",
       "has_runbook": false,
       "health": "warn",
       "id": "fecd2fd4-e612-48be-8d1c-ebbd0679783e",
@@ -57,7 +57,7 @@
     {
       "age_days": 0,
       "episodes": 1,
-      "expected_volume": "6 raw / 1 episodes",
+      "expected_volume": "6 raw / 1 episodes (attack-replay)",
       "has_runbook": true,
       "health": "ok",
       "id": "c56a5b89-e153-4ae5-aed9-2397f691b4d4",
@@ -73,7 +73,7 @@
     {
       "age_days": 72,
       "episodes": 1,
-      "expected_volume": "2 raw / 1 episodes",
+      "expected_volume": "2 raw / 1 episodes (attack-replay)",
       "has_runbook": false,
       "health": "warn",
       "id": "fdb03386-8bc9-4991-bb23-73c15b1d5e5f",
@@ -105,7 +105,7 @@
     {
       "age_days": 0,
       "episodes": 6,
-      "expected_volume": "74 raw / 6 episodes",
+      "expected_volume": "74 raw / 6 episodes (attack-replay)",
       "has_runbook": true,
       "health": "ok",
       "id": "aaaaba9c-627e-4dfb-adda-4d719c81cb89",
@@ -233,7 +233,7 @@
     {
       "age_days": 0,
       "episodes": 2,
-      "expected_volume": "27 raw / 2 episodes",
+      "expected_volume": "27 raw / 2 episodes (attack-replay)",
       "has_runbook": true,
       "health": "ok",
       "id": "62dc6867-340d-4560-a957-53826aa802eb",
@@ -249,7 +249,7 @@
     {
       "age_days": 0,
       "episodes": 1,
-      "expected_volume": "2 raw / 1 episodes",
+      "expected_volume": "2 raw / 1 episodes (attack-replay)",
       "has_runbook": true,
       "health": "ok",
       "id": "71de3736-4142-435e-9f87-70e5c08bd872",
@@ -265,7 +265,7 @@
     {
       "age_days": 71,
       "episodes": 1,
-      "expected_volume": "2 raw / 1 episodes",
+      "expected_volume": "2 raw / 1 episodes (attack-replay)",
       "has_runbook": false,
       "health": "warn",
       "id": "a75c42a5-baf9-4c3b-8171-35eaaf58e4ec",
@@ -281,7 +281,7 @@
     {
       "age_days": 71,
       "episodes": 1,
-      "expected_volume": "2 raw / 1 episodes",
+      "expected_volume": "2 raw / 1 episodes (attack-replay)",
       "has_runbook": false,
       "health": "warn",
       "id": "be36ecf4-e509-4683-a287-d53d1315a7a0",
@@ -297,7 +297,7 @@
     {
       "age_days": 0,
       "episodes": 1,
-      "expected_volume": "7 raw / 1 episodes",
+      "expected_volume": "7 raw / 1 episodes (attack-replay)",
       "has_runbook": true,
       "health": "ok",
       "id": "2569c23f-8db1-428e-b708-251d73855980",
@@ -313,7 +313,7 @@
     {
       "age_days": 71,
       "episodes": 1,
-      "expected_volume": "4 raw / 1 episodes",
+      "expected_volume": "4 raw / 1 episodes (attack-replay)",
       "has_runbook": false,
       "health": "warn",
       "id": "d2003c38-34b8-4f8a-b8dc-409e1a5eeb23",
@@ -329,7 +329,7 @@
     {
       "age_days": 0,
       "episodes": 1,
-      "expected_volume": "6 raw / 1 episodes",
+      "expected_volume": "6 raw / 1 episodes (attack-replay)",
       "has_runbook": true,
       "health": "ok",
       "id": "e252ae54-8784-4286-ad9f-2b007c508ee5",
@@ -345,7 +345,7 @@
     {
       "age_days": 71,
       "episodes": 1,
-      "expected_volume": "6 raw / 1 episodes",
+      "expected_volume": "6 raw / 1 episodes (attack-replay)",
       "has_runbook": false,
       "health": "warn",
       "id": "c231db54-8929-42bd-8d9c-3ca276d037c6",

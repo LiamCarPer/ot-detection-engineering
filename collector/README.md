@@ -59,11 +59,11 @@ Consequences, made explicit because they affect detection:
 - **The parameter-band write rule cannot fire on Zeek data** — Zeek's
   `modbus.log` has no register address. The decoder and Suricata paths do.
 - **The DNP3 control rule's master allowlist cannot be applied on Zeek data** —
-  Zeek's `dnp3.log` has no link addresses. Today the rule treats an unidentified
-  master as unauthorized, so it fires on Zeek control requests. The correct fix
-  is for the rule to require link identity (so it never mis-attributes) and to
-  add a separate "control from an unidentified master" rule; that change is
-  tracked as follow-up work because it touches the generated bundle.
+  Zeek's `dnp3.log` has no link addresses. The rule now requires
+  `link_source|exists`, so an unidentified master is not mis-attributed and the
+  event is allowed through rather than alerted. A separate "control from an
+  unidentified master" rule is still a gap; it must be explicit rather than a
+  fail-closed allowlist side effect.
 
 ## The proof
 

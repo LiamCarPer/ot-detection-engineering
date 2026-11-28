@@ -25,7 +25,7 @@ not current and must not be used.
 | ATT&CK for ICS coverage | **32 / 97 techniques (33.0%)** tagged, **32 validated**, **10 live-lab proven** |
 | Detection content | **30 Sigma + 7 correlation + 4 YARA + 21 native + 5 stateful**, plus 3 baseline + 3 conduit = 73 catalogued rules |
 | Benign baseline (generated) | **Sigma single-event: 0 / 1,000 generated events**, 95% Wilson upper bound **0.38%**; all-family report in `deploy/evidence/fpr/report.md` |
-| Lab benign capture | **25.45 h, 1,136,470 events, 0 Sigma/native FPs** from the 9 / 30 rules with input; lab-trained baseline **0 / 1,041,580** |
+| Lab benign capture | **25.45 h, 1,136,470 events, 0 Sigma/native FPs** from the 9 / 30 rules with input; lab-trained baseline **0 / 1,041,580**; a 10-minute sample PCAP is committed |
 | Benign protocol window | **0.5 h, 52,811 events, 0 Sigma/native FPs**; **22 / 30** Sigma rules had input, including DNP3, OPC UA, S7comm and SNMP heartbeat input; no SNMP trap event occurred. Lab-trained baseline **0 / 38,276** |
 | Approved-write window | **10 min, 12,916 events, 0 Sigma/native FPs**; approved HMI writes to HR1 do not fire the writer rules; the PLC does not produce a benign Modbus exception. Lab-trained baseline **0** |
 | Held-out single-event | **54 / 54** positives (24 rules × 2, six × 1), **0** false positives over 1,024 shared negatives evaluated by each rule |
@@ -34,7 +34,7 @@ not current and must not be used.
 | Purple team (MTTD run) | **4 / 4** expectations, mean MTTD **2.45 s** (`n=4`, one run) |
 | Purple team (live) | **12 / 12 Sigma expectations**, 7 steps, 3 runs, 0 unexpected, benign windows clean; non-process MTTD mean **2.53 s**, process step **125 s** (fill-cycle wait) |
 | Purple team (replay) | **14 / 14** lab alert signals, 8 steps, 0 unexpected, benign passed |
-| Suppression | **151 alerts → 21 notifications (86.09%)**; C2/C3/C4/C5 preserved |
+| Suppression | **151 alerts → 21 notifications (86.09%)** under the five-label grouping model; C2/C3/C4/C5 preserved |
 | Sensor health | **Detection Service Stopped firing live** in the lab ruler |
 | Alert-flood case study | **151 alerts → 24 episodes → 5 operational events** |
 | Detection catalogue | **73 rules, 6 stable, 67 experimental, 12 with observed lab volume, 0 blocking gaps** |
@@ -97,7 +97,7 @@ not current and must not be used.
 | The 2026-11-26 live run executes the generated Loki rules against 7 steps and 3 runs | Implemented (lab, 3 runs) | `deploy/evidence/purple-live/` | `python purple/runner/live_lab.py --plan purple/emulation/emulation-plan-live.yaml --runs 3` |
 | The 2026-11-24 lab alert-signal replay matches 14 / 14 expected signals across 8 steps | Verified (replay) | `deploy/evidence/purple/emulation_results.json` | `make purple-check`, `tests/test_emulation.py` |
 | The 2026-11-24 replay produced 0 unexpected alerts and passed a 30-second benign window | Verified (replay) | `deploy/evidence/purple/emulation_results.json` | `make purple-check` |
-| The Alertmanager grouping policy reduces 151 alerts to 21 notifications and preserves C2/C3/C4/C5 | Verified (model) | `analysis/out/suppression.json` | `python analysis/suppression.py` |
+| The Alertmanager group_by key reduces 151 alerts to 21 notifications in the offline grouping model and preserves C2/C3/C4/C5; inhibit rules are not replayed | Verified (model) | `analysis/out/suppression.json` | `python analysis/suppression.py` |
 | The sensor-health rule fires on a stopped detection producer in the lab | Implemented (lab) | `deploy/evidence/lab-health/` | `make lab-health-check` |
 | Security controls and threats are governed as code | Verified | `metadata/security-controls.yaml`, `metadata/threat-model.yaml` | `make security-preflight`, `tests/test_security_governance.py` |
 | CI runs the offline checks; container and live-lab evidence is committed and guarded rather than re-run | Verified | `.github/workflows/ci.yml`, `tests/test_*_evidence.py` | CI |

@@ -18,7 +18,9 @@ Policy: `deploy/alertmanager/ot-inhibit.yml`
 | C4_operator_write | 4 |
 | C5_sensor_health | 1 |
 
-The grouping key is `(alert_type, source, destination)`, the same key as
-the case study's 60-second episode. A new source or destination is a new
-group; the sensor-health and process-safety events are not in an inhibit
-rule.
+The grouping key is the policy's `group_by` list: `alertname`, `severity`, `src_ip`, `dst_ip`, `dst_zone`.
+
+The snapshot has no `severity` label or `dst_zone`; severity is resolved
+from the detection catalogue (unknown stays unknown) and zone from the
+asset inventory. This is a grouping model, not an Alertmanager replay:
+`group_wait`, repeat intervals and inhibit rules are not simulated.

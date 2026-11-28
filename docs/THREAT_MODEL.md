@@ -1,5 +1,13 @@
 # Threat model
 
+This page covers the repository and the detection product. The plant the
+detections are written for has a separate model:
+[`metadata/plant-threat-model.yaml`](../metadata/plant-threat-model.yaml) and
+[`docs/PLANT_THREAT_MODEL.md`](PLANT_THREAT_MODEL.md). It lists the zones,
+critical assets, six adversary paths, the rules that cover them and the gaps the
+plant owner still owns; keep the two separate so a product control is not
+mistaken for plant coverage.
+
 The threat model is **code**: [`metadata/threat-model.yaml`](../metadata/threat-model.yaml)
 lists the assets, trust boundaries and threats, and
 [`metadata/security-controls.yaml`](../metadata/security-controls.yaml) maps each
